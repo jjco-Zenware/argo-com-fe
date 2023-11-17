@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    //background-image: url("/assets/layout/images/fondo_login.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.btn-login:focus {
+    box-shadow: none
+}
+
+.olvidasteClave {
+    text-shadow: none;
+    color: rgb(91, 155, 209) !important
+}

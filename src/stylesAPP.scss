@@ -1,0 +1,58 @@
+.APP-invalid {
+    color: #f44435;
+    font-size: 0.86rem;
+    font-weight: 600;
+    border-color: transparent;
+}
+
+@media screen and (min-width: 1729px) {
+    .layout-content {
+        width: auto; // 1504px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+}
+
+.header-adaptable {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center !important;
+}
+
+.header-adaptable span {
+    display: inline-block;
+    padding: 2px;
+}
+
+.row-adaptable {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.row-adaptable span {
+    display: inline-block;
+    padding: 2px;
+}
+
+.modalBtnRed {
+    background: red;
+}
+
+.modalBtnRed:hover {
+    background: rgb(243, 7, 7) !important;
+    color: black !important;
+}
+
+.modalBtnGreen {
+    background: #03a9f4;
+}
+
+.modalBtnGreen:hover {
+    background: #089de2;
+    color: black !important;
+}
+
+.btnFooterModal {
+    justify-content: end;
+    align-items: end;
+}

@@ -1,0 +1,8 @@
+<div class="w-full flex flex-column gap-3 px-3 pb-6">
+    <span class="p-input-icon-left">
+        <i class="pi pi-envelope"></i>
+        <input type="text" class="w-full" [formControl]="loginUser" pInputText placeholder="Usuario" />
+    </span>
+    <button pButton pRipple class="w-full my-3 px-3" style="background-color: #03A9F4" label="Siguiente"
+        [loading]="isLoading" (click)="validaNombreUsuario()"></button>
+</div>

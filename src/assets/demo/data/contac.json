@@ -1,0 +1,20 @@
+{
+    "data": [
+        {
+            "idcontacto": 0,
+            "nombrecontacto": "Juan Ortega",
+            "image": "onyamalimba.png",
+            "cargo": "cargo",
+            "email": "demo@demo.com",
+            "telefono": "987654321"
+        },
+        {
+            "idcontacto": 1,
+            "nombrecontacto": "Miguel Cabellos",
+            "image": "amyelsner.png",
+            "cargo": "cargo",
+            "email": "demo@demo.com",
+            "telefono": "987654321"
+        }
+    ]
+}

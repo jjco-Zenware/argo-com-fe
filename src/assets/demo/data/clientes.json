@@ -1,0 +1,16 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Ministerio de Energia y Mina"
+        },
+        {
+            "id": 2,
+            "name": "Ministerio de Transporte y Comunicaciones"
+        },
+        {
+            "id": 3,
+            "name": "Banco Continental BBVA"
+        }
+    ]
+}
