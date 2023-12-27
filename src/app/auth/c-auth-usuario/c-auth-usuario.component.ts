@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
-import { mensajesGenericos, tipoAcceso } from '@constantes';
+import { mensajesGenericos, moduloAPP, tipoAcceso } from '@constantes';
 import { I_rptaDataLogin } from '@interfaces';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
@@ -41,7 +41,7 @@ export class CAuthUsuarioComponent implements OnInit, OnDestroy {
   validaNombreUsuario(): void {
     this.isLoading = true;
 
-    const $validaNombreUsuario = this.authService.validaNombreUsuario({ loginUser: this.loginUser.value })
+    const $validaNombreUsuario = this.authService.validaNombreUsuario({ loginUser: this.loginUser.value, moduloAPP })
       .subscribe({
         next: (rpta: I_rptaDataLogin) => {
           this.isLoading = false;
@@ -112,7 +112,7 @@ export class CAuthUsuarioComponent implements OnInit, OnDestroy {
   }
 
   validarloginAzure(nombreUser:string|undefined, emailUser:string){
-    const $validarloginAzure = this.authService.validarloginAzure({ loginUser: this.loginUser.value, nombreUser: nombreUser, emailUser: emailUser })
+    const $validarloginAzure = this.authService.validarloginAzure({ loginUser: this.loginUser.value, nombreUser: nombreUser, emailUser: emailUser, moduloAPP})
     .subscribe({
       next: (rpta: I_rptaDataLogin) => {
         debugger;
@@ -140,7 +140,7 @@ export class CAuthUsuarioComponent implements OnInit, OnDestroy {
         rpta.nombreUsuario = this.loginUser.value
         this.localStorage.setearLocalStorage(rpta);
         this.isLoading = false;
-        this.router.navigate(['/pages/oportunidades/dashboard'])
+        this.router.navigate(['/pages/dashboard'])
       },
       error: (err) => {
         this.logoutAzure();

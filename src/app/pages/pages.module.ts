@@ -9,6 +9,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TokenInterceptor } from '../services/token-interceptor';
 import { PagesService } from './pages.service';
+import { AuthService } from '../auth/auth.service';
 
 
 @NgModule({
@@ -23,12 +24,13 @@ import { PagesService } from './pages.service';
   ],
   providers: [
     DialogService,
-    PagesService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
     },
+    PagesService,
+    AuthService
   ]
 })
 export class PagesModule { }

@@ -7,7 +7,7 @@ import { AuthService } from '../auth.service';
 import { MessageService } from 'primeng/api';
 import { LocalStorageService } from '@localStorage';
 import { I_rptaDataLogin } from '@interfaces';
-import { mensajesGenericos } from '@constantes';
+import { mensajesGenericos, moduloAPP } from '@constantes';
 
 @Component({
   selector: 'app-c-login',
@@ -49,6 +49,7 @@ export class CLoginComponent implements OnInit, OnDestroy {
     this.frmDatos = this.fb.group({
       loginUser: [{value:null, disabled:false}, [Validators.required]],
       claveUser: [{value:null, disabled:false}, [Validators.required]],
+      moduloAPP: [{value: moduloAPP, disabled: true}]
     });
   }
 

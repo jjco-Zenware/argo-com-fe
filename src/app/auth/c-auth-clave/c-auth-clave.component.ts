@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { LocalStorageService } from '@localStorage';
-import { mensajesGenericos } from '@constantes';
+import { mensajesGenericos, moduloAPP } from '@constantes';
 
 @Component({
   selector: 'app-c-auth-clave',
@@ -37,7 +37,7 @@ export class CAuthClaveComponent implements OnInit, OnDestroy {
   validaLogin(): void {
     this.isLoading = true;
 
-    const $validausuario = this.authService.validausuario({loginUser: this.IS_nombreUser, claveUser: this.claveUser.value})
+    const $validausuario = this.authService.validausuario({loginUser: this.IS_nombreUser, claveUser: this.claveUser.value, moduloAPP})
       .subscribe({
         next: (rpta:I_rptaDataLogin) => {
           this.isLoading = false;
