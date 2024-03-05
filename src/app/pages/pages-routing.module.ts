@@ -12,6 +12,21 @@ const routes: Routes = [
         loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
         data: { breadcrumb: 'Dashboard' }
       },
+      {
+        path: 'compras',
+        loadChildren: () => import('./compras/compras.module').then(m => m.ComprasModule),
+        data: { breadcrumb: 'Compras' }
+      },
+      {
+        path: 'facturacion',
+        loadChildren: () => import('./facturacion/facturacion.module').then(m => m.FacturacionModule),
+        data: { breadcrumb: 'Facturación' }
+      },
+      {
+        path: 'almacen',
+        loadChildren: () => import('./almacen/almacen.module').then(m => m.AlmacenModule),
+        data: { breadcrumb: 'Almacén' }
+      },
     ]
   }
 ];
