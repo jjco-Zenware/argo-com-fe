@@ -1,6 +1,6 @@
 import { I_rptaDataLogin } from "@interfaces"
 
-export const moduloAPP =  'COM';
+export const moduloAPP =  '3'; //'COM';
 
 export const constantesLocalStorage: I_rptaDataLogin = {
   nombreUsuario: "",

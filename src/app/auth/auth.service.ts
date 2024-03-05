@@ -20,8 +20,8 @@ export class AuthService {
     return  this.http.post<I_rptaDataLogin>(url, objeto);
   }
 
-  obtenerMenu(codUsuario:number) {
-    const url = `${constantesApiWeb.opcionesperfilusuario}/${codUsuario}`;
+  obtenerMenu(moduloAPP:string, codUsuario:number) {
+    const url = `${constantesApiWeb.opcionesperfilusuario}/${moduloAPP}/${codUsuario}`;
     return  this.http.get<I_rptaDataLogin>(url);
   }
 
