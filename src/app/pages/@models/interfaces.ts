@@ -17,6 +17,7 @@ export interface I_rptaDataLogin {
     mensaje: string;
     token: string;
     tipoacceso: string;
+    imagen: string;
 }
 
 export interface I_respuestaGeneral {

@@ -9,7 +9,8 @@ export const constantesLocalStorage: I_rptaDataLogin = {
   idusuario: 0,
   estado: 0,
   mensaje: "",
-  tipoacceso: ""
+  tipoacceso: "",
+  imagen: ""
 }
 
 export const mensajesGenericos = {
