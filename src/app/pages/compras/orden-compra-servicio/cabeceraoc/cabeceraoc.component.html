@@ -1,0 +1,32 @@
+<div class="p-fluid border-1 surface-border border-round bg-blue-50 mt-2">
+    <form [formGroup]="frmDatosCab">
+        <div class="flex grid col-12 -mt-2 field h-4rem" >
+            <div class="col-6 sm:col-12 lg:col-1 md:col-12">
+                <label class="font-semibold">N° OC</label>
+                <input pInputText type="text" class="mt-1" formControlName="idcotiza"/>
+            </div>
+            <div class="col-6 sm:col-12 lg:col-2 md:col-12 justify-content-end">
+                <label class="block text-900 font-semibold">Fecha</label>
+                <span class="p-input-icon-left w-auto mt-1" style="height: 3.5rem;">
+                    <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                    inputStyleClass="w-full cursor-pointer" appendTo="body"></p-calendar>
+                </span>
+            </div>
+        </div>
+        <div class="flex grid col-12 mt-3">
+            <div class="col-12 sm:col-12 lg:col-9 md:col-12">
+                <label class="font-semibold">Observación</label>
+                <textarea id="observacion" type="text" formControlName="observacion" pInputTextarea [rows]="3"
+                    style="resize: none" class="w-full mt-1"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+
+<app-c-detalleoc ></app-c-detalleoc>
+
+
+
+
+
+

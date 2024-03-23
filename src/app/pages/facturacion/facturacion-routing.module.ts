@@ -5,12 +5,12 @@ const routes: Routes = [
   {
     path: 'proyecto-ganado',
     loadChildren: () => import('./proyectos-ganados/proyectos-ganados.module').then(m => m.ProyectosGanadosModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Proyecto Ganado' }
   },
   {
     path: 'registro-facturacion',
     loadChildren: () => import('./registro-facturacion/registro-facturacion.module').then(m => m.RegistroFacturacionModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Registro Factura' }
   }
 ];
 

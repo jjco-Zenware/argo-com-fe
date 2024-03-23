@@ -1,0 +1,382 @@
+
+    <div class="justify-content-between">
+        <div class="p-1">
+            <div class="col-12 border-1 surface-border border-round -mb-2 bg-blue-50">
+                <div class="flex grid">
+                    <div class="col-12 sm:col-12 lg:col-4 flex-wrap">
+                        <div class="py-0 flex-wrap">
+                            <i class="pi pi-user text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Cliente : </span>
+                            <label for="start" class="font-semibold text-600 ml-3 text-sm"> {{ headCliente | uppercase  }}
+                            </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-calendar text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Fecha BC : </span>
+                            <label for="start" class="font-semibold text-600 ml-3 text-sm"> {{ headFecha }}
+                            </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-user text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Autor : </span>
+                            <label for="start" class="font-semibold text-600 ml-3 text-sm"> {{ headNomCreador | uppercase }} </label>
+                        </div>
+                    </div>
+                    <div class="col-12 sm:col-12 lg:col-4 flex-wrap">
+                        <div class="py-0">
+                            <i class="pi pi-user text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Tipo de Cambio :</span>
+                            <label for="start" class="font-semibold text-600 ml-3"> {{this.headTipoCambio | number: '0.2'}} </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-money-bill text-green-600 text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Moneda : </span>
+                            <label for="start" class="font-semibold text-600 ml-3 text-sm"> {{this.headMoneda |
+                                uppercase}}
+                            </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-user text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">PreVenta : </span>
+                            <label for="start" class="font-semibold text-600 ml-3 text-sm"> {{ headNomPreventa | uppercase }} </label>
+                        </div>
+                    </div>
+                    <div class="col-12 sm:col-12 lg:col-4 flex-wrap">
+                        <div class="py-0">
+                            <i class="pi pi-money-bill text-green-600 text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Monto Global :</span>
+                            <label for="start" class="font-semibold text-600 ml-3 text-sm"> {{this.headImporte | number: '0.2'}} </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-percentage text-green-600 text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Margen Global % :</span>
+                            <label for="start" class="font-semibold text-600 ml-3 text-sm"> {{this.headMargen }}</label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-money-bill text-green-600 text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Profit Global:</span>
+                            <label for="start" class="font-semibold text-600 ml-3 text-sm"> {{this.headProfit | number: '0.2'}} </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="py-0 ml-1 -mt-3">
+                    <div class="flex ">
+                        <i class="pi pi-ellipsis-h text-primary text-1xl"></i>
+                        <span class="font-semibold text-900 text-lg ml-3">Descripción Oportunidad</span>
+                    </div>
+                    <div class="ml-5">
+                        <label for="start" class="font-semibold text-600 text-sm"> {{this.headDescrip | uppercase }}
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 ">
+                <div class="flex grid ">
+                    <div class="col-12 md:col-3 border-1 surface-border border-round mt-3" style="height: 450px; overflow: auto">
+                        <div class="surface-border ml-3 border-round-md flex flex-column gap-3">
+                            <div class="flex flex-column gap-1">
+                               <div (click)="itemsFilter(team)" *ngFor="let team of lstSecciones"
+                                    class="flex justify-content-between align-items-center border-1 border-transparent border-round-md p-3 cursor-pointer hover:surface-hover"
+                                    [ngClass]="{'bg-primary-50 border-primary-100':selectedProd === team.idtipoprod }">
+                                    <div class="flex align-items-center gap-3 ml-2 text-sm">
+                                        <div style="width:8px;height:8px;" class="border-round" [class]="team.badgeColor"></div>
+                                        <span>{{team.nomtipoproducto}}</span>
+                                    </div>
+                                    <div class="flex gap-2 align-items-center">
+                                        <i *ngIf="selectedProd === team.idtipoprod" class="pi pi-chevron-right text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-9 border-1 surface-border border-round mt-3" style="height: 450px; overflow: auto">
+                        <div class="flex align-items-center h-3rem fonthead border-primary-100 border-1 border-round px-3 justify-content-between">
+                            <div class="justify-content-start flex">
+                                <div style="width:9px;height:9px;" class="border-round border-bottom-1 mt-1"
+                                    [class]="selectedProdColor">
+                                </div>
+                                <span class="font-semibold  ml-2 text-sm">{{ titleTabla | uppercase}}</span>
+                            </div>
+
+                        </div>
+                        <ng-container *ngIf="mostrarPorProducto">
+                            <div class="surface-border border-round-md h-28rem overflow-y-auto mt-2">
+                                <p-table #dt1 [value]="filteredProd" [rows]="10" [rowHover]="true" responsiveLayout="stack"
+                                    [breakpoint]="'960px'" [paginator]="true" [showCurrentPageReport]="true" styleClass="p-datatable-sm"
+                                    [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]" responsiveLayout="scroll"
+                                    currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} Registros">
+                                    <ng-template pTemplate="header">
+                                        <tr class="text-sm">
+                                            <th style="width: 5%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    N°
+                                                </div>
+                                            </th>
+                                            <th class="surface-200">
+                                                <div style="width: 100px" class="flex justify-content-between align-items-center content font-bold">
+                                                    PRODUCTO
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    CANTIDAD
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PC UNI
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PC TOT
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    MARGEN %
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PV UNI
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PV TOT
+                                                </div>
+                                            </th>
+                                            <th style="min-width: 10%" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PROFIT
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                                        <tr>
+                                            <td>
+                                                {{rowIndex + 1}}
+                                            </td>
+                                            <td style="width: 100px">
+                                                <div class="flex flex-column flex-wrap">
+                                                    <span class="font-semibold text-sm">{{ data.descripcion | uppercase }}</span>
+                                                    <div class="flex-wrap text-sm ">
+                                                        <span>{{ data.nommarca | uppercase}}</span>
+                                                        <span> - </span>
+                                                        <span>{{ data.nomproveedor | uppercase}}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span>{{ data.cantidad}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{data.preciocosto | number: '0.2'}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{data.preciocostototal | number: '0.2'}}</span>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-column w-4rem justify-content-start border-round mr-4">
+                                                    <input [(ngModel)]="data.margen" (keyup)="calcularMargen(data)">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-column" style="flex-basis: 100%;">
+                                                    <span>{{data.precioventa | number: '0.2'}}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-column" style="flex-basis: 100%;">
+                                                    <span>{{data.precioventatotal | number: '0.2'}}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-column" style="flex-basis: 100%;">
+                                                    <span>{{data.preprofit | number: '0.2'}}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="footer">
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3" class="text-right">Totales: </td>
+                                            <td>{{totalPrecioventatotal | number: '0.2'}}</td>
+                                            <td>{{totalPreprofit | number: '0.2'}}</td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="9">No existe Items.</td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="loadingbody">
+                                        <tr>
+                                            <td colspan="9">Cargando datos. Espere por favor.</td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="mostrarResumen">
+                            <div class="surface-border border-round-md h-28rem overflow-y-auto mt-2">
+                                <p-table #dt2 [value]="filteredProd" [rowHover]="true" responsiveLayout="stack"
+                                    [breakpoint]="'960px'" [showCurrentPageReport]="true" styleClass="p-datatable-sm"
+                                    [resizableColumns]="true" responsiveLayout="scroll"
+                                    rowGroupMode="subheader" groupRowsBy="nomtipoprod" sortField="nomtipoprod" dataKey="nomtipoprod"
+                                    sortMode="single">
+                                    <ng-template pTemplate="header">
+                                        <tr class="text-sm">
+                                            <th style="width: 5%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center">
+
+                                                </div>
+                                            </th>
+                                            <th style="min-width: 10rem" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center content font-bold">
+                                                    PRODUCTO
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    CANTIDAD
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PC UNI
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PC TOT
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    MARGEN %
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PV UNI
+                                                </div>
+                                            </th>
+                                            <th style="width: 10%;" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PV TOT
+                                                </div>
+                                            </th>
+                                            <th style="min-width: 10%" class="surface-200">
+                                                <div class="flex justify-content-between align-items-center font-bold">
+                                                    PROFIT
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="groupheader" let-customer let-rowIndex="rowIndex" let-expanded="expanded">
+                                        <tr class="font-bold text-sm">
+                                            <td>
+                                                <div class="justify-content-start flex align-items-center">
+                                                    <button type="button" pButton pRipple [pRowToggler]="customer" class="p-button-text p-button-rounded p-button-plain mr-2" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+                                                    <div style="width:9px;height:9px;" class="border-round border-bottom-1 mt-1"
+                                                        [class]="customer.badgeColor">
+                                                    </div>
+                                                    <span class="font-bold ml-2 text-sm">{{customer.nomtipoprod}}</span>
+                                                </div>
+
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="2" class="text-right">Total : </td>
+                                            <!-- <td>{{calcularPrecioVenta(customer.idtipoprod) | number: '0.2'}}</td> -->
+                                            <td>{{calcularPrecioVentaTotal(customer.idtipoprod) | number: '0.2'}}</td>
+                                            <td>{{calcularProfit(customer.idtipoprod) | number: '0.2'}}</td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="rowexpansion" let-data let-rowIndex="rowIndex">
+                                        <tr class="bg-bluegray-50">
+                                            <td></td>
+                                            <td>
+                                                <div class="flex flex-column flex-wrap text-sm">
+                                                    <span class="font-semibold">{{ data.descripcion | uppercase }}</span>
+                                                    <div class="flex-wrap text-sm">
+                                                        <span>{{ data.nommarca | uppercase}}</span>
+                                                        <span> - </span>
+                                                        <span>{{ data.nomproveedor | uppercase}}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span>{{ data.cantidad}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{data.preciocosto | number: '0.2'}}</span>
+                                            </td>
+                                            <td>
+                                                <span>{{data.preciocostototal | number: '0.2'}}</span>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-column w-4rem justify-content-start border-round mr-4">
+                                                    <input [(ngModel)]="data.margen" (keyup)="calcularMargen(data)">
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-column" style="flex-basis: 100%;">
+                                                    <span>{{data.precioventa | number: '0.2'}}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-column" style="flex-basis: 100%;">
+                                                    <span>{{data.precioventatotal | number: '0.2'}}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-column" style="flex-basis: 100%;">
+                                                    <span>{{data.preprofit | number: '0.2'}}</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                     <ng-template pTemplate="footer">
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td colspan="3" class="text-right">Totales: </td>
+                                            <td>{{totalPrecioventatotal | number: '0.2'}}</td>
+                                            <td>{{totalPreprofit | number: '0.2'}}</td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="9">No existe Items.</td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="loadingbody">
+                                        <tr>
+                                            <td colspan="9">Cargando datos. Espere por favor.</td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+

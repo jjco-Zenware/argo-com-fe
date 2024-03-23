@@ -5,17 +5,17 @@ const routes: Routes = [
   {
     path: 'proyecto-ganado',
     loadChildren: () => import('./proyectos-ganados/proyectos-ganados.module').then(m => m.ProyectosGanadosModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'proyectos-ganados' }
   },
   {
     path: 'orden-compra-servicio',
     loadChildren: () => import('./orden-compra-servicio/orden-compra-servicio.module').then(m => m.OrdenCompraServicioModule),
-    data: { breadcrumb: 'Dashboard' }
-  },  
+    data: { breadcrumb: 'Orden de Compra' }
+  },
   {
     path: 'registro-compra',
     loadChildren: () => import('./registro-compra/registro-compra.module').then(m => m.RegistroCompraModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Registros de Compras' }
   },
 ];
 

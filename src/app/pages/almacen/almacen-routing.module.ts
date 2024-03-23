@@ -5,37 +5,37 @@ const routes: Routes = [
   {
     path: 'ingreso-oc-proyecto',
     loadChildren: () => import('./ingreso-oc-proyecto/ingreso-oc-proyecto.module').then(m => m.IngresoOcProyectoModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Ingreso OC Proyecto' }
   },
   {
     path: 'ingreso-oc-interno',
     loadChildren: () => import('./ingreso-oc-req-interno/ingreso-oc-req-interno.module').then(m => m.IngresoOcReqInternoModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Ingreso OC Interno' }
   },
   {
     path: 'orden-despacho',
     loadChildren: () => import('./orden-despacho/orden-despacho.module').then(m => m.OrdenDespachoModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Orden Despacho' }
   },
   {
     path: 'productos',
     loadChildren: () => import('./producto/producto.module').then(m => m.ProductoModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Productos' }
   },
   {
     path: 'almacenes',
     loadChildren: () => import('./almacenes/almacenes.module').then(m => m.AlmacenesModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Almacenes' }
   },
   {
     path: 'kardex',
     loadChildren: () => import('./kardex/kardex.module').then(m => m.KardexModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Kardeex' }
   },
   {
     path: 'ingreso-por-traslado',
     loadChildren: () => import('./ingreso-por-traslado/ingreso-por-traslado.module').then(m => m.IngresoPorTrasladoModule),
-    data: { breadcrumb: 'Dashboard' }
+    data: { breadcrumb: 'Ingreso por Traslado' }
   },
 ];
 

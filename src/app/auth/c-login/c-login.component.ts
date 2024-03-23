@@ -72,7 +72,7 @@ export class CLoginComponent implements OnInit, OnDestroy {
 
           rpta.nombreUsuario = this.frmDatos.get('loginUser')?.value
           this.localStorage.setearLocalStorage(rpta);
-          this.router.navigate(['/pages/oportunidades/dashboard'])
+          //this.router.navigate(['/pages/oportunidades/dashboard'])
         },
         error:(err)=>{
           this.setSpinner(false);
