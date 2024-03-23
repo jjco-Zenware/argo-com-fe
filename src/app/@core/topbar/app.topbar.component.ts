@@ -15,9 +15,11 @@ export class AppTopbarComponent {
     @ViewChild('mobileMenuButton') mobileMenuButton!: ElementRef;
     @ViewChild('searchInput') searchInput!: ElementRef;
     nomUsuario: string = '';
+    nomImagen: string = '';
 
     constructor(public layoutService: LayoutService, public el: ElementRef, private router: Router, private localStorage: LocalStorageService) {
         this.nomUsuario = constantesLocalStorage.nombreUsuario;
+        this.nomImagen = constantesLocalStorage.imagen;
     }
 
     activeItem!: number;
