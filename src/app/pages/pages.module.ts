@@ -6,8 +6,6 @@ import { CPagesComponent } from './c-pages.component';
 import { CoreModule } from '../@core/core.module';
 import { AppConfigModule } from '../@core/config/app.config.module';
 import { DialogService } from 'primeng/dynamicdialog';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from '../services/token-interceptor';
 import { PagesService } from './pages.service';
 import { AuthService } from '../auth/auth.service';
 
@@ -24,11 +22,11 @@ import { AuthService } from '../auth/auth.service';
   ],
   providers: [
     DialogService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    },
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: TokenInterceptor,
+    //   multi: true
+    // },
     PagesService,
     AuthService
   ]

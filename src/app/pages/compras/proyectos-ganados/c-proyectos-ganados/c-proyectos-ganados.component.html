@@ -1,10 +1,41 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
     <div class="card">
-        <div class="grid px-3">
-            <div class="mb-1 py-3 h-3rem flex border-round p-2 mt-2 fonthead w-full text-base">
-                <span class="font-semibold">PROYECTOS GANADOS</span>
+
+        <div class="grid">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-base font-semibold">PROYECTOS</span>
+                </div>
+                <div class="mt-1">
+                    <p-splitButton label="NUEVO" [model]="itemsNvoPro" appendTo="body"
+                    styleClass="p-button-raised p-button-text mt-1 h-3rem"></p-splitButton>
+                </div>
+               
+                <!-- <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center w-auto" icon="pi pi-plus-circle" label="Nuevo"
+                        pTooltip="Agregar Proyecto" tooltipPosition="left" (click)="onNuevo()" ></button>                                                   
+                </div> -->
             </div>
         </div>
+        <form [formGroup]="frmDatos">
+            <div class="p-fluid p-formgrid grid col-10 -mb-3 -mt-4 text-sm">                
+                <div class="field md:col-2 sm:col-4 lg:col-2">
+                    <label htmlFor="fechaInicio" class="font-semibold">FECHA INICIO</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fechaini"
+                        [readonlyInput]="true" appendTo="body">
+                    </p-calendar>
+                </div>
+                <div class="field md:col-2 sm:col-4 lg:col-2">
+                    <label htmlFor="fechaFin" class="font-semibold ">FECHA FIN</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
+                        [readonlyInput]="true" appendTo="body"></p-calendar>
+                </div>
+                <div class="field md:col-2 sm:col-3">
+                    <button pButton type="button" (click)="cargarLista()" pTooltip="Buscar Registros"
+                        class="font-semibold p-button-outlined mt-4 justify-content-center h-3rem" icon="pi pi-search"></button>
+                </div>
+            </div>
+        </form>
 
         <p-table [value]="lstProyecto" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
@@ -13,15 +44,15 @@
             <!-- [globalFilterFields]="['title','nomcreador','nompreventa','nomcomercial','nomproveedor','monto']" -->
 
             <ng-template pTemplate="header">
-                <tr>
-                    <th class="surface-200">
+                <tr class="text-sm">
+                    <th [ngStyle]="{'width':'20px'}"  class="surface-200" >
                         <div class="flex justify-content-between align-items-center">
                             N°
                         </div>
                     </th>
                     <th [ngStyle]="{'width':'50px'}"  class="surface-200" >
                         <div class="justify-content-between align-items-center">
-                            OPORTUNIDAD
+                            TIPO
                         </div>
                     </th>
                     <th [ngStyle]="{'width':'50px'}" class="surface-200" >
@@ -29,24 +60,14 @@
                             CÓDIGO
                         </div>
                     </th>
-                    <th style="width: 250px;" class="surface-200" >
+                    <th style="width: 350px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             PROYECTO
                         </div>
                     </th>
-                    <th style="width: 250px;" class="surface-200" >
+                    <!-- <th style="width: 250px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             CLIENTE
-                        </div>
-                    </th>
-                    <th style="width: 250px;" class="surface-200" >
-                        <div class="justify-content-between align-items-center">
-                            VENDEDOR
-                        </div>
-                    </th>
-                    <th style="width: 250px;" class="surface-200" >
-                        <div class="justify-content-between align-items-center">
-                            PREVENTA
                         </div>
                     </th>
                     <th style="width: 250px;" class="surface-200" >
@@ -58,7 +79,7 @@
                         <div class="justify-content-between align-items-center">
                             PROVEEDOR
                         </div>
-                    </th>
+                    </th> -->
                     <th style="width: 80px;" class="surface-200">
                         <div class="flex justify-content-between align-items-center">
                             ACCIONES
@@ -92,18 +113,21 @@
 
             </ng-template>
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-                <tr >
+                <tr class="text-sm">
                     <td>
-                        {{rowIndex + 1}}
+                        <div [ngStyle]="{'width':'20px'}">
+                            {{rowIndex + 1}}
+                        </div>
+                        
                     </td>
                     <td >
                         <div [ngStyle]="{'width':'50px'}">
-                            {{data.idoportunidad}}
+                            {{data.idtipoproyecto}}
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'50px'}">
-                            {{data.idproyecto}}
+                        <div [ngStyle]="{'width':'150px'}" class="text-primary">
+                            {{data.codigoproyecto}}
                         </div>
                     </td>
                     <td>
@@ -111,19 +135,9 @@
                             {{data.nomproyecto | uppercase}}
                         </div>
                     </td>
-                    <td>
+                    <!-- <td>
                         <div [ngStyle]="{'width':'100px'}">
                             {{data.nomcomercial | uppercase}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.nomvendedor | uppercase}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'80px'}">
-                            {{data.nompreventa | uppercase}}
                         </div>
                     </td>
                     <td >
@@ -135,11 +149,13 @@
                         <div [ngStyle]="{'width':'80px'}">
                             {{data.nomproveedor | uppercase}}
                         </div>
-                    </td>
+                    </td> -->
                     <td>
-                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
-                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                            <button pButton pRipple type="button" icon="pi pi-cart-plus" tooltipPosition="left" pTooltip="Generar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="generarOC(data)"></button>
+                        <div style="text-align: start;">
+                            <button pButton pRipple type="button" icon="pi pi-pencil" tooltipPosition="left" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                            <!-- <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button> -->
+                            <button *ngIf="data.idoportunidad > 0" pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVerBC(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-briefcase" tooltipPosition="left" pTooltip="OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="generarOC(data)"></button>
                         </div>
                     </td>
                 </tr>
@@ -155,8 +171,6 @@
                 </tr>
             </ng-template>
         </p-table>
-
-
 
     </div>
 </ng-container>
@@ -177,13 +191,34 @@
         </div>
         <p-tabView>
             <p-tabPanel header="Business Case">
-                <app-c-business-case ></app-c-business-case>
+                <app-c-business-case [IS_codigo]="codigoBC"></app-c-business-case>
             </p-tabPanel>
 
             <p-tabPanel header="Quote" >
-                <app-c-cotizacion ></app-c-cotizacion>
+                <app-c-cotizacion [IA_data]="dataCT"></app-c-cotizacion>
             </p-tabPanel>
         </p-tabView>
     </div>
 
+    <div class="p-fluid p-3 mb-1 card" *ngIf="visOcOs" (OB_back)="getProyecto($event)">
+        <div class="grid">
+            <div class="flex justify-content-between col-12 -mt-3">
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round p-2 mt-2 fonthead w-full">
+                    <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                </div>
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
+                        pTooltip="Regresar a Bandeja" tooltipPosition="left" (click)="getBack()" ></button>
+                </div>
+            </div>
+        </div>
+        <app-c-listaOC [Id_proyecto]="codproyecto" ></app-c-listaOC>
+    </div>
+
+   
+
 </ng-template>
+
+<p-toast></p-toast>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+

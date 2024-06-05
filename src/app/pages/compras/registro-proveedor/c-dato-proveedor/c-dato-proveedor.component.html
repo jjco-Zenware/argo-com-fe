@@ -1,0 +1,210 @@
+<div>       
+    <p-tabView>
+        <p-tabPanel>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-user"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Datos Generales
+                    </span>
+                </div>
+            </ng-template>
+            <form [formGroup]="registerFormCliente">
+
+                <div class="p-fluid py-4 mb-3 col-12">
+                    <div class="flex ">
+                        <button pButton icon="pi pi-save" label="Grabar" (click)="guardar()" class="font-bold w-auto mb-3 p-button-primary h-3rem"></button>
+                    </div>
+                    <div class="flex -mt-2 h-6rem grid">
+                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                            <label class="font-semibold">Tipo Persona <span class="text-red-500 font-bold"> * </span></label>
+                                <p-dropdown [options]="dropdownItemsTipPer" formControlName="tipopersona" optionLabel="name" placeholder="Seleccionar..."
+                                    optionValue="code" (onChange)="cambioTipoPer($event.value)"></p-dropdown>
+                        </div>   
+                    </div>
+                    <div class="flex -mt-2 h-6rem grid">                                
+                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                            <label class="font-semibold">Tipo Doc. <span class="text-red-500 font-bold"> * </span></label>
+                            <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="name" placeholder="Seleccionar..."
+                                optionValue="code" (onChange)="cambioTipoDoc($event.value)"></p-dropdown>
+                            <p class="p-error" *ngIf="submitted && formCliente.idtipodoc.errors" >Tipo Documento es requerido.</p>
+                        </div>
+                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                            <label class="font-semibold">N° Documento <span class="text-red-500 font-bold"> * </span></label>
+                            <input pInputText type="text" formControlName="nrodocumento" maxlength="11"
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                                <p class="p-error" *ngIf="submitted && formCliente.nrodocumento.errors">N° Documento es requerido.</p>
+                        </div>
+                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                            <label class="font-semibold">Nacionalidad <span class="text-red-500 font-bold"> * </span></label>
+                            <p-dropdown [options]="dropdownItemsNac" formControlName="indnacionalidad" optionLabel="name" placeholder="Seleccionar Nacionalidad"
+                                    optionValue="code"></p-dropdown>
+                            <p class="p-error" *ngIf="submitted && formCliente.indnacionalidad.errors">* Nacionalidad es requerido.</p>
+        
+                        </div> 
+                    </div>
+                    <ng-container *ngIf="personaNatural ; else mostrarjuridico">
+                        <div class="flex h-6rem grid" >
+                            <div class="col-3 field sm:col-6 lg:col-3 md:col-4">
+                                <label for="start" class="font-semibold">Paterno <span class="text-red-500 font-bold"> * </span></label>
+                                <input pInputText type="text" formControlName="appaterno"/>
+                                <p class="p-error" *ngIf="submitted && formCliente.appaterno.errors">Paterno es requerido.</p>
+                            </div>
+                            <div class="col-3 field sm:col-6 lg:col-3 md:col-4">
+                                <label for="start" class="font-semibold">Materno <span class="text-red-500 font-bold"> * </span></label>
+                                <input pInputText type="text" formControlName="apmaterno" />
+                                <p class="p-error" *ngIf="submitted && formCliente.apmaterno.errors">Materno es requerido.</p>
+                            </div>
+                        </div>
+                        <div class="flex h-6rem grid" >
+                            <div class="col-6 field sm:col-6 lg:col-6 md:col-4">
+                                <label for="start" class="font-semibold">Nombres <span class="text-red-500 font-bold"> * </span></label>
+                                <input pInputText type="text" formControlName="nombres" />
+                                <p class="p-error" *ngIf="submitted && formCliente.nombres.errors">Nombres es requerido.</p>
+                            </div>
+                        </div>
+                    </ng-container>
+        
+                    <ng-template #mostrarjuridico>
+                        <div class="flex h-6rem grid">                    
+                            <div class="col-6 field sm:col-6 lg:col-6 md:col-12">
+                                <label for="start" class="font-semibold">Razón Social <span class="text-red-500 font-bold"> * </span></label>
+                                <input pInputText type="text" formControlName="razonsocial" />
+                                <p class="p-error" *ngIf="submitted && formCliente.razonsocial.errors">Razón Social es requerido.</p>
+                            </div>                           
+                        </div>
+                        <div class="flex h-6rem grid"> 
+                            <div class="col-6 field sm:col-6 lg:col-6 md:col-12">
+                                <label for="start" class="font-semibold">Nombre Comercial</label>
+                                <input pInputText type="text" formControlName="nomcomercial" />
+                            </div>                           
+                        </div>
+                        
+                    </ng-template>            
+        
+                    <div class="flex h-6rem grid">                
+                        <div class="col-6 field sm:col-6 lg:col-6 md:col-4">
+                            <label for="start" class="font-semibold">Dirección <span class="text-red-500 font-bold"> * </span></label>
+                            <input pInputText type="text" formControlName="direcresumen" />
+                            <p class="p-error" *ngIf="submitted && formCliente.direcresumen.errors">Dirección es requerido.</p>
+                        </div>               
+                    </div>
+                    <div class="flex h-6rem grid">
+                        <div class="col-3 field sm:col-6 lg:col-3 md:col-4">
+                            <label for="start" class="font-semibold">Email <span class="text-red-500 font-bold"> * </span></label>
+                            <input pInputText type="email" formControlName="email" >
+                            <div *ngIf="submitted && formCliente.email.errors" class="p-error">
+                                <div *ngIf="formCliente.email.errors.required">Debe ingresar Email</div>
+                                <div *ngIf="formCliente.email.errors.email">El correo electrónico no es válido</div>
+                            </div>
+                        </div>
+                        <div class="col-3 field sm:col-6 lg:col-3 md:col-4">
+                            <label for="start" class="font-semibold">Pagina Web</label>
+                            <input pInputText type="text" formControlName="paginaweb"/>
+                        </div>
+                    </div>
+                  
+                    <div class="flex h-6rem grid">    
+                        <div class="col-3 field sm:col-6 lg:col-2 md:col-4">
+                            <label for="start" class="font-semibold">Telefono</label>
+                            <p-inputMask mask="999 999 999" formControlName="telefresumen" ></p-inputMask>
+                        </div>     
+                        <div class="col-3 field sm:col-6 lg:col-2 md:col-4">
+                            <label for="start" class="font-semibold">Movil</label>
+                            <!-- <input pInputText type="text" formControlName="telefresumen" /> -->
+                            <p-inputMask mask="999 999 999" formControlName="telefresumen" ></p-inputMask>
+
+                        </div>        
+                        <!-- <div class="col-2 field sm:col-6 lg:col-2 md:col-4">
+                            <label class="font-semibold">Sector</label>
+                            <p-dropdown [options]="dropdownItemsSector" formControlName="idtipodoc" optionLabel="name" placeholder="Seleccionar..."
+                                optionValue="code" (onChange)="cambioTipoDoc($event.value)"></p-dropdown>
+                            <p class="p-error" *ngIf="submitted && formCliente.idtipodoc.errors" >Tipo Documento es requerido.</p>
+                        </div>                 -->
+                    </div>
+                    
+                </div>
+
+            </form>
+        </p-tabPanel>
+
+        <p-tabPanel [disabled]=visibleDocument>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-phone"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Contactos
+                    </span>
+                </div>
+            </ng-template>
+            <!-- <app-c-contacto [IA_codigo]="codigoParam" ></app-c-contacto>    -->
+            <app-c-contacto></app-c-contacto>          
+        </p-tabPanel>
+
+        <p-tabPanel [disabled]=visibleDocument>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-check"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Legales
+                    </span>
+                </div>
+            </ng-template>
+            <app-c-adjuntos [IA_data]="dataLegal" ></app-c-adjuntos> 
+        </p-tabPanel>
+        
+        <!-- <p-tabPanel [disabled]=visibleDocument>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-dollar"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Financiero
+                    </span>
+                </div>
+            </ng-template>
+            <app-c-financiero [IA_codigo]="codigoParam"></app-c-financiero>           
+        </p-tabPanel> -->
+
+        <p-tabPanel [disabled]=visibleDocument>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-check"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Condiciones Comerciales
+                    </span>
+                </div>
+            </ng-template>
+            <!-- <app-c-condiciones [IA_codigo]="codigoParam" [IA_TerPag]="terminopago"></app-c-condiciones>  -->
+            <app-c-condiciones [IA_TerPag]="terminopago"></app-c-condiciones> 
+        </p-tabPanel>
+
+        <p-tabPanel [disabled]=visibleDocument>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-check"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Datos Bancarios
+                    </span>
+                </div>
+            </ng-template>
+            <!-- <app-c-bancario [IA_codigo]="codigoParam"></app-c-bancario>   -->
+            <app-c-bancario ></app-c-bancario>  
+            
+        </p-tabPanel>
+
+        <p-tabPanel [disabled]=visibleDocument>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-paperclip"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Adjuntos
+                    </span>
+                </div>
+            </ng-template>             
+            <app-c-adjuntos [IA_data]="dataAdjunto" ></app-c-adjuntos>                
+        </p-tabPanel>
+    </p-tabView>    
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-toast></p-toast>

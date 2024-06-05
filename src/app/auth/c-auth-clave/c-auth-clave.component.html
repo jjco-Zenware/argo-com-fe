@@ -1,4 +1,4 @@
-<div class="w-full flex flex-column gap-3 px-3 pb-6">
+<div class="w-full flex flex-column gap-3 px-3 pb-6" (keydown.enter)="validaLogin()">
     <span class="p-input-icon-left">
         <i class="pi pi-key"></i>
         <input type="password" class="w-full" [formControl]="claveUser" pInputText placeholder="Contraseña" />

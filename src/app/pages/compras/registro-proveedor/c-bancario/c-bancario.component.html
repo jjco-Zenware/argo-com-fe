@@ -1,0 +1,176 @@
+
+
+<div class="flex justify-content-between col-12 -ml-3 -mt-2">                
+    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem -mr-3">
+        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-plus" label="Agregar" (click)="agregarCuenta()"></button>
+    </div>
+</div>
+
+
+<p-table #dt1 [value]="lstContractual" [rows]="10" [rowHover]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+    [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]" styleClass="p-datatable-sm"
+    responsiveLayout="scroll" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} Registros">
+
+    <ng-template pTemplate="header">
+        <tr class="text-sm">
+            <th style="width: 40px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    N°
+                </div>
+            </th>
+            <th style="min-width: 12rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    BANCO
+                </div>
+            </th>
+            <th style="width: 150px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    MONEDA 
+                </div>
+            </th>
+            <th style="width: 100px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    TIPO CUENTA
+                </div>
+            </th>
+            <th style="width: 100px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    N° CUENTA
+                </div>
+            </th>
+            <th style="width: 100px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    NOMBRE CUENTA
+                </div>
+            </th>
+            <th style="min-width: 10rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    ACCIONES
+                </div>
+            </th>
+        </tr>
+        <!-- <tr >
+            <th></th>
+            <th *ngFor="let col of cols">
+                <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>
+                
+            </th>
+        </tr> -->
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+        <tr class="text-sm">
+            <td>
+                {{rowIndex + 1}}
+            </td>
+            <td>
+                {{data.nombanco | uppercase}}
+            </td>
+            <td>
+                {{data.desmoneda | uppercase}}
+            </td>
+            <td>
+                {{data.nomtipocuenta}}
+            </td>
+            <td>
+                {{data.nrocuenta}}
+            </td>
+            <td>
+                {{data.nomcuenta}}
+            </td>
+            <td style="text-align: start;">
+                <button pButton pRipple type="button" icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="left" (click)="editarCuenta(data)" class="p-button-rounded p-button-text mr-2 -mt-2"></button>
+                <button pButton pRipple type="button" icon="pi pi-trash" pTooltip="Eliminar" tooltipPosition="left" (click)="eliminarCuenta(data)" class="p-button-rounded p-button-text mr-2 -mt-2 text-red-500"></button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="8">No se encontraron registros.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="8">Cargando datos. Espere por favor.</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="cuentaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '85vw'}">
+    <p-header styleClass="testDialog"> <i class="pi pi-folder-open" style="margin-right: 10px;"></i>{{ headerTitle }} </p-header>
+
+        <form [formGroup]="registerFormRegistro" (ngSubmit)="guardarCuenta()">
+            <div class="p-fluid border-1 surface-border mb-3 bg-blue-50 p-2 border-round m-2 grid">
+                <span [hidden]="true"> {{ IdCuenta }} </span>
+                <div class="col-6 field h-4rem">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Banco</label>
+                    </div>
+                    <span class="p-fluid">
+                        <p-dropdown [options]="lstBanco" formControlName="idbanco" placeholder="Seleccionar..." optionLabel="valoritem"
+                         optionValue="iditem" appendTo="body"></p-dropdown>
+                    </span>
+                    <p class="text-red-600" *ngIf="submittedCta && formRegistro.idbanco.errors">* Debe Seleccionar Banco</p>
+                </div>
+                <div class="col-6 field h-4rem">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Moneda</label>
+                    </div>
+                    <span class="p-fluid">
+                        <p-dropdown [options]="lstMoneda" formControlName="idmoneda" placeholder="Seleccionar..." optionLabel="desmoneda"
+                          optionValue="idmoneda" appendTo="body" ></p-dropdown>
+                    </span>
+                    <p class="text-red-600" *ngIf="submittedCta && formRegistro.idmoneda.errors">* Debe Seleccionar Moneda</p>
+                </div>
+                <div class="col-6 field h-4rem">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Tipo Cuenta</label>
+                    </div>
+                    <span class="p-fluid">
+                        <p-dropdown [options]="lstTipocuenta" formControlName="codtipocuenta" placeholder="Seleccionar..." optionLabel="valoritem"
+                          optionValue="iditem" appendTo="body" ></p-dropdown>
+                    </span>
+                    <p class="text-red-600" *ngIf="submittedCta && formRegistro.codtipocuenta.errors">* Debe Seleccionar Tipo</p>
+                </div>
+                <div class="col-6 field h-4rem">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Nombre Cuenta </label>
+                    </div>
+                    <span class="p-fluid">
+                        <input pInputText type="text" class="w-full" formControlName="nomcuenta"/>
+                    </span>
+                    <p class="text-red-600" *ngIf="submittedCta && formRegistro.nomcuenta.errors">* Debe Ingresar Nombre de Cuenta</p>
+                </div>
+                <div class="col-12 field h-4rem">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Número Cuenta </label>
+                    </div>
+                    <span class="p-fluid">
+                        <input pInputText type="text" class="w-full" formControlName="nrocuenta"/>
+                    </span>
+                    <p class="text-red-600" *ngIf="submittedCta && formRegistro.nrocuenta.errors">* Debe Ingresar N° Cuenta</p>
+                </div>
+                <div class="col-12 field h-4rem">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Número CCI </label>
+                    </div>
+                    <span class="p-fluid">
+                        <input pInputText type="text" class="w-full" formControlName="nrocci"/>
+                    </span>
+                    <p class="text-red-600" *ngIf="submittedCta && formRegistro.nrocci.errors">* Debe Ingresar N° Cuenta CCI</p>
+                </div>
+                <!-- <div class="col-6 field h-4rem">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Activo</label>
+                    </div>
+                    <span class="p-fluid">
+                        <p-checkbox formControlName="indactivo" inputId="indactivo" [binary]="true" />
+                    </span>
+                </div> -->
+
+            </div>
+            <div class="flex justify-content-end">
+                <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary w-auto"></button>
+            </div>
+        </form>
+
+</p-dialog>

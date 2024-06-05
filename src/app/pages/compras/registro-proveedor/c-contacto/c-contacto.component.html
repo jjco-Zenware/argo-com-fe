@@ -1,0 +1,160 @@
+<div class="flex justify-content-between col-12 -ml-3 -mt-2">
+    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem -mr-3">
+        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-plus" label="Agregar" (click)="agregarContacto()"></button>
+    </div>
+</div>
+
+<p-table #dt1 [value]="listaContacto" [rows]="10" [rowHover]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+    [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+    responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm">
+    <!-- <ng-template pTemplate="caption">
+        <div class="mb-1 border-bottom-1 surface-border py-3 flex justify-content-between -mt-5">
+            <span class="text-900 text-xl font-semibold">Lista de Contactos</span>
+            <div class="justify-content-end p-2 -mt-2">
+                <button (click)="getRegistro()" pButton
+                    class="p-button-outlined w-full sm:w-auto flex-order-0 sm:flex-order-1 justify-content-center" icon="pi pi-user-plus"
+                    label="Nuevo Contacto"></button>
+            </div>
+        </div>                    
+    </ng-template> -->
+    <ng-template pTemplate="header">
+        <tr class="text-sm">
+            <th style="width: 40px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+
+                </div>
+            </th>
+            <th style="min-width: 12rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    NOMBRE
+                </div>
+            </th>
+            <th style="min-width: 12rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    CARGO
+                </div>
+            </th>
+            <th style="min-width: 14rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    EMAIL
+                </div>
+            </th>
+            <th style="min-width: 10rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    TELEFONO
+                </div>
+            </th>
+            <th style="min-width: 10rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    VIGENCIA
+                </div>
+            </th>
+            <th style="min-width: 10rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+
+                </div>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+        <tr class="text-sm">
+            <td>
+                {{rowIndex + 1}}
+            </td>
+            <td>
+                {{data.nombrecontacto | uppercase}}
+            </td>
+            <td>
+                {{data.cargo | uppercase}}
+            </td>
+            <td>
+                {{data.email}}
+            </td>
+            <td>
+                {{data.telefono}}
+            </td>
+            <td>
+                <i class="pi" [ngClass]="{ 'text-green-500 pi-thumbs-up': data.indvig, 'text-red-500 pi-thumbs-down': !data.indvig }"></i>
+            </td>
+            <td style="text-align: start;">
+                <button pButton pRipple type="button" icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="left" class="p-button-rounded p-button-text mr-2 -mt-2" (click)="EditarContacto(data)">
+                </button>                            
+                <button pButton pRipple type="button" icon="pi pi-sort-alt" pTooltip="Activar/Desactivar"  tooltipPosition="left" class="-button-rounded p-button-text mr-2 -mt-2 text-red-500" (click)="vigenciaContacto(data)">
+                </button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="8">No se encontraron registros.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="8">Cargando datos. Espere por favor.</td>8
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="modalvisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '30vw'}" [breakpoints]="{'960px': '75vw'}" >
+    <p-header> <i class="pi pi-folder-open" style="margin-right: 10px;"></i>{{ headerTitle }} </p-header>
+
+    <form [formGroup]="registerFormContacto">
+        <div class="p-fluid py-4 border-1 border-round bg-blue-50 p-3 surface-border mb-3">
+            <div class="mb-3 field">
+                <div class="flex">
+                    <label for="start">Nombre</label>
+                </div>
+                <span class="p-fluid">
+                    <input pInputText type="text" formControlName="nombrecontacto" />
+                    <p class="text-red-600" *ngIf="submitted && formContacto.nombrecontacto.errors">* Debe ingresar Nombre</p>
+                </span>
+            </div>
+            <div class="mb-3 field">
+                <div class="flex">
+                    <label for="email">Email</label>
+                </div>
+                <span class="p-fluid">
+                    <input pInputText type="email" formControlName="email"/>
+                    <div *ngIf="submitted && formContacto.email.errors" class="text-red-600">
+                    <div *ngIf="formContacto.email.errors.required">Debe ingresar Email</div>
+                        <div *ngIf="formContacto.email.errors.email">El correo electrónico no es válido</div>
+                    </div>
+                </span>
+            </div>
+            <div class="mb-3 field">
+                <div class="flex">
+                    <label htmlFor="cel1">Celular</label>
+                </div>
+                <span class="p-fluid">
+                    <input pInputText type="text" formControlName="telefono"/>
+                    <p class="text-red-600" *ngIf="submitted && formContacto.telefono.errors">* Debe ingresar Celular</p>
+                </span>
+            </div>
+            <div class=" mb-3 field">
+                <div class="flex">
+                    <label htmlFor="age1">Cargo</label>
+                </div>
+                <span class="p-fluid">
+                    <input pInputText type="text" formControlName="cargo"/>
+                    <p class="text-red-600" *ngIf="submitted && formContacto.cargo.errors">* Debe ingresar Cargo</p>
+                </span>
+            </div>
+            <div class="mb-3 field">
+                <div class="flex">
+                    <label class="font-semibold">Rol</label>
+                </div>
+                <span class="p-fluid">
+                    <p-dropdown appendto="body" [options]="lstTipoRol" optionLabel="valoritem" optionValue="iditem" formControlName="tiporol" placeholder="Seleccionar Rol"></p-dropdown>
+                    <p class="text-red-600" *ngIf="submitted && formContacto.tiporol.errors">* Debe Seleccionar el Rol</p>
+                </span>
+            </div>
+            <div class="flex justify-content-end">
+                <button pButton icon="pi pi-save" label="Grabar" (click)="guardarContacto()" class="font-bold w-auto mb-3 p-button-primary h-3rem"></button>
+    
+            </div>
+        </div>
+       
+    </form>
+    <!-- <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary w-auto"></button> -->
+</p-dialog>

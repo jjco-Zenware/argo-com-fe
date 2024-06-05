@@ -1,0 +1,90 @@
+<!-- <div class="flex justify-content-between col-12 -ml-3 -mt-2">
+    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem -mr-3">
+        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-plus" label="Agregar" (click)="agregarContacto()"></button>
+    </div>
+</div> -->
+
+<div class="p-fluid p-formgrid grid col-10 -mb-3 -mt-3 text-sm">            
+    <div class="field col-12 md:col-2">
+        <label class="font-semibold">Contactos</label>
+            <p-dropdown [options]="lsContactosProvee" [(ngModel)]="idcontacto" optionLabel="name" placeholder="Seleccionar Proyecto"
+                optionValue="code" ></p-dropdown>
+    </div>
+    <div class="field col-12 md:col-2">
+        <button pButton type="button" (click)="agregarContacto()" pTooltip="Agregar Contacto"
+            class="font-semibold p-button-outlined mt-4 justify-content-center h-3rem" icon="pi pi-plus"></button>
+    </div>
+</div>
+
+<p-table #dt1 [value]="listaContacto" [rows]="10" [rowHover]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+    [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+    responsiveLayout="scroll" currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm">
+
+    <ng-template pTemplate="header">
+        <tr class="text-sm">
+            <th style="width: 40px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+
+                </div>
+            </th>
+            <th style="min-width: 12rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    NOMBRE
+                </div>
+            </th>
+            <th style="min-width: 12rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    CARGO
+                </div>
+            </th>
+            <th style="min-width: 14rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    EMAIL
+                </div>
+            </th>
+            <th style="min-width: 10rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    TELEFONO
+                </div>
+            </th>
+            <th style="min-width: 10rem" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+
+                </div>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+        <tr class="text-sm">
+            <td>
+                {{rowIndex + 1}}
+            </td>
+            <td>
+                {{data.nombrecontacto | uppercase}}
+            </td>
+            <td>
+                {{data.cargo | uppercase}}
+            </td>
+            <td>
+                {{data.email}}
+            </td>
+            <td>
+                {{data.telefono}}
+            </td>
+            <td style="text-align: start;">
+                <button pButton pRipple type="button" icon="pi pi-trash" pTooltip="Eliminar" tooltipPosition="left" class="p-button-rounded p-button-text mr-2 -mt-2" (click)="eliminarContacto(data)">
+                </button>   
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="8">No se encontraron registros.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="8">Cargando datos. Espere por favor.</td>8
+        </tr>
+    </ng-template>
+</p-table>

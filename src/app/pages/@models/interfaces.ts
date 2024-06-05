@@ -18,6 +18,8 @@ export interface I_rptaDataLogin {
     mensaje: string;
     token: string;
     tipoacceso: string;
+    idperfil: number;
+    nomperfil: string;
 }
 
 export interface I_respuestaGeneral {
@@ -194,6 +196,7 @@ export interface Cotizacion {
     condicionescomerciales: string;
 }
 
+
 export interface CotizacionItem{
     idcotizaitem?: number;
     idcotiza?: number;
@@ -227,6 +230,7 @@ export interface CotizacionItem{
     nromeses:number;
     sku?: string;
     serialnumber?: string;
+    idproveedor?: number;
 }
 
 export interface CasoNegocio{
@@ -260,4 +264,226 @@ export interface dOperacion{
     idproyecto: number;
     nomproyecto: string;
     idcotiza: number;
+}
+
+export interface Notificacion{
+    codproceso: number;
+    codtiponotif: string;
+    detallenotifica: string;
+    estado: string;
+    fechanotifica: string;
+    fecreg: string;
+    idnotifica: string;
+    idnroproceso: string;
+    idtrx: string;
+    iduserreg: string;
+    idusuario: string;
+    msgnotifica: string;
+}
+
+export interface Cliente {
+    idcliente: number;
+    idrolpersona?: string;
+    tipopersona?: string;
+    tipoalta?: string;
+    indnacionalidad?: string;
+    idpais?: string;
+    idtipodoc?: string;
+    nrodocumento: string;
+    appaterno?: string;
+    apmaterno?: string;
+    apcasada?: string;
+    nombres?: string;
+    razonsocial?: string;
+    nomcomercial?: string;
+    direcresumen?: string;
+    telefresumen?: string;
+    email?: string;
+    paginaweb?: string;
+    facebook?: string;
+    youtube?: string;
+    indmigrado?: boolean;
+    indestado?: string;
+    indvig?: boolean;
+    fechareg?: Date;
+    iduserreg?: number;
+    fechaact?: Date;
+    iduseract?: number;
+    idpersona?: number;
+    nomtipopersona?: string;
+}
+
+export interface KanbanCard {
+    id: string;
+    title?: string;
+    description?: string;
+    startDate?: string;
+    dueDate: string;
+    completed?: boolean;
+    progress?: number;
+    idcliente?:number;
+    // assignees?: Assignees[];
+    // comments?: Comments[];
+    // contactos?: Contacto[];
+    priority?: object;
+    attachments?: number;
+    //taskList: TaskList;
+    monto: number;
+    idlista?: number;
+    razonsocial?: string;
+    simbmoneda?: string;
+    idmoneda?:number;
+    nroasignados?: number;
+    nrocontactos?: number;
+    nrotareas?: number;
+    nroadjuntos?: number;
+    nomlista?: string;
+    idpreventa?:number;
+    //acciones?: Acciones[]|undefined;
+    bgcolor?: string;
+    bgicon?: string;
+    tipocambio: number;
+    nomcreador?: string;
+    tipoproducto?: undefined;
+    nommoneda?: string;
+    indestado_qu?: boolean;
+    indestado_bc?: boolean;
+    nomestado_qu?: string;
+    nomestado_bc?: string;
+    montodolar?: number;
+    nomcomercial?: string;
+    nompreventa?: string;
+    nomproveedor?: string;
+    idproveedor?:number;
+    idmarca?:number;
+    //regoportunidadesext?: RegOportunidadExt[];
+    idtrx?: number;
+    //preventas?: Assignees[];
+    idnotifica?: number;
+}
+
+export interface TablaDetalle{
+    iditem: number;
+    valoritem: string;
+}
+
+export interface Contacto {
+    idcontacto: number;
+    idcliente?: number;
+    nombrecontacto?: string;
+    cargo?: string;
+    email?: string;
+    telefono?: string;
+    image?: string;
+    idcotiza?: number;
+    tiporol?: number;
+    nomtiporol?: string;
+}
+
+export interface Moneda {
+    idmoneda: number;
+    desmoneda?: string;
+    simbmoneda?: string;
+}
+
+export interface TipoDocumento{
+    iditem: number;
+    valoritem: string;
+}
+
+export interface Marca{
+    idmarca: number;
+    nommarca: string;
+}
+
+export interface TipoProducto{
+    idtipoprod: number;
+    nomtipoprod: string;
+}
+
+export interface OrdenCompraItem{
+    idordencompraitem?: number;
+    idordencompra?: number;
+    idtipoprod: number;
+    idprod?: number;
+    descripcion?: string;
+    cantidad: number;
+    codunidad?: string;
+    preciocosto : number;
+    descuento?:number;
+    margen? :number;
+    precioventa :number;
+    indvig ?:boolean;
+    iduserreg?:number;
+    fecreg ?:Date;
+    iduseract? :number;
+    fecact ?:Date;
+    coditem ?:string;
+    idmarca?: number;
+    nomprod?: string;
+    nommarca?: string;
+    preciocostototal: number;
+    precioventatotal: number;
+    preprofit: number;
+    nomtipoprod?: string;
+    nomproveedor?: string;
+    badgeColor?: string;
+    idnvoitem:number;
+    nroindex:number;
+    nrocontrato?: string;
+    nromeses:number;
+    sku?: string;
+    serialnumber?: string;
+    idproveedor?: number;
+}
+
+export interface OrdenCompra {
+    idordencompra: number;
+    idrequerimiento: number;
+    idproyecto: number;
+    codtipodoc?: string;
+    idmoneda: number;
+    monto: number;
+    costo: number;
+    idproveedor: number;
+    fechaingreso ?: Date;
+    horaingreso ?: Date;
+    fechacompleto ?: Date;
+    horacompleto ?: Date;
+    fechaaprobacio?: Date;
+    horaaprobacion?: Date;
+    estado: string;
+    idusercompleto: number;
+    iduseraprueba: number;
+    idproveedor_original: number;
+    fechareg?: Date;
+    iduserreg?: number;
+    fechaact?: Date;
+    iduseract?: number;
+    tiempoentrega: number;
+    codformapago?: string;
+    validezoferta: number;
+    lugarentrega?: string;
+    observacion?: string;
+    garantia: number;
+    nrodocumentoadd?: string;
+    idusuario?: number;
+    items:CotizacionItem[];
+    nomempresa: string;
+    s_monto: string;
+    simbmoneda: string;
+    condicionescomerciales: string;
+}
+
+export interface ContactoOrdenCompra {
+    idcontacto: number;
+    idcliente?: number;
+    nombrecontacto?: string;
+    cargo?: string;
+    email?: string;
+    telefono?: string;
+    image?: string;
+    idordencompra?: number;
+    tiporol?: number;
+    nomtiporol?: string;
 }

@@ -35,101 +35,152 @@
         <div class="layout-topbar-actions-end flex">
             <ul class="layout-topbar-items">
                 <li>
-                    <a pStyleClass="@next" enterClass="ng-hidden" enterActiveClass="px-scalein" leaveToClass="ng-hidden" leaveActiveClass="px-fadeout" [hideOnOutsideClick]="true" pRipple>
-                        <i class="pi pi-bell" pBadge severity="warning"></i>
+                    <a pStyleClass="@next" enterClass="ng-hidden" enterActiveClass="px-scalein" leaveToClass="ng-hidden" leaveActiveClass="px-fadeout" [hideOnOutsideClick]="true" >
+                        <i class="pi pi-bell text-2xl" pBadge style="font-size: 2rem" severity="warning"></i>
                     </a>
-                    <div class="ng-hidden">
-                        <ul class="list-none p-0 m-0">
-                            <li class="px-3 py-1">
-                                <span>No Tiene Notificaciones</span>
-                            </li>
-                            <!-- <li class="p-3">
-                                <div class="flex align-items-center">
-                                    <img src="assets/demo/images/avatar/avatar-1.png" />
-                                    <div class="flex flex-column ml-3 flex-1">
-                                        <div class="flex align-items-center justify-content-between mb-1">
-                                            <span class="font-bold">Jerome Bell</span>
-                                            <small>42 mins ago</small>
-                                        </div>
-                                        <span class="text-sm line-height-3">How to write content about your photographs?</span>
+                    <div class="ng-hidden" >   
+                        <span class="px-4"> Tienes <b>{{totNoti}}</b> notificaciones</span>
+                        <div class="list-none px-3 mt-2" *ngFor="let noti of lstNotificacion; let i=index">                            
+                            <p-divider></p-divider>
+                            <div class="flex align-items-center">
+                                <!-- <img src="assets/demo/images/avatar/avatar-2.png"/> -->
+                                <div class="flex flex-column ml-3 flex-1">
+                                    <div class="flex align-items-center justify-content-between mb-1 ">
+                                        <span class="fs-small font-bold">{{noti.msgnotifica}}</span>
+                                        <i class="pi pi-times-circle text-red-900 cursor-pointer" pTooltip="Descartar Notificación" (click)="prcNotificacion(noti)" ></i>
                                     </div>
-                                </div>
-                            </li>
-                            <li class="p-3">
-                                <div class="flex align-items-center">
-                                    <img src="assets/demo/images/avatar/avatar-2.png"/>
-                                    <div class="flex flex-column ml-3 flex-1">
-                                        <div class="flex align-items-center justify-content-between mb-1">
-                                            <span class="fs-small font-bold">Cameron Williamson</span>
-                                            <small>48 mins ago</small>
+                                    <div class="flex justify-content-between">
+                                        <div >
+                                            <i class="pi pi-calendar text-cyan-600 font-semibold"></i>
+                                            <span class="text-sm line-height-3 ml-2">{{noti.fechanotifica}}.</span>
                                         </div>
-                                        <span class="text-sm line-height-3">Start a blog to reach your creative peak.</span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="p-3">
-                                <div class="flex align-items-center">
-                                    <img src="assets/demo/images/avatar/avatar-3.png"/>
-                                    <div class="flex flex-column ml-3 flex-1">
-                                        <div class="flex align-items-center justify-content-between mb-1">
-                                            <span class="fs-small font-bold">Anna Miles</span>
-                                            <small>1 day ago</small>
+                                        <div>
+                                            
                                         </div>
-                                        <span class="text-sm line-height-3">Caring is the new marketing</span>
                                     </div>
+                                    
                                 </div>
-                            </li>
-                            <li class="p-3">
-                                <div class="flex align-items-center">
-                                    <img src="assets/demo/images/avatar/avatar-4.png"/>
-                                    <div class="flex flex-column ml-3 flex-1">
-                                        <div class="flex align-items-center justify-content-between mb-1">
-                                            <span class="fs-small font-bold">Arlene Mccoy</span>
-                                            <small>4 day ago</small>
-                                        </div>
-                                        <span class="text-sm line-height-3">Starting your traveling blog with Vasco.</span>
-                                    </div>
-                                </div>
-                            </li> -->
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                 </li>
                 <li>
                     <a pStyleClass="@next" enterClass="ng-hidden" enterActiveClass="px-scalein" leaveToClass="ng-hidden" leaveActiveClass="px-fadeout" [hideOnOutsideClick]="true" pRipple>
-                        <img [src]="'assets/demo/images/avatar/' + nomImagen" alt="avatar" class="w-2rem h-2rem">
+                        <img [src]="logoUsuario" alt="avatar" class="w-2rem h-2rem">
                     </a>
                     <div class="ng-hidden">
                         <ul class="list-none p-0 m-0">
                             <li>
-                                <a class="cursor-pointer flex align-items-center py-2 hover:surface-hover transition-duration-150 transition-all px-3 py-2" pRipple>
-                                    <i class="pi pi-cog mr-2"></i>
+                                <a (click)="verPerfil()" class="cursor-pointer flex align-items-center py-2 hover:surface-hover transition-duration-150 transition-all px-3 py-2" pRipple>
+                                    <i class="pi pi-user-edit mr-2"></i>
                                     <span>Perfil</span>
                                 </a>
                             </li>
-                            <!-- <li>
-                                <a class="cursor-pointer flex align-items-center py-2 hover:surface-hover transition-duration-150 transition-all px-3 py-2" pRipple>
-                                    <i class="pi pi-file-o mr-2"></i>
-                                    <span>Terms of Usage</span>
-                                </a>
-                            </li>
                             <li>
-                                <a class="cursor-pointer flex align-items-center py-2 hover:surface-hover transition-duration-150 transition-all px-3 py-2" pRipple>
-                                    <i class="pi pi-compass mr-2"></i>
-                                    <span>Support</span>
-                                </a>
-                            </li> -->
-                            <li>
-                                <a (click)="logout()" class="cursor-pointer flex align-items-center py-2 hover:surface-hover transition-duration-150 transition-all px-3 py-2" pRipple>
+                                <a (click)="logOff()" class="cursor-pointer flex align-items-center py-2 hover:surface-hover transition-duration-150 transition-all px-3 py-2" pRipple>
                                     <i class="pi pi-power-off mr-2"></i>
-                                    <span>Logout</span>
+                                    <span>Cerrar sesión</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
-
                 </li>
             </ul>
-            <span class="text-1xl ml-1 mt-2">{{nomUsuario | uppercase}}</span>
+            <span class="text-xl ml-1 mt-2">{{nomUsuario}}</span>
         </div>
     </div>
 </div>
+
+<p-sidebar [(visible)]="visible" #sidebar [closeOnEscape]="false" [dismissible]="false" position="right" [baseZIndex]="10000" styleClass="md:w-7 lg:w-5 xl:w-4 mt-7 pb-3">
+    <div class="p-6 bg-blue-50 border-1 surface-border border-round m-3">
+        <!-- <span class="text-900 text-xl font-bold mb-4 block">Editar Perfil</span> -->
+        <div class="grid">
+            <div class="col-12 lg:col-12">
+                <div class="grid formgrid p-fluid">
+                    <div class="flex flex-column field mb-4 col-12 align-items-center">
+                        <!-- <advanced-image [cldImg]="img"></advanced-image> -->
+    
+                        <!-- <label for="avatar" class="font-medium text-900">Avatar</label>
+                        <p-fileUpload mode="basic" name="avatar" url="./upload.php" accept="image/*" [maxFileSize]="1000000" styleClass="p-button-outlined p-button-plain" chooseLabel="Upload Image"></p-fileUpload> -->
+                        <img [src]="logoUsuario" alt="avatar" class="border-1 surface-border border-round w-15rem h-15rem">
+                        <div >
+                            <!--  -->
+                            <button pButton pRipple  label="Avatar" icon="pi pi-save" class="w-auto mt-3"
+                                pTooltip="Cambiar Imagen" tooltipPosition="bottom" (click)="uploadWidget()"></button>                          
+                        </div>
+                        
+                        
+                        
+                    </div>
+                    <div class="field mb-4 col-12">
+                        <label for="nickname" class="font-medium text-900">Nombre</label>
+                        <input id="nickname" [(ngModel)]="nomusuario" id="nomusuario" type="text" pInputText>
+                    </div>
+                    <div class="field mb-4 col-12 md:col-12">
+                        <label for="email" class="font-medium text-900">Email</label>
+                        <input id="email" type="text" [(ngModel)]="email" id="email" disabled="true" pInputText>
+                    </div>                
+                    <!-- <div class="field mb-4 col-12">
+                        <label for="website" class="font-medium text-900">Website</label>
+                        <div class="p-inputgroup">
+                            <span class="p-inputgroup-addon">www</span>
+                            <input id="website" type="text"  [(ngModel)]="url1" id="url1" pInputText>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="flex w-full justify-content-end align-content-end gap-2" >
+                    <button *ngIf="verBtnKey" pButton class="font-semibold p-button-outlined justify-content-center text-green-600 mt-2" icon="pi pi-key"
+                                pTooltip="Cambiar Contraseña" tooltipPosition="bottom" (click)="cambiarContrasena()"></button>
+                    <button pButton pRipple label="Guardar" icon="pi pi-save" class="w-auto mt-2" (click)="guardarUsuarioPerfil()"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </p-sidebar>
+    
+    <p-dialog [(visible)]="contraVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
+        <p-header styleClass="testDialog"> <i class="pi pi-key" style="margin-right: 10px;"></i> Cambiar Contraseña </p-header>
+    
+        <form [formGroup]="registerFormRegistro">
+            <div class="w-full flex flex-column gap-2 px-2 pb-1">
+                <div class="col-12 flex flex-column">
+                    <label for="nickname" class="font-medium text-900">Contraseña Actual</label>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-key"></i>              
+                        <input type="password" class="w-full" formControlName="passActual" pInputText placeholder="Contraseña Actual" />
+                    </span>
+                </div>
+                
+                <div class="col-12 flex flex-column">
+                    <label for="nickname" class="font-medium text-900">Nueva Contraseña</label>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-key"></i>               
+                        <input type="password" class="w-full" formControlName="passNueva" pInputText placeholder="Nueva Contraseña" />
+                    </span>
+                </div>
+                
+                <div class="col-12 flex flex-column">
+                    <label for="nickname" class="font-medium text-900">Confirmar Contraseña</label>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-key"></i>               
+                        <input type="password" class="w-full" formControlName="passConfir" pInputText placeholder="Confirmar Contraseña" />
+                    </span>
+                </div>
+                <!-- <div class="col-12 flex flex-column">
+                    <span> {{ registerFormRegistro.errors | json }} </span>
+                </div>             -->
+                <button pButton pRipple class="w-full my-3 px-3" style="background-color: #0288d1" label="Confirmar" (click)="grabarContrasena()"></button>
+            </div>
+        </form>
+    
+    </p-dialog>
+    
+    <ng-container *ngIf="visUpload">
+        <img id="uploadedimage" />
+    </ng-container>
+    
+    
+    
+    <p-toast></p-toast>
+    
+    <p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"></p-confirmDialog>

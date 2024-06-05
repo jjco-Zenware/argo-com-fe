@@ -1,0 +1,64 @@
+<form [formGroup]="registerFormRegistro" (ngSubmit)="prcProyecto()">
+    <div class="p-fluid border-1 surface-border mb-3 bg-blue-50 p-2 border-round m-2 grid">        
+        <div *ngIf="verOpor" class="col-12 field">
+            <div class="flex">
+                <label class="block text-900 font-semibold mb-1">Cliente</label>
+            </div>
+            <span class="p-fluid">
+                <p-dropdown [options]="lstCliente" formControlName="idcliente" placeholder="Seleccionar Cliente" optionLabel="nomcomercial"
+                 optionValue="idcliente" appendTo="body" (onChange)="cargarOportunidades($event.value)" autoWidth="false"></p-dropdown>
+            </span>
+            <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.idcliente.errors">* Debe Seleccionar Cliente</p> -->
+        </div>
+        <div *ngIf="verOpor" class="col-12 field">
+            <div class="flex">
+                <label class="block text-900 font-semibold mb-1">Oportunidad</label>
+            </div>
+            <span class="p-fluid">
+                <p-dropdown [options]="lstOportunidad" formControlName="idoportunidad" placeholder="Seleccionar Oportunidad" optionLabel="title"
+                  optionValue="id" appendTo="body" autoWidth="false" ></p-dropdown>
+            </span>
+            <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.idoportunidad.errors">* Debe Seleccionar Oportunidad</p> -->
+        </div>
+        <div *ngIf="!verOpor" class="col-12 field">
+            <div class="flex">
+                <label class="block text-900 font-semibold mb-1">Nombre </label>
+            </div>
+            <span class="p-fluid">
+                <textarea type="text" pInputTextarea [rows]="2" formControlName="nomproyecto"style="resize: none" class="w-full"></textarea>
+                <!-- <input pInputText type="text" formControlName="nomproyecto" /> -->
+            </span>
+            <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.nomproyecto.errors">* Debe Ingresar Nombre</p> -->
+        </div>
+        <div *ngIf="verInter" class="col-12 field">
+            <div class="flex">
+                <label class="block text-900 font-semibold mb-1">N° Requerimiento</label>
+            </div>
+            <span class="p-fluid">
+                <input pInputText type="text" formControlName="idrequerimiento" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                <!-- oninput="this.value=this.value.replace(/[^0-9]/g,'');" -->
+            </span>
+            <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.nrorequerimiento.errors">* Debe Ingresar Requerimiento</p> -->
+        </div>
+        <div class="col-12 field">
+            <div class="flex">
+                <label class="block text-900 font-semibold mb-1">Descripción</label>
+            </div>
+            <span class="p-fluid">
+                <textarea type="text" pInputTextarea [rows]="3" formControlName="descripcion" style="resize: none" class="w-full" id="descripcion"></textarea>
+                <!-- oninput="this.value=this.value.replace(/[^0-9]/g,'');" -->
+            </span>
+            <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.nrorequerimiento.errors">* Debe Ingresar Requerimiento</p> -->
+        </div>
+
+        
+
+    </div>
+    <div class="flex justify-content-end" >
+        <button pButton icon="pi pi-check" label="Agregar" type="submit" class="p-button-primary"></button>
+    </div>
+</form>
+
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"></p-confirmDialog>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+

@@ -1,0 +1,155 @@
+<div class="p-fluid border-1 surface-border border-round mt-2">
+    <form [formGroup]="frmDatosCot">
+        <div class="flex grid col-12 -mt-2 field h-4rem" >
+            <div class="col-6 sm:col-12 lg:col-2 md:col-12">
+                <label class="font-semibold">N° Cotización</label>
+                <input pInputText type="text" class="mt-1" formControlName="idcotiza"/>
+            </div>
+            <div class=" sm:col-12 lg:col-1 md:col-12"></div>
+            <div class="col-6 sm:col-12 lg:col-3 md:col-12">
+                <label  class="font-semibold">N° OC Proveedor</label>
+                <input pInputText type="text" placeholder="N° de Cotización de Proveedor" class="mt-1" formControlName="nrodocumentoadd"/>
+            </div>
+            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end">
+                <label class="block text-900 font-semibold">Fecha</label>
+                <span class="p-input-icon-left w-auto mt-1" style="height: 3.5rem;">
+                    <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                    inputStyleClass="w-full cursor-pointer" appendTo="body"></p-calendar>
+                </span>
+            </div>
+        </div>
+        <div class="flex grid col-12 h-5rem">
+            <div class="col-6 sm:col-6 lg:col-6 md:col-6">
+                <!-- <label for="start" class="block text-900 font-semibold">Proveedor</label> -->
+                <div class="flex">
+                    <label class="block text-900 font-semibold mb-3">Proveedor</label>
+                    <!-- <i class="pi pi-user-plus cursor-pointer" style="margin-left: 10px;" pTooltip="Nuevo Proveedor"
+                        tooltipPosition="right" (click)="NuevoProveedor();"></i> -->
+                </div>
+                <div class="-mt-1">
+                    <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" optionLabel="razonsocial" optionValue="idcliente"></p-dropdown>
+
+                </div>
+            </div>
+            <div class="col-6 sm:col-6 lg:col-3 md:col-3 mt-1">
+                <label class="block text-900 font-semibold">Moneda</label>
+                <div class="mt-2">
+                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda" ></p-dropdown>
+                </div>
+            </div>
+
+        </div>
+        <div class="flex grid col-12 mt-3">
+            <div class="col-12 sm:col-12 lg:col-9 md:col-12">
+                <label class="font-semibold">Condiciones Comerciales</label>
+                <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="3"
+                    style="resize: none" class="w-full mt-1"></textarea>
+            </div>
+        </div>
+    </form>
+
+    <div class="flex grid col-12 -mt-6">
+        <div class="col-12 sm:col-12 lg:col-9 md:col-12">
+            <div class="flex">
+                <label for="contac" class="block text-900 font-semibold mb-3">Contactos Porveedor</label>
+                 <!-- <i class="pi pi-user-plus cursor-pointer" style="margin-left: 10px;" pTooltip="Nuevo Contacto" tooltipPosition="right" (click)="changeHeaderTitle(1, $event);"></i> -->
+            </div>
+            <p-autoComplete name="contacs" [(ngModel)]="asignadosContacto" [suggestions]="filteredContac" (completeMethod)="filterContac($event)" [disabled]="true"
+                [multiple]="true" [showEmptyMessage]="true" emptyMessage="No se han encontrado resultados" placeholder="Elegir Contactos" [inputStyle]="{'height': '2.5rem'}">
+                <ng-template let-contac pTemplate="selectedItem">
+                    <div class="flex align-items-center gap-3 border-round">
+                        <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.nombrecontacto" (click)="op2.toggle($event)" class="h-2rem w-2rem border-2 border-circle surface-border mr-2 cursor-pointer">
+                        <span class="text-900">{{contac.nombrecontacto}}</span>
+                        <p-overlayPanel #op2 >
+                            <div>
+                                <div class="flex">
+                                    <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.nombrecontacto" class="h-3rem w-3rem border-2 border-circle surface-border mr-2">
+                                    <div >
+                                        <span class="text-900 font-semibold">{{contac.nombrecontacto}}</span>
+                                        <br>
+                                        <span>{{contac.cargo}}</span>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="flex align-items-center text-900">
+                                    <i class="pi pi-phone font-semibold" style="left: 3.5rem; margin-left: 15px;"></i>
+                                    <span style="margin-left: 10px;">{{contac.telefono}}</span>
+                                </div>
+                                <br>
+                                <div class="flex align-items-center text-900">
+                                    <i class="pi pi-envelope font-semibold" style="left: 1.5rem; margin-left: 15px;"></i>
+                                    <span style="margin-left: 10px;">{{contac.email}}</span>
+                                </div>
+                                <br><br>
+                                <!-- <div class="flex justify-content-end">
+                                    <i class="pi pi-pencil cursor-pointer" pTooltip="Editar Contacto" tooltipPosition="left" (click)="op2.hide(); changeHeaderTitle(2, contac);"></i>
+                                </div> -->
+                              </div>
+                        </p-overlayPanel>
+                    </div>
+                </ng-template>
+                <ng-template let-contac pTemplate="item">
+                    <div class="flex align-items-center border-round">
+                        <img src="assets/demo/images/avatar/{{contac.image}}" [alt]="contac.nombrecontacto" class="h-2rem w-2rem border-2 border-circle surface-border mr-2">
+                        <span class="text-900">{{contac.nombrecontacto}}</span>
+                    </div>
+                </ng-template>
+            </p-autoComplete>
+        </div>
+    </div>
+</div>
+
+<div class="p-fluid p-3 p-card mt-3 mb-1">
+    <p-tabView>
+        <p-tabPanel header="Items">
+            <!-- <div class="flex align-items-center mt-3 ml-2">
+                <button pButton class="font-semibold p-button-outlined w-auto" pTooltip="Agregar Nuevo Item" icon="pi pi-folder" label="Nuevo" (click)="getItem([],0)" ></button>
+
+                <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true"
+                                (uploadHandler)="ReadExcel($event, fubauto)" [auto]="true"
+                                chooseIcon="pi pi-cloud-download" class="text-sm ml-3" pTooltip="Importar Archivo">
+                            </p-fileUpload>
+
+            </div> -->
+            <p-table [value]="lstCotizacionItem" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+            [scrollable]="true"  styleClass="p-datatable-sm">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="surface-200">Producto</th>
+                        <th class="surface-200">Marca</th>
+                        <th class="surface-200">Descripción</th>
+                        <th class="surface-200">Cant</th>
+                        <th class="surface-200">c/u</th>
+                        <th class="surface-200">Total</th>
+                        <!-- <th class="surface-200"></th> -->
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                    <tr>
+                        <td>{{ product.nomtipoprod }}</td>
+                        <td>{{ product.nommarca }}</td>
+                        <td>{{ product.descripcion }}</td>
+                        <td>{{ product.cantidad }}</td>
+                        <td>{{ product.preciocosto | number: '0.2'}}</td>
+                        <td>{{ product.preciocostototal | number: '0.2'}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td colspan="1" class="text-right">Total: </td>
+                        <td>{{montoTotal | number: '0.2'}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-tabPanel>
+        <p-tabPanel header="Documentos">
+            <!-- <app-c-listado-file [I_CodCotiza] = idCotiza [I_Quote] = i_valor /> -->
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

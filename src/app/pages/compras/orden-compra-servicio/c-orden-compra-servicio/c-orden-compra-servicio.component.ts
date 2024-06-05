@@ -1,9 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage } from '@constantes';
+import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { dOperacion } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
+import { CDatoCotizacionComponent } from '../../proyectos-ganados/c-dato-cotizacion/c-dato-cotizacion.component';
+import { DialogService } from 'primeng/dynamicdialog';
+import { ProyectosService } from '../../proyectos-ganados/service/proyectos.service';
+import { SharedAppService } from '@sharedAppService';
+import { CDatoCotizacionViewProyecComponent } from '../../proyectos-ganados/c-dato-cotizacion-view-proyec/c-dato-cotizacion-view-proyec.component';
 
 @Component({
   selector: 'app-c-orden-compra-servicio',
@@ -18,10 +23,10 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     vistaLista: boolean = true;
     visDetalle: boolean = false;
     visQuote: boolean = false;
-
-    lstOperacion: dOperacion[] =[];
+    lstOrdenCompra: any;
     tituloDetalle!: string;
     frmDatos!: FormGroup;
+    tipoOC:any;
 
     dropdownItemsEstado = [
         { name: 'Registrado', code: 'REG' },
@@ -30,25 +35,24 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         { name: 'Rechazado', code: 'RCH' }
     ];
 
+    blockedDocument: boolean = false;
+    mensajeSpinner: string = "";
+
     constructor(
         private fb: FormBuilder,
-        private utilitariosService: UtilitariosService){
+        private utilitariosService: UtilitariosService,
+        public dialogService: DialogService  ,
+        private proyectosService: ProyectosService,     
+        private serviceSharedApp: SharedAppService,
+        
+      ){
 
-            this.lstOperacion = [{
-                nrooperacion: 152,
-                idordencompra:4343,
-                nomproveedor: ' nombre proveedor',
-                nommoneda: 'soles',
-                monto: 550000,
-                nomtipoproducto: 'nom tipo product',
-                idproyecto: 1233,
-                nomproyecto: 'descripción Proyecto',
-                idcotiza: 345
-            }];
+           
     }
 
     ngOnInit(): void{
         this.createFrm();
+        this.getListarOrdenCompra();
     }
 
     ngOnDestroy(): void {
@@ -57,21 +61,25 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         }
       }
 
+      setSpinner(valor: boolean) {
+        this.blockedDocument = valor;
+      }
+
     createFrm(){
         this.frmDatos = this.fb.group({
-            idestado: [
-            {
-              value: null,
-              disabled: false,
-            },
-          ],
-          fechaini: [
+          //   idestado: [
+          //   {
+          //     value: null,
+          //     disabled: false,
+          //   },
+          // ],
+          fecini: [
             {
               value: this.utilitariosService.obtenerFechaInicioMes(),
               disabled: false,
             },
           ],
-          fechafin: [
+          fecfin: [
             {
               value: this.utilitariosService.obtenerFechaFinMes(),
               disabled: false,
@@ -86,51 +94,56 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         })
       }
 
-      getBuscar(){
-        // this.setSpinner(true);
-        // this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+      getListarOrdenCompra(){
+        this.setSpinner(true);
+        this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+        console.log('this.frmDatos...', this.frmDatos.value);
 
-        // this.btnBuscar=true;
-        // const $listaTareas = this.listatareasService.listaTareas(this.frmDatos.getRawValue())
-        //   .subscribe({
-        //     next: (rpta:any) => {
-        //         this.setSpinner(false);
-        //         console.log('rpta listaTareas', rpta);
-        //       this.listaTareas = rpta;
-        //     },
-        //     error:(err)=>{
-        //         this.setSpinner(false);
-        //       console.error('error : ',err)
-        //       this.messageService.clear();
-        //       this.messageService.add({
-        //         severity: 'error',
-        //         summary: 'Error',
-        //         detail: mensajesQuestion.msgErrorGenerico
-        //       })
-        //     },
-        //     complete:() => {
-        //       this.btnBuscar=false;
-        //       this.setSpinner(false);
-        //     }
-        //   });
-        // this.$listSubcription.push($listaTareas)
+        const $getListarOrdenCompra = this.proyectosService.ordenCompraList(this.frmDatos.value)
+          .subscribe({
+            next: (rpta:any) => {
+                this.setSpinner(false);
+                console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
+                this.lstOrdenCompra = rpta.ordenescompra
+            },
+            error:(err)=>{
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast()
+            },
+            complete:() => {
+              this.setSpinner(false);
+            }
+          });
+        this.$listSubcription.push($getListarOrdenCompra)
       }
 
-    onVer(data: dOperacion) {
-        console.log('onVer...', data);
-        this.tituloDetalle = "Ver Orden de Compra/Servicio N° " + data.idordencompra;
-        this.vistaLista = false;
-        this.visDetalle = true;
-        this.visQuote = false;
+    onVer(dato: dOperacion) {
+        console.log('onVer...', dato);
+        const ref = this.dialogService.open(CDatoCotizacionViewProyecComponent, {
+          data: dato,
+          header: "Ver Orden de Compra/Servicio N° " + dato.idordencompra ,
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '50%',
+        });
     }
 
-    onEditar(data: dOperacion) {
-        console.log('onVer...', data);
-        this.tituloDetalle = "Editar Orden de Compra/Servicio N° " + data.idordencompra;
-        this.vistaLista = false;
-        this.visDetalle = true;
-        this.visQuote = false;
+    onEditar(dato: dOperacion) {
+        console.log('onVer...', dato);
+        const ref = this.dialogService.open(CDatoCotizacionComponent, {
+          data: dato,
+          header: "Editar Orden de Compra/Servicio N° " + dato.idordencompra,
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '50%',
+          //height: '60%'
+        });
+        
+        ref.onClose.subscribe(() => {
+          this.getListarOrdenCompra();
+        });
     }
+
     verCotiza(data: dOperacion) {
         console.log('onVer...', data);
         this.tituloDetalle = "Cotización de Orden de Compra/Servicio N° " + data.idordencompra;
@@ -149,5 +162,12 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         this.vistaLista = true;
         this.visDetalle = false;
         this.visQuote = false;
+      }
+
+      onNuevo() {
+        
+        this.tituloDetalle = "Nueva Orden de Compra/Servicio ";
+        this.tipoOC = 1;
+        this.vistaLista = false;
       }
 }

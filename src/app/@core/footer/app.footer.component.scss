@@ -1,8 +1,13 @@
-.footer {
+
+
+  .footer {
     position: fixed;
     left: 1%;
     bottom: 0;
     width: 100%;
-    //background-color: rgb(209, 223, 233);
-    opacity: 0.5;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background-color: rgb(232, 237, 240);
+    opacity: 0.4;
   }

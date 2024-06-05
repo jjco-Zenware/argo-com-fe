@@ -41,6 +41,8 @@ export class CPagesComponent implements OnInit  {
         constantesLocalStorage.login = localStorageService.obtenerDataGeneral().login;
         constantesLocalStorage.idusuario = localStorageService.obtenerDataGeneral().idusuario;
         constantesLocalStorage.imagen = localStorageService.obtenerDataGeneral().imagen;
+        constantesLocalStorage.idperfil = localStorageService.obtenerDataGeneral().idperfil;
+        constantesLocalStorage.nomperfil = localStorageService.obtenerDataGeneral().nomperfil;
 
         this.hideMenuProfile();
         this.overlayMenuOpenSubscription =

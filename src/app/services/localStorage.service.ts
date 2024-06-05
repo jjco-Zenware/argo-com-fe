@@ -9,6 +9,7 @@ export class LocalStorageService {
   constructor() { }
 
   setearLocalStorage(respuestaData: I_rptaDataLogin) {
+    console.log('setearLocalStorage', respuestaData );
     localStorage.setItem('ZENWARE_SEG', JSON.stringify(respuestaData));
   }
 
@@ -22,8 +23,8 @@ export class LocalStorageService {
   }
 
   obtenerUsuario(): string {
-    //return this.obtenerDataGeneral().nombreUsuario??'';
-    return 'ZenWare';
+    return this.obtenerDataGeneral().nombreUsuario??'';
+    //return 'ZenWare';
   }
 
   obtenerLogin(): string {

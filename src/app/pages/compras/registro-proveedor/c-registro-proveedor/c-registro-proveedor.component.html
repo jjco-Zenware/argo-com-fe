@@ -1,0 +1,159 @@
+<ng-container *ngIf="vistaLista; else visSecciones">
+    <div class="card">
+        <div class="grid">
+            <div class="flex justify-content-between col-12 -mt-3">
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-base font-semibold">PROVEEDORES</span>
+                </div>
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
+                        pTooltip="Nuevo Proveedor" tooltipPosition="left" (click)="onNuevo(0)" ></button>
+                </div>
+            </div>
+        </div>
+        
+        <p-table #dt1 [value]="listaClientes" [rows]="10" [rowHover]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+        [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+        responsiveLayout="scroll" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm">
+       
+        <ng-template pTemplate="header">
+            <tr class="text-sm">
+                <th style="width: 40px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        N°
+                    </div>
+                </th>
+                <th style="min-width: 12rem" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        RAZÓN SOCIAL
+                    </div>
+                </th>
+                <th style="width: 150px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        NOMBRE COMERCIAL
+                    </div>
+                </th>
+                <th style="width: 100px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        TIPO DOCUMENTO
+                    </div>
+                </th>
+                <th style="width: 100px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        N° DOCUMENTO
+                    </div>
+                </th>
+                <th style="width: 100px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        TIPO PERSONA
+                    </div>
+                </th>
+                <th style="width: 100px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        TELEFONO
+                    </div>
+                </th>
+                <th style="width: 150px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        EMAIL
+                    </div>
+                </th>
+                <th style="width: 100px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        ESTADO
+                    </div>
+                </th>
+                <th style="min-width: 10rem" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        ACCIONES
+                    </div>
+                </th>
+            </tr>
+            <tr >
+                <th></th>
+                <th *ngFor="let col of cols">
+                    <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td>
+                    {{rowIndex + 1}}
+                </td>
+                <td>
+                    {{data.razonsocial | uppercase}}
+                </td>
+                <td>
+                    {{data.nomcomercial | uppercase}}
+                </td>
+                <td>
+                    {{data.idtipodoc | uppercase}}
+                </td>
+                <td>
+                    {{data.nrodocumento}}
+                </td>
+                <td>
+                    {{data.nomtipopersona}}
+                </td>
+                <td>
+                    {{data.telefresumen}}
+                </td>
+                <td>
+                    {{data.email}}
+                </td>
+                <td>
+                    <!-- <div [ngClass]="{'text-green-500': data.indestado, 'text-red-500': !data.indestado}">
+                        {{data.nomestado}}
+                    </div> -->
+                    {{data.nomestado}}
+                </td>
+                <!-- <td>
+                    <i class="pi" [ngClass]="{ 'text-green-500 pi-thumbs-up': data.indvig, 'text-red-500 pi-thumbs-down': !data.indvig }"></i>
+                </td> -->
+                <td style="text-align: start;">
+                    <button pButton pRipple type="button" icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="left" class="p-button-rounded p-button-text mr-2 -mt-2" (click)="EditarCliente(data)">
+                    </button>
+                    <button pButton pRipple type="button" icon="pi pi-lock" pTooltip="Activar/Desactivar"  tooltipPosition="left" class="-button-rounded p-button-text mr-2 -mt-2" (click)="getActvarDesactivar(data)">
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="8">Cargando datos. Espere por favor.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    </div>
+</ng-container>
+
+<ng-template #visSecciones>
+
+    <div class="p-fluid p-3 mb-1 card" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
+        <div class="grid">
+            <div class="flex justify-content-between col-12 -mt-3">
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-base font-semibold">{{tituloDetalle}}</span>
+                </div>
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
+                        pTooltip="Regresar a Proveedor" tooltipPosition="left" (click)="getBack()" ></button>
+                </div>
+            </div>
+        </div>
+        <app-c-dato-proveedor [IA_data]="dataCT" (OB_back)="getBack($event)"></app-c-dato-proveedor>
+    </div>
+
+</ng-template>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-toast></p-toast>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+

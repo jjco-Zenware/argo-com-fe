@@ -3,15 +3,17 @@ import { I_rptaDataLogin } from "@interfaces"
 export const moduloAPP =  '3'; //'COM';
 
 export const constantesLocalStorage: I_rptaDataLogin = {
-    nombreUsuario: "",
-    token: "",
-    login: "",
-    idusuario: 0,
-    estado: 0,
-    mensaje: "",
-    tipoacceso: "",
-    imagen:""
-  }
+  nombreUsuario: "",
+  token: "",
+  login: "",
+  idusuario: 0,
+  estado: 0,
+  mensaje: "",
+  tipoacceso: "",
+  imagen:"",
+  idperfil:0,
+  nomperfil:""
+}
 
 export const mensajesGenericos = {
   msgErrorGenerico: 'Lo sentimos ocurrio un error',
@@ -53,5 +55,10 @@ export const tipoAcceso = {
 export const respuestaProceso = {
   ConExito: 0,
   SinExito: 1
+}
+
+export const globalVariable = {
+  codigoId: 0,
+  oportunidadId: 0,
 }
 

@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
-import { constantesLocalStorage, mensajesQuestion, mensajesSpinner, respuestaProceso } from '@constantes';
+import { constantesLocalStorage, globalVariable, mensajesQuestion, mensajesSpinner, respuestaProceso } from '@constantes';
 import { CotizacionItem, CasoNegocio, Secciones } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { SharedAppService } from '@sharedAppService';
 import { ProyectosService } from '../service/proyectos.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { CDatoCotizacionViewComponent } from '../c-dato-cotizacion-view/c-dato-cotizacion-view.component';
 
 @Component({
   selector: 'app-c-business-case',
@@ -45,6 +47,7 @@ export class CBusinessCaseComponent implements OnInit, OnChanges, OnDestroy {
     headNomCreador!: string;
     mostrarPorProducto: boolean = true;
     mostrarResumen: boolean = false;
+    mostrarPorProveedor: boolean = false;
     headNomPreventa!: string;
 
     totalPrecioventatotal!: number;
@@ -58,6 +61,7 @@ export class CBusinessCaseComponent implements OnInit, OnChanges, OnDestroy {
     private cdr: ChangeDetectorRef,
     private serviceProyecto: ProyectosService,
     private serviceSharedApp: SharedAppService,
+    public dialogService: DialogService,
   ) { }
 
   setSpinner(valor: boolean) {
@@ -68,6 +72,7 @@ export class CBusinessCaseComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['IS_codigo']) {
+      console.log('IS_codigo',this.IS_codigo);
       this.listarCasoNegocio();
     }
   }
@@ -87,7 +92,11 @@ export class CBusinessCaseComponent implements OnInit, OnChanges, OnDestroy {
     this.lstCotizacionItem = [];
     this.filteredProd = [];
     this.filteredProdAll = [];
-    const $listarCasoNegocio = this.serviceProyecto.listarCasoNegocio(this.IS_codigo)
+    const objeto ={
+      idoportunidad: this.IS_codigo,
+      idusuario: constantesLocalStorage.idusuario,
+    }
+    const $listarCasoNegocio = this.serviceProyecto.listarCasoNegocio(objeto)
       .subscribe({
         next: (rpta: any) => {
             this.setSpinner(false);
@@ -132,6 +141,7 @@ export class CBusinessCaseComponent implements OnInit, OnChanges, OnDestroy {
         console.log('this.lstCotizacionItem', this.lstCotizacionItem);
         this.mostrarPorProducto = false;
         this.mostrarResumen = true;
+        this.mostrarPorProveedor = false;
         //this.filteredProd = this.lstCotizacionItem.filter(item => item.idtipoprod === this.selectedProd);
         this.filteredProd = this.lstCotizacionItem;
         //this.titleTabla = team.nomtipoproducto.concat('( ',this.filteredProd.length.toString(),')')
@@ -166,17 +176,40 @@ export class CBusinessCaseComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedProd = team.idtipoprod;
     this.selectedProdColor = team.badgeColor;
 
-    if (team.idtipoprod == 0) {
-        console.log('this.lstCotizacionItem...', this.lstCotizacionItem);
-        this.mostrarPorProducto = false;
-        this.mostrarResumen = true;
-        this.filteredProd = this.lstCotizacionItem;
-    }
-    else{
-        this.mostrarPorProducto = true;
-        this.mostrarResumen = false;
-        this.filteredProd = this.lstCotizacionItem.filter(item => item.idtipoprod === this.selectedProd);
-    }
+    // if (team.idtipoprod == 0) {
+    //     console.log('this.lstCotizacionItem...', this.lstCotizacionItem);
+    //     this.mostrarPorProducto = false;
+    //     this.mostrarResumen = true;
+    //     this.mostrarPorProveedor = false;
+    //     this.filteredProd = this.lstCotizacionItem;
+    // }
+    // else{
+    //     this.mostrarPorProducto = true;
+    //     this.mostrarResumen = false;
+    //     this.mostrarPorProveedor = false;
+    //     this.filteredProd = this.lstCotizacionItem.filter(item => item.idtipoprod === this.selectedProd);
+    // }
+    switch (team.idtipoprod) {
+      case 0:
+          this.mostrarPorProducto = false;
+          this.mostrarResumen = true;
+          this.mostrarPorProveedor = false
+          this.filteredProd = this.lstCotizacionItem;
+      break;
+      case 8:
+          this.mostrarPorProducto = false;
+          this.mostrarResumen = false;
+          this.mostrarPorProveedor = true
+          this.filteredProd = this.lstCotizacionItem;
+      break;
+
+      default:
+          this.mostrarPorProducto = true;
+          this.mostrarResumen = false;
+          this.mostrarPorProveedor = false
+          this.filteredProd = this.lstCotizacionItem.filter(item => item.idtipoprod === this.selectedProd);
+      break;
+  }
 
     // this.mostrarPorProducto = true;
     //     this.mostrarResumen = false;
@@ -280,6 +313,48 @@ export class CBusinessCaseComponent implements OnInit, OnChanges, OnDestroy {
         return total;
     }
 
+    calcularProfitProvee(id: number) {
+      let total = 0;
+
+      if (this.filteredProd) {
+          for (let lstTipiProd of this.filteredProd) {
+              if (lstTipiProd.idproveedor === id) {
+                  total = total + lstTipiProd.preprofit;
+              }
+          }
+      }
+
+      return total;
+  }
+
+  calcularPrecioVentaTotalProvee(id: number) {
+      let total = 0;
+
+      if (this.filteredProd) {
+          for (let lstTipiProd of this.filteredProd) {
+              if (lstTipiProd.idproveedor === id) {
+                  total = total + lstTipiProd.precioventatotal;
+              }
+          }
+      }
+
+      return total;
+  }
+
+  calcularPreciocostoProvee(id: number) {
+      let total = 0;
+
+      if (this.filteredProd) {
+          for (let lstTipiProd of this.filteredProd) {
+              if (lstTipiProd.idproveedor === id) {
+                  total = total + lstTipiProd.preciocostototal;
+              }
+          }
+      }
+
+      return total;
+  }
+
     calcularProfit(id: number) {
         let total = 0;
 
@@ -323,4 +398,48 @@ export class CBusinessCaseComponent implements OnInit, OnChanges, OnDestroy {
   getBack(){
     this.OB_back.emit(true);
   }
+
+  verQuoteItems(data: any)
+    {
+        this.setSpinner(true);
+        const $listarCotizacionUno = this.serviceProyecto.listarCotizacionUno(data.idcotiza)
+          .subscribe({
+            next: (rpta: any) => {
+                console.log('listarCotizacionUno', rpta.quotes);
+                this.verDetalle(rpta.quotes);
+                this.setSpinner(false);
+            },
+            error: (err) => {
+              console.error('error : ', err)
+              this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            }
+          });
+        this.$listSubcription.push($listarCotizacionUno);
+    }
+
+    verDetalle(data: any) {
+
+      console.log('verDetalle...', data, this.lstCasoNegocio[0].idoportunidad);
+      globalVariable.codigoId = data[0].idcotiza;
+      globalVariable.oportunidadId = this.lstCasoNegocio[0].idoportunidad;
+
+       const objeto = {
+          data: data[0],
+          idindicador: 3,
+          lstCotizacionItem: data[0].items,
+          idoportunidad: this.lstCasoNegocio[0].idoportunidad,
+          idnroproceso: data[0].idcotiza
+        }
+
+        console.log('objeto........', objeto);
+        const ref = this.dialogService.open(CDatoCotizacionViewComponent, {
+          data: objeto,
+          header: "Cotización N° - " + data[0].idcotiza,
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '50%',
+        });
+    }
 }

@@ -1,4 +1,4 @@
-<div class="w-full flex flex-column gap-3 px-3 pb-6">
+<div class="w-full flex flex-column gap-3 px-3 pb-6" (keydown.enter)="validaNombreUsuario()">
     <span class="p-input-icon-left">
         <i class="pi pi-envelope"></i>
         <input type="text" class="w-full" [formControl]="loginUser" pInputText placeholder="Usuario" />

@@ -24,6 +24,8 @@
         "@azure/msal-browser": "^3.5.0",
         "@canvasjs/angular-charts": "^1.0.3",
         "@canvasjs/charts": "^3.7.12",
+        "@cloudinary/ng": "^2.0.2",
+        "@cloudinary/url-gen": "^1.19.0",
         "@fullcalendar/angular": "^6.0.3",
         "@fullcalendar/core": "^6.0.3",
         "@fullcalendar/daygrid": "^6.0.3",

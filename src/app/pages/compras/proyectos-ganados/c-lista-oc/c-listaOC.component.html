@@ -1,0 +1,205 @@
+<!-- <ng-container *ngIf="vistaLista; else visSecciones">
+    <div class="card">
+        <div class="grid">
+            <div class="flex justify-content-between col-12 -mt-3">
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-base font-semibold">LISTA DE COMPRA/SERVICIOS</span>
+                </div>
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-plus" 
+                        pTooltip="Agregar Orden de Compra/Servicio" tooltipPosition="left" (click)="onNuevo()" ></button>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-12 border-1 surface-border border-round mb-2 bg-blue-50">
+            <div class="flex grid">
+                <div class="col-12 sm:col-12 lg:col-6 flex-wrap">
+                    <div class="py-0 flex-wrap">
+                        <i class="pi pi-user text-primary text-1xl"></i>
+                        <span class="font-semibold text-900 text-lg ml-3">Cliente:</span>
+                        <label for="start" class="font-semibold text-600 ml-3"> {{headCliente | uppercase}} </label>
+                    </div>
+                    <div class="py-0">
+                        <i class="pi pi-calendar text-primary text-1xl"></i>
+                        <span class="font-semibold text-900 text-lg ml-3">Fecha BC:</span>
+                        <label for="start" class="font-semibold text-600 ml-3"> {{headFecha}} </label>
+                    </div>
+                    <div class="py-0">
+                        <i class="pi pi-user text-primary text-1xl"></i>
+                        <span class="font-semibold text-900 text-lg ml-3">Autor:</span>
+                        <label for="start" class="font-semibold text-600 ml-3"> {{ headNomCreador | uppercase }} </label>
+                    </div>
+                </div>
+                <div class="col-12 sm:col-12 lg:col-6 flex-wrap">
+                    <div class="py-0">
+                        <i class="pi pi-dollar text-primary text-1xl"></i>
+                        <span class="font-semibold text-900 text-lg ml-3">Tipo de Cambio:</span>
+                        <label for="start" class="font-semibold text-600 ml-3"> {{this.headTipoCambio | number: '0.2'}} </label>
+                    </div>
+                    <div class="py-0">
+                        <i class="pi pi-money-bill text-primary text-1xl"></i>
+                        <span class="font-semibold text-900 text-lg ml-3">Moneda: </span>
+                        <label for="start" class="font-semibold text-600 ml-3"> {{headMoneda | uppercase}} </label>
+                    </div>
+                    <div class="py-0">
+                        <i class="pi pi-money-bill text-primary text-1xl"></i>
+                        <span class="font-semibold text-900 text-lg ml-3">Total Quotes: </span>
+                        <label for="start" class="font-semibold text-600 ml-3"> {{headTotalQuote | number: '0.2'}} </label>
+                    </div>
+                </div>
+            </div>
+            <div class="py-0 ml-1 -mt-3">
+                <div class="flex ">
+                    <i class="pi pi-ellipsis-h text-primary text-1xl"></i>
+                    <span class="font-semibold text-900 text-lg ml-3">Descripción:</span>
+                </div>
+                <div class="ml-5">
+                    <label for="start" class="font-semibold text-600"> {{headDescrip | uppercase }} </label>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="flex justify-content-center col-12 -mt-1">
+                <div class="py-3 h-3rem flex border-round mt-2 p-2  w-full">
+                    <span class="text-primary font-semibold">LISTA DE ORDEN COMPRA/SERVICIOS</span>
+                </div>
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-plus" 
+                        pTooltip="Agregar Orden de Compra/Servicio" tooltipPosition="left" (click)="onNuevo()" ></button>
+                </div>
+            </div>
+        </div>
+      
+        <p-table [value]="lstOrdenCompra" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm">
+
+            <ng-template pTemplate="header">
+                <tr class="text-sm">
+                    <th [ngStyle]="{'width':'10px'}" class="surface-200">
+                        <div class="flex justify-content-between align-items-center">
+                            N°
+                        </div>
+                    </th>
+                    <th [ngStyle]="{'width':'50px'}" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            N° OC
+                        </div>
+                    </th>
+                    <th style="width: 350px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            PROVEEDOR
+                        </div>
+                    </th>
+                    <th style="width: 200px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            MONEDA
+                        </div>
+                    </th>
+                    <th style="width: 200px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            MONTO
+                        </div>
+                    </th>
+                    <!-- <th style="width: 250px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            COD PROYECTO
+                        </div>
+                    </th>
+                    <th style="width: 250px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            PROYECTO
+                        </div>
+                    </th> -->
+                    <th style="width: 80px;" class="surface-200">
+                        <div class="flex justify-content-between align-items-center">
+                            ACCIONES
+                        </div>
+                    </th>
+                </tr>
+
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                <tr class="text-sm">
+                    <td>
+                        {{rowIndex + 1}}
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'50px'}">
+                            {{data.idordencompra}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'250px'}">
+                            {{data.nomcomercial | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px'}">
+                            {{data.simbmoneda | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px'}">
+                            {{data.s_monto | number: '3.2'}}
+                        </div>
+                    </td>
+                    <!-- <td >
+                        <div [ngStyle]="{'width':'80px'}">
+                            {{data.idproyecto }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'80px'}">
+                            {{data.nomproyecto | uppercase}}
+                        </div>
+                    </td> -->
+                    <td>
+                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
+                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="Ver OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-folder" tooltipPosition="left" pTooltip="Ver Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="verCotiza(data)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">No se encontraron registros.</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="8">Cargando datos. Espere por favor.</td>8
+                </tr>
+            </ng-template>
+        </p-table>
+
+
+
+    <!-- </div> -->
+<!-- </ng-container>
+
+<ng-template #visSecciones>
+
+    <div class="p-fluid p-3 mb-1 card" *ngIf="visQuote" (OB_back)="getDetalle($event)">
+        <div class="grid">
+            <div class="flex justify-content-between col-12 -mt-3">
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                </div>
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
+                        pTooltip="Regresar a Bandeja" tooltipPosition="left" (click)="getBack()" ></button>
+                </div>
+            </div>
+        </div>
+        <app-c-cotizacion ></app-c-cotizacion>
+    </div>
+
+
+
+</ng-template> -->

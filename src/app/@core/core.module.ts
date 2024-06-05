@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AppMenuitemComponent } from './menu-item/app.menuitem.component';
 import { AppConfigModule } from './config/app.config.module';
@@ -14,6 +14,7 @@ import { AppRightMenuComponent } from './right-menu/app.rightmenu.component';
 import { AppSidebarComponent } from './sidebar/app.sidebar.component';
 import { AppTopbarComponent } from './topbar/app.topbar.component';
 import { SharedPrimeNgModule } from '@primeNgModule';
+import { MenuService } from './app.menu.service';
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { SharedPrimeNgModule } from '@primeNgModule';
         RouterModule,
         AppConfigModule,
         SharedPrimeNgModule,
+        ReactiveFormsModule
     ],
     exports: [
         AppBreadcrumbComponent,
@@ -44,5 +46,8 @@ import { SharedPrimeNgModule } from '@primeNgModule';
         AppMenuitemComponent,
         AppFooterComponent,
     ],
+    providers:[
+        MenuService
+      ]
 })
 export class CoreModule {}

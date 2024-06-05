@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
 
@@ -11,23 +11,43 @@ import { CCotizacionComponent } from './c-cotizacion/c-cotizacion.component';
 import { ProyectosService } from './service/proyectos.service';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ModalProyectoComponent } from './modal-proyecto/modal-proyecto.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { CListaOrdenCompraServicioComponent } from './c-lista-oc/c-listaOC.component';
+import { CDatoCotizacionComponent } from './c-dato-cotizacion/c-dato-cotizacion.component';
+import { RegistroProveedorModule } from '../registro-proveedor/registro-proveedor.module';
+import { CItemCotizacionComponent } from './c-item-cotizacion/c-item-cotizacion.component';
+import { CDatoCotizacionViewComponent } from './c-dato-cotizacion-view/c-dato-cotizacion-view.component';
+import { CDatoCotizacionViewProyecComponent } from './c-dato-cotizacion-view-proyec/c-dato-cotizacion-view-proyec.component';
+
 
 
 @NgModule({
   declarations: [
     CProyectosGanadosComponent,
     CBusinessCaseComponent,
-    CCotizacionComponent
+    CCotizacionComponent,
+    ModalProyectoComponent,
+    CListaOrdenCompraServicioComponent,
+    CDatoCotizacionComponent,
+    CItemCotizacionComponent,
+    CDatoCotizacionViewComponent,
+    CDatoCotizacionViewProyecComponent
   ],
   imports: [
     CommonModule,
     SharedPrimeNgModule,
     SharedAppModule,
-    ProyectosGanadosRoutingModule
+    ProyectosGanadosRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SplitButtonModule,
+    RegistroProveedorModule
   ],
   exports:[
     CCotizacionComponent
   ],
-  providers: [SharedAppService, ProyectosService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, ProyectosService, DynamicDialogRef, DynamicDialogConfig, DatePipe]
 })
 export class ProyectosGanadosModule { }

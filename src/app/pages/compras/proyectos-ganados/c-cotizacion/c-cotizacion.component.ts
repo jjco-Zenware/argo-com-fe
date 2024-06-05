@@ -3,8 +3,9 @@ import { SharedAppService } from '@sharedAppService';
 import { Subscription } from 'rxjs';
 import { CotizacionItem, Cotizacion } from '@interfaces';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
-import { mensajesSpinner } from '@constantes';
+import { globalVariable, mensajesSpinner } from '@constantes';
 import { ProyectosService } from '../service/proyectos.service';
+import { CDatoCotizacionViewComponent } from '../c-dato-cotizacion-view/c-dato-cotizacion-view.component';
 
 @Component({
   selector: 'app-c-cotizacion',
@@ -186,16 +187,16 @@ export class CCotizacionComponent implements OnInit, OnChanges, OnDestroy {
 
   cotizaFilter(dato: any) {
     console.log('dato...',dato);
-    this.selectedCoti = dato.idcotiza;
+    this.selectedCoti = dato.idordencompra;
     this.nomproveedor = dato.nomempresa;
     this.smonto = dato.s_monto;
             this.simbmoneda = dato.simbmoneda;
 
-    this.calcularPreciocosto(dato.idcotiza);
-    this.calcularPreciocostoTotal(dato.idcotiza);
+    this.calcularPreciocosto(dato.idordencompra);
+    this.calcularPreciocostoTotal(dato.idordencompra);
 
     if (this.lstCotizacionItem.length > 0) {
-      this.filteredCotizaItems = this.lstCotizacionItem.filter(item => item.idcotiza === dato.idcotiza)
+      this.filteredCotizaItems = this.lstCotizacionItem.filter(item => item.idcotiza === dato.idordencompra)
     }
   }
 
@@ -203,7 +204,23 @@ export class CCotizacionComponent implements OnInit, OnChanges, OnDestroy {
     data.idoportunidad = this.idoportunidad;
     console.log('getCotizacion...', data);
 
+    globalVariable.codigoId = data.idordencompra;
+    globalVariable.oportunidadId = this.idoportunidad;
 
+    const objeto = {
+      data,
+      idindicador: 0,
+      lstCotizacionItem: this.lstCotizacionItem.filter(item => item.idcotiza === data.idordencompra)
+    }
+
+    const ref = this.dialogService.open(CDatoCotizacionViewComponent, {
+      data: objeto,
+      header: "Cotización N° - " + data.idordencompra,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '50%',
+      //height: '60%'
+    });
   }
 
   ObtenerMonto() {

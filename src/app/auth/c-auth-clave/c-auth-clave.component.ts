@@ -50,10 +50,10 @@ export class CAuthClaveComponent implements OnInit, OnDestroy {
             })
             return;
           };         
-          rpta.nombreUsuario = this.IS_nombreUser
+          //rpta.nombreUsuario = this.IS_nombreUser
           this.localStorage.setearLocalStorage(rpta);
           this.isLoading = false;
-          this.router.navigate(['/pages/oportunidades/dashboard'])
+          this.router.navigate(['/pages/dashboard'])
         },
         error:(err)=>{
           this.messageService.clear();

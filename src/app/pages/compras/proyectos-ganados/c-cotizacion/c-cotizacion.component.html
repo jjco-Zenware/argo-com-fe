@@ -62,15 +62,15 @@
                         </div>
                         <div class="surface-border ml-3 border-round-md flex flex-column gap-3">
                             <div class="flex flex-column gap-1">
-                                <div (click)="cotizaFilter(team)" *ngFor="let team of lstCotizacion" class="flex justify-content-between align-items-center border-1 border-transparent border-round-md p-3 -mx-2 cursor-pointer hover:surface-hover" [ngClass]="{'bg-primary-50 border-primary-100':selectedCoti === team.idcotiza }">
+                                <div (click)="cotizaFilter(team)" *ngFor="let team of lstCotizacion" class="flex justify-content-between align-items-center border-1 border-transparent border-round-md p-3 -mx-2 cursor-pointer hover:surface-hover" [ngClass]="{'bg-primary-50 border-primary-100':selectedCoti === team.idordencompra }">
                                     <div class="flex align-items-center gap-3 text-600 font-semibold">
-                                        <span>{{nroCotizacion + team.idcotiza}}</span>
+                                        <span>{{nroCotizacion + team.idordencompra}}</span>
                                         <span class="font-semibold -mr-2">{{ team.simbmoneda }}</span>
                                         <span class="font-semibold">{{ team.s_monto | number: '0.2' }}</span>
                                     </div>
                                     <div class="flex gap-2 align-items-center">
-                                        <i class="pi pi-pencil cursor-pointer text-blue-600" style="margin-left: 20px;" pTooltip="Editar Cotización" tooltipPosition="right" (click)="getCotizacion(team)" ></i>
-                                        <i *ngIf="selectedCoti === team.idcotiza" class="pi pi-chevron-right text-primary"></i>
+                                        <i class="pi pi-eye cursor-pointer text-blue-600" style="margin-left: 20px;" pTooltip="ver Orden de Compra" tooltipPosition="right" (click)="getCotizacion(team)" ></i>
+                                        <i *ngIf="selectedCoti === team.idordencompra" class="pi pi-chevron-right text-primary"></i>
                                     </div>
                                 </div>
                             </div>
