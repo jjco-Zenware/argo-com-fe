@@ -140,23 +140,23 @@
                     </span>
                     <p class="text-red-600" *ngIf="submittedCta && formRegistro.nomcuenta.errors">* Debe Ingresar Nombre de Cuenta</p>
                 </div>
-                <div class="col-12 field h-4rem">
+                <div class="col-6 field h-4rem mb-5">
                     <div class="flex">
                         <label class="block text-900 font-semibold mb-1">Número Cuenta </label>
                     </div>
                     <span class="p-fluid">
-                        <input pInputText type="text" class="w-full" formControlName="nrocuenta"/>
+                        <input pInputText type="text" class="w-full" formControlName="nrocuenta" maxlength="20" oninput="this.value=this.value.replace(/[^0-9,-]/g,'');"/>
                     </span>
                     <p class="text-red-600" *ngIf="submittedCta && formRegistro.nrocuenta.errors">* Debe Ingresar N° Cuenta</p>
                 </div>
-                <div class="col-12 field h-4rem">
+                <div class="col-6 field h-4rem mb-5">
                     <div class="flex">
-                        <label class="block text-900 font-semibold mb-1">Número CCI </label>
+                        <label class="block text-900 font-semibold mb-1">CCI </label>
                     </div>
                     <span class="p-fluid">
-                        <input pInputText type="text" class="w-full" formControlName="nrocci"/>
+                        <input pInputText type="text" class="w-full" formControlName="nrocci" maxlength="20" oninput="this.value=this.value.replace(/[^0-9,-]/g,'');"/>
                     </span>
-                    <p class="text-red-600" *ngIf="submittedCta && formRegistro.nrocci.errors">* Debe Ingresar N° Cuenta CCI</p>
+                    <p class="text-red-600" *ngIf="submittedCta && formRegistro.nrocci.errors">* Debe Ingresar CCI</p>
                 </div>
                 <!-- <div class="col-6 field h-4rem">
                     <div class="flex">

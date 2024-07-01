@@ -1,9 +1,9 @@
-<div class="flex grid col">
-    <div class="field col-5">
+<div  class="flex grid col">
+    <div *ngIf="verAcciones" class="field col-5">
         <label class="block font-semibold text-blue-600">Descripción</label>
-        <input pInputText type="text" class="mt-1" [formControl]="descripcion" placeholder="Ingresar Descripción..."/>
+        <input pInputText type="text" class="mt-1 w-full" [formControl]="descripcion" placeholder="Ingresar Descripción..."/>
     </div>
-    <div class="field mt-6">
+    <div *ngIf="verAcciones" class="field mt-6">
         <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" [auto]="true" chooseLabel="Archivo" chooseIcon="pi pi-file" 
             class="text-sm" [disabled]="disabUpload" (uploadHandler)="onUpload($event, fubauto)" >
         </p-fileUpload>
@@ -89,7 +89,7 @@
             </td>
             <td>
                 <div class="flex align-items-center m:justify-content-end">
-                    <button  pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="left" (click)="deleteArchivo(data.idmovasset)" 
+                    <button *ngIf="verAcciones" pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="left" (click)="deleteArchivo(data.idmovasset)" 
                         pTooltip="eliminar" class="p-button-rounded p-button-text -mt-1 text-red-500"></button>
                     <button pButton pRipple type="button" icon="pi pi-cloud-download" tooltipPosition="left" (click)="download(data)"
                         pTooltip="Descargar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"></button>

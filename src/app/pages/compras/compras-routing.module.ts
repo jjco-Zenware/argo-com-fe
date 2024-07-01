@@ -22,6 +22,11 @@ const routes: Routes = [
     loadChildren: () => import('./registro-proveedor/registro-proveedor.module').then(m => m.RegistroProveedorModule),
     data: { breadcrumb: 'Registros de Compras' }
   },
+  {
+    path: 'reglas-aprobacion',
+    loadChildren: () => import('./reglas-aprobacion/reglas-aprobacion.module').then(m => m.ReglaAprobacionModule),
+    data: { breadcrumb: 'Reglas de Aprobación' }
+  },
 ];
 
 @NgModule({

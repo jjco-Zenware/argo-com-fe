@@ -194,6 +194,7 @@ export interface Cotizacion {
     s_monto: string;
     simbmoneda: string;
     condicionescomerciales: string;
+    indseleccion: boolean;
 }
 
 

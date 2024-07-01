@@ -7,6 +7,8 @@ import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { MessageService } from 'primeng/api';
 import { ProyectosService } from '../service/proyectos.service';
+import { ComprasService } from '../../Service/compraServices';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-c-item-cotizacion',
@@ -23,6 +25,11 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
     headerTitle?: string;
     submitted?: boolean;
     registerFormMarca: any = FormGroup;
+    verporTipo: boolean = false;
+    verporLic: boolean = false;
+    verporSerie: boolean = false;
+    verSku: boolean = false;
+    lstUnidades: any;
 
   constructor(
     private fb: FormBuilder,
@@ -33,17 +40,27 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
     private serviceUtilitario: UtilitariosService,
     private messageService: MessageService,
     private proyectosService: ProyectosService,
+    private comprasService: ComprasService,
+    public datepipe: DatePipe
   ) { }
 
   get formContacto() { return this.registerFormMarca.controls; }
 
   ngOnInit(): void {
     this.param = this.config.data;
+    console.log("params : ", this.param);
     this.createFrm();
-    this.createFormContacto();
-    this.getRegistro();
+    this.createFormContacto();    
     this.listarTipoProducto();
     this.listarMarcas();
+    this.listarItemsTabla();
+
+    // if (this.param.idordencompra === 0) {
+    // }else{
+    //   this.verControles(this.param.idtipoprod);
+    // }    
+    this.getRegistro();
+    this.verControles(this.param.idtipoprod);
   }
 
   ngOnDestroy() {
@@ -56,7 +73,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
     this.frmDatosItem = this.fb.group({
       idordencompraitem: [{ value: 0, disabled: false }],
       idordencompra: [{ value: 0, disabled: false }],
-      idtipoprod: [{ value: 0, disabled: false }, [Validators.required]],
+      idtipoprod: [{ value: 0, disabled: false }],
       idprod: [{ value: 0, disabled: false }],
       descripcion: [{ value: null, disabled: false }, [Validators.required]],
       cantidad: [{ value: 1, disabled: false }, [Validators.required]],
@@ -71,7 +88,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       iduseract: [{ value: 0, disabled: false }],
       fecact: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: true }],
       coditem: [{ value: '0', disabled: false }],
-      idmarca: [{ value: 0, disabled: false }, [Validators.required]],
+      idmarca: [{ value: 0, disabled: false }],
       nomprod: [{ value: null, disabled: false }],
       nommarca: [{ value: null, disabled: false }],
       preciocostototal: [{ value: 0, disabled: true }],
@@ -82,7 +99,10 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       serialnumber: [{ value: '', disabled: false }],
       sku: [{ value: '', disabled: false }],
       nrocontrato: [{ value: '', disabled: false }],
-      nromeses: [{ value: 0, disabled: false }]
+      nromeses: [{ value: 0, disabled: false }],
+      fecini: [{ value: this.serviceUtilitario.obtenerFechaInicioMes(), disabled: false }],
+      fecfin: [{ value: this.serviceUtilitario.obtenerFechaFinMes(), disabled: false }],
+      idunidad: [{ value: '', disabled: false }]
     })
   }
 
@@ -94,16 +114,39 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
 }
 
   getRegistro(){
-    console.log("params item : ", this.param);
     this.frmDatosItem.patchValue(this.param);
+    // const fechaInicio = this.changeDatePicker(this.frmDatosItem.get('fecini')?.value);
+    // const fechaFin = this.changeDatePicker(this.frmDatosItem.get('fecfin')?.value);
+
+    // this.frmDatosItem.get('fecini')?.setValue(fechaInicio);
+    // this.frmDatosItem.get('fecfin')?.setValue(fechaFin);
     console.log("frmDatosItem  : ", this.frmDatosItem.getRawValue());
+    //this.frmDatosItem.get('idtipoprod')
   }
+
+  listarItemsTabla() {
+    this.comprasService.obtenerItemsTabla(107).subscribe({
+        next: (rpta: any) => {
+          console.info('listarItemsTabla : ', rpta);
+            this.lstUnidades = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
+    }
 
   listarTipoProducto() {
     const $listarTipoProducto = this.proyectosService.obtenerTipoProducto().subscribe({
       next: (rpta: any) => {
+        console.log('listarTipoProducto', rpta);
         this.lstTipoProductoTot = rpta;
         this.lstTipoProducto = this.lstTipoProductoTot.filter(x => x.idtipoprod !== 0 && x.idtipoprod !== 8);
+        //this.frmDatosItem.get('idtipoprod')?.setValue(1);
       },
       error: (err) => {
         console.info('error : ', err);
@@ -164,6 +207,12 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
       return;
     }
+    const _fecini = new Date(this.frmDatosItem.get('fecini')?.value);
+    console.log('_fecini...', _fecini);
+    this.frmDatosItem.get('fecini')?.setValue(_fecini);
+    const _fecfin = new Date(this.frmDatosItem.get('fecfin')?.value);
+    console.log('_fecfin...', _fecfin);
+    this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
 
     const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
     this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
@@ -179,39 +228,76 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   }
 
   NuevaMarca()  {
-        this.submitted = false;
-        this.headerTitle= 'Nueva Marca' ;
-        this.marcaVisible = true;
-    }
+    this.submitted = false;
+    this.headerTitle= 'Nueva Marca' ;
+    this.marcaVisible = true;
+  }
 
-    guardarMarca() {
-        this.submitted = true;
-        if (this.registerFormMarca.invalid) {
-            this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
-            return;
-        }
-        if(this.submitted)
-        {
-            const objeto = {
-                idmarca: 0,
-                nommarca: this.registerFormMarca.value.nommarca,
-                idproveedor: 0
-              }
-              const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
-                next: (rpta: any) => {
-                    console.log('guardarMarca', rpta);
-                  this.listarMarcas();
-                },
-                error: (err) => {
-                  console.info('error : ', err);
-                  this.serviceSharedApp.messageToast()
-                },
-                complete: () => {
-                },
-              });
-              this.$listSubcription.push($prcMarcas);
+  guardarMarca() {
+      this.submitted = true;
+      if (this.registerFormMarca.invalid) {
+          this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
+          return;
+      }
+      if(this.submitted)
+      {
+          const objeto = {
+              idmarca: 0,
+              nommarca: this.registerFormMarca.value.nommarca,
+              idproveedor: 0
+            }
+            const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
+              next: (rpta: any) => {
+                  console.log('guardarMarca', rpta);
+                this.listarMarcas();
+              },
+              error: (err) => {
+                console.info('error : ', err);
+                this.serviceSharedApp.messageToast()
+              },
+              complete: () => {
+              },
+            });
+            this.$listSubcription.push($prcMarcas);
 
-            this.marcaVisible=false;
-        }
+          this.marcaVisible=false;
+      }
+  }
+
+  verControles(dato: any){
+    switch (dato) {
+      case 1:  
+        this.verporTipo = true;
+        this.verporLic = false;
+        this.verporSerie = false;
+        this.verSku = true;
+      break;
+      case 2:
+      case 3: 
+      case 6: 
+      case 7:  
+        this.verporTipo = false;
+        this.verporLic = true;
+        this.verporSerie = false;
+        this.verSku = false;
+      break;
+      case 4:  
+        this.verporTipo = false;
+        this.verporLic = false;  
+        this.verporSerie = false;   
+        this.verSku = false; 
+      break;
+      case 5:  
+        this.verporTipo = true;
+        this.verporLic = true; 
+        this.verporSerie = true; 
+        this.verSku = true;    
+      break;
     }
+  }
+
+  changeDatePicker(data:any): any {
+    let fecha = this.datepipe.transform(data, 'dd/MM/yyyy');
+    return fecha;
+  }
 }

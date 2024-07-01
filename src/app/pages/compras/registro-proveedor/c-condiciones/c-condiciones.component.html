@@ -33,6 +33,16 @@
                     NOMBRE
                 </div>
             </th>
+            <th style="width: 100px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    DESDE
+                </div>
+            </th>
+            <th style="width: 100px;" class="surface-200">
+                <div class="flex justify-content-between align-items-center">
+                    HASTA
+                </div>
+            </th>
             <th style="width: 150px;" class="surface-200">
                 <div class="flex justify-content-between align-items-center">
                     MONEDA 
@@ -41,11 +51,6 @@
             <th style="width: 100px;" class="surface-200">
                 <div class="flex justify-content-between align-items-center">
                     MONTO
-                </div>
-            </th>
-            <th style="width: 100px;" class="surface-200">
-                <div class="flex justify-content-between align-items-center">
-                    FECHA
                 </div>
             </th>
             <th style="width: 100px;" class="surface-200">
@@ -76,20 +81,25 @@
                 {{data.nomlinea | uppercase}}
             </td>
             <td>
-                {{data.desmoneda }}
-            </td>
-            <td>
-                {{data.montolinea | number: '3.2'}}
+                {{data.fechavcto | date: 'dd/MM/yyyy'}}
             </td>
             <td>
                 {{data.fechavcto | date: 'dd/MM/yyyy'}}
             </td>
+            <td>
+                {{data.desmoneda }}
+            </td>
+            <td>
+                {{data.montolinea | number: '3.2'}}
+            </td>            
             <td>
                 {{data.saldo | number: '3.2'}}
             </td>
             <td style="text-align: start;">
                 <button pButton pRipple type="button" icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="left" (click)="editarLinea(data)" class="p-button-rounded p-button-text mr-2 -mt-2"></button>
                 <button pButton pRipple type="button" icon="pi pi-trash" pTooltip="Eliminar" tooltipPosition="left" (click)="eliminarLinea(data)" class="p-button-rounded p-button-text mr-2 -mt-2 text-red-500"></button>
+                <button pButton pRipple type="button" icon="pi pi-paperclip" pTooltip="Anjuntos" tooltipPosition="left" (click)="agregarAdjunto(data)" class="p-button-rounded p-button-text mr-2 -mt-2"></button>
+
             </td>
         </tr>
     </ng-template>
@@ -109,18 +119,40 @@
     <p-header styleClass="testDialog"> <i class="pi pi-folder-open" style="margin-right: 10px;"></i>{{ headerTitle }} </p-header>
 
         <form [formGroup]="registerFormLinea" (ngSubmit)="guardarLinea()">
-            <div class="p-fluid border-1 surface-border mb-3 bg-blue-50 p-2 border-round m-2 grid">
+            <div class="p-fluid border-1 surface-border mb-2 bg-blue-50 p-2 border-round m-2 grid">
                 <span [hidden]="true"> {{ IdLinea }} </span>
                 <div class="col-12 field h-4rem">
                     <div class="flex">
-                        <label class="block text-900 font-semibold mb-1">Línea</label>
+                        <label class="block text-900 font-semibold mb-1">Descripción</label>
                     </div>
                     <span class="p-fluid">
                         <input pInputText type="text" class="w-full" formControlName="nomlinea"/>
                         <p class="text-red-600" *ngIf="submittedLinea && formLinea.nomlinea.errors">* Debe Ingresar Línea</p>
                     </span>
                 </div>
-                <div class="col-6 field h-4rem">
+                <div class="col-6 field h-4rem ">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Desde</label>
+                    </div>
+                    <span class="p-fluid">
+                        <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechavcto" dateType="string" 
+                            [readonlyInput]="true" appendTo="body" formControlName="fechavcto">
+                        </p-calendar>
+                        <p class="text-red-600" *ngIf="submittedLinea && formLinea.fechavcto.errors">* Debe Ingresar Desde</p>
+                    </span>
+                </div>
+                <div class="col-6 field h-4rem ">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Hasta</label>
+                    </div>
+                    <span class="p-fluid">
+                        <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechavcto" dateType="string" 
+                            [readonlyInput]="true" appendTo="body" formControlName="fechavcto">
+                        </p-calendar>
+                        <p class="text-red-600" *ngIf="submittedLinea && formLinea.fechavcto.errors">* Debe Ingresar Hasta</p>
+                    </span>
+                </div>
+                <div class="col-6 field h-4rem mb-4">
                     <div class="flex">
                         <label class="block text-900 font-semibold mb-1">Moneda</label>
                     </div>
@@ -130,7 +162,7 @@
                           <p class="text-red-600" *ngIf="submittedLinea && formLinea.idmoneda.errors">* Debe Seleccionar Moneda</p>
                     </span>
                 </div>
-                <div class="col-6 field h-4rem">
+                <div class="col-3 field h-4rem mb-4">
                     <div class="flex">
                         <label class="block text-900 font-semibold mb-1">Monto</label>
                     </div>
@@ -139,7 +171,7 @@
                         <p class="text-red-600" *ngIf="submittedLinea && formLinea.montolinea.errors">* Debe Ingresar Monto</p>
                     </span>
                 </div>
-                <div class="col-6 field h-4rem">
+                <div class="col-3 field h-4rem mb-4">
                     <div class="flex">
                         <label class="block text-900 font-semibold mb-1">Saldo</label>
                     </div>
@@ -149,17 +181,7 @@
                     </span>
                     
                 </div>
-                <div class="col-6 field h-4rem mb-6">
-                    <div class="flex">
-                        <label class="block text-900 font-semibold mb-1">Vencimiento</label>
-                    </div>
-                    <span class="p-fluid">
-                        <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechavcto" dateType="string" 
-                            [readonlyInput]="true" appendTo="body" formControlName="fechavcto">
-                        </p-calendar>
-                        <p class="text-red-600" *ngIf="submittedLinea && formLinea.fechavcto.errors">* Debe Ingresar Vencimiento</p>
-                    </span>
-                </div>
+                
             </div>
             <div class="flex justify-content-end">
                 <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary w-auto"></button>

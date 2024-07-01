@@ -121,7 +121,6 @@ export class ComprasService {
 
     emitirEvento(dato:any) {
         console.log('emitirEvento...', dato);
-
         globalVariable.codigoId =  dato;
         this.$emitter.emit(dato);
     }
@@ -145,5 +144,45 @@ export class ComprasService {
         const url = `${constantesApiWeb.PersonaCuentaDell}${codigo}`;
         return this.http.get<any>(url);
     }
-    
+
+    listarFlujo() {
+        const url = `${constantesApiWeb.listarFlujo}`;
+        return this.http.get<any>(url);
+    }  
+
+    grabarRegla(objeto: any) {
+        const url = `${constantesApiWeb.grabarRegla}`;
+        console.log('url', url);
+        return this.http.post<any>(url, objeto);
+    }
+
+    listarReglaFlujo() {
+        const url = `${constantesApiWeb.listarReglaFlujo}`;
+        return this.http.get<any>(url);
+    }
+
+    traerUnoReglaFlujo(codigo: any) {
+        const url = `${constantesApiWeb.traerUnoReglaFlujo}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    agregarResolutor(objeto: any) {
+        const url = `${constantesApiWeb.agregarResolutor}`;
+        return this.http.post<any>(url, objeto);
+    }
+
+    listarPerfil(objeto: any) {
+        const url = `${constantesApiWeb.listarPerfil}`;
+        return this.http.post<any>(url, objeto);
+    }
+
+    listarResolutor(codigo: any) {
+        const url = `${constantesApiWeb.listarResolutor}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    eliminarResolutor(objeto: any) {
+        const url = `${constantesApiWeb.eliminarResolutor}`;
+        return this.http.post<any>(url, objeto);
+    }
 }

@@ -27,6 +27,7 @@ export class ModalProyectoComponent {
   onEditar: boolean = false;
   blockedDocument: boolean = false;
     mensajeSpinner: string = "Cargando...!";
+    lstOrigen: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,20 +47,28 @@ get formRegistro() { return this.registerFormRegistro.controls; }
 ngOnInit(): void {  
   console.log('codigop ver...',this.config.data);
   this.onEditar = this.config.data.indEditar;
+  this.listaProyectoTipo();
   this.listaClientes();
   this.createFormRegistro();
-  this.verControles();
+  //this.verControles();
   if (this.config.data.idproyecto > 0) {
     this.traerunoProyecto();
+  }else{
+    this.verControles(1);
   }
 }
 
 setSpinner(valor: boolean) {
   this.blockedDocument = valor;
-  }
+}
 
-verControles(){
-  switch (this.config.data.idtipoproyecto) {
+changeOrigen(dato:any){
+  console.log('changeOrigen', dato);
+  this.verControles(dato);
+}
+
+verControles(data:any){
+  switch (data) {
     case 1:
       this.verOpor = true;
       this.verInter = false;
@@ -96,6 +105,8 @@ traerunoProyecto(){
         this.registerFormRegistro.get('nomproyecto').setValue(rpta[0].nomproyecto);
         this.registerFormRegistro.get('idrequerimiento').setValue(rpta[0].idrequerimiento);
         this.registerFormRegistro.get('descripcion').setValue(rpta[0].descripcion);
+
+        this.verControles(rpta[0].idtipoproyecto);
       },
       error:(err)=>{
         this.setSpinner(false);
@@ -125,6 +136,7 @@ traerunoProyecto(){
       idrequerimiento: [{ value: 0, disabled: false }],
       descripcion: [{ value: '', disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      codtipodoc: [{ value: '', disabled: false }],
     });
 }
 
@@ -320,5 +332,27 @@ validarDatos():boolean{
      //this.formValue.taskList?.tasks
      return _error;
    }
+
+   listaProyectoTipo(){
+    this.proyectosService.tipoProyectoList().subscribe({
+      next: (rpta: any) => {
+        this.lstOrigen = rpta;
+      console.info('listaProyectoTipo : ', this.lstOrigen);
+      //this.itemsNvoPro = rpta;
+
+      },
+      error: (err) => {
+      console.info('error : ', err);
+      this.messageService.clear();
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+      });
+      },
+      complete: () => {
+      },
+  });
+  }
 
 }

@@ -5,6 +5,8 @@ import { ComprasService } from '../../Service/compraServices';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { constantesLocalStorage, globalVariable, mensajesQuestion } from '@constantes';
 import { SharedAppService } from '@sharedAppService';
+import { CAdjuntosComponent } from '../c-adjuntos/c-adjuntos.component';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-c-condiciones',
@@ -36,6 +38,7 @@ export class CCondicionesComponent {
          private formBuilder: FormBuilder,
          private comprasService: ComprasService,
          private serviceSharedApp: SharedAppService,
+         public dialogService: DialogService,
       ) {
         
       }
@@ -251,5 +254,22 @@ export class CCondicionesComponent {
         });
       
         }
+
+    agregarAdjunto(data: any) {
+      console.log('agregarAdjunto', globalVariable.codigoId);
+      const dataLegal ={
+        idCliente: data.idlineaprov,
+        codtipoproc: 8
+      }
+      //console.log('dataxxxxxxx...', data);
+      const ref = this.dialogService.open(CAdjuntosComponent, {
+          data: dataLegal,
+          header: 'Adjuntos de la Línea: ' + data.nomlinea,
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '80%',
+          height: '50%'
+      });
+  }
       
 }

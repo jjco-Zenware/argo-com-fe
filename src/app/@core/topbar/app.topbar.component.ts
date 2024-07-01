@@ -235,7 +235,7 @@ export class AppTopbarComponent implements OnInit, OnDestroy {
         const guardarFotoCloudinary = this.menuService.guardarFotoCloudinary(objeto)
             .subscribe({
                 next: (rpta:any) => {
-                    console.log("guardarFotoCloudinary : ", rpta);
+                    //console.log("guardarFotoCloudinary : ", rpta);
                     
                 },
                 error:(err)=>{
@@ -251,7 +251,7 @@ export class AppTopbarComponent implements OnInit, OnDestroy {
         const listarNotificaciones = this.menuService.ListarNotificacion(constantesLocalStorage.idusuario)
             .subscribe({
                 next: (rpta:any) => {
-                    console.log("listarNotificaciones : ", rpta);
+                    //console.log("listarNotificaciones : ", rpta);
                     this.lstNotificacion = rpta;
                     this.totNoti = rpta.length;
                 },

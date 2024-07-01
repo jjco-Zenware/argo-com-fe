@@ -1,0 +1,141 @@
+<ng-container *ngIf="vistaLista; else visSecciones">
+    <div class="card">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">   
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="NUEVO"
+                        pTooltip="Nueva Regla" tooltipPosition="left" (click)="onNuevo()" ></button>
+                </div>                 
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-base font-semibold">REGLAS DE APROBACIÓN</span>
+                </div>           
+            </div>
+        </div>             
+
+        <p-table [value]="lstReglas" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
+
+            <ng-template pTemplate="header">
+                <tr class="text-sm h-3rem">
+                    <th [ngStyle]="{'width':'20px'}" class="surface-200">
+                        <div class="flex justify-content-between align-items-center">
+                            N°
+                        </div>
+                    </th>
+                    <th [ngStyle]="{'width':'50px'}"  class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            ID REGLA 
+                        </div>
+                    </th>
+                    <th [ngStyle]="{'width':'50px'}" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            ID FLUJO
+                        </div>
+                    </th>
+                    <th [ngStyle]="{'width':'300px'}" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            NOMBRE DE REGLA
+                        </div>
+                    </th>
+                    <th style="width: 150px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            MONEDA  
+                        </div>
+                    </th>
+                    <th style="width: 150px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            MONTO INICIAL 
+                        </div>
+                    </th>
+                    <th style="width: 250px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            MONTO FINAL
+                        </div>
+                    </th>
+                    <th style="width: 80px;" class="surface-200">
+                        <div class="flex justify-content-between align-items-center">
+                            ACCIONES
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                <tr class="text-sm">
+                    <td [ngStyle]="{'width':'20px'}">
+                        {{rowIndex + 1}}
+                    </td>
+                    <td >
+                        <div [ngStyle]="{'width':'50px'}">
+                            {{data.idregla}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'50px'}">
+                            {{data.idflujo}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'300px'}">
+                            {{data.descripcion | uppercase}}
+                        </div>
+                    </td><td>
+                        <div [ngStyle]="{'width':'150px'}">
+                            {{data.desmoneda}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'150px'}">
+                            {{data.montoini | number: '3.2'}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px'}">
+                            {{data.montofin | number: '3.2'}}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
+                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="Ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="left" pTooltip="Eliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-600" (click)="eliminar(data)"></button>                        
+
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">No se encontraron registros.</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="8">Cargando datos. Espere por favor.</td>8
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</ng-container>
+
+<ng-template #visSecciones>
+
+    <div class="p-fluid p-3 mb-1 card" (OB_back)="getDetalle($event)">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
+                        pTooltip="Regresar" tooltipPosition="left" (click)="getBack()" ></button>                    
+                </div>
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-base font-semibold">{{tituloDetalle}}</span>
+                </div>       
+            </div>
+        </div>
+        <app-c-detalle [IA_data]="dataRegla"></app-c-detalle>
+    </div>
+
+</ng-template>
+
+<p-toast></p-toast>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

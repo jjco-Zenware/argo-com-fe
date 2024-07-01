@@ -48,26 +48,7 @@ export class CProyectosGanadosComponent implements OnInit{
 
     ngOnInit(): void{     
         this.createFrm();
-        this.itemsNvoPro = [
-            {
-                label: 'Oportunidad', 
-                command: () => {
-                    this.onNuevo("O");
-                }
-            },
-            {
-                label: 'Interno',
-                command: () => {
-                    this.onNuevo("I");
-                }
-            },
-            {
-                label: 'Venta Pura',
-                command: () => {
-                    this.onNuevo("V");
-                }
-            },
-        ];
+        //this.listaProyectoTipo();
         this.cargarLista(); 
     }
 
@@ -130,13 +111,6 @@ export class CProyectosGanadosComponent implements OnInit{
 
         this.codigoBC = data.idoportunidad;
         this.oportunidadTraerUno(data.idoportunidad);
-
-        // const {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio, idlista} = this.oportunidad;
-        // this.dataCT = {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio, idlista};
-
-        // this.vistaLista = false;
-        // this.visDetalle = true;
-        // this.visOcOs= false;
     }
 
     onVer(dato: any) {
@@ -200,32 +174,33 @@ export class CProyectosGanadosComponent implements OnInit{
         this.visOcOs= false;
     } 
 
-    onNuevo(dato:any){
-        let nomProyecto='';
-        switch (dato) {
-            case 'O':
-                nomProyecto='Oportunidad'
-                this._tipoProy = 1;
-            break;                
-            case 'I':
-                nomProyecto='Interno'  
-                this._tipoProy = 2;              
-            break;                
-            case 'V':
-                nomProyecto='Venta Pura' 
-                this._tipoProy = 3;               
-            break;   
-        }
+    onNuevo(){
+        // let nomProyecto='';
+        // let dato = '';
+        // switch (dato) {
+        //     case 'O':
+        //         nomProyecto='Oportunidad'
+        //         this._tipoProy = 1;
+        //     break;                
+        //     case 'I':
+        //         nomProyecto='Interno'  
+        //         this._tipoProy = 2;              
+        //     break;                
+        //     case 'V':
+        //         nomProyecto='Venta Pura' 
+        //         this._tipoProy = 3;               
+        //     break;   
+        // }
 
         const objeto = {
-            idtipoproyecto : this._tipoProy,
+            idtipoproyecto : 1,
             idproyecto: 0,
             indEditar: false
         }
 
         const ref = this.dialogService.open(ModalProyectoComponent, {
             data: objeto ,
-            header: "Nuevo Proyecto - "+ nomProyecto,
+            header: "Nuevo Proyecto",
             styleClass: 'testDialog',
             closeOnEscape: false,
             closable: true,

@@ -6,15 +6,10 @@
                 <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
                     <span class="text-base font-semibold">PROYECTOS</span>
                 </div>
-                <div class="mt-1">
-                    <p-splitButton label="NUEVO" [model]="itemsNvoPro" appendTo="body"
-                    styleClass="p-button-raised p-button-text mt-1 h-3rem"></p-splitButton>
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="NUEVO"
+                        pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>
-               
-                <!-- <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center w-auto" icon="pi pi-plus-circle" label="Nuevo"
-                        pTooltip="Agregar Proyecto" tooltipPosition="left" (click)="onNuevo()" ></button>                                                   
-                </div> -->
             </div>
         </div>
         <form [formGroup]="frmDatos">

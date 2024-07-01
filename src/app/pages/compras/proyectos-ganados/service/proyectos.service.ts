@@ -128,4 +128,14 @@ export class ProyectosService {
         const url = `${constantesApiWeb.updProyecto}`;
         return  this.http.post<any>(url, objeto)
     }
+
+    ordenCompraTraeruno(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompraTraeruno}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    tipoProyectoList() {
+        const url = `${constantesApiWeb.tipoProyectoList}`;
+        return this.http.get<any>(url);
+    } 
 }

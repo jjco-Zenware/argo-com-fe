@@ -1,0 +1,173 @@
+<div class="p-2">
+    
+    <!-- <div class="field col-12 md:col-2">
+        <button pButton type="button" (click)="grabarRegla()" label="Grabar"
+            class="font-semibold w-auto h-3rem -ml-3 -mt-1" icon="pi pi-save"></button>
+    </div> -->
+
+    <form [formGroup]="registerFormRegistro" class="ml-3 mb-3 -mr-3 mt-4">
+        <div class="p-fluid p-formgrid grid col-12 text-sm card border-1 border-round surface-border p-2">
+            
+            <div class="h-4rem field col-12 lg:col-3 sm:col-6 md:col-12">
+                <label htmlFor="fechaInicio" class="font-semibold">FLUJO</label>
+                <span class="p-fluid ">
+                    <p-dropdown [options]="lstFlujo" formControlName="idflujo" placeholder="Seleccionar..." optionLabel="nombretrack" 
+                    optionValue="idtrack" ></p-dropdown>
+                </span>
+            </div>
+            <div class="h-4rem field col-12 lg:col-2 sm:col-6 md:col-12">
+                <label class="font-semibold">MONEDA</label>  
+                <span class="p-fluid">
+                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                    optionValue="idmoneda" appendTo="body"></p-dropdown>
+                </span>                                      
+            </div> 
+            <div class="h-4rem field col-12 lg:col-2 sm:col-6 md:col-12">
+                <label  class="font-semibold">MONTO INICAL</label>
+                <span class="p-fluid">
+                    <p-inputNumber formControlName="montoini" locale="es-PE" mode="decimal" [minFractionDigits]="2" ></p-inputNumber>
+                </span>
+            </div>            
+            <div class="h-4rem field col-12 lg:col-2 sm:col-6 md:col-12">
+                <label  class="font-semibold">MONTO FINAL</label>
+                <span class="p-fluid">
+                    <p-inputNumber formControlName="montofin" locale="es-PE" mode="decimal" [minFractionDigits]="2" ></p-inputNumber>
+                </span>
+            </div>
+            <div class="field col-12 lg:col-2 sm:col-2 md:col-12"></div>
+            <div class="h-4rem field col-12 lg:col-1 sm:col-6 md:col-12">
+                <label  class="font-semibold">N° REGLA</label>
+                <span class="p-fluid">
+                    <input pInputText type="text" formControlName="idregla"/>
+                </span>
+            </div>           
+            <div class="h-5rem field col-12 lg:col-9 sm:col-6 md:col-12">
+                <label  class="font-semibold">DESCRIPCIÓN</label>
+                <span class="p-fluid">
+                    <input pInputText type="text" formControlName="descripcion"/>
+                </span>
+            </div>
+            <div class="field col-12 lg:col-2 sm:col-2 md:col-12"></div>
+            <div class="justify-content-end mt-6 ml-5">
+                <button pButton type="button" (click)="grabarRegla()" label="Grabar"
+                    class="font-semibold w-auto h-3rem -mt-1" icon="pi pi-save"></button>
+            </div>
+        </div>
+    </form>       
+
+    <p-table [value]="lstDetalle" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+        [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
+        <ng-template pTemplate="caption">
+            <div class="mb-1 border-bottom-1 surface-border py-3 flex -mt-3">
+                <button pButton class="p-button-outlined w-full sm:w-auto flex-order-0 sm:flex-order-1 justify-content-center" icon="pi pi-user-plus"
+                    label="Agregar" (click)="agregarResolutor()" [disabled]=verbtnAgregar>
+                </button>                
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr class="text-sm h-3rem">
+                <!-- <th [ngStyle]="{'width':'20px'}" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        N°
+                    </div>
+                </th> -->
+                <th [ngStyle]="{'width':'50px'}"  class="surface-200" >
+                    <div class="justify-content-between align-items-center">
+                        NIVEL 
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'250px'}" class="surface-200" >
+                    <div class="justify-content-between align-items-center">
+                        PERFIL APROBADOR 01
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'250px'}" class="surface-200" >
+                    <div class="justify-content-between align-items-center">
+                        PERFIL APROBADOR 02
+                    </div>
+                </th>
+                <th style="width: 80px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        ACCIONES
+                    </div>
+                </th>
+            </tr>           
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <!-- <td [ngStyle]="{'width':'20px'}">
+                    {{rowIndex + 1}}
+                </td> -->
+                <td >
+                    <div [ngStyle]="{'width':'50px'}">
+                        {{rowIndex + 1}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'250px'}">
+                        {{data.nomperfil | uppercase}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'250px'}">
+                        {{data.nomperfil2 | uppercase}}
+                    </div>
+                </td>
+                <td>
+                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
+                        <button pButton pRipple type="button" icon="pi pi-pencil" tooltipPosition="left" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="editarResolutor(data)"></button>                        
+                        <button pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="left" pTooltip="Eliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-600" (click)="eliminarResolutor(data)"></button>                        
+                    </div>
+                    
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="8">Cargando datos. Espere por favor.</td>8
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-dialog [(visible)]="resolutorVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '25vw'}" [breakpoints]="{'960px': '75vw'}">
+        <p-header> <i class="pi pi-folder" style="margin-right: 10px;"></i> Resolutor </p-header>
+
+            <form [formGroup]="registerFormResolutor" (ngSubmit)="grabarResolutor()">
+                <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
+                    <div class="mb-3 field">
+                        <label class="font-semibold">ID Resolutor</label>
+                        <input pInputText type="text" formControlName="idresolutor" />
+                    </div>
+                    <div class="mb-3 field">
+                        <label class="font-semibold">Perfil Aprobador 01</label>
+                        <p-dropdown [options]="lstPerfil" formControlName="idperfil" placeholder="Seleccionar..." optionLabel="desperfil" 
+                            optionValue="idperfil" appendTo="body"></p-dropdown>
+                    </div>
+                    <div class="mb-3 field flex h-2rem justify-content-between">
+                        <p-divider class="col-5 -mt-3"></p-divider>
+                        <label class="font-semibold col-2 justify-content-center -mt-1">Ó</label>
+                        <p-divider class="col-5 -mt-3"></p-divider>
+                    </div>
+                    <div class="mb-3 field">
+                        <label class="font-semibold">Perfil Aprobador 02</label>
+                        <p-dropdown [options]="lstPerfil" formControlName="idperfil2" placeholder="Seleccionar..." optionLabel="desperfil" 
+                            optionValue="idperfil" appendTo="body"></p-dropdown>
+                    </div>
+                </div>
+                <div class="flex justify-content-end">
+                    <button pButton icon="pi pi-check" label="Agregar" type="submit" class="p-button-primary w-auto"></button>
+                </div>
+            </form>
+    </p-dialog>
+</div>
+
+<p-toast></p-toast>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>

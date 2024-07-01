@@ -1,5 +1,15 @@
 <form [formGroup]="registerFormRegistro" (ngSubmit)="prcProyecto()">
-    <div class="p-fluid border-1 surface-border mb-3 bg-blue-50 p-2 border-round m-2 grid">        
+    <div class="p-fluid border-1 surface-border mb-3 bg-blue-50 p-2 border-round m-2 grid">              
+        <div class="col-12 field">
+            <div class="flex">
+                <label class="block text-900 font-semibold mb-1">Origen</label>
+            </div>
+            <span class="p-fluid">
+                <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
+                optionValue="idtipoproyecto" (onChange)="changeOrigen($event.value)"></p-dropdown>
+            </span>
+            <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.idcliente.errors">* Debe Seleccionar Cliente</p> -->
+        </div>
         <div *ngIf="verOpor" class="col-12 field">
             <div class="flex">
                 <label class="block text-900 font-semibold mb-1">Cliente</label>

@@ -94,13 +94,13 @@
                     {{data.nrodocumento}}
                 </td>
                 <td>
-                    {{data.nomtipopersona}}
+                    {{data.nomtipopersona | uppercase}}
                 </td>
                 <td>
                     {{data.telefresumen}}
                 </td>
                 <td>
-                    {{data.email}}
+                    {{data.email | uppercase}}
                 </td>
                 <td>
                     <!-- <div [ngClass]="{'text-green-500': data.indestado, 'text-red-500': !data.indestado}">

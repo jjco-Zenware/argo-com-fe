@@ -15,6 +15,13 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { RegistroProveedorModule } from '../registro-proveedor/registro-proveedor.module';
 import { CContactoComponent } from './c-contacto/c-contacto.component';
 import { OrdencompraService } from './service/ordencompra.service';
+import { CModalExcTransacComponent } from './modal-exc-transac/modal-exc-transac.component';
+import { CDatoCotizacionComponent } from './c-dato-cotizacion/c-dato-cotizacion.component';
+import { CCotizacionComponent } from './c-cotizacion/c-cotizacion.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { TagModule } from 'primeng/tag';
+
+
 
 
 @NgModule({
@@ -22,7 +29,10 @@ import { OrdencompraService } from './service/ordencompra.service';
     COrdenCompraServicioComponent,
     CabeceraocComponent,
     DetalleocComponent,
-    CContactoComponent
+    CContactoComponent,
+    CModalExcTransacComponent,
+    CCotizacionComponent,
+    CDatoCotizacionComponent
   ],
   imports: [
     CommonModule,
@@ -33,7 +43,9 @@ import { OrdencompraService } from './service/ordencompra.service';
     ReactiveFormsModule,
     ProyectosGanadosModule,
     SplitButtonModule,
-    RegistroProveedorModule
+    RegistroProveedorModule,
+    SelectButtonModule,
+    TagModule 
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, OrdencompraService]
 })

@@ -9,6 +9,7 @@ const controllerUsuario: string = webApi+'Usuario';
 const controllerComercial: string = webApi+'Comercial';
 const controllerMain: string = webApi+'Main';
 const controllerArchivo: string = webApi+'Archivo';
+const controllerPerfil: string = webApi+'Perfil';
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -72,5 +73,22 @@ export const constantesApiWeb = {
     lineaproveedorDel: controllerComercial + '/lineaproveedordel/',
     PersonaCuentaDell: controllerComercial + '/PersonaCuentaDell/',
     kanbanListaContactosOpor: controllerCRM + '/contactolistoportunidad/',
+    ordenCompraTraeruno: controllerComercial + '/ordencompratrearuno',
+    tipoProyectoList: controllerComercial + '/tipoproyectolist',
+    portipoProyectoList: controllerComercial + '/proyectolist02/',
+
+    procesarTrx: controllerMain + '/prctrxdoc',
+    prcDocumento: controllerMain + '/prcdocumento',
+    listarFlujo: controllerComercial + '/trackflujolist',
+    grabarRegla: controllerComercial + '/reglaflujoprc/',
+    listarReglaFlujo: controllerComercial + '/reglaflujolist',
+    traerUnoReglaFlujo: controllerComercial + '/reglaflujotraeruno/',
+    agregarResolutor: controllerComercial + '/reglaflujoresolutorprc',
+    listarPerfil: controllerPerfil + '/listarPerfil/',
+    listarResolutor: controllerComercial + '/reglaflujoresolutorlist/',
+    eliminarResolutor: controllerComercial + '/reglaflujoresolutordel/',
+
+    //reglaflujoresolutordel
+    descargarPlantilla: controllerArchivo + '/descargarplantilla/',
 
 }

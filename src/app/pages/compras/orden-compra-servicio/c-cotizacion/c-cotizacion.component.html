@@ -1,0 +1,152 @@
+<p-card>
+    <div class="justify-content-between">
+        <div class="p-1">
+            <div class="col-12 border-1 surface-border border-round -mb-2 bg-blue-50 mt-2">
+                <div class="flex grid">
+                    <div class="col-12 sm:col-12 lg:col-6 flex-wrap">
+                        <div class="py-0 flex-wrap">
+                            <i class="pi pi-user text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Cliente:</span>
+                            <label for="start" class="font-semibold text-600 ml-3"> {{headCliente | uppercase}} </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-calendar text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Fecha BC:</span>
+                            <label for="start" class="font-semibold text-600 ml-3"> {{headFecha}} </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-user text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Autor:</span>
+                            <label for="start" class="font-semibold text-600 ml-3"> {{ headNomCreador | uppercase }} </label>
+                        </div>
+                    </div>
+                    <div class="col-12 sm:col-12 lg:col-6 flex-wrap">
+                        <div class="py-0">
+                            <i class="pi pi-dollar text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Tipo de Cambio:</span>
+                            <label for="start" class="font-semibold text-600 ml-3"> {{this.headTipoCambio | number: '0.2'}} </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-money-bill text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Moneda: </span>
+                            <label for="start" class="font-semibold text-600 ml-3"> {{headMoneda | uppercase}} </label>
+                        </div>
+                        <div class="py-0">
+                            <i class="pi pi-money-bill text-primary text-1xl"></i>
+                            <span class="font-semibold text-900 text-lg ml-3">Total Quotes: </span>
+                            <label for="start" class="font-semibold text-600 ml-3"> {{headTotalQuote | number: '0.2'}} </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="py-0 ml-1 -mt-3">
+                    <div class="flex ">
+                        <i class="pi pi-ellipsis-h text-primary text-1xl"></i>
+                        <span class="font-semibold text-900 text-lg ml-3">Descripción Oportunidad</span>
+                    </div>
+                    <div class="ml-5">
+                        <label for="start" class="font-semibold text-600"> {{headDescrip | uppercase }} </label>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 ">
+                <div class="flex grid">
+                    <div class="col-12 md:col-3 border-1 surface-border border-round mt-3" style="height: 450px; overflow: auto" >
+                        
+                        <div class="surface-border ml-3 border-round-md flex flex-column gap-3">
+                            <div class="flex flex-column gap-2">
+                                <!-- <div class="justify-content-center">
+                                    <p-selectButton [options]="stateOptions" [(ngModel)]="value" optionLabel="label" optionValue="value"></p-selectButton>
+                                </div> -->
+                                <div  *ngFor="let team of lstCotizacion" class="flex justify-content-between align-items-center border-1 border-transparent border-round-md p-3 -mx-2 hover:surface-hover" [ngClass]="{'bg-primary-50 border-primary-100':selectedCoti === team.idcotiza }">
+                                    <div class="flex gap-2 align-items-center">
+                                        <p-checkbox [binary]="true" [(ngModel)]="team.indseleccion" inputId="binary" (onChange)="changeCheckBox(team)"></p-checkbox>
+                                    </div>
+                                    <div (click)="cotizaFilter(team)" class="flex align-items-center gap-3 text-600 font-semibold cursor-pointer">
+                                        <span>{{team.idcotiza}}</span>
+                                        <span class="font-semibold -mr-2">{{ team.simbmoneda }}</span>
+                                        <span class="font-semibold">{{ team.s_monto | number: '0.2' }}</span>
+                                    </div>
+                                    <div class="flex gap-2 align-items-center">
+                                        <i *ngIf="selectedCoti === team.idcotiza" class="pi pi-chevron-right text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 md:col-9 border-1 surface-border border-round mt-3" style="height: 450px; overflow: auto">
+                        <div class="flex align-items-center h-3rem border-primary-100 border-1 border-round px-3 fonthead">
+                            <div class="col-7 md:col-7 text-sm">
+                                <span class="font-semibold">{{selectedCoti + ' - ' + nomproveedor | uppercase}}</span>
+                                <span class="font-semibold"> - </span>
+                                <span class="font-semibold mr-1 text-base">{{ simbmoneda}}</span>
+                                        <span class="font-semibold text-base">{{ smonto | number: '0.2' }}</span>
+                            </div>
+                            <div class="col-5 md:col-5 -ml-3">
+                                <div class="flex justify-content-between gap-2 flex-1 font-semibold text-sm">
+                                    <div class="flex flex-column justify-content-between" style="flex-basis: 100%;">
+                                        <span>CANTIDAD</span>
+                                    </div>
+                                    <div class="flex flex-column justify-content-between" style="flex-basis: 100%;">
+                                        <span >COSTO {{ simbmoneda}}</span>
+                                    </div>
+                                    <div class="flex flex-column justify-content-between" style="flex-basis: 100%;">
+                                        <span >TOTAL  {{ simbmoneda}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="surface-border border-round-md h-28rem overflow-y-auto text-sm">
+                            <div *ngFor="let member of filteredCotizaItems" class="grid grid-nogutter align-items-center p-2 border-round border-1 surface-border text-700 hover:text-color">
+                                <div class="col-7 md:col-7">
+                                    <div class="flex flex-column flex-wrap">
+                                        <span class="font-semibold text-sm">{{ member.descripcion | uppercase }}</span>
+                                        <div class="flex-wrap text-sm ">
+                                            <span>{{ member.nommarca | uppercase}}</span>
+                                            <span> - </span>
+                                            <span>{{ member.nomtipoprod | uppercase}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-5 md:col-5">
+                                    <div class="flex justify-content-between gap-2 flex-1 text-left">
+                                        <div class="aling-content-end" style="flex-basis: 100%;">
+                                            <label>1</label>
+                                        </div>
+                                        <div  style="flex-basis: 100%;">
+                                            <span >{{member.preciocosto | number: '0.2'}}</span>
+                                        </div>
+                                        <div style="flex-basis: 100%;">
+                                            <span>{{member.preciocostototal | number: '0.2'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 flex">
+                                <div class="col-6"> </div>
+                                <div class=" col-6">
+                                    <div class="flex justify-content-between font-semibold gap-2 flex-1 text-left">
+                                        <div style="flex-basis: 50%;">
+                                            <label>TOTALES : </label>
+                                        </div>
+                                        <div style="flex-basis: 100%;">
+                                            <span >{{Cantidad | number}}</span>
+                                        </div>
+                                        <div style="flex-basis: 140%;">
+                                        </div>
+                                        <div style="flex-basis: 100%;">
+                                            <span >{{ simbmoneda | uppercase}} {{PreciocostoTotal | number: '0.2'}}</span>
+                                        </div>
+                                    </div>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</p-card>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+

@@ -6,6 +6,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { constantesLocalStorage, globalVariable, mensajesQuestion } from '@constantes';
 import { I_RespuestaProceso } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'app-c-adjuntos',
@@ -23,7 +24,8 @@ export class CAdjuntosComponent {
     descripcion: FormControl = new FormControl({ value: '', disabled: false });
     disabUpload:boolean = true;
     idCliente: any;
-    private _codtipoproc: any;
+    _codtipoproc: any;
+    verAcciones: boolean = true;
 
     constructor(
         private messageService: MessageService,
@@ -31,6 +33,8 @@ export class CAdjuntosComponent {
          private formBuilder: FormBuilder,
          private comprasService: ComprasService,
          private serviceSharedApp: SharedAppService,
+         public config: DynamicDialogConfig
+
       ) {
         
       }
@@ -42,13 +46,20 @@ export class CAdjuntosComponent {
 
       ngOnInit(): void { 
         console.log('this.IA_codigo...', this.IA_data);
+        //console.log('codigop ver...',this.config.data);
         if (this.IA_data !== undefined) {
           this.idCliente = this.IA_data.idCliente;
-          this._codtipoproc = this.IA_data.codtipoproc;
+          this._codtipoproc = this.IA_data.codtipoproc;                  
+        }  else{
+          this.idCliente = this.config.data.idCliente;
+          this._codtipoproc = this.config.data.codtipoproc;
+        }      
+
+        if (this.IA_data.veracciones === 1) {
+          this.verAcciones = false;
+        }
         
-          this.getListaArchivos();
-        }        
-        this.idCliente = globalVariable.codigoId;
+        this.getListaArchivos();
         this.getValueDescrip();
       }
 
@@ -58,7 +69,7 @@ getListaArchivos() {
     const objeto = {
       idoportunidad: 0,
       codtipoproc: this._codtipoproc , 
-      idnroproceso: globalVariable.codigoId, 
+      idnroproceso: this.idCliente, 
     }
   
   const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
@@ -190,7 +201,7 @@ getListaArchivos() {
         formData.append('fechadoc', fechaFormateada);
         formData.append('idusuario', iduser.toString());
         formData.append('descripcion', this.descripcion.value);
-        formData.append('idnroproceso', globalVariable.codigoId.toString());
+        formData.append('idnroproceso', this.idCliente.toString());
         formData.append('codtipoproc', codtipoproc.toString());
     });
     fubauto.clear();
