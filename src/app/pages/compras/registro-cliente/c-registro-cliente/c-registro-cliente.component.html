@@ -7,7 +7,7 @@
                         pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo(0)" ></button>
                 </div>                 
                 <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
-                    <span class="text-base font-semibold">PROVEEDORES</span>
+                    <span class="text-base font-semibold">CLIENTES</span>
                 </div>           
             </div>
             <!-- <div class="flex justify-content-between col-12 -mt-3">
@@ -158,7 +158,7 @@
                 
             </div>
         </div>
-        <app-c-dato-proveedor [IA_data]="dataCT" (OB_back)="getBack($event)"></app-c-dato-proveedor>
+        <app-c-dato-cliente [IA_data]="dataCT" (OB_back)="getBack($event)"></app-c-dato-cliente>
     </div>
 
 </ng-template>
@@ -167,4 +167,3 @@
 <p-toast></p-toast>
 <p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
 acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
-

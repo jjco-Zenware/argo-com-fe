@@ -64,6 +64,13 @@ setSpinner(valor: boolean) {
 
 changeOrigen(dato:any){
   console.log('changeOrigen', dato);
+  this.registerFormRegistro.patchValue({
+        idcliente:0,
+        idoportunidad: 0,
+        nomproyecto:'',
+        idrequerimiento:0,
+        descripcion:''
+});
   this.verControles(dato);
 }
 
@@ -79,12 +86,6 @@ verControles(data:any){
       this.verInter = true;
       this.verVent = false;
     break;
-    case 3:
-      this.verOpor = false;
-      this.verInter = false;
-      this.verVent = true;
-    
-    break;
   }
 }
 
@@ -97,14 +98,15 @@ traerunoProyecto(){
   .subscribe({
       next: (rpta:any) => {
         console.log('traerunoProyecto...', rpta);
+        this.cargarOportunidades(rpta[0].idcliente);
         //this.registerFormRegistro.patchValue(rpta[0]);
         this.registerFormRegistro.get('idproyecto').setValue(rpta[0].idproyecto);
         this.registerFormRegistro.get('idtipoproyecto').setValue(rpta[0].idtipoproyecto);
         this.registerFormRegistro.get('idcliente').setValue(rpta[0].idcliente);
-        this.registerFormRegistro.get('idoportunidad').setValue(rpta[0].idoportunidad);
         this.registerFormRegistro.get('nomproyecto').setValue(rpta[0].nomproyecto);
         this.registerFormRegistro.get('idrequerimiento').setValue(rpta[0].idrequerimiento);
         this.registerFormRegistro.get('descripcion').setValue(rpta[0].descripcion);
+        this.registerFormRegistro.get('idoportunidad').setValue(rpta[0].idoportunidad.toString());
 
         this.verControles(rpta[0].idtipoproyecto);
       },
@@ -129,8 +131,8 @@ traerunoProyecto(){
     //Agregar validaciones de formulario
     this.registerFormRegistro = this.formBuilder.group({
       idproyecto: [{ value: 0, disabled: false }],
-      idtipoproyecto: [{ value: this.config.data, disabled: false }],
-      idcliente: [{ value: '', disabled: false }],
+      idtipoproyecto: [{ value: this.config.data.idtipoproyecto, disabled: false }],
+      idcliente: [{ value: 0, disabled: false }],
       idoportunidad: [{ value: 0, disabled: false }],
       nomproyecto: [{ value: '', disabled: false }],
       idrequerimiento: [{ value: 0, disabled: false }],
@@ -155,7 +157,6 @@ actualizarRegistro() {
         this.messageService.add({severity: 'info', summary: 'Validación', detail: this.errorMensaje });
         return;
     }
-  console.log('this.actualizarRegistro...', this.registerFormRegistro.value);
 
   if (this.registerFormRegistro.value.idoportunidad > 0) {
     const _nomoportunidad =this.lstOportunidad.filter((x: { id: any; })=>x.id === this.registerFormRegistro.value.idoportunidad)[0].title;
@@ -202,44 +203,46 @@ guardarRegistro() {
     this.registerFormRegistro.get('nomproyecto').setValue(_nomoportunidad);
   }
 
-    this.confirmationService.confirm({
-      key: 'confirm1',
-      header: 'Confirmación',
-      message: '<b>'+'¿Desea Crear el Proyecto...?'+'</b>',
-      //message: '¿Desea Crear el Proyecto de la Oportunidad: '+ '<b>'+ _nomoportunidad +'</b>'+ ' del Cliente: '+'<b>'+ _nomcliente +'</b>'+'?',
-      acceptLabel: 'Si',
-      rejectLabel: 'No',
-      icon:'pi pi-exclamation-triangle text-6xl p-2 text-orange-600',
-      rejectButtonStyleClass:'modalBtnRed',
-      acceptButtonStyleClass:'modalBtnGreen',
-      accept: () => {
-          //Verdadero si todos los campos están llenos
-          this.proyectosService.newProyecto(this.registerFormRegistro.value).subscribe({
-            next: (rpta: any) => {
-            //this.lstProyecto = rpta;
-            if (rpta.procesoSwitch === 0) {
-              console.info('lstProyecto : ', rpta );
-              this.refDatoItem.close();
-            }else{
-              this.messageService.add({severity: 'info', summary: 'Validación', detail: rpta.mensaje});
-            }
-            
-            },
-            error: (err) => {
-            console.info('error : ', err);
-            this.messageService.clear();
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: mensajesQuestion.msgErrorGenerico,
-            });
-            },
-            complete: () => {
-            },
-        });
+  this.proyectosService.newProyecto(this.registerFormRegistro.value).subscribe({
+    next: (rpta: any) => {
+    //this.lstProyecto = rpta;
+    if (rpta.procesoSwitch === 0) {
+      console.info('lstProyecto : ', rpta );
+      this.refDatoItem.close();
+    }else{
+      this.messageService.add({severity: 'info', summary: 'Validación', detail: rpta.mensaje});
+    }
+    
+    },
+    error: (err) => {
+    console.info('error : ', err);
+    this.messageService.clear();
+    this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: mensajesQuestion.msgErrorGenerico,
+    });
+    },
+    complete: () => {
+    },
+});
+
+  //   this.confirmationService.confirm({
+  //     key: 'confirm1',
+  //     header: 'Confirmación',
+  //     message: '<b>'+'¿Desea Crear el Proyecto...?'+'</b>',
+  //     //message: '¿Desea Crear el Proyecto de la Oportunidad: '+ '<b>'+ _nomoportunidad +'</b>'+ ' del Cliente: '+'<b>'+ _nomcliente +'</b>'+'?',
+  //     acceptLabel: 'Si',
+  //     rejectLabel: 'No',
+  //     icon:'pi pi-exclamation-triangle text-6xl p-2 text-orange-600',
+  //     rejectButtonStyleClass:'modalBtnRed',
+  //     acceptButtonStyleClass:'modalBtnGreen',
+  //     accept: () => {
+  //         //Verdadero si todos los campos están llenos
+         
           
-      }
-  }); 
+  //     }
+  // }); 
 }
 
 listaClientes() {
@@ -275,14 +278,17 @@ cargarOportunidades(data: any){
     annio: this.annio.getFullYear(),
     q: 0,
     idproveedor: 0
+  }
 
-}
+  
+  console.log('objeto...', objeto);
 
-    const $listarOportunidad = this.proyectosService.obtenerOportunidadXCliente(objeto)
+    const $listarOportunidad = this.proyectosService.obtenerOportunidadCliente(objeto)
       .subscribe({
           next: (rpta:any) => {
             console.log('cargarOportunidades...', rpta);
             this.lstOportunidad = rpta;
+
           },
           error:(err)=>{
               console.error('error : ',err)
@@ -303,33 +309,32 @@ cargarOportunidades(data: any){
 validarDatos():boolean{
   let _error = false;
   this.errorMensaje="";
+  console.log('validarDatos',this.registerFormRegistro.value)
 
-     if (this.registerFormRegistro.value.idcliente === " " && this.config.data === 1)
+     if ((this.registerFormRegistro.value.idcliente === 0 || this.registerFormRegistro.value.idcliente === null) && this.registerFormRegistro.value.idtipoproyecto === 1)
      {
           this.errorMensaje="Debe Seleccionar Cliente...!";
           _error = true;
      }
 
-     if (!_error && this.registerFormRegistro.value.idoportunidad === "" && this.config.data === 1)
+     if (!_error && (this.registerFormRegistro.value.idoportunidad === 0 || this.registerFormRegistro.value.idoportunidad === null) && this.registerFormRegistro.value.idtipoproyecto === 1)
      {
-          this.errorMensaje="Debe Seleccionar Titulo...!";
+          this.errorMensaje="Debe Seleccionar Oportunidad CRM...!";
           _error = true;
      }
 
-     if (!_error && (this.registerFormRegistro.value.nomproyecto === "" && (this.config.data === 2 || this.config.data === 3)))
+     if (!_error && (this.registerFormRegistro.value.nomproyecto === "" && this.registerFormRegistro.value.idtipoproyecto === 2))
       {
           this.errorMensaje="Ingresar Nombre de Proyecto...";
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.idrequerimiento === "" && this.config.data === 2 ))
-        {
-            this.errorMensaje="Ingresar N° Requerimiento...";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.idrequerimiento === "" && this.config.data === 2 ))
+      //   {
+      //       this.errorMensaje="Ingresar N° Requerimiento...";
+      //       _error = true;
+      //   }
      
-
-     //this.formValue.taskList?.tasks
      return _error;
    }
 

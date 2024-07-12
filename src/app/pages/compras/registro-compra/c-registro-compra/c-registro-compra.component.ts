@@ -136,14 +136,14 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
 
   onEditar(data: dOperacion) {
       console.log('onVer...', data);
-      this.tituloDetalle = "Editar Orden de Compra/Servicio N° " + data.idordencompra;
+      this.tituloDetalle = "Editar Compra/Servicio N° " + data.idordencompra;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
   }
   verCotiza(data: dOperacion) {
       console.log('onVer...', data);
-      this.tituloDetalle = "Cotización de Orden de Compra/Servicio N° " + data.idordencompra;
+      this.tituloDetalle = "Cotización de Compra/Servicio N° " + data.idordencompra;
       this.vistaLista = false;
       this.visDetalle = false;
       this.visQuote = true;
@@ -158,6 +158,17 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
   getBack() {
       this.vistaLista = true;
       this.visDetalle = false;
+      this.visQuote = false;
+    }
+
+    onNuevo() {        
+      this.tituloDetalle = "REGISTRAR COMPRA";
+      // this.dataOC = {
+      //   idordencompra: 0,
+      //   paramReg:'N'
+      // }
+      this.vistaLista = false;
+      this.visDetalle = true;
       this.visQuote = false;
     }
 }

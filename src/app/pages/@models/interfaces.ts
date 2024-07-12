@@ -488,3 +488,10 @@ export interface ContactoOrdenCompra {
     tiporol?: number;
     nomtiporol?: string;
 }
+
+export interface Tag{
+    idtag: number;
+    nomtag: string;
+    valor: string;
+    iditemdocumento: string;
+}

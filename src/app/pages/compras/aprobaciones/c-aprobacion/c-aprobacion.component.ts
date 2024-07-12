@@ -8,20 +8,22 @@ import { ProyectosService } from '../../proyectos-ganados/service/proyectos.serv
 import { SharedAppService } from '@sharedAppService';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
-import { CModalExcTransacComponent } from '../modal-exc-transac/modal-exc-transac.component';
+import { CModalExcTransacComponent } from '../../orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
 import * as FileSaver from 'file-saver';
 
 @Component({
-  selector: 'app-c-orden-compra-servicio',
-  templateUrl: './c-orden-compra-servicio.component.html',
-  styleUrls: ['./c-orden-compra-servicio.component.scss']
+  selector: 'app-c-aprobacion',
+  templateUrl: './c-aprobacion.component.html',
+  styleUrls: ['./c-aprobacion.component.scss']
 })
-export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
+export class CAprobacionComponent implements OnInit, OnDestroy{
 
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
     visDetalle: boolean = false;
     lstOrdenCompra: any;
+    lstOrdenCompraPen: any;
+    lstOrdenCompraApro: any;
     tituloDetalle!: string;
     frmDatos!: FormGroup;
     dataOC:any;
@@ -36,8 +38,9 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     menuItems: MenuItem[] = [];
     @ViewChild('menu') menu!: Menu;
     ordenCompra: any;
-    cols: any[] = [];
+    cols: any[] = [];    
     lstExportar: any[] = [];
+    lstOrdenCompraExportar: any;
 
     constructor(
         private fb: FormBuilder,
@@ -113,6 +116,8 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
               this.setSpinner(false);
               console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
               this.lstOrdenCompra = rpta.ordenescompra
+              this.lstOrdenCompraPen = this.lstOrdenCompra.filter((x: { estado: string; }) => x.estado === 'PRC');
+              this.lstOrdenCompraApro = this.lstOrdenCompra.filter((x: { estado: string; }) => x.estado === 'EMI');
           },
           error:(err)=>{
               this.setSpinner(false);
@@ -140,22 +145,6 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         this.vistaLista = false;
     }
 
-    onEditar(dato: any) {
-      console.log('onEditar', dato);
-      let codigo;
-      if (dato.estado === 'EMI' || dato.estado === 'ANU') {
-        codigo = dato.codigonroorden;
-      }else{
-        codigo = dato.idordencompra;
-      }
-        this.tituloDetalle = "ORDEN DE COMPRA/SERVICIOS N° " + codigo;
-        this.dataOC = {
-          idordencompra: dato.idordencompra,
-          labelnrodocumento: dato.idordencompra,
-          paramReg:'N'
-        }
-        this.vistaLista = false;
-    }
 
     verCotiza(data: any) {
         console.log('onVer...', data);
@@ -209,7 +198,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
       console.log('onAccion', item);
       const ref = this.dialogService.open(CModalExcTransacComponent, {
           data: this.ordenCompra,
-          header: item.nomtrx +' - '+  this.ordenCompra.idordencompra,
+          header: item.nomtrx +' - '+  this.ordenCompra.labelnrodocumento,
           closeOnEscape: false,
           styleClass: 'testDialog',
           width: '40%'
@@ -220,24 +209,31 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         });
     }
 
+    selectHeaders(tabNumber: any) {
+      if (tabNumber.index === 0) {
+        this.lstOrdenCompraExportar = this.lstOrdenCompraPen;
+      }else{
+        this.lstOrdenCompraExportar = this.lstOrdenCompraApro;
+      }
+    }
 
     getExportarExcel() {
 
       this.lstExportar = [];
-      for (let i = 0; i < this.lstOrdenCompra.length; i++) {       
+      for (let i = 0; i < this.lstOrdenCompraExportar.length; i++) {       
           const objeto = {
               'N°': i + 1,
-              'TIPO': this.lstOrdenCompra[i].nomtipoorden,
-              'N° ORDEN': this.lstOrdenCompra[i].codigonroorden,
-              'PROVEEDOR': this.lstOrdenCompra[i].nomcomercial,
-              'N° RUC': this.lstOrdenCompra[i].nrodocumento,
-              'MONEDA': this.lstOrdenCompra[i].nommoneda,
+              'TIPO': this.lstOrdenCompraExportar[i].nomtipoorden,
+              'N° ORDEN': this.lstOrdenCompraExportar[i].codigonroorden,
+              'PROVEEDOR': this.lstOrdenCompraExportar[i].nomcomercial,
+              'N° RUC': this.lstOrdenCompraExportar[i].nrodocumento,
+              'MONEDA': this.lstOrdenCompraExportar[i].nommoneda,
               'BASE IMPONIBLE': 0,
               'IGV': 0,
-              'TOTAL': this.lstOrdenCompra[i].s_monto,
-              'COD PROYECTO' : this.lstOrdenCompra[i].codigoproyecto,
-              'NOM PROYECTO' : this.lstOrdenCompra[i].nomproyecto,
-              'ESTADO' : this.lstOrdenCompra[i].nomestado
+              'TOTAL': this.lstOrdenCompraExportar[i].s_monto,
+              'COD PROYECTO' : this.lstOrdenCompraExportar[i].codigoproyecto,
+              'NOM PROYECTO' : this.lstOrdenCompraExportar[i].nomproyecto,
+              'ESTADO' : this.lstOrdenCompraExportar[i].nomestado
               
           }
           this.lstExportar.push(objeto);

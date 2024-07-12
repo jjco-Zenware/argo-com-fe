@@ -10,27 +10,23 @@ import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CItemCotizacionComponent } from '../../proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
-import { OrdencompraService } from '../service/ordencompra.service';
-import { CModalExcTransacComponent } from '../modal-exc-transac/modal-exc-transac.component';
 import { ComprasService } from '../../Service/compraServices';
 import * as  XLSX  from 'xlsx';
+import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
+import { CModalExcTransacComponent } from '../../orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
 
 @Component({
-  selector: 'app-c-cabeceraoc',
-  templateUrl: './cabeceraoc.component.html',
-  styleUrls: ['./cabeceraoc.component.scss']
+  selector: 'app-c-cotizacion-det',
+  templateUrl: './c-cotizacion-det.component.html',
+  styleUrls: ['./c-cotizacion-det.component.scss']
 })
-export class CabeceraocComponent implements OnInit, OnDestroy{
+export class CotizacionDetComponent implements OnInit, OnDestroy{
   @Input() IA_data: any;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
   visibleDocument: boolean = true;
   dataAdjunto: any;
   registerFormRegistro: any= FormGroup;
-  // verOpor: boolean = false;
-  // verInter: boolean = false;
-  // verVent: boolean = false;
-  // verOtro: boolean = false;
   idtipoproyecto: any;
   lstProyectos: any;
   lstCliente: Cliente []=[];
@@ -63,7 +59,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   ];
   lstTermino: any;
   lstQuotes: any[]=[];
-  verAdjunto: boolean = false;
+  //verAdjunto: boolean = false;
   contactoVisible: boolean = false;
   itemVisible: boolean = false;
   ExcelData: any;
@@ -98,7 +94,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     this.createFormContacto();
     this.listaProyectoTipo();
     this.listaClientes();
-    this.listaProveedores();
+    //this.listaProveedores();
     this.listaMonedas();  
     this.listarItemsTabla(); 
     this.listarItemsTablaUnidad() ;
@@ -117,7 +113,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
           veracciones: 0
         }
       }  
-      this.verAdjunto = true;     
+      //this.verAdjunto = true;     
       this.traerUnoOrdenC();
     }else{
       //this.verControles('NOA');
@@ -152,7 +148,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     this.registerFormRegistro = this.formBuilder.group({
       idproyecto: [{ value: 0, disabled: false }],
       idtipoproyecto: [{ value: 0, disabled: false }],
-      //idcliente: [{ value: '', disabled: false }],
+      idcliente: [{ value: '', disabled: false }],
       idoportunidad: [{ value: 0, disabled: false }],
       sustentodoc: [{ value: '', disabled: false }],
       idrequerimiento: [{ value: 0, disabled: false }],
@@ -166,7 +162,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       }],
       idordencompra: [{ value: this.idOrdenC, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
-      idproveedor: [{ value: 0, disabled: false }],
+      //idproveedor: [{ value: 0, disabled: false }],
       idmoneda: [{ value: 0, disabled: false }],
       //idorigen: [{ value: this.IA_data, disabled: false }],
       idcontacto: [{ value: 0, disabled: false }],
@@ -357,8 +353,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
       fechaingreso,
-      quotes: this.lstQuotes,
-      idtipodocprc: 8
+      //quotes: this.lstQuotes,
+      idtipodocprc: 1
     }
 
     console.log('guardarOC...', objeto);
@@ -378,7 +374,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
               codtipoproc: 7,
               veracciones: 0
             }   
-            this.verAdjunto = true;   
+            //this.verAdjunto = true;   
             this.traerUnoOrdenC();
           }
          
@@ -452,21 +448,21 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     
       }
 
-  listaProveedores() {
+  // listaProveedores() {
 
-    const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
-      next: (rpta: any) => {
-        this.lstProveedores = rpta;
-        console.log('this.lstProveedores', this.lstProveedores);
-      },
-      error: (err) => {
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => { },
-    });
-    this.$listSubcription.push($getClientes);
+  //   const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
+  //     next: (rpta: any) => {
+  //       this.lstProveedores = rpta;
+  //       console.log('this.lstProveedores', this.lstProveedores);
+  //     },
+  //     error: (err) => {
+  //       this.serviceSharedApp.messageToast()
+  //     },
+  //     complete: () => { },
+  //   });
+  //   this.$listSubcription.push($getClientes);
 
-  }
+  // }
 
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({

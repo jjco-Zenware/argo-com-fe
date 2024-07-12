@@ -12,7 +12,7 @@
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-building"></i>
                         <span class="font-bold white-space-nowrap m-0">
-                            Datos Proveedor
+                            Datos Cliente
                         </span>
                     </div>
                 </ng-template>
@@ -37,7 +37,7 @@
                             </div>
                             <div class=" sm:col-8 lg:col-3 md:col-12"></div>
                             <div class="sm:col-12 lg:col-3 md:col-12 h-4rem field">
-                                <label class="block text-900 font-semibold mb-1">N° OC</label>
+                                <label class="block text-900 font-semibold mb-1">N° Cotización</label>
                                 <span class="p-fluid">
                                     <input pInputText type="text" class="font-semibold" formControlName="idordencompra"/>
                                 </span>
@@ -68,9 +68,9 @@
                             </div> -->
                             
                             <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem">                            
-                                <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
+                                <label class="block text-900 font-semibold mb-1">Cliente <span class="text-red-500 font-bold"> * </span></label>                            
                                 <span>
-                                    <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" 
+                                    <p-dropdown [options]="lstCliente" placeholder="Seleccionar Cliente"  formControlName="idcliente" 
                                     optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [readonly]=onlyRead></p-dropdown>            
                                 </span>
                             </div>                         
@@ -130,7 +130,7 @@
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-list"></i>
                         <span class="font-bold white-space-nowrap m-0">
-                            Registros
+                            Items
                         </span>
                     </div>
                 </ng-template>
@@ -203,7 +203,7 @@
                 </p-table>                
             </p-tabPanel>
 
-            <p-tabPanel [disabled]=visibleDocument>
+            <!-- <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-paperclip"></i>
@@ -213,19 +213,7 @@
                     </div>
                 </ng-template>             
                 <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
-            </p-tabPanel>
-
-            <p-tabPanel [disabled]=verCotizacion >
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-money-bill"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Cotización
-                        </span>
-                    </div>
-                </ng-template>
-                <app-cotizacion  [IA_data]="dataCT" (OB_back)="getQuotes($event)"></app-cotizacion>         
-            </p-tabPanel>
+            </p-tabPanel> -->
                   
         </p-tabView> 
     </div>
@@ -299,11 +287,3 @@
 </div>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
-
-
-
-
-
-
-
-

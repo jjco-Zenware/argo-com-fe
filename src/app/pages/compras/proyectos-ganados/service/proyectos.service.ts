@@ -138,4 +138,15 @@ export class ProyectosService {
         const url = `${constantesApiWeb.tipoProyectoList}`;
         return this.http.get<any>(url);
     } 
+
+    prcItem(objeto:any) {
+        const url = `${constantesApiWeb.prcItem}`;
+        return  this.http.post<any>(url, objeto)
+    }
+
+    obtenerOportunidadCliente(objeto:any) {
+        const url = `${constantesApiWeb.obtenerOportunidadCliente}`;
+        return  this.http.post<any>(url, objeto)
+    }
+    
 }

@@ -141,7 +141,7 @@ export class CProyectosGanadosComponent implements OnInit{
         }
         const ref = this.dialogService.open(ModalProyectoComponent, {
             data: objeto,
-            header: "Editar Proyecto : "+ dato.nomproyecto,
+            header: dato.nomproyecto,
             styleClass: 'testDialog',
             closeOnEscape: false,
             closable: true,
