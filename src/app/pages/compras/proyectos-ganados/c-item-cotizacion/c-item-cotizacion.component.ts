@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Marca, TipoProducto } from '@interfaces';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Marca, Tag, TipoProducto } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
@@ -21,15 +21,20 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   lstTipoProducto: TipoProducto[] = [];
   lstTipoProductoTot: TipoProducto[] = [];
   lstMarcas: Marca[] = [];
-    marcaVisible?: boolean;
-    headerTitle?: string;
-    submitted?: boolean;
-    registerFormMarca: any = FormGroup;
-    verporTipo: boolean = false;
-    verporLic: boolean = false;
-    verporSerie: boolean = false;
-    verSku: boolean = false;
-    lstUnidades: any;
+  marcaVisible?: boolean;
+  headerTitle?: string;
+  submitted?: boolean;
+  registerFormMarca: any = FormGroup;
+  verporTipo: boolean = false;
+  verporLic: boolean = false;
+  verporSerie: boolean = false;
+  verSku: boolean = false;
+  lstUnidades: any[]=[];
+  lstTag: any[]=[];
+  listaTag: any = [];
+  tagVisible: boolean = false;
+  registerFormTag!: FormGroup;  
+  verporLicContrato  : boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -45,15 +50,18 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   ) { }
 
   get formContacto() { return this.registerFormMarca.controls; }
+  get formTag() { return this.registerFormTag.controls; }
 
   ngOnInit(): void {
     this.param = this.config.data;
-    console.log("params : ", this.param);
     this.createFrm();
-    this.createFormContacto();    
+    this.createFormContacto(); 
+    this.createFormTag();   
     this.listarTipoProducto();
     this.listarMarcas();
     this.listarItemsTabla();
+    this.listarItemsTag();
+    
 
     // if (this.param.idordencompra === 0) {
     // }else{
@@ -73,9 +81,9 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
     this.frmDatosItem = this.fb.group({
       idordencompraitem: [{ value: 0, disabled: false }],
       idordencompra: [{ value: 0, disabled: false }],
-      idtipoprod: [{ value: 0, disabled: false }],
+      idtipoprod: [{ value: '', disabled: false }, [Validators.required]],
       idprod: [{ value: 0, disabled: false }],
-      descripcion: [{ value: null, disabled: false }, [Validators.required]],
+      descripcion: [{ value: '', disabled: false }, [Validators.required]],
       cantidad: [{ value: 1, disabled: false }, [Validators.required]],
       codunidad: [{ value: 'UNID', disabled: false }],
       preciocosto: [{ value: 0, disabled: false }, [Validators.required]],
@@ -88,9 +96,9 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       iduseract: [{ value: 0, disabled: false }],
       fecact: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: true }],
       coditem: [{ value: '0', disabled: false }],
-      idmarca: [{ value: 0, disabled: false }],
-      nomprod: [{ value: null, disabled: false }],
-      nommarca: [{ value: null, disabled: false }],
+      idmarca: [{ value: '', disabled: false }, [Validators.required]],
+      nomprod: [{ value: '', disabled: false }],
+      nommarca: [{ value: '', disabled: false }],
       preciocostototal: [{ value: 0, disabled: true }],
       precioventatotal: [{ value: 0, disabled: true }],
       preprofit: [{ value: 0, disabled: true }],
@@ -102,7 +110,9 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       nromeses: [{ value: 0, disabled: false }],
       fecini: [{ value: this.serviceUtilitario.obtenerFechaInicioMes(), disabled: false }],
       fecfin: [{ value: this.serviceUtilitario.obtenerFechaFinMes(), disabled: false }],
-      idunidad: [{ value: '', disabled: false }]
+      idunidad: [{ value: '', disabled: false }, [Validators.required]],
+      nomunidad: [{ value: '', disabled: false }],
+      valor: [{ value: '', disabled: false }],
     })
   }
 
@@ -113,21 +123,23 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
     });
 }
 
+createFormTag() {
+  //Agregar validaciones de formulario
+  this.registerFormTag = this.fb.group({
+  nomtag: ['', [Validators.required]],
+  });
+}
+
   getRegistro(){
     this.frmDatosItem.patchValue(this.param);
-    // const fechaInicio = this.changeDatePicker(this.frmDatosItem.get('fecini')?.value);
-    // const fechaFin = this.changeDatePicker(this.frmDatosItem.get('fecfin')?.value);
-
-    // this.frmDatosItem.get('fecini')?.setValue(fechaInicio);
-    // this.frmDatosItem.get('fecfin')?.setValue(fechaFin);
-    console.log("frmDatosItem  : ", this.frmDatosItem.getRawValue());
-    //this.frmDatosItem.get('idtipoprod')
+    // if (this.param.idordencompra > 0) {
+       this.listaTag = this.param.tags;
+    // }
   }
 
   listarItemsTabla() {
     this.comprasService.obtenerItemsTabla(107).subscribe({
         next: (rpta: any) => {
-          console.info('listarItemsTabla : ', rpta);
             this.lstUnidades = rpta;
         },
         error: (err) => {
@@ -140,10 +152,24 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   
     }
 
+    listarItemsTag() {
+      this.comprasService.obtenerItemsTabla(108).subscribe({
+          next: (rpta: any) => {
+              this.lstTag = rpta;
+          },
+          error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+          },
+          complete: () => {
+          },
+      });
+    
+      }
+
   listarTipoProducto() {
     const $listarTipoProducto = this.proyectosService.obtenerTipoProducto().subscribe({
       next: (rpta: any) => {
-        console.log('listarTipoProducto', rpta);
         this.lstTipoProductoTot = rpta;
         this.lstTipoProducto = this.lstTipoProductoTot.filter(x => x.idtipoprod !== 0 && x.idtipoprod !== 8);
         //this.frmDatosItem.get('idtipoprod')?.setValue(1);
@@ -190,28 +216,18 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   }
 
   guardarItem() {
-    //console.log('frmDatosItem...', this.frmDatosItem.getRawValue());
-
-    // if (this.frmDatosItem.get('descripcion')?.value == "") {
-    //     this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Descripción'});
-    //     return;
-    //   }
-
       if (this.frmDatosItem.get('preciocosto')?.value == 0) {
         this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Precio Costo'});
         return;
       }
 
     if (this.frmDatosItem.invalid) {
-      //console.log('invalid...', this.frmDatosItem.invalid);
       this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
       return;
     }
     const _fecini = new Date(this.frmDatosItem.get('fecini')?.value);
-    console.log('_fecini...', _fecini);
     this.frmDatosItem.get('fecini')?.setValue(_fecini);
     const _fecfin = new Date(this.frmDatosItem.get('fecfin')?.value);
-    console.log('_fecfin...', _fecfin);
     this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
 
     const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
@@ -219,12 +235,24 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
 
     const _marca:string=this.lstMarcas.filter(x=>x.idmarca == this.frmDatosItem.get('idmarca')?.value)[0].nommarca;
     this.frmDatosItem.get('nommarca')?.setValue(_marca)
+    //this.lstUnidades//
+    const _nomunidad:string=this.lstUnidades.filter(x=>x.iditem == this.frmDatosItem.get('idunidad')?.value)[0].valoritem;
+    this.frmDatosItem.get('nomunidad')?.setValue(_nomunidad)
+
+    const objeto = {
+      ...this.frmDatosItem.getRawValue(),
+      tags: this.listaTag
+    }
 
     this.cerrar({...this.frmDatosItem.getRawValue()})
   }
 
   cerrar(data:any) {
-    this.refDatoItem.close({data});
+    const objeto = {
+      ...data,
+      tags: this.listaTag
+    }
+    this.refDatoItem.close({objeto});
   }
 
   NuevaMarca()  {
@@ -248,7 +276,6 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
             }
             const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
               next: (rpta: any) => {
-                  console.log('guardarMarca', rpta);
                 this.listarMarcas();
               },
               error: (err) => {
@@ -265,39 +292,137 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   }
 
   verControles(dato: any){
+    console.log('verControles', dato);
     switch (dato) {
       case 1:  
         this.verporTipo = true;
         this.verporLic = false;
         this.verporSerie = false;
         this.verSku = true;
+        this.verporLicContrato = false;
       break;
       case 2:
+        this.verporTipo = false;
+        this.verporLic = false;
+        this.verporSerie = false;
+        this.verSku = false;
+        this.verporLicContrato = true;
+      break;
       case 3: 
+      this.verporTipo = false;
+        this.verporLic = false;
+        this.verporSerie = false;
+        this.verSku = false;
+        this.verporLicContrato = false;
+      break;
       case 6: 
       case 7:  
         this.verporTipo = false;
         this.verporLic = true;
         this.verporSerie = false;
         this.verSku = false;
+        this.verporLicContrato = true;
       break;
-      case 4:  
+      case 4: 
+      case 5: 
         this.verporTipo = false;
         this.verporLic = false;  
         this.verporSerie = false;   
         this.verSku = false; 
+        this.verporLicContrato = false;
       break;
-      case 5:  
-        this.verporTipo = true;
-        this.verporLic = true; 
-        this.verporSerie = true; 
-        this.verSku = true;    
-      break;
+      // case 5:  
+      //   this.verporTipo = false;
+      //   this.verporLic = false; 
+      //   this.verporSerie = false; 
+      //   this.verSku = false;    
+      //   this.verporLicContrato = false;
+      // break;
     }
   }
 
   changeDatePicker(data:any): any {
     let fecha = this.datepipe.transform(data, 'dd/MM/yyyy');
     return fecha;
+  }
+
+  NuevoTag(){
+    this.submitted = false;
+    this.registerFormTag.get('nomtag')?.setValue('');
+    this.tagVisible = true;
+  }
+
+  guardarTag() {
+    this.submitted = true;
+    if (this.registerFormTag.invalid) {
+        this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Ingresar Descripción ..." });
+        return;
+    }
+    if(this.submitted)
+    {
+        const objeto = {
+            iditem: 0,
+            idtabla: 108,
+            valor: this.registerFormTag.value.nomtag,
+            coditem: ''
+          }
+          const $prcMarcas = this.proyectosService.prcItem(objeto).subscribe({
+            next: (rpta: any) => {
+              if (rpta.procesoSwitch === 0){
+                this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+                this.tagVisible=false;
+                this.listarItemsTag();
+              }else{
+              this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+              }
+                
+                
+              
+            },
+            error: (err) => {
+              console.info('error : ', err);
+              this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+          });
+          this.$listSubcription.push($prcMarcas);
+
+        
+    }
+}
+
+  eliminarTag(data:any){
+    const _posAll: number = this.listaTag.findIndex(((x: { idtag: any; }) => x.idtag == data.idtag))
+      if (_posAll != -1) {
+      this.listaTag.splice(_posAll, 1)
+      }
+  }
+
+  addTag(data:any){
+    if (this.listaTag === undefined) { this.listaTag =[]}
+
+    //if (this.listaTag !== undefined) {
+      if (this.listaTag.length > 0) {
+        let _idtagtabla = this.listaTag.filter((x: { idtag: any; }) => x.idtag === data);
+        
+        if (_idtagtabla.length > 0) {
+          if (_idtagtabla[0].idtag === data) {
+            this.messageService.add({ severity: 'info', summary: 'OK...', detail: 'El TAG ya fue registrado...' });
+          return;
+          }
+        }            
+      }
+    //}    
+
+    let _objeto = this.lstTag.filter(x => x.iditem === data);
+    
+    const objeto = {
+      idtag: data,
+      nomtag: _objeto[0].valoritem,
+      valor: '',
+      iditemdocumento: this.frmDatosItem.value.idordencompraitem
+    }
+    this.listaTag.unshift(objeto);
   }
 }

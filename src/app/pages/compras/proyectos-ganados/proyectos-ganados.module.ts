@@ -20,6 +20,7 @@ import { RegistroProveedorModule } from '../registro-proveedor/registro-proveedo
 import { CItemCotizacionComponent } from './c-item-cotizacion/c-item-cotizacion.component';
 import { CDatoCotizacionViewComponent } from './c-dato-cotizacion-view/c-dato-cotizacion-view.component';
 import { CDatoCotizacionViewProyecComponent } from './c-dato-cotizacion-view-proyec/c-dato-cotizacion-view-proyec.component';
+import { TableModule } from 'primeng/table';
 
 
 
@@ -43,7 +44,8 @@ import { CDatoCotizacionViewProyecComponent } from './c-dato-cotizacion-view-pro
     FormsModule,
     ReactiveFormsModule,
     SplitButtonModule,
-    RegistroProveedorModule
+    RegistroProveedorModule,
+    TableModule
   ],
   exports:[
     CCotizacionComponent

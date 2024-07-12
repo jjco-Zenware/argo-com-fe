@@ -1,7 +1,18 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
     <div class="card">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">   
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="NUEVO"
+                        pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
+                </div>                 
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-base font-semibold">PROYECTOS</span>
+                </div>           
+            </div>
+        </div>
 
-        <div class="grid">
+        <!-- <div class="grid">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">
                 <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
                     <span class="text-base font-semibold">PROYECTOS</span>
@@ -11,30 +22,33 @@
                         pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>
             </div>
-        </div>
-        <form [formGroup]="frmDatos">
-            <div class="p-fluid p-formgrid grid col-10 -mb-3 -mt-4 text-sm">                
-                <div class="field md:col-2 sm:col-4 lg:col-2">
-                    <label htmlFor="fechaInicio" class="font-semibold">FECHA INICIO</label>
+        </div> -->
+
+        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-2 ml-3">
+            <!-- <div class="p-fluid p-formgrid grid col-10 -mb-3 -mt-4 text-sm">     -->
+            <div class="p-fluid p-formgrid grid col-12 text-sm card border-1 border-round surface-border h-7rem">               
+                <div class="field col-12 md:col-2 -mt-3">
+                    <label class="font-semibold text-blue-600">FECHA INICIO</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fechaini"
                         [readonlyInput]="true" appendTo="body">
                     </p-calendar>
                 </div>
-                <div class="field md:col-2 sm:col-4 lg:col-2">
-                    <label htmlFor="fechaFin" class="font-semibold ">FECHA FIN</label>
+                <div class="field col-12 md:col-2 -mt-3">
+                    <label class="font-semibold text-blue-600">FECHA FIN</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
                         [readonlyInput]="true" appendTo="body"></p-calendar>
                 </div>
-                <div class="field md:col-2 sm:col-3">
-                    <button pButton type="button" (click)="cargarLista()" pTooltip="Buscar Registros"
-                        class="font-semibold p-button-outlined mt-4 justify-content-center h-3rem" icon="pi pi-search"></button>
+                <div class="field col-12 md:col-2 -mt-3">
+                    <button pButton type="button" (click)="cargarLista()" pTooltip="Buscar Registros" tooltipPosition="bottom"
+                        class="font-semibold mt-4 justify-content-center h-3rem w-3rem w-auto" icon="pi pi-search"></button>
                 </div>
             </div>
         </form>
 
         <p-table [value]="lstProyecto" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm">
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
+            styleClass="p-datatable-sm card border-1 border-round surface-border">
 
             <!-- [globalFilterFields]="['title','nomcreador','nompreventa','nomcomercial','nomproveedor','monto']" -->
 
@@ -45,7 +59,7 @@
                             N°
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'50px'}"  class="surface-200" >
+                    <th [ngStyle]="{'width':'70px'}"  class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             TIPO
                         </div>
@@ -116,12 +130,12 @@
                         
                     </td>
                     <td >
-                        <div [ngStyle]="{'width':'50px'}">
-                            {{data.idtipoproyecto}}
+                        <div [ngStyle]="{'width':'80px'}">
+                            {{data.nomtipoproyecto | uppercase}}
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'150px'}" class="text-primary">
+                        <div [ngStyle]="{'width':'70px'}" class="text-primary">
                             {{data.codigoproyecto}}
                         </div>
                     </td>
@@ -147,10 +161,10 @@
                     </td> -->
                     <td>
                         <div style="text-align: start;">
-                            <button pButton pRipple type="button" icon="pi pi-pencil" tooltipPosition="left" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-pencil" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                             <!-- <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button> -->
-                            <button *ngIf="data.idoportunidad > 0" pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="left" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVerBC(data)"></button>
-                            <button pButton pRipple type="button" icon="pi pi-briefcase" tooltipPosition="left" pTooltip="OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="generarOC(data)"></button>
+                            <button *ngIf="data.idoportunidad > 0" pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="bottom" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVerBC(data)"></button>
+                            <!-- <button pButton pRipple type="button" icon="pi pi-briefcase" tooltipPosition="left" pTooltip="OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="generarOC(data)"></button> -->
                         </div>
                     </td>
                 </tr>

@@ -90,5 +90,7 @@ export const constantesApiWeb = {
 
     //reglaflujoresolutordel
     descargarPlantilla: controllerArchivo + '/descargarplantilla/',
+    prcItem: controllerMain + '/tablaitemnew',
+    obtenerOportunidadCliente: controllerCRM + '/oportunidadlist03',
 
 }

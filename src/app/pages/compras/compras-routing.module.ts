@@ -20,13 +20,28 @@ const routes: Routes = [
   {
     path: 'registro-proveedor',
     loadChildren: () => import('./registro-proveedor/registro-proveedor.module').then(m => m.RegistroProveedorModule),
-    data: { breadcrumb: 'Registros de Compras' }
+    data: { breadcrumb: 'Registros de Proveedores' }
   },
   {
     path: 'reglas-aprobacion',
     loadChildren: () => import('./reglas-aprobacion/reglas-aprobacion.module').then(m => m.ReglaAprobacionModule),
     data: { breadcrumb: 'Reglas de Aprobación' }
   },
+  {
+    path: 'aprobaciones',
+    loadChildren: () => import('./aprobaciones/aprobaciones.module').then(m => m.AprobacionModule),
+    data: { breadcrumb: 'Aprobaciones' }
+  },
+  {
+    path: 'cotizacion',
+    loadChildren: () => import('./cotizacion/cotizacion.module').then(m => m.CotizacionModule),
+    data: { breadcrumb: 'Aprobaciones' }
+  },
+  {
+    path: 'registro-cliente',
+    loadChildren: () => import('./registro-cliente/registro-cliente.module').then(m => m.RegistroClienteModule),
+    data: { breadcrumb: 'Registros de Clientes' }
+  }
 ];
 
 @NgModule({

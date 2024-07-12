@@ -6,49 +6,49 @@
     </div> -->
 
     <form [formGroup]="registerFormRegistro" class="ml-3 mb-3 -mr-3 mt-4">
-        <div class="p-fluid p-formgrid grid col-12 text-sm card border-1 border-round surface-border p-2">
+        <div class="p-fluid p-formgrid grid col-12 text-sm border-1 border-round surface-border p-2">
             
             <div class="h-4rem field col-12 lg:col-3 sm:col-6 md:col-12">
-                <label htmlFor="fechaInicio" class="font-semibold">FLUJO</label>
+                <label htmlFor="fechaInicio" class="font-semibold text-blue-600">Flujo</label>
                 <span class="p-fluid ">
                     <p-dropdown [options]="lstFlujo" formControlName="idflujo" placeholder="Seleccionar..." optionLabel="nombretrack" 
                     optionValue="idtrack" ></p-dropdown>
                 </span>
             </div>
             <div class="h-4rem field col-12 lg:col-2 sm:col-6 md:col-12">
-                <label class="font-semibold">MONEDA</label>  
+                <label class="font-semibold text-blue-600">Moneda</label>  
                 <span class="p-fluid">
                     <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
                     optionValue="idmoneda" appendTo="body"></p-dropdown>
                 </span>                                      
             </div> 
             <div class="h-4rem field col-12 lg:col-2 sm:col-6 md:col-12">
-                <label  class="font-semibold">MONTO INICAL</label>
+                <label  class="font-semibold text-blue-600">Monto Inicial</label>
                 <span class="p-fluid">
                     <p-inputNumber formControlName="montoini" locale="es-PE" mode="decimal" [minFractionDigits]="2" ></p-inputNumber>
                 </span>
             </div>            
             <div class="h-4rem field col-12 lg:col-2 sm:col-6 md:col-12">
-                <label  class="font-semibold">MONTO FINAL</label>
+                <label  class="font-semibold text-blue-600">Monto Final</label>
                 <span class="p-fluid">
                     <p-inputNumber formControlName="montofin" locale="es-PE" mode="decimal" [minFractionDigits]="2" ></p-inputNumber>
                 </span>
             </div>
             <div class="field col-12 lg:col-2 sm:col-2 md:col-12"></div>
             <div class="h-4rem field col-12 lg:col-1 sm:col-6 md:col-12">
-                <label  class="font-semibold">N° REGLA</label>
+                <label  class="font-semibold text-blue-600">N° Regla</label>
                 <span class="p-fluid">
                     <input pInputText type="text" formControlName="idregla"/>
                 </span>
             </div>           
             <div class="h-5rem field col-12 lg:col-9 sm:col-6 md:col-12">
-                <label  class="font-semibold">DESCRIPCIÓN</label>
+                <label  class="font-semibold text-blue-600">Descripción</label>
                 <span class="p-fluid">
                     <input pInputText type="text" formControlName="descripcion"/>
                 </span>
             </div>
             <div class="field col-12 lg:col-2 sm:col-2 md:col-12"></div>
-            <div class="justify-content-end mt-6 ml-5">
+            <div class="justify-content-end mt-6 ml-4">
                 <button pButton type="button" (click)="grabarRegla()" label="Grabar"
                     class="font-semibold w-auto h-3rem -mt-1" icon="pi pi-save"></button>
             </div>

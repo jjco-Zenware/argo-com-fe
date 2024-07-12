@@ -137,8 +137,7 @@
                     </span>
                 </div>
             </ng-template>
-            <!-- <app-c-contacto [IA_codigo]="codigoParam" ></app-c-contacto>    -->
-            <app-c-contacto></app-c-contacto>          
+            <app-c-contacto></app-c-contacto>           
         </p-tabPanel>
 
         <p-tabPanel [disabled]=visibleDocument>
@@ -153,18 +152,6 @@
             <app-c-adjuntos [IA_data]="dataLegal" ></app-c-adjuntos> 
         </p-tabPanel>
         
-        <!-- <p-tabPanel [disabled]=visibleDocument>
-            <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                    <i class="pi pi-dollar"></i>
-                    <span class="font-bold white-space-nowrap m-0">
-                        Financiero
-                    </span>
-                </div>
-            </ng-template>
-            <app-c-financiero [IA_codigo]="codigoParam"></app-c-financiero>           
-        </p-tabPanel> -->
-
         <p-tabPanel [disabled]=visibleDocument>
             <ng-template pTemplate="header">
                 <div class="flex align-items-center gap-2">
@@ -174,7 +161,6 @@
                     </span>
                 </div>
             </ng-template>
-            <!-- <app-c-condiciones [IA_codigo]="codigoParam" [IA_TerPag]="terminopago"></app-c-condiciones>  -->
             <app-c-condiciones [IA_TerPag]="terminopago"></app-c-condiciones> 
         </p-tabPanel>
 
@@ -187,7 +173,6 @@
                     </span>
                 </div>
             </ng-template>
-            <!-- <app-c-bancario [IA_codigo]="codigoParam"></app-c-bancario>   -->
             <app-c-bancario ></app-c-bancario>  
             
         </p-tabPanel>

@@ -35,6 +35,8 @@ import { CCondicionesComponent } from './c-condiciones/c-condiciones.component';
   exports:[    
     CAdjuntosComponent,
     CContactoComponent,
+    CBancarioComponent,
+    CCondicionesComponent
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
 })

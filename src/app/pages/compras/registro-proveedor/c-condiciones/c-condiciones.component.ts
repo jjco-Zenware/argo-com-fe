@@ -242,14 +242,13 @@ export class CCondicionesComponent {
             next: (rpta: any) => {
                 console.log('listarItemsTabla', rpta);
                 this.lstTermino = rpta;
+                this.idestado = this.IA_TerPag;
             },
             error: (err) => {
             console.info('error : ', err);
             this.serviceSharedApp.messageToast()
             },
-            complete: () => {
-              
-        this.idestado ='90'; //this.IA_TerPag;
+            complete: () => {       
             },
         });
       

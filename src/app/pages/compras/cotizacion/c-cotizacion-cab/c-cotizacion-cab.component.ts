@@ -8,29 +8,23 @@ import { ProyectosService } from '../../proyectos-ganados/service/proyectos.serv
 import { SharedAppService } from '@sharedAppService';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
-import { CModalExcTransacComponent } from '../modal-exc-transac/modal-exc-transac.component';
+import { CModalExcTransacComponent } from '../../orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
 import * as FileSaver from 'file-saver';
 
 @Component({
-  selector: 'app-c-orden-compra-servicio',
-  templateUrl: './c-orden-compra-servicio.component.html',
-  styleUrls: ['./c-orden-compra-servicio.component.scss']
+  selector: 'app-c-cotizacion-cab',
+  templateUrl: './c-cotizacion-cab.component.html',
+  styleUrls: ['./c-cotizacion-cab.component.scss']
 })
-export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
+export class CCotizacionComponent implements OnInit, OnDestroy{
 
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
     visDetalle: boolean = false;
-    lstOrdenCompra: any;
+    lstCotizacion: any;
     tituloDetalle!: string;
     frmDatos!: FormGroup;
     dataOC:any;
-    dropdownItemsEstado = [
-        { name: 'Registrado', code: 'REG' },
-        { name: 'Confirmado', code: 'CFM' },
-        { name: 'Aprobado', code: 'APR' },
-        { name: 'Rechazado', code: 'RCH' }
-    ];
     blockedDocument: boolean = false;
     mensajeSpinner: string = "";
     menuItems: MenuItem[] = [];
@@ -54,9 +48,8 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         this.getListarOrdenCompra();
         this.cols = [
           { field: 'idordencompra', header: 'ID OC' },
-          { field: 'nomtipoorden', header: 'TIPO ORDEN' },
-          { field: 'codigonroorden', header: 'N ORDEN' },
-          { field: 'nomcomercial', header: 'PROVEEDOR' },
+          { field: 'codigonroorden', header: 'N COTIZACIÓN' },
+          { field: 'nomcomercial', header: 'CLIENTE' },
           { field: 'nommoneda', header: 'MONEDA' },
           { field: 's_monto', header: 'MONTO' },
           { field: 'codigoproyecto', header: 'COD PROYECTO' },
@@ -104,7 +97,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
       //console.log('this.frmDatos...', this.frmDatos.value);
       const objeto = {
         ...this.frmDatos.value,
-        idtipodocprc: 8
+        idtipodocprc: 1
       }
 
       const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
@@ -112,7 +105,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
           next: (rpta:any) => {
               this.setSpinner(false);
               console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
-              this.lstOrdenCompra = rpta.ordenescompra
+              //this.lstCotizacion = rpta.ordenescompra
           },
           error:(err)=>{
               this.setSpinner(false);
@@ -132,7 +125,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
       }else{
         codigo = dato.idordencompra;
       }
-        this.tituloDetalle = "ORDEN DE COMPRA/SERVICIOS N° " + codigo;
+        this.tituloDetalle = "COTIZACIÓN N° " + codigo;
         this.dataOC = {
           idordencompra: dato.idordencompra,
           paramReg:'V'
@@ -140,26 +133,10 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         this.vistaLista = false;
     }
 
-    onEditar(dato: any) {
-      console.log('onEditar', dato);
-      let codigo;
-      if (dato.estado === 'EMI' || dato.estado === 'ANU') {
-        codigo = dato.codigonroorden;
-      }else{
-        codigo = dato.idordencompra;
-      }
-        this.tituloDetalle = "ORDEN DE COMPRA/SERVICIOS N° " + codigo;
-        this.dataOC = {
-          idordencompra: dato.idordencompra,
-          labelnrodocumento: dato.idordencompra,
-          paramReg:'N'
-        }
-        this.vistaLista = false;
-    }
 
     verCotiza(data: any) {
         console.log('onVer...', data);
-        this.tituloDetalle = "Cotización de Orden de Compra/Servicio N° " + data.codigonroorden;
+        this.tituloDetalle = "COTIZACIÓN N° " + data.codigonroorden;
         this.vistaLista = false;
         this.visDetalle = false;
     }
@@ -177,7 +154,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "ORDEN DE COMPRA/SERVICIOS";
+      this.tituloDetalle = "NUEVA COTIZACIÓN";
       this.dataOC = {
         idordencompra: 0,
         paramReg:'N'
@@ -209,7 +186,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
       console.log('onAccion', item);
       const ref = this.dialogService.open(CModalExcTransacComponent, {
           data: this.ordenCompra,
-          header: item.nomtrx +' - '+  this.ordenCompra.idordencompra,
+          header: item.nomtrx +' - '+  this.ordenCompra.labelnrodocumento,
           closeOnEscape: false,
           styleClass: 'testDialog',
           width: '40%'
@@ -220,28 +197,27 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         });
     }
 
-
     getExportarExcel() {
 
       this.lstExportar = [];
-      for (let i = 0; i < this.lstOrdenCompra.length; i++) {       
-          const objeto = {
-              'N°': i + 1,
-              'TIPO': this.lstOrdenCompra[i].nomtipoorden,
-              'N° ORDEN': this.lstOrdenCompra[i].codigonroorden,
-              'PROVEEDOR': this.lstOrdenCompra[i].nomcomercial,
-              'N° RUC': this.lstOrdenCompra[i].nrodocumento,
-              'MONEDA': this.lstOrdenCompra[i].nommoneda,
-              'BASE IMPONIBLE': 0,
-              'IGV': 0,
-              'TOTAL': this.lstOrdenCompra[i].s_monto,
-              'COD PROYECTO' : this.lstOrdenCompra[i].codigoproyecto,
-              'NOM PROYECTO' : this.lstOrdenCompra[i].nomproyecto,
-              'ESTADO' : this.lstOrdenCompra[i].nomestado
+      // for (let i = 0; i < this.lstOrdenCompra.length; i++) {       
+      //     const objeto = {
+      //         'N°': i + 1,
+      //         'TIPO': this.lstOrdenCompra[i].nomtipoorden,
+      //         'N° ORDEN': this.lstOrdenCompra[i].codigonroorden,
+      //         'PROVEEDOR': this.lstOrdenCompra[i].nomcomercial,
+      //         'N° RUC': this.lstOrdenCompra[i].nrodocumento,
+      //         'MONEDA': this.lstOrdenCompra[i].nommoneda,
+      //         'BASE IMPONIBLE': 0,
+      //         'IGV': 0,
+      //         'TOTAL': this.lstOrdenCompra[i].s_monto,
+      //         'COD PROYECTO' : this.lstOrdenCompra[i].codigoproyecto,
+      //         'NOM PROYECTO' : this.lstOrdenCompra[i].nomproyecto,
+      //         'ESTADO' : this.lstOrdenCompra[i].nomestado
               
-          }
-          this.lstExportar.push(objeto);
-      }
+      //     }
+      //     this.lstExportar.push(objeto);
+      // }
   
       import('xlsx').then((xlsx) => {
         const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);

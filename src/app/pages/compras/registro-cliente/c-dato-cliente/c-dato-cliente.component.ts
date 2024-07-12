@@ -8,11 +8,11 @@ import { Subscription } from 'rxjs';
 import { SharedAppService } from '@sharedAppService';
 
 @Component({
-  selector: 'app-c-dato-proveedor',
-  templateUrl: './c-dato-proveedor.component.html',
-  styleUrls: ['./c-dato-proveedor.component.scss']
+  selector: 'app-c-dato-cliente',
+  templateUrl: './c-dato-cliente.component.html',
+  styleUrls: ['./c-dato-cliente.component.scss']
 })
-export class CDatoProveedorComponent implements  OnChanges, OnDestroy{
+export class CDatoClienteComponent implements  OnChanges, OnDestroy{
   $listSubcription: Subscription[] = [];
   @Input() IA_data: any;
   @Output() OB_back = new EventEmitter<any>();
@@ -28,7 +28,6 @@ export class CDatoProveedorComponent implements  OnChanges, OnDestroy{
   lstTipoDocumento: TablaDetalle[] = []; 
   visibleDocument: boolean = true;
   lstMoneda: any;
-  //codigoParam: any;
   dataLegal: any;
   dataAdjunto: any;
   terminopago: any;
@@ -103,7 +102,7 @@ get formCliente() { return this.registerFormCliente.controls; }
 
 createFormCliente() {
   this.registerFormCliente = this.formBuilder.group({
-  idrolpersona: [{ value: 'PRO', disabled: false }],
+  idrolpersona: [{ value: 'CLI', disabled: false }],
   tipopersona :  [{ value: 'J', disabled: false }, [Validators.required]],
   tipoalta : [{ value: 'NOR', disabled: false }],
   indnacionalidad: [{ value: null, disabled: false }, [Validators.required]],
@@ -236,18 +235,19 @@ cargarData(){
 
 guardar() {
   this.submitted = true;
-  // deténgase aquí si el formulario no es válido
-  if (this.registerFormCliente.invalid) {
+   // deténgase aquí si el formulario no es válido
+   if (this.registerFormCliente.invalid) {
     //console.log('invalid...', this.registerFormCliente.invalid);
     return;
-}
+  }
 
-  this.cliente = this.registerFormCliente.getRawValue();  
+  this.cliente = this.registerFormCliente.getRawValue(); 
   if (this.idCliente > 0) {
       this.cliente.idpersona = this.idCliente
   }else{
       this.cliente.idpersona = 0;
   }
+
   console.log('guardar...', this.cliente);
 
   //Verdadero si todos los campos están llenos
