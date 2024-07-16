@@ -45,7 +45,7 @@
                     currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
                      styleClass="p-datatable-sm card border-1 border-round surface-border">
         
-                    <ng-template pTemplate="header">
+                     <ng-template pTemplate="header">
                         <tr class="text-sm h-3rem">
                             <th style="width: 10px" class="surface-200">
                                 <div class="flex justify-content-between align-items-center">
@@ -74,22 +74,32 @@
                             </th>
                             <th style="width: 250px;" class="surface-200" >
                                 <div class="justify-content-between align-items-center">
+                                    COD PROYECTO
+                                </div>
+                            </th>
+                            <th style="width: 350px;" class="surface-200" >
+                                <div class="justify-content-between align-items-center">
+                                    PROYECTO
+                                </div>
+                            </th>
+                            <th style="width: 150px;" class="surface-200" >
+                                <div class="justify-content-between align-items-center">
                                     MONEDA
                                 </div>
                             </th>
                             <th style="width: 50px;" class="surface-200" >
                                 <div class="justify-content-between align-items-center">
-                                    MONTO
+                                    SUBTOTAL
                                 </div>
                             </th>
-                            <th style="width: 250px;" class="surface-200" >
-                                <div class="justify-content-between align-items-center">
-                                    COD PROYECTO
+                            <th style="width: 70px;" class="surface-200" >
+                                <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                                    IGV
                                 </div>
                             </th>
-                            <th style="width: 250px;" class="surface-200" >
+                            <th style="width: 50px;" class="surface-200" >
                                 <div class="justify-content-between align-items-center">
-                                    PROYECTO
+                                    TOTAL
                                 </div>
                             </th>
                             <th style="width: 80px" class="surface-200">
@@ -109,7 +119,7 @@
                                 <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
                             </th>
                         </tr>
-                
+                   
                     </ng-template>
                     <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
                         <tr class="text-sm">
@@ -136,29 +146,37 @@
                                     {{data.nomcomercial | uppercase}}
                                 </div>
                             </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.nommoneda | uppercase}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'50px'}">
-                                    {{data.s_monto | number: '3.2' }}
-                                </div>
-                            </td>
                             <td >
                                 <div [ngStyle]="{'width':'80px'}">
                                     {{data.codigoproyecto }}
                                 </div>
                             </td>
                             <td>
-                                <div [ngStyle]="{'width':'80px'}">
+                                <div [ngStyle]="{'width':'100px'}">
                                     {{data.nomproyecto | uppercase}}
                                 </div>
                             </td>
                             <td>
-                                
-        
+                                <div [ngStyle]="{'width':'100px'}">
+                                    {{data.nommoneda | uppercase}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                                    {{data.s_monto | number: '3.2' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'50px','text-align':'right'}">
+                                    {{data.s_igv | number: '3.2' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                                    {{data.s_monto_total | number: '3.2' }}
+                                </div>
+                            </td>
+                            <td>                       
                                 <div [ngStyle]="{'width':'80px','text-align': 'center'}">
                                     <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                                     <!-- {{data.estado | uppercase}} -->
@@ -167,6 +185,7 @@
                             <td>
                                 <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                                     <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                                    <button *ngIf="data.estado === 'REG' || data.estado === 'OBS'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                                     <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
                                         pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
                                     <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
@@ -229,22 +248,32 @@
                             </th>
                             <th style="width: 250px;" class="surface-200" >
                                 <div class="justify-content-between align-items-center">
+                                    COD PROYECTO
+                                </div>
+                            </th>
+                            <th style="width: 350px;" class="surface-200" >
+                                <div class="justify-content-between align-items-center">
+                                    PROYECTO
+                                </div>
+                            </th>
+                            <th style="width: 150px;" class="surface-200" >
+                                <div class="justify-content-between align-items-center">
                                     MONEDA
                                 </div>
                             </th>
                             <th style="width: 50px;" class="surface-200" >
                                 <div class="justify-content-between align-items-center">
-                                    MONTO
+                                    SUBTOTAL
                                 </div>
                             </th>
-                            <th style="width: 250px;" class="surface-200" >
-                                <div class="justify-content-between align-items-center">
-                                    COD PROYECTO
+                            <th style="width: 70px;" class="surface-200" >
+                                <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                                    IGV
                                 </div>
                             </th>
-                            <th style="width: 250px;" class="surface-200" >
+                            <th style="width: 50px;" class="surface-200" >
                                 <div class="justify-content-between align-items-center">
-                                    PROYECTO
+                                    TOTAL
                                 </div>
                             </th>
                             <th style="width: 80px" class="surface-200">
@@ -261,10 +290,10 @@
                         <tr >
                             <th></th>
                             <th *ngFor="let col of cols">
-                                <input pInputText type="text" (input)="dt2.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
+                                <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
                             </th>
                         </tr>
-                
+                   
                     </ng-template>
                     <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
                         <tr class="text-sm">
@@ -291,29 +320,37 @@
                                     {{data.nomcomercial | uppercase}}
                                 </div>
                             </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.nommoneda | uppercase}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'50px'}">
-                                    {{data.s_monto | number: '3.2' }}
-                                </div>
-                            </td>
                             <td >
                                 <div [ngStyle]="{'width':'80px'}">
                                     {{data.codigoproyecto }}
                                 </div>
                             </td>
                             <td>
-                                <div [ngStyle]="{'width':'80px'}">
+                                <div [ngStyle]="{'width':'100px'}">
                                     {{data.nomproyecto | uppercase}}
                                 </div>
                             </td>
                             <td>
-                                
-        
+                                <div [ngStyle]="{'width':'100px'}">
+                                    {{data.nommoneda | uppercase}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                                    {{data.s_monto | number: '3.2' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'50px','text-align':'right'}">
+                                    {{data.s_igv | number: '3.2' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                                    {{data.s_monto_total | number: '3.2' }}
+                                </div>
+                            </td>
+                            <td>                       
                                 <div [ngStyle]="{'width':'80px','text-align': 'center'}">
                                     <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                                     <!-- {{data.estado | uppercase}} -->
@@ -322,6 +359,7 @@
                             <td>
                                 <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                                     <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                                    <button *ngIf="data.estado === 'REG' || data.estado === 'OBS'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                                     <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
                                         pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
                                     <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>

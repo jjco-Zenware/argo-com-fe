@@ -1,10 +1,5 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
     <div class="card">
-        <!-- <div class="grid px-3">
-            <div class="mb-1 py-3 h-3rem flex border-round p-2 mt-2 fonthead w-full text-base">
-                <span class="font-semibold">REGISTRO DE COMPRAS</span>
-            </div>
-        </div> -->
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-3rem">
@@ -20,27 +15,17 @@
             <div class="p-fluid p-formgrid grid col-12 text-sm border-1 border-round surface-border h-7rem">                
                 <div class="field md:col-6 sm:col-4 lg:col-2 -mt-3">
                     <label htmlFor="fechaInicio" class="font-semibold text-blue-600">FECHA INICIO</label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fechaini"
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
                         [readonlyInput]="true" appendTo="body">
                     </p-calendar>
                 </div>
                 <div class="field md:col-6 sm:col-4 lg:col-2 -mt-3">
                     <label htmlFor="fechaFin" class="font-semibold text-blue-600">FECHA FIN</label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                         [readonlyInput]="true" appendTo="body"></p-calendar>
                 </div>
-                <!-- <div class="field col-12 md:col-2">
-                    <label class="font-semibold">PROVEEDOR</label>
-                        <p-dropdown [options]="dropdownItemsEstado" formControlName="idproveedor" optionLabel="name" placeholder="Seleccionar Proveedor"
-                            optionValue="code" ></p-dropdown>
-                </div>
-                <div class="field col-12 md:col-2">
-                    <label class="font-semibold">PROYECTO</label>
-                        <p-dropdown [options]="dropdownItemsEstado" formControlName="idproyecto" optionLabel="name" placeholder="Seleccionar Proyecto"
-                            optionValue="code" ></p-dropdown>
-                </div> -->
                 <div class="field col-12 md:col-2 -mt-3 gap-2">
-                    <button pButton type="button" (click)="getBuscar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                         class="font-semibold mt-4 justify-content-center h-3rem w-3rem w-auto" icon="pi pi-search"></button>
                         <button pButton type="button" pTooltip="Exportar Excel" tooltipPosition="bottom" 
                         class="font-semibold mt-4 justify-content-center h-3rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
@@ -48,7 +33,7 @@
             </div>
         </form>
 
-        <p-table [value]="lstOperacion" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+        <p-table #dt1 [value]="lstCompras" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
             currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm">
 
@@ -76,12 +61,22 @@
                     </th>
                     <th style="width: 250px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
+                            ID PROYECTO
+                        </div>
+                    </th>
+                    <th style="width: 250px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            PROYECTO
+                        </div>
+                    </th>
+                    <th style="width: 250px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
                             MONEDA
                         </div>
                     </th>
                     <th style="width: 250px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
-                            MONTO
+                            SUBTOTAL
                         </div>
                     </th>
                     <th style="width: 250px;" class="surface-200" >
@@ -93,21 +88,22 @@
                         <div class="justify-content-between align-items-center">
                             TOTAL
                         </div>
-                    </th>
-                    <th style="width: 250px;" class="surface-200" >
-                        <div class="justify-content-between align-items-center">
-                            ID PROYECTO
+                    </th>      
+                    <th style="width: 80px" class="surface-200">
+                        <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                            ESTADO
                         </div>
-                    </th>
-                    <th style="width: 250px;" class="surface-200" >
-                        <div class="justify-content-between align-items-center">
-                            PROYECTO
-                        </div>
-                    </th>
+                    </th>              
                     <th style="width: 80px;" class="surface-200">
                         <div class="flex justify-content-between align-items-center">
                             ACCIONES
                         </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th *ngFor="let col of cols">
+                        <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
                     </th>
                 </tr>
                
@@ -132,21 +128,6 @@
                             {{data.nomproveedor | uppercase}}
                         </div>
                     </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.nommoneda | uppercase}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.monto }}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'80px'}">
-                            {{data.nomtipoproducto | uppercase}}
-                        </div>
-                    </td>
                     <td >
                         <div [ngStyle]="{'width':'80px'}">
                             {{data.idproyecto }}
@@ -158,8 +139,28 @@
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'80px'}">
-                            {{data.idcotiza}}
+                        <div [ngStyle]="{'width':'100px'}">
+                            {{data.nommoneda | uppercase}}
+                        </div>
+                    </td>                  
+                    <td>
+                        <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                            {{data.s_monto | number: '3.2' }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'50px','text-align':'right'}">
+                            {{data.s_igv | number: '3.2' }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                            {{data.s_monto_total | number: '3.2' }}
+                        </div>
+                    </td>
+                    <td>                       
+                        <div [ngStyle]="{'width':'80px','text-align': 'center'}">
+                            <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                         </div>
                     </td>
                     <td>
@@ -193,16 +194,16 @@
     <div class="p-fluid p-3 mb-1 card" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
         <div class="grid">
             <div class="flex justify-content-between col-12 -mt-3">
-                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
-                    <span class="text-lg font-semibold">{{tituloDetalle}}</span>
-                </div>
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar a Bandeja" tooltipPosition="left" (click)="getBack()" ></button>
                 </div>
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                </div>
             </div>
         </div>
-        <!-- <app-c-cabeceraoc ></app-c-cabeceraoc> -->
+        <app-c-dato-compra [IA_data]="dataPrc"></app-c-dato-compra>
     </div>
 
     <div class="p-fluid p-3 mb-1 card" *ngIf="visQuote" (OB_back)="getDetalle($event)">

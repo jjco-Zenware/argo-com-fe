@@ -10,17 +10,16 @@ import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CItemCotizacionComponent } from '../../proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
-import { OrdencompraService } from '../service/ordencompra.service';
-import { CModalExcTransacComponent } from '../modal-exc-transac/modal-exc-transac.component';
 import { ComprasService } from '../../Service/compraServices';
 import * as  XLSX  from 'xlsx';
+import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
 
 @Component({
-  selector: 'app-c-cabeceraoc',
-  templateUrl: './cabeceraoc.component.html',
-  styleUrls: ['./cabeceraoc.component.scss']
+  selector: 'app-c-dato-compra',
+  templateUrl: './c-dato-compra.component.html',
+  styleUrls: ['./c-dato-compra.component.scss']
 })
-export class CabeceraocComponent implements OnInit, OnDestroy{
+export class DatoCompraComponent implements OnInit, OnDestroy{
   @Input() IA_data: any;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
@@ -76,9 +75,6 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   verReferencia: boolean = false;
   lstUnidades:any;
   errorMensaje: string = "";
-  s_monto:number = 0;
-  s_igv:number = 0;
-  s_monto_total:number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -94,7 +90,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   ) { }
 
   ngOnInit(): void {
-    this.idOrdenC = this.IA_data.idordencompra;
+    //this.idOrdenC = this.IA_data.idordencompra;
 
     this.createFrm();
     this.createFormRegistro();
@@ -110,24 +106,23 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       if (this.IA_data.paramReg === 'V') {
         this.dataAdjunto ={
           idCliente: this.idOrdenC,
-          codtipoproc: 7,
+          codtipoproc: 8, //adjuntos compras
           veracciones: 1
         }
       }  else{
         this.dataAdjunto ={
           idCliente: this.idOrdenC,
-          codtipoproc: 7,
+          codtipoproc: 8,
           veracciones: 0
         }
       }  
-      this.verAdjunto = true;     
-      this.traerUnoOrdenC();
+      this.verAdjunto = true; 
     }else{
       //this.verControles('NOA');
       this.cargarProyectos(1); 
       this.dataAdjunto ={
         idCliente: 0,
-        codtipoproc: 7,
+        codtipoproc: 8,
         veracciones: 0
       }     
       this.mostrarBotones('NVO');
@@ -155,7 +150,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     this.registerFormRegistro = this.formBuilder.group({
       idproyecto: [{ value: 0, disabled: false }],
       idtipoproyecto: [{ value: 0, disabled: false }],
-      idtipodocprc: [{ value: 8, disabled: false }],
+      idtipodocprc: [{ value: 7, disabled: false }],
       idoportunidad: [{ value: 0, disabled: false }],
       sustentodoc: [{ value: '', disabled: false }],
       idrequerimiento: [{ value: 0, disabled: false }],
@@ -281,59 +276,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     
   }
 
-  traerUnoOrdenC(){
-    this.setSpinner(true);
-    this.mensajeSpinner = 'Cargando...!';
-    const objeto ={
-      idordencompra: this.idOrdenC,
-      idusuario: constantesLocalStorage.idusuario
-    }
-
-    const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
-      .subscribe({
-        next: (rpta:any) => {
-          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-            this.setSpinner(false);
-            this.ordenCompra = rpta.ordencompra[0];
-            //this.ordenCompra.codformapago = (rpta.ordencompra[0].codformapago).toString();
-            this.getContactos(rpta.ordencompra[0].idproveedor);      
-            if (rpta.ordencompra[0].items !== undefined) {
-              this.lstItemOC = rpta.ordencompra[0].items;
-              //this.calcularTotales();
-            }  
-            if (rpta.ordencompra[0].quotes !== undefined) {
-              this.lstQuotes =  rpta.ordencompra[0].quotes; 
-            }    
-           
-            this.getOrigen(rpta.ordencompra[0].codtipodoc);               
-            this.visibleDocument = false;
-            console.log('s_monto', rpta.ordencompra[0].s_monto);
-          this.s_monto = rpta.ordencompra[0].s_monto;
-          this.s_igv = rpta.ordencompra[0].s_igv;
-          this.s_monto_total = rpta.ordencompra[0].s_monto_total; 
-
-          this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-          this.cargarMenu(rpta.ordencompra[0].acciones);
-          this.mostrarBotones(rpta.ordencompra[0].estado);
-          const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == this.registerFormRegistro.get('idproyecto').value)[0].nomproyecto;
-          this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto); 
-          
-          
-                   
-          
-        },
-        error:(err)=>{
-            this.setSpinner(false);
-            this.serviceSharedApp.messageToast()
-        },
-        complete:() => {
-          this.setSpinner(false);
-          
-        }
-      });
-    this.$listSubcription.push($cargarOrdenC)
-  }
-
+ 
   guardarOC(){
 
     if (this.validarDatos())
@@ -364,8 +307,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     const objeto = {
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
-      fechaingreso,
-      quotes: this.lstQuotes
+      fechaingreso
     }
 
     console.log('guardarOC...', objeto);
@@ -382,11 +324,10 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
            
             this.dataAdjunto ={
               idCliente: this.idOrdenC,
-              codtipoproc: 7,
+              codtipoproc: 8,
               veracciones: 0
             }   
             this.verAdjunto = true;   
-            this.traerUnoOrdenC();
           }
          
         this.visibleDocument = false;
@@ -724,37 +665,12 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   });
   }
 
-  cargarMenu(data: any) {
-    this.menuItems = [];
-    data.forEach((item: any) => {
-        this.menuItems.push({
-            label: item.nomtrx,
-            icon: 'pi pi-cog',
-            command: () => this.onAccion(item)
-        })
-    });
-  }
-
-  onAccion(item: any) {
-    this.ordenCompra.idtrx = item.idtrx;
-    const ref = this.dialogService.open(CModalExcTransacComponent, {
-        data: this.ordenCompra,
-        header: item.nomtrx +' - '+  this.ordenCompra.idordencompra,
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: '40%'
-    });
-    ref.onClose.subscribe(() => {
-        this.traerUnoOrdenC();
-      });
-  }
 
   changeProyecto(idproyecto : any){
     if (this.registerFormRegistro.get('codtipodoc').value === 'OPO') {  
       const idoportunidad = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].idoportunidad;
       const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
       this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
-      this.oportunidadTraerUno(idoportunidad);     
     }    else{
       const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
       this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
@@ -762,30 +678,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     }
   }
 
-  oportunidadTraerUno(idoportunidad: any){
-    //this.setSpinner(true);
-    this.mensajeSpinner = 'Cargando Cotizaciones...!';
-    this.proyectosService.oportunidadTraeruno(idoportunidad).subscribe({
-      next: (rpta: any) => {
-        let quotes = this.lstQuotes;
-          const {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio, idlista} = rpta;
-              this.dataCT = {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio, idlista, quotes};
-      },
-          error: (err) => {
-            //this.setSpinner(false);
-          this.messageService.clear();
-          this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: mensajesQuestion.msgErrorGenerico,
-          });
-      },
-          complete: () => {
-            this.verCotizacion = false;
-            //this.setSpinner(false);
-      },
-    });
-  }
+
 
   vistaPreliminar(){
     this.setSpinner(true);

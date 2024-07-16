@@ -67,22 +67,32 @@
                     </th>
                     <th style="width: 250px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
+                            COD PROYECTO
+                        </div>
+                    </th>
+                    <th style="width: 350px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            PROYECTO
+                        </div>
+                    </th>
+                    <th style="width: 100px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
                             MONEDA
                         </div>
                     </th>
                     <th style="width: 50px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
-                            MONTO
+                            SUBTOTAL
                         </div>
                     </th>
-                    <th style="width: 250px;" class="surface-200" >
-                        <div class="justify-content-between align-items-center">
-                            COD PROYECTO
+                    <th style="width: 70px;" class="surface-200" >
+                        <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                            IGV
                         </div>
                     </th>
-                    <th style="width: 250px;" class="surface-200" >
+                    <th style="width: 50px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
-                            PROYECTO
+                            TOTAL
                         </div>
                     </th>
                     <th style="width: 80px" class="surface-200">
@@ -129,29 +139,37 @@
                             {{data.nomcomercial | uppercase}}
                         </div>
                     </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.nommoneda | uppercase}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'50px'}">
-                            {{data.s_monto | number: '3.2' }}
-                        </div>
-                    </td>
                     <td >
                         <div [ngStyle]="{'width':'80px'}">
                             {{data.codigoproyecto }}
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'80px'}">
+                        <div [ngStyle]="{'width':'100px'}">
                             {{data.nomproyecto | uppercase}}
                         </div>
                     </td>
                     <td>
-                        
-
+                        <div [ngStyle]="{'width':'100px'}">
+                            {{data.nommoneda | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                            {{data.s_monto | number: '3.2' }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'50px','text-align':'right'}">
+                            {{data.s_igv | number: '3.2' }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                            {{data.s_monto_total | number: '3.2' }}
+                        </div>
+                    </td>
+                    <td>                       
                         <div [ngStyle]="{'width':'80px','text-align': 'center'}">
                             <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                             <!-- {{data.estado | uppercase}} -->

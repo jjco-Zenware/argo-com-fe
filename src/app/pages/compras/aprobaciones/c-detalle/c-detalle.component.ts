@@ -65,6 +65,9 @@ export class CDetalleComponent implements OnInit, OnDestroy{
   verReferencia: boolean = false;
   lstUnidades:any;
   registerFormRegistro: any= FormGroup;
+  s_monto:number = 0;
+  s_igv:number = 0;
+  s_monto_total:number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -235,7 +238,7 @@ export class CDetalleComponent implements OnInit, OnDestroy{
             this.getContactos(rpta.ordencompra[0].idproveedor);      
             if (rpta.ordencompra[0].items !== undefined) {
               this.lstItemOC = rpta.ordencompra[0].items;
-              this.calcularTotales();
+              //this.calcularTotales();
             }  
             if (rpta.ordencompra[0].quotes !== undefined) {
               this.lstQuotes =  rpta.ordencompra[0].quotes; 
@@ -243,6 +246,9 @@ export class CDetalleComponent implements OnInit, OnDestroy{
            
             this.getOrigen(rpta.ordencompra[0].codtipodoc);               
             this.visibleDocument = false;
+            this.s_monto = rpta.ordencompra[0].s_monto;
+          this.s_igv = rpta.ordencompra[0].s_igv;
+          this.s_monto_total = rpta.ordencompra[0].s_monto_total;
             
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);

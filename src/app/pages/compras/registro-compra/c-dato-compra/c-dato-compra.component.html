@@ -140,7 +140,7 @@
                     <button pButton class="font-semibold w-auto bg-green-400" pTooltip="Importar Plantilla" icon="pi pi-cloud-upload" label="Importar" (click)="importarPlantilla()"></button>
                 </div>
                 <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [scrollable]="true"  styleClass="p-datatable-sm">
+                [scrollable]="true"  styleClass="p-datatable-sm p-datatable-gridlines">
                     <ng-template pTemplate="header">
                         <tr>
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
@@ -185,16 +185,19 @@
                     </ng-template>
                     <ng-template pTemplate="footer">
                         <tr>
-                            <td colspan="12" class="text-right">Sub Total: </td>
-                            <td>{{s_monto | number: '0.2'}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="12" class="text-right">IGV: </td>
-                            <td>{{s_igv | number: '0.2'}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="12" class="text-right">Total: </td>
-                            <td>{{s_monto_total | number: '0.2'}}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="1" class="text-right">Total: </td>
+                            <td>{{montoTotal | number: '0.2'}}</td>
                         </tr>
                     </ng-template>
                 </p-table>                
@@ -211,30 +214,6 @@
                 </ng-template>             
                 <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
             </p-tabPanel>
-
-            <p-tabPanel [disabled]=verCotizacion >
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-money-bill"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Cotización
-                        </span>
-                    </div>
-                </ng-template>
-                <app-cotizacion  [IA_data]="dataCT" (OB_back)="getQuotes($event)"></app-cotizacion>         
-            </p-tabPanel>
-
-            <!-- <p-tabPanel [disabled]=visibleDocument>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-paperclip"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Registro Compras
-                        </span>
-                    </div>
-                </ng-template>             
-                <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
-            </p-tabPanel> -->
                   
         </p-tabView> 
     </div>
@@ -308,11 +287,3 @@
 </div>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
-
-
-
-
-
-
-
-

@@ -20,6 +20,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
     const $obtenerMenu = this.serviceAuth.obtenerMenu(moduloAPP, constantesLocalStorage.idusuario)
       .subscribe({
         next: (rpta: any) => {
+          console.log('obtenerMenu', rpta);
           this.model = rpta;
         },
         error: (err) => { },

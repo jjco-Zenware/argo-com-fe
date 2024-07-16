@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage } from '@constantes';
+import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { dOperacion } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
+import { ProyectosService } from '../../proyectos-ganados/service/proyectos.service';
+import { DialogService } from 'primeng/dynamicdialog';
+import { SharedAppService } from '@sharedAppService';
 
 @Component({
   selector: 'app-c-registro-compra',
@@ -19,36 +22,39 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
   visDetalle: boolean = false;
   visQuote: boolean = false;
 
-  lstOperacion: dOperacion[] =[];
+  lstCompras: any[] =[];
   tituloDetalle!: string;
   frmDatos!: FormGroup;
-
-  dropdownItemsEstado = [
-      { name: 'Registrado', code: 'REG' },
-      { name: 'Confirmado', code: 'CFM' },
-      { name: 'Aprobado', code: 'APR' },
-      { name: 'Rechazado', code: 'RCH' }
-  ];
+  cols: any[] = [];
+  dataPrc:any;
+  blockedDocument: boolean = false;
+    mensajeSpinner: string = "";
 
   constructor(
-      private fb: FormBuilder,
-      private utilitariosService: UtilitariosService){
+    private fb: FormBuilder,
+    private utilitariosService: UtilitariosService,
+    public dialogService: DialogService  ,
+    private proyectosService: ProyectosService,     
+    private serviceSharedApp: SharedAppService
+    ){
 
-          this.lstOperacion = [{
-              nrooperacion: 152,
-              idordencompra:4343,
-              nomproveedor: ' nombre proveedor',
-              nommoneda: 'soles',
-              monto: 550000,
-              nomtipoproducto: 'nom tipo product',
-              idproyecto: 1233,
-              nomproyecto: 'descripción Proyecto',
-              idcotiza: 345
-          }];
   }
 
   ngOnInit(): void{
       this.createFrm();
+      this.getListar();
+      this.cols = [
+        { field: 'idordencompra', header: 'REG COMPRA' },
+        { field: 'nomtipoorden', header: 'PROVEEDOR' },
+        { field: 'codigonroorden', header: 'N° FACTURA' },
+        { field: 'nomcomercial', header: 'COD PROYECTO' },
+        { field: 'nommoneda', header: 'PROYECTO' },
+        { field: 'codigoproyecto', header: 'MONEDA' },
+        { field: 's_monto', header: 'SUBTOTAL' },
+        { field: 's_monto', header: 'IGV' },
+        { field: 's_monto', header: 'TOTAL' },
+        { field: 'nomestado', header: 'ESTADO' }
+    ];
   }
 
   ngOnDestroy(): void {
@@ -56,75 +62,44 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         this.$listSubcription.forEach((sub) => sub.unsubscribe());
       }
     }
-
+    
+    setSpinner(valor: boolean) {
+      this.blockedDocument = valor;
+    }
   createFrm(){
-      this.frmDatos = this.fb.group({
-          idestado: [
-          {
-            value: null,
-            disabled: false,
-          },
-        ],idproveedor: [
-          {
-            value: null,
-            disabled: false,
-          },
-        ],idproyecto: [
-          {
-            value: null,
-            disabled: false,
-          },
-        ],
-        fechaini: [
-          {
-            value: this.utilitariosService.obtenerFechaInicioMes(),
-            disabled: false,
-          },
-        ],
-        fechafin: [
-          {
-            value: this.utilitariosService.obtenerFechaFinMes(),
-            disabled: false,
-          },
-        ],
-        idusuario: [
-          {
-            value: constantesLocalStorage.idusuario,
-            disabled: false,
-          },
-        ],
-      })
+    this.frmDatos = this.fb.group({    
+        fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}],       
+        fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],     
+        idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
+    }) 
+  }
+
+  getListar(){
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+    
+    const objeto = {
+      ...this.frmDatos.value,
+      idtipodocprc: 7
     }
 
-    getBuscar(){
-      // this.setSpinner(true);
-      // this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-
-      // this.btnBuscar=true;
-      // const $listaTareas = this.listatareasService.listaTareas(this.frmDatos.getRawValue())
-      //   .subscribe({
-      //     next: (rpta:any) => {
-      //         this.setSpinner(false);
-      //         console.log('rpta listaTareas', rpta);
-      //       this.listaTareas = rpta;
-      //     },
-      //     error:(err)=>{
-      //         this.setSpinner(false);
-      //       console.error('error : ',err)
-      //       this.messageService.clear();
-      //       this.messageService.add({
-      //         severity: 'error',
-      //         summary: 'Error',
-      //         detail: mensajesQuestion.msgErrorGenerico
-      //       })
-      //     },
-      //     complete:() => {
-      //       this.btnBuscar=false;
-      //       this.setSpinner(false);
-      //     }
-      //   });
-      // this.$listSubcription.push($listaTareas)
-    }
+    const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
+      .subscribe({
+        next: (rpta:any) => {
+            this.setSpinner(false);
+            console.log('rpta getListar', rpta.ordenescompra);
+            this.lstCompras = rpta.ordenescompra
+        },
+        error:(err)=>{
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($getListarOrdenCompra)
+  }
 
   onVer(data: dOperacion) {
       console.log('onVer...', data);
@@ -163,10 +138,10 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
 
     onNuevo() {        
       this.tituloDetalle = "REGISTRAR COMPRA";
-      // this.dataOC = {
-      //   idordencompra: 0,
-      //   paramReg:'N'
-      // }
+      this.dataPrc = {
+        idordencompra: 0,
+        paramReg:'N'
+      }
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;

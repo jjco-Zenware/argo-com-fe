@@ -61,10 +61,12 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
           { field: 'codigonroorden', header: 'N ORDEN' },
           { field: 'nomcomercial', header: 'PROVEEDOR' },
           { field: 'nommoneda', header: 'MONEDA' },
-          { field: 's_monto', header: 'MONTO' },
           { field: 'codigoproyecto', header: 'COD PROYECTO' },
           { field: 'nomproyecto', header: 'PROYECTO' },
-          { field: 'nomestado', header: 'ESTADO' },
+          { field: 's_monto', header: 'SUBTOTAL' },
+          { field: 's_monto', header: 'IGV' },
+          { field: 's_monto', header: 'TOTAL' },
+          { field: 'nomestado', header: 'ESTADO' }
       ];
     }
 
