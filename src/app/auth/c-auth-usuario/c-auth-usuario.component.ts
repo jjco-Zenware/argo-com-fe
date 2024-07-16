@@ -78,9 +78,9 @@ export class CAuthUsuarioComponent implements OnInit, OnDestroy {
   async loginAzure() {
     this.msalInstance = new PublicClientApplication({
       auth: {
-        clientId: '4ef23981-3c3f-49a5-8e58-419ed530d5bb',
+        clientId: 'b65e275c-ca73-4aac-b3e3-fd74c0658fd8',
         authority: 'https://login.microsoftonline.com/02157777-a391-40f4-b293-125e2aee9f72',
-        postLogoutRedirectUri: 'http://localhost:4200/',
+        //postLogoutRedirectUri: 'http://localhost:4200/',
       },
       system: {
         allowNativeBroker: true,
