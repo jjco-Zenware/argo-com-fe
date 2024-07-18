@@ -108,9 +108,9 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       sku: [{ value: '', disabled: false }],
       nrocontrato: [{ value: '', disabled: false }],
       nromeses: [{ value: 0, disabled: false }],
-      fecini: [{ value: this.serviceUtilitario.obtenerFechaInicioMes(), disabled: false }],
-      fecfin: [{ value: this.serviceUtilitario.obtenerFechaFinMes(), disabled: false }],
-      idunidad: [{ value: '', disabled: false }, [Validators.required]],
+      fecini: [{ value: null, disabled: false }], //this.serviceUtilitario.obtenerFechaInicioMes()
+      fecfin: [{ value: null, disabled: false }], //this.serviceUtilitario.obtenerFechaFinMes()
+      idunidad: [{ value: 130, disabled: false }, [Validators.required]],
       nomunidad: [{ value: '', disabled: false }],
       valor: [{ value: '', disabled: false }],
     })
@@ -141,6 +141,7 @@ createFormTag() {
     this.comprasService.obtenerItemsTabla(107).subscribe({
         next: (rpta: any) => {
             this.lstUnidades = rpta;
+            console.log('lstUnidades : ', rpta);
         },
         error: (err) => {
         console.info('error : ', err);
@@ -216,6 +217,12 @@ createFormTag() {
   }
 
   guardarItem() {
+
+    if (this.frmDatosItem.get('descripcion')?.value == 0) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Descripción'});
+      return;
+    }
+
       if (this.frmDatosItem.get('preciocosto')?.value == 0) {
         this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Precio Costo'});
         return;
@@ -225,24 +232,30 @@ createFormTag() {
       this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
       return;
     }
-    const _fecini = new Date(this.frmDatosItem.get('fecini')?.value);
-    this.frmDatosItem.get('fecini')?.setValue(_fecini);
-    const _fecfin = new Date(this.frmDatosItem.get('fecfin')?.value);
-    this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
+
+    if (this.frmDatosItem.get('idtipoprod')?.value  === 6 || this.frmDatosItem.get('idtipoprod')?.value  === 7) {
+      if (this.frmDatosItem.get('fecini')?.value === null) {
+        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Inicio'});
+        return;
+      }
+      if (this.frmDatosItem.get('fecfin')?.value === null) {
+        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Final'});
+        return;
+      }
+      const _fecini = new Date(this.frmDatosItem.get('fecini')?.value);
+      this.frmDatosItem.get('fecini')?.setValue(_fecini);
+      const _fecfin = new Date(this.frmDatosItem.get('fecfin')?.value);
+      this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
+    }   
 
     const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
     this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
 
     const _marca:string=this.lstMarcas.filter(x=>x.idmarca == this.frmDatosItem.get('idmarca')?.value)[0].nommarca;
     this.frmDatosItem.get('nommarca')?.setValue(_marca)
-    //this.lstUnidades//
+    
     const _nomunidad:string=this.lstUnidades.filter(x=>x.iditem == this.frmDatosItem.get('idunidad')?.value)[0].valoritem;
     this.frmDatosItem.get('nomunidad')?.setValue(_nomunidad)
-
-    const objeto = {
-      ...this.frmDatosItem.getRawValue(),
-      tags: this.listaTag
-    }
 
     this.cerrar({...this.frmDatosItem.getRawValue()})
   }
@@ -255,41 +268,41 @@ createFormTag() {
     this.refDatoItem.close({objeto});
   }
 
-  NuevaMarca()  {
-    this.submitted = false;
-    this.headerTitle= 'Nueva Marca' ;
-    this.marcaVisible = true;
-  }
+  // NuevaMarca()  {
+  //   this.submitted = false;
+  //   this.headerTitle= 'Nueva Marca' ;
+  //   this.marcaVisible = true;
+  // }
 
-  guardarMarca() {
-      this.submitted = true;
-      if (this.registerFormMarca.invalid) {
-          this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
-          return;
-      }
-      if(this.submitted)
-      {
-          const objeto = {
-              idmarca: 0,
-              nommarca: this.registerFormMarca.value.nommarca,
-              idproveedor: 0
-            }
-            const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
-              next: (rpta: any) => {
-                this.listarMarcas();
-              },
-              error: (err) => {
-                console.info('error : ', err);
-                this.serviceSharedApp.messageToast()
-              },
-              complete: () => {
-              },
-            });
-            this.$listSubcription.push($prcMarcas);
+  // guardarMarca() {
+  //     this.submitted = true;
+  //     if (this.registerFormMarca.invalid) {
+  //         this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
+  //         return;
+  //     }
+  //     if(this.submitted)
+  //     {
+  //         const objeto = {
+  //             idmarca: 0,
+  //             nommarca: this.registerFormMarca.value.nommarca,
+  //             idproveedor: 0
+  //           }
+  //           const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
+  //             next: (rpta: any) => {
+  //               this.listarMarcas();
+  //             },
+  //             error: (err) => {
+  //               console.info('error : ', err);
+  //               this.serviceSharedApp.messageToast()
+  //             },
+  //             complete: () => {
+  //             },
+  //           });
+  //           this.$listSubcription.push($prcMarcas);
 
-          this.marcaVisible=false;
-      }
-  }
+  //         this.marcaVisible=false;
+  //     }
+  // }
 
   verControles(dato: any){
     console.log('verControles', dato);

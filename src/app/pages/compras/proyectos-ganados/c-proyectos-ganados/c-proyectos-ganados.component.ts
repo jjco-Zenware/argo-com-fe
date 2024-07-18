@@ -3,7 +3,7 @@ import { I_Proyecto } from '@interfaces';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 import { ModalProyectoComponent } from '../modal-proyecto/modal-proyecto.component';
-import { MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
@@ -42,6 +42,7 @@ export class CProyectosGanadosComponent implements OnInit{
         private utilitariosService: UtilitariosService,
         private proyectosService: ProyectosService,
         private messageService: MessageService,
+        private confirmationService: ConfirmationService
     ){
         
     }
@@ -238,6 +239,51 @@ export class CProyectosGanadosComponent implements OnInit{
                     this.visOcOs= false;
             },
         });
+    }
+
+    onEliminar(dato: any){
+
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            header: 'Confirmación',
+            message:  '¿Desea Eliminar El Proyecto ' + '<b>' + dato.codigoproyecto + '</b>' + '?' ,
+            accept: () => {
+                this.setSpinner(true);
+                this.mensajeSpinner = "Eliminando...!";
+                const objeto = {
+                    idproyecto: dato.idproyecto,
+                    idusuario: constantesLocalStorage.idusuario
+        
+                }
+                this.proyectosService.eliminarProyecto(objeto).subscribe({
+                    next: (rpta: any) => {
+                        console.log('onEliminar', rpta);
+                        if (rpta.procesoSwitch === 0) {
+                            this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+                            this.cargarLista();                    
+                        }else{
+                            this.messageService.add({ severity: 'info', summary: 'Aviso...', detail: rpta.mensaje });
+                        }
+                        
+                    this.setSpinner(false);
+                    },
+                    error: (err) => {
+                    console.info('error : ', err);
+                    this.messageService.clear();
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: mensajesQuestion.msgErrorGenerico,
+                    });
+                    },
+                    complete: () => {
+                        this.setSpinner(false);
+                    },
+                });
+            }
+        });
+
+       
     }
 
     

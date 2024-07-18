@@ -162,7 +162,7 @@
                     <td>
                         <div style="text-align: start;">
                             <button pButton pRipple type="button" icon="pi pi-pencil" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
-                            <!-- <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button> -->
+                            <button pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="bottom" pTooltip="Eliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-600" (click)="onEliminar(data)"></button>
                             <button *ngIf="data.idoportunidad > 0" pButton pRipple type="button" icon="pi pi-chart-line" tooltipPosition="bottom" pTooltip="Business Case" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVerBC(data)"></button>
                             <!-- <button pButton pRipple type="button" icon="pi pi-briefcase" tooltipPosition="left" pTooltip="OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="generarOC(data)"></button> -->
                         </div>
@@ -230,4 +230,6 @@
 
 <p-toast></p-toast>
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
 

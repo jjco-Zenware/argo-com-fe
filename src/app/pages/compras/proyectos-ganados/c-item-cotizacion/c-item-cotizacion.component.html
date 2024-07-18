@@ -135,7 +135,7 @@
     class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary mt-2"></button> 
 </div>
 
-<p-dialog [(visible)]="marcaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
+<!-- <p-dialog [(visible)]="marcaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
     <p-header > <i class="pi pi-tag" style="margin-right: 10px;"></i>{{ headerTitle }} </p-header>
         <form [formGroup]="registerFormMarca" (ngSubmit)="guardarMarca()">
             <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
@@ -148,7 +148,7 @@
                 <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary"></button>
             </div>
         </form>
-</p-dialog>
+</p-dialog> -->
 
 <p-dialog [(visible)]="tagVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
     <p-header> <i class="pi pi-tag" style="margin-right: 10px;"></i>Agregar TAG </p-header>

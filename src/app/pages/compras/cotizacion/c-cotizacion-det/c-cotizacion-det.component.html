@@ -2,7 +2,7 @@
     <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
         <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-3rem" (click)="guardarOC()"></button>
         <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-outlined w-auto h-3rem" (click)="vistaPreliminar()"></button>
-        <button *ngIf="verbtnOrden" pButton icon="pi pi-file" label="Ver Orden Compra" class="p-button-outlined w-auto h-3rem" (click)="vistaPreliminar()"></button>
+        <button *ngIf="verbtnOrden" pButton icon="pi pi-file" label="Ver Cotización" class="p-button-outlined w-auto h-3rem" (click)="vistaPreliminar()"></button>
         <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-3rem"></p-splitButton>
     </div>
     <div class="card p-2">
@@ -21,13 +21,13 @@
                     
                     <div class="p-fluid grid col-8 border-1 border-round surface-border p-2 m-2"> 
                             
-                            <div class="col-6 sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                            <!-- <div class="col-6 sm:col-6 lg:col-3 md:col-3 h-4rem field">
                                 <label class="block text-900 font-semibold mb-1">Orden <span class="text-red-500 font-bold"> * </span></label>
                                 <span class="p-fluid ">
                                     <p-dropdown [options]="lstTipo" formControlName="codtipoorden" placeholder="Seleccionar Tipo" optionLabel="name" 
                                     optionValue="code" [readonly]=onlyRead></p-dropdown>
                                 </span>
-                            </div>
+                            </div> -->
                             <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field">
                                 <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
                                 <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
@@ -35,7 +35,7 @@
                                     inputStyleClass="w-full cursor-pointer" appendTo="body" ></p-calendar>
                                 </span>
                             </div>
-                            <div class=" sm:col-8 lg:col-3 md:col-12"></div>
+                            <div class=" sm:col-8 lg:col-6 md:col-12"></div>
                             <div class="sm:col-12 lg:col-3 md:col-12 h-4rem field">
                                 <label class="block text-900 font-semibold mb-1">N° Cotización</label>
                                 <span class="p-fluid">
@@ -45,21 +45,21 @@
                             <div class="col-12 -mt-2 -mb-5">
                                 <p-divider ></p-divider>
                             </div>
-                            <div class="sm:col-6 lg:col-4 md:col-3 mt-1 h-4rem field">
+                            <!-- <div class="sm:col-6 lg:col-4 md:col-3 mt-1 h-4rem field">
                                 <label class="block text-900 font-semibold mb-1">Origen <span class="text-red-500 font-bold"> * </span></label>
                                 <span class="p-fluid mt-1">
                                     <p-dropdown [options]="lstOrigen" formControlName="codtipodoc" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
                                     optionValue="codproceso" (onChange)="getOrigen($event.value)" [readonly]=onlyRead></p-dropdown>
                                 </span>
                             </div>  
-                            <div class=" sm:col-8 lg:col-7 md:col-12"></div>
-                            <div class="col-12 field h-4rem mt-1">
+                            <div class=" sm:col-8 lg:col-7 md:col-12"></div> -->
+                            <!-- <div class="col-12 field h-4rem mt-1">
                                 <label class="block text-900 font-semibold mb-1">Proyecto <span class="text-red-500 font-bold"> * </span></label>                        
                                 <span class="p-fluid mt-1">
                                     <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto"
                                     optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
                                 </span>
-                            </div>
+                            </div> -->
                             <!-- <div class="col-8 field h-4rem mt-1">
                                 <label class="block text-900 font-semibold mb-1">Descripción Proyecto</label>                        
                                 <span class="p-fluid">

@@ -45,16 +45,18 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void{
         this.createFrm();
-        this.getListarOrdenCompra();
+        this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID OC' },
           { field: 'codigonroorden', header: 'N COTIZACIÓN' },
           { field: 'nomcomercial', header: 'CLIENTE' },
           { field: 'nommoneda', header: 'MONEDA' },
-          { field: 's_monto', header: 'MONTO' },
           { field: 'codigoproyecto', header: 'COD PROYECTO' },
           { field: 'nomproyecto', header: 'PROYECTO' },
-          { field: 'nomestado', header: 'ESTADO' },
+          { field: 's_monto', header: 'SUBTOTAL' },
+          { field: 's_monto', header: 'IGV' },
+          { field: 's_monto', header: 'TOTAL' },
+          { field: 'nomestado', header: 'ESTADO' }
       ];
     }
 
@@ -91,7 +93,7 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
       })
     }
 
-    getListarOrdenCompra(){
+    getListar(){
       this.setSpinner(true);
       this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
       //console.log('this.frmDatos...', this.frmDatos.value);
@@ -100,12 +102,12 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
         idtipodocprc: 1
       }
 
-      const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
+      const $getListar = this.proyectosService.ordenCompraList(objeto)
         .subscribe({
           next: (rpta:any) => {
               this.setSpinner(false);
-              console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
-              //this.lstCotizacion = rpta.ordenescompra
+              console.log('rpta getListar', rpta.ordenescompra);
+              this.lstCotizacion = rpta.ordenescompra
           },
           error:(err)=>{
               this.setSpinner(false);
@@ -115,7 +117,7 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
             this.setSpinner(false);
           }
         });
-      this.$listSubcription.push($getListarOrdenCompra)
+      this.$listSubcription.push($getListar)
     }
 
     onVer(dato: any) {
@@ -144,13 +146,13 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
     getDetalle(dato:boolean){
       this.vistaLista = true;
       this.visDetalle = false;
-      this.getListarOrdenCompra();
+      this.getListar();
     }
 
     getBack() {
       this.vistaLista = true;
       this.visDetalle = false;
-      this.getListarOrdenCompra();
+      this.getListar();
     }
 
     onNuevo() {        
@@ -193,7 +195,7 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
       });
   
       ref.onClose.subscribe(() => {
-          this.getListarOrdenCompra();
+          this.getListar();
         });
     }
 
@@ -234,5 +236,20 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
             type: EXCEL_TYPE
         });
         FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
+      }
+
+      onEditar(dato: any) {
+        // let codigo;
+        // if (dato.estado === 'EMI' || dato.estado === 'ANU') {
+        //   codigo = dato.codigonroorden;
+        // }else{
+        //   codigo = dato.idordencompra;
+        // }
+          this.tituloDetalle = "COTIZACIÓN N° " + dato.idordencompra;
+          this.dataOC = {
+            idordencompra: dato.idordencompra,
+            paramReg:''
+          }
+          this.vistaLista = false;
       }
 }

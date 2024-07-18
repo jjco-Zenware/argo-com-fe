@@ -7,7 +7,7 @@
                         pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                 
                 <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
-                    <span class="text-base font-semibold">COTIZACIONES</span>
+                    <span class="text-base font-semibold">COTIZACIONES CLIENTES</span>
                 </div>           
             </div>
         </div>
@@ -26,7 +26,7 @@
                         [readonlyInput]="true" appendTo="body"></p-calendar>
                 </div>
                 <div class="field col-12 md:col-2 -mt-3 gap-2">
-                    <button pButton type="button" (click)="getListarOrdenCompra()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                         class="font-semibold mt-4 justify-content-center h-3rem w-3rem w-auto" icon="pi pi-search"></button>
                     <button pButton type="button" (click)="getExportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom" 
                         class="font-semibold mt-4 justify-content-center h-3rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
@@ -68,25 +68,35 @@
                     </th>
                     <th style="width: 250px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
+                            COD PROYECTO
+                        </div>
+                    </th>
+                    <th style="width: 350px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            PROYECTO
+                        </div>
+                    </th>
+                    <th style="width: 100px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
                             MONEDA
                         </div>
                     </th>
                     <th style="width: 50px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
-                            MONTO
+                            SUBTOTAL
                         </div>
                     </th>
-                    <th style="width: 250px;" class="surface-200" >
+                    <th style="width: 70px;" class="surface-200" >
+                        <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                            IGV
+                        </div>
+                    </th>
+                    <th style="width: 50px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
-                            COD PROYECTO
+                            TOTAL
                         </div>
                     </th>
-                    <th style="width: 250px;" class="surface-200" >
-                        <div class="justify-content-between align-items-center">
-                            PROYECTO
-                        </div>
-                    </th>
-                    <th style="width: 80px" class="surface-200">
+                    <th style="width: 80px" class="surface-200" >
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
                             ESTADO
                         </div>
@@ -130,29 +140,37 @@
                             {{data.nomcomercial | uppercase}}
                         </div>
                     </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.nommoneda | uppercase}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'50px'}">
-                            {{data.s_monto | number: '3.2' }}
-                        </div>
-                    </td>
                     <td >
-                        <div [ngStyle]="{'width':'80px'}">
+                        <div [ngStyle]="{'width':'100px'}">
                             {{data.codigoproyecto }}
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'80px'}">
+                        <div [ngStyle]="{'width':'250px'}">
                             {{data.nomproyecto | uppercase}}
                         </div>
                     </td>
                     <td>
-                        
-
+                        <div [ngStyle]="{'width':'60px'}">
+                            {{data.nommoneda | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                            {{data.s_monto | number: '0.2-2' }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'50px','text-align':'right'}">
+                            {{data.s_igv | number: '0.2-2' }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                            {{data.s_monto_total | number: '0.2-2' }}
+                        </div>
+                    </td>
+                    <td>                       
                         <div [ngStyle]="{'width':'80px','text-align': 'center'}">
                             <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                             <!-- {{data.estado | uppercase}} -->
@@ -161,6 +179,7 @@
                     <td>
                         <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                             <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                             <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
                                 pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
                             <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>

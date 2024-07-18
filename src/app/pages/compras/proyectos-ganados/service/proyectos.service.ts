@@ -148,5 +148,14 @@ export class ProyectosService {
         const url = `${constantesApiWeb.obtenerOportunidadCliente}`;
         return  this.http.post<any>(url, objeto)
     }
+
+    eliminarProyecto(objeto:any) {
+        const url = `${constantesApiWeb.eliminarProyecto}`;
+        return  this.http.post<any>(url, objeto)
+    }
     
+    listarTrasacciones(codigo:any) {
+        const url = `${constantesApiWeb.listarTrasacciones}${codigo}`;
+        return this.http.get<any>(url);
+    }
 }

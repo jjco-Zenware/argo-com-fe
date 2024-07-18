@@ -131,9 +131,9 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     onVer(dato: any) {
       let codigo;
       if (dato.estado === 'EMI' || dato.estado === 'ANU') {
-        codigo = dato.codigonroorden;
+        codigo = dato.labelnrodocumento;
       }else{
-        codigo = dato.idordencompra;
+        codigo = dato.labelnrodocumento;
       }
         this.tituloDetalle = "ORDEN DE COMPRA/SERVICIOS N° " + codigo;
         this.dataOC = {
@@ -147,14 +147,14 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
       console.log('onEditar', dato);
       let codigo;
       if (dato.estado === 'EMI' || dato.estado === 'ANU') {
-        codigo = dato.codigonroorden;
+        codigo = dato.labelnrodocumento;
       }else{
         codigo = dato.idordencompra;
       }
         this.tituloDetalle = "ORDEN DE COMPRA/SERVICIOS N° " + codigo;
         this.dataOC = {
           idordencompra: dato.idordencompra,
-          labelnrodocumento: dato.idordencompra,
+          //labelnrodocumento: dato.idordencompra,
           paramReg:'N'
         }
         this.vistaLista = false;

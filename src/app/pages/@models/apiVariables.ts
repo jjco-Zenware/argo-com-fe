@@ -92,5 +92,7 @@ export const constantesApiWeb = {
     descargarPlantilla: controllerArchivo + '/descargarplantilla/',
     prcItem: controllerMain + '/tablaitemnew',
     obtenerOportunidadCliente: controllerCRM + '/oportunidadlist03',
+    eliminarProyecto: controllerComercial + '/proyectodel',
+    listarTrasacciones: controllerMain + '/trxmovimientolist02/',
 
 }

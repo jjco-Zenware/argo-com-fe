@@ -79,6 +79,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   s_monto:number = 0;
   s_igv:number = 0;
   s_monto_total:number = 0;
+  lstTransacciones: any[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -122,6 +123,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       }  
       this.verAdjunto = true;     
       this.traerUnoOrdenC();
+      this.listarTransacciones();
     }else{
       //this.verControles('NOA');
       this.cargarProyectos(1); 
@@ -171,7 +173,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: 0, disabled: false }],
       idmoneda: [{ value: 0, disabled: false }],
-      //idorigen: [{ value: this.IA_data, disabled: false }],
+      labelnrodocumento: [{ value: '', disabled: true }],
       idcontacto: [{ value: 0, disabled: false }],
       codtipodoc: [{ value: 'OPO', disabled: false }],
       tiempoentrega: [{ value: 0, disabled: false }],
@@ -272,8 +274,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     if (this.IA_data.paramReg === 'V') {
       console.log('entro', this.IA_data.paramReg);
       this.verbtnGrabar = false;
-      this.verbtnPreliminar= this.idOrdenC === 0 ? true : false;
-      this.verbtnOrden = this.idOrdenC === 0 ? false : true;
+      this.verbtnPreliminar= this.idOrdenC > 0 && this.IA_data.paramReg === 'V' && data !=='EMI' ? true : false;
+      this.verbtnOrden = this.idOrdenC > 0 && data === 'EMI' ? true : false;
       this.verbtnAcciones = false;
       this.verItems = false;
       this.onlyRead = true;
@@ -1048,4 +1050,20 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       }
        return _error;
      }
+
+     listarTransacciones() {
+      const $lstTransacciones = this.proyectosService.listarTrasacciones(this.idOrdenC).subscribe({
+        next: (rpta: any) => {
+          console.log('lstTransacciones', rpta);
+          this.lstTransacciones = rpta;       
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+      });
+      this.$listSubcription.push($lstTransacciones);
+  
+    }
 }

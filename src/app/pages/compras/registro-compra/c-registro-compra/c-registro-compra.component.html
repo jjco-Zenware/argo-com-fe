@@ -93,13 +93,15 @@
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
                             ESTADO
                         </div>
-                    </th>              
+                    </th>  
+                               
                     <th style="width: 80px;" class="surface-200">
                         <div class="flex justify-content-between align-items-center">
                             ACCIONES
                         </div>
                     </th>
                 </tr>
+              
                 <tr>
                     <th></th>
                     <th *ngFor="let col of cols">
@@ -193,8 +195,8 @@
 
     <div class="p-fluid p-3 mb-1 card" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
         <div class="grid">
-            <div class="flex justify-content-between col-12 -mt-3">
-                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+            <div class="flex justify-content-between col-12 gap-2">
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem -ml-1">
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar a Bandeja" tooltipPosition="left" (click)="getBack()" ></button>
                 </div>

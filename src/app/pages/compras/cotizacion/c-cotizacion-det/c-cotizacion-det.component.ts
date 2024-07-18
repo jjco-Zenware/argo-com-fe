@@ -114,10 +114,10 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
         }
       }  
       //this.verAdjunto = true;     
-      this.traerUnoOrdenC();
+      this.traerUno();
     }else{
       //this.verControles('NOA');
-      this.cargarProyectos(1); 
+      //this.cargarProyectos(1); 
       this.dataAdjunto ={
         idCliente: 0,
         codtipoproc: 7,
@@ -148,7 +148,7 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
     this.registerFormRegistro = this.formBuilder.group({
       idproyecto: [{ value: 0, disabled: false }],
       idtipoproyecto: [{ value: 0, disabled: false }],
-      idcliente: [{ value: '', disabled: false }],
+      idtipodocprc: [{ value: 1, disabled: false }],
       idoportunidad: [{ value: 0, disabled: false }],
       sustentodoc: [{ value: '', disabled: false }],
       idrequerimiento: [{ value: 0, disabled: false }],
@@ -162,7 +162,7 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
       }],
       idordencompra: [{ value: this.idOrdenC, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
-      //idproveedor: [{ value: 0, disabled: false }],
+      idcliente: [{ value: 0, disabled: false }],
       idmoneda: [{ value: 0, disabled: false }],
       //idorigen: [{ value: this.IA_data, disabled: false }],
       idcontacto: [{ value: 0, disabled: false }],
@@ -274,7 +274,7 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
     
   }
 
-  traerUnoOrdenC(){
+  traerUno(){
     this.setSpinner(true);
     this.mensajeSpinner = 'Cargando...!';
     const objeto ={
@@ -305,8 +305,9 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
           this.cargarMenu(rpta.ordencompra[0].acciones);
           this.mostrarBotones(rpta.ordencompra[0].estado);
-          const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == this.registerFormRegistro.get('idproyecto').value)[0].nomproyecto;
-          this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);  
+          this.registerFormRegistro.get('idcliente').setValue(rpta.ordencompra[0].idproveedor);
+          // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == this.registerFormRegistro.get('idproyecto').value)[0].nomproyecto;
+          // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);  
           
           
         },
@@ -326,9 +327,9 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
 
     if (this.validarDatos())
       {
-          this.setSpinner(false);
-          this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
-          return;
+        this.setSpinner(false);
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+        return;
       }
 
     this.setSpinner(true);
@@ -353,8 +354,8 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
       fechaingreso,
-      //quotes: this.lstQuotes,
-      idtipodocprc: 1
+      idtipodocprc: 1,
+      idproveedor: this.registerFormRegistro.get('idcliente').value    
     }
 
     console.log('guardarOC...', objeto);
@@ -375,7 +376,7 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
               veracciones: 0
             }   
             //this.verAdjunto = true;   
-            this.traerUnoOrdenC();
+            this.traerUno();
           }
          
         this.visibleDocument = false;
@@ -520,11 +521,11 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
   getOrigen(data:any){
     switch (data) {
       case 'OPO':
-        this.cargarProyectos(1);
+        //this.cargarProyectos(1);
         this.verReferencia = false;
         break;
       case 'REQ':
-        this.cargarProyectos(2);
+        //this.cargarProyectos(2);
         this.verReferencia = true;
         break;
       // case 'VED':
@@ -689,29 +690,29 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
     this.itemVisible = false;
   }
 
-  cargarProyectos(dato:any){
-    this.ordencompraService.portipoProyectoList(dato).subscribe({
-      next: (rpta: any) => {
-      this.lstProyectos = rpta;
+  // cargarProyectos(dato:any){
+  //   this.ordencompraService.portipoProyectoList(dato).subscribe({
+  //     next: (rpta: any) => {
+  //     this.lstProyectos = rpta;
 
-      if (this.idOrdenC > 0) {
-        this.changeProyecto(this.registerFormRegistro.get('idproyecto').value);
-      }
+  //     if (this.idOrdenC > 0) {
+  //       this.changeProyecto(this.registerFormRegistro.get('idproyecto').value);
+  //     }
 
-      },
+  //     },
 
-      error: (err) => {
-      this.messageService.clear();
-      this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-          });
-      },
-      complete: () => {
-      },
-  });
-  }
+  //     error: (err) => {
+  //     this.messageService.clear();
+  //     this.messageService.add({
+  //         severity: 'error',
+  //         summary: 'Error',
+  //         detail: mensajesQuestion.msgErrorGenerico,
+  //         });
+  //     },
+  //     complete: () => {
+  //     },
+  // });
+  // }
 
   cargarMenu(data: any) {
     this.menuItems = [];
@@ -734,7 +735,7 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
         width: '40%'
     });
     ref.onClose.subscribe(() => {
-        this.traerUnoOrdenC();
+        this.traerUno();
       });
   }
 
@@ -840,8 +841,8 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
   }
 
   AgregarContacto(){
-    if (this.registerFormRegistro.get('idproveedor').value === null) {
-      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Debe Seleccionar un Proveedor...' });
+    if (this.registerFormRegistro.get('idcliente').value === null) {
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Debe Seleccionar un Cliente...' });
 
       return;
     }

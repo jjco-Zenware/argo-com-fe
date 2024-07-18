@@ -39,7 +39,7 @@
                             <div class="sm:col-12 lg:col-3 md:col-12 h-4rem field">
                                 <label class="block text-900 font-semibold mb-1">N° OC</label>
                                 <span class="p-fluid">
-                                    <input pInputText type="text" class="font-semibold" formControlName="idordencompra"/>
+                                    <input pInputText type="text" class="font-semibold" formControlName="labelnrodocumento"/>
                                 </span>
                             </div>
                             <div class="col-12 -mt-2 -mb-5">
@@ -142,7 +142,7 @@
                 <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
                 [scrollable]="true"  styleClass="p-datatable-sm">
                     <ng-template pTemplate="header">
-                        <tr>
+                        <tr class="text-sm">
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
                             <th class="surface-200">PRODUCTO</th>
                             <th class="surface-200">DESCRIPCIÓN</th>
@@ -160,7 +160,7 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                        <tr>
+                        <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
                             <td>{{ product.nomtipoprod | uppercase}}</td>
                             <td>{{ product.descripcion | uppercase}}</td>
@@ -224,17 +224,51 @@
                 <app-cotizacion  [IA_data]="dataCT" (OB_back)="getQuotes($event)"></app-cotizacion>         
             </p-tabPanel>
 
-            <!-- <p-tabPanel [disabled]=visibleDocument>
+            <p-tabPanel >
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
-                        <i class="pi pi-paperclip"></i>
+                        <i class="pi pi-cog"></i>
                         <span class="font-bold white-space-nowrap m-0">
-                            Registro Compras
+                            Transacciones 
                         </span>
                     </div>
-                </ng-template>             
-                <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
-            </p-tabPanel> -->
+                </ng-template>    
+                <p-table [value]="lstTransacciones" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                [scrollable]="true"  styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr class="text-sm">
+                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
+                            <th class="surface-200">TRANSACCIÓN</th>
+                            <th class="surface-200">DESCRIPCIÓN</th>
+                            <th class="surface-200">FECHA MOV</th>
+                            <th class="surface-200">USUARIO</th>
+                            <th class="surface-200"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                        <tr class="text-sm">
+                            <td>{{rowIndex + 1}}</td>
+                            <td>
+                                <div [ngStyle]="{'width':'200px'}">
+                                    {{product.nomtrx | uppercase}}
+                                </div>
+                            </td>
+                            <td>{{ product.mensajetrx | uppercase}}</td>
+                            <td>
+                                <div [ngStyle]="{'width':'250px'}">
+                                    {{product.fechamov }}
+                                </div>
+                            </td>
+                            <td>{{ product.nomusuario | uppercase}}</td>
+                            <td>
+                                <!-- <div class="flex justify-content-end">
+                                    <button pButton pRipple icon="pi pi-eye" pTooltip="Ver Detalle" tooltipPosition="left" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                </div> -->
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>                         
+            </p-tabPanel>
                   
         </p-tabView> 
     </div>
