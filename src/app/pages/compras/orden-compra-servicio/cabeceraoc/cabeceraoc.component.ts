@@ -317,8 +317,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
           this.cargarMenu(rpta.ordencompra[0].acciones);
           this.mostrarBotones(rpta.ordencompra[0].estado);
-          const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == this.registerFormRegistro.get('idproyecto').value)[0].nomproyecto;
-          this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto); 
+          // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == this.registerFormRegistro.get('idproyecto').value)[0].nomproyecto;
+          // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto); 
           
           
                    
@@ -388,8 +388,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
               veracciones: 0
             }   
             this.verAdjunto = true;   
-            this.traerUnoOrdenC();
           }
+          this.traerUnoOrdenC();
          
         this.visibleDocument = false;
         }else{
@@ -632,7 +632,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   }
 
   ReadExcel(event: any, fubauto: any){
-    this.lstItemOC = [];
+    //this.lstItemOC = [];
     let file = event.files[0];
     let s_nombre = file.name.split('.').pop();  
 
@@ -657,14 +657,14 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     
         this.ExcelData.forEach((item: any) => {
           console.log('ExcelData...', item);
-          console.log('Item...', item.Cantidad);
+          
           
           item.items = item.Item === undefined ? 0 : item.Item,
           item.idmarca = this.idmarca,
           item.idtipoprod = this.idtipoprod,
           item.nommarca  = _nommarca,
           item.nomtipoprod  = _nomtipoprod,
-          item.coditem = '0',
+          item.coditem = item.Item === undefined ? 0 : item.Item,
           item.descuento = 0,
           item.fecact = new Date(),
           item.fecfin = item.FechaFin === undefined ? null : item.FechaFin,
@@ -703,9 +703,11 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   }
 
   cargarProyectos(dato:any){
+    console.log('cargarProyectos', dato);
     this.ordencompraService.portipoProyectoList(dato).subscribe({
       next: (rpta: any) => {
       this.lstProyectos = rpta;
+      console.log('lstProyectos',rpta);
 
       if (this.idOrdenC > 0) {
         this.changeProyecto(this.registerFormRegistro.get('idproyecto').value);
@@ -754,12 +756,12 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   changeProyecto(idproyecto : any){
     if (this.registerFormRegistro.get('codtipodoc').value === 'OPO') {  
       const idoportunidad = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].idoportunidad;
-      const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
-      this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
+      // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
+      // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
       this.oportunidadTraerUno(idoportunidad);     
     }    else{
-      const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
-      this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
+      // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
+      // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
       this.verCotizacion = true;
     }
   }

@@ -242,9 +242,9 @@ createFormTag() {
         this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Final'});
         return;
       }
-      const _fecini = new Date(this.frmDatosItem.get('fecini')?.value);
+      const _fecini = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecini')?.value);
       this.frmDatosItem.get('fecini')?.setValue(_fecini);
-      const _fecfin = new Date(this.frmDatosItem.get('fecfin')?.value);
+      const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
       this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
     }   
 

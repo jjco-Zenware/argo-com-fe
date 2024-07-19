@@ -276,5 +276,19 @@ export class UtilitariosService {
     return _fecha;
   }
 
+  obtenerFechaFormateadoDMA(fecha?:any){
+
+    let dateOpt: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    };
+
+
+    if (fecha == null )
+      return new Date().toLocaleDateString('es-PE', dateOpt);
+    else
+      return  new Date(Date.parse(fecha)).toLocaleDateString('es-PE', dateOpt);
+  }
 
 }
