@@ -102,7 +102,7 @@
                                 </span>                                      
                             </div> 
                             <div class="sm:col-6 lg:col-4 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Terminos de Pago <span class="text-red-500 font-bold"> * </span></label>
+                                <label class="block text-900 font-semibold mb-1">Forma de Pago <span class="text-red-500 font-bold"> * </span></label>
                                 <span>
                                     <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
                                     optionValue="iditem" appendTo="body" [readonly]=onlyRead></p-dropdown>
@@ -115,10 +115,17 @@
                                     inputStyleClass="w-full cursor-pointer" appendTo="body"></p-calendar>
                                 </span>
                             </div>
+                            <div class="sm:col-6 lg:col-12 md:col-3 mt-1">                        
+                                <label class="block text-900 font-semibold mb-1">Terminos para el Pago de Factura <span class="text-red-500 font-bold"> * </span></label>                        
+                                <span class="p-fluid">
+                                    <textarea type="text" formControlName="terminosdepago" pInputTextarea [rows]="2"
+                                    style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
+                                </span>
+                            </div>  
                             <div class="sm:col-6 lg:col-12 md:col-3 mt-3">                        
                                 <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
                                 <span class="p-fluid">
-                                    <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="6"
+                                    <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="5"
                                     style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
                                 </span>
                             </div>                   

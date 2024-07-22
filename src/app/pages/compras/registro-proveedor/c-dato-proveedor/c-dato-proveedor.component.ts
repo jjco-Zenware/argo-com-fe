@@ -40,7 +40,7 @@ export class CDatoProveedorComponent implements  OnChanges, OnDestroy{
 
 dropdownItemsNac = [
     { name: 'Extranjero', code: '0' },
-    { name: 'Peruano', code: '1' }
+    { name: 'Peruana', code: '1' }
 ];
 
 dropdownItemsTipNro = [

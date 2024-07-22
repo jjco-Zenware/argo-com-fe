@@ -174,7 +174,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       idcontacto: [{ value: 0, disabled: false }],
       codtipodoc: [{ value: 'OPO', disabled: false }],
       tiempoentrega: [{ value: 0, disabled: false }],
-      codformapago: [{ value: 0, disabled: false }],
+      codformapago: [{ value: 118, disabled: false }],
       validezoferta: [{ value: 0, disabled: false }],
       lugarentrega: [{ value: '', disabled: false }],
       garantia: [{ value: 0, disabled: false }],
@@ -185,7 +185,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       codtipoorden:[{ value: 'OC', disabled: false }],
       codigonroorden:[{ value: '', disabled: true }],
       nomproyecto:[{ value: '', disabled: false }],
-      fecentrega: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}]
+      fecentrega: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      terminosdepago:[{ value: '', disabled: false }],
     });
   }
 
@@ -346,10 +347,13 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     this.setSpinner(true);
     this.mensajeSpinner = 'Guardando...!';
     let fechaingreso;
+    let fecentrega;
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
+    fecentrega = this.registerFormRegistro.value.fecentrega;
 
     if (this.idOrdenC > 0) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));      
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
+      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
     }
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
@@ -365,6 +369,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
       fechaingreso,
+      fecentrega,
       quotes: this.lstQuotes
     }
 
@@ -564,6 +569,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       //height: '55%'
     });
     refItem.onClose.subscribe((rpta: any) => {
+      
+      console.log('onClose',rpta);
       if (rpta != undefined) {
           const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == index))
           if (_posAll != -1) {

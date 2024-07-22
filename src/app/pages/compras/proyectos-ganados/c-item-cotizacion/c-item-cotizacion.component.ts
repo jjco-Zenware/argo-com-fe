@@ -268,41 +268,41 @@ createFormTag() {
     this.refDatoItem.close({objeto});
   }
 
-  // NuevaMarca()  {
-  //   this.submitted = false;
-  //   this.headerTitle= 'Nueva Marca' ;
-  //   this.marcaVisible = true;
-  // }
+  NuevaMarca()  {
+    this.submitted = false;
+    this.headerTitle= 'Nueva Marca' ;
+    this.marcaVisible = true;
+  }
 
-  // guardarMarca() {
-  //     this.submitted = true;
-  //     if (this.registerFormMarca.invalid) {
-  //         this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
-  //         return;
-  //     }
-  //     if(this.submitted)
-  //     {
-  //         const objeto = {
-  //             idmarca: 0,
-  //             nommarca: this.registerFormMarca.value.nommarca,
-  //             idproveedor: 0
-  //           }
-  //           const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
-  //             next: (rpta: any) => {
-  //               this.listarMarcas();
-  //             },
-  //             error: (err) => {
-  //               console.info('error : ', err);
-  //               this.serviceSharedApp.messageToast()
-  //             },
-  //             complete: () => {
-  //             },
-  //           });
-  //           this.$listSubcription.push($prcMarcas);
+  guardarMarca() {
+      this.submitted = true;
+      if (this.registerFormMarca.invalid) {
+          this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
+          return;
+      }
+      if(this.submitted)
+      {
+          const objeto = {
+              idmarca: 0,
+              nommarca: this.registerFormMarca.value.nommarca,
+              idproveedor: 0
+            }
+            const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
+              next: (rpta: any) => {
+                this.listarMarcas();
+              },
+              error: (err) => {
+                console.info('error : ', err);
+                this.serviceSharedApp.messageToast()
+              },
+              complete: () => {
+              },
+            });
+            this.$listSubcription.push($prcMarcas);
 
-  //         this.marcaVisible=false;
-  //     }
-  // }
+          this.marcaVisible=false;
+      }
+  }
 
   verControles(dato: any){
     console.log('verControles', dato);
