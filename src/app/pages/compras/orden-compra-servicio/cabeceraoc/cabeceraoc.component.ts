@@ -165,10 +165,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd:[{ value: '', disabled: false }],
-      fechaingreso: [{
-        value: this.serviceUtilitario.obtenerFechaActual(),
-        disabled: false,
-      }],
+      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
       idordencompra: [{ value: this.idOrdenC, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: 0, disabled: false }],
@@ -188,6 +185,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       codtipoorden:[{ value: 'OC', disabled: false }],
       codigonroorden:[{ value: '', disabled: true }],
       nomproyecto:[{ value: '', disabled: false }],
+      fecentrega: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}]
     });
   }
 

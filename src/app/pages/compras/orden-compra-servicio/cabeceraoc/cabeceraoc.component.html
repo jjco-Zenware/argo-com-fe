@@ -108,6 +108,13 @@
                                     optionValue="iditem" appendTo="body" [readonly]=onlyRead></p-dropdown>
                                 </span>
                             </div>    
+                            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field">
+                                <label class="block text-900 font-semibold">Fecha Entrega<span class="text-red-500 font-bold"> * </span></label>
+                                <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;">
+                                    <p-calendar formControlName="fecentrega" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                                    inputStyleClass="w-full cursor-pointer" appendTo="body"></p-calendar>
+                                </span>
+                            </div>
                             <div class="sm:col-6 lg:col-12 md:col-3 mt-3">                        
                                 <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
                                 <span class="p-fluid">

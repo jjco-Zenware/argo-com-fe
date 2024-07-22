@@ -102,12 +102,27 @@
                                 </span>                                      
                             </div> 
                             <div class="sm:col-6 lg:col-4 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Terminos de Pago <span class="text-red-500 font-bold"> * </span></label>
+                                <label class="block text-900 font-semibold mb-1">Terminos de Pago<span class="text-red-500 font-bold"> * </span></label>
                                 <span>
                                     <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
                                     optionValue="iditem" appendTo="body" [readonly]=onlyRead></p-dropdown>
                                 </span>
-                            </div>    
+                            </div> 
+
+                            <div class="sm:col-6 lg:col-2 md:col-3 h-4rem ">
+                                <label class="block text-900 font-semibold mb-1">Plazo Entrega(días) </label>
+                                <span>
+                                    <p-inputNumber formControlName="tiempoentrega" locale="es-PE" [min]="0" [readonly]=onlyRead></p-inputNumber>
+                                </span>
+                            </div> 
+
+                            <div class="sm:col-6 lg:col-2 md:col-3 h-4rem ">
+                                <label class="block text-900 font-semibold mb-1">Validez Oferta(días)</label>
+                                <span>
+                                    <p-inputNumber formControlName="validezoferta" locale="es-PE" [min]="0" [readonly]=onlyRead></p-inputNumber>
+                                </span>
+                            </div>                                  
+
                             <div class="sm:col-6 lg:col-12 md:col-3 mt-3">                        
                                 <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
                                 <span class="p-fluid">
@@ -169,8 +184,8 @@
                             <td>{{ product.serialnumber }}</td>
                             <td>{{ product.sku }}</td>
                             <td>{{ product.nrocontrato }}</td>
-                            <td>{{ product.fecini | date: 'dd/MM/yyyy'}}</td> <!-- | date: 'dd/MM/yyyy' -->
-                            <td>{{ product.fecfin | date: 'dd/MM/yyyy'}}</td>
+                            <td>{{ product.fecini }}</td> <!-- | date: 'dd/MM/yyyy' -->
+                            <td>{{ product.fecfin }}</td>
                             <td>{{ product.nomunidad }}</td>
                             <td>{{ product.preciocosto | number: '0.2'}}</td>
                             <td>{{ product.cantidad | number: '0.2'}}</td>

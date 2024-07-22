@@ -449,22 +449,6 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
     
       }
 
-  // listaProveedores() {
-
-  //   const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
-  //     next: (rpta: any) => {
-  //       this.lstProveedores = rpta;
-  //       console.log('this.lstProveedores', this.lstProveedores);
-  //     },
-  //     error: (err) => {
-  //       this.serviceSharedApp.messageToast()
-  //     },
-  //     complete: () => { },
-  //   });
-  //   this.$listSubcription.push($getClientes);
-
-  // }
-
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
       next: (rpta: any) => {
@@ -521,23 +505,12 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
   getOrigen(data:any){
     switch (data) {
       case 'OPO':
-        //this.cargarProyectos(1);
         this.verReferencia = false;
         break;
       case 'REQ':
-        //this.cargarProyectos(2);
         this.verReferencia = true;
         break;
-      // case 'VED':
-      //   this.cargarProyectos(3);
-      //   break;
-      // case 'NOA':
-      //   this.registerFormRegistro.get('idproyecto').setValue(0);
-      //   break;
     }    
-    //this.registerFormRegistro.get('sustentodoc').setValue('');  
-    
-    //this.verControles(data);
 
   }
 
@@ -690,30 +663,6 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
     this.itemVisible = false;
   }
 
-  // cargarProyectos(dato:any){
-  //   this.ordencompraService.portipoProyectoList(dato).subscribe({
-  //     next: (rpta: any) => {
-  //     this.lstProyectos = rpta;
-
-  //     if (this.idOrdenC > 0) {
-  //       this.changeProyecto(this.registerFormRegistro.get('idproyecto').value);
-  //     }
-
-  //     },
-
-  //     error: (err) => {
-  //     this.messageService.clear();
-  //     this.messageService.add({
-  //         severity: 'error',
-  //         summary: 'Error',
-  //         detail: mensajesQuestion.msgErrorGenerico,
-  //         });
-  //     },
-  //     complete: () => {
-  //     },
-  // });
-  // }
-
   cargarMenu(data: any) {
     this.menuItems = [];
     data.forEach((item: any) => {
@@ -739,43 +688,7 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
       });
   }
 
-  changeProyecto(idproyecto : any){
-    if (this.registerFormRegistro.get('codtipodoc').value === 'OPO') {  
-      const idoportunidad = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].idoportunidad;
-      const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
-      this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
-      this.oportunidadTraerUno(idoportunidad);     
-    }    else{
-      const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
-      this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
-      this.verCotizacion = true;
-    }
-  }
-
-  oportunidadTraerUno(idoportunidad: any){
-    //this.setSpinner(true);
-    this.mensajeSpinner = 'Cargando Cotizaciones...!';
-    this.proyectosService.oportunidadTraeruno(idoportunidad).subscribe({
-      next: (rpta: any) => {
-        let quotes = this.lstQuotes;
-          const {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio, idlista} = rpta;
-              this.dataCT = {id, razonsocial, description, nommoneda, startDate, nomcreador, tipocambio, idlista, quotes};
-      },
-          error: (err) => {
-            //this.setSpinner(false);
-          this.messageService.clear();
-          this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: mensajesQuestion.msgErrorGenerico,
-          });
-      },
-          complete: () => {
-            this.verCotizacion = false;
-            //this.setSpinner(false);
-      },
-    });
-  }
+ 
 
   vistaPreliminar(){
     this.setSpinner(true);
@@ -784,7 +697,7 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
     const objeto = {
       idusuario : constantesLocalStorage.idusuario,
       iddocumentoprc: this.idOrdenC,
-      codtipoprc: 8
+      codtipoprc: 1
     }
 
     const $cargarOrdenC = this.ordencompraService.prcDocumento(objeto).subscribe({
