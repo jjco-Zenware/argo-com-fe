@@ -654,8 +654,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         const _nomunidad:string=this.lstUnidades.filter((x: { iditem: number; })=>x.iditem == 130)[0].valoritem;
     
         this.ExcelData.forEach((item: any) => {
-          console.log('ExcelData...', item);
-          
+          console.log('ExcelData...', item);          
           
           item.items = item.Item === undefined ? 0 : item.Item,
           item.idmarca = this.idmarca,
