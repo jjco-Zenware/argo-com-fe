@@ -61,7 +61,7 @@ export class CDetalleComponent implements OnInit, OnDestroy{
   lstMarcas:any;
   lstTipoProducto:any;
   verImportar: boolean = true;
-  //onlyRead: boolean = false;
+  onlyRead: boolean = true;
   verReferencia: boolean = false;
   lstUnidades:any;
   registerFormRegistro: any= FormGroup;
@@ -105,29 +105,29 @@ export class CDetalleComponent implements OnInit, OnDestroy{
   createFormRegistro() {
     //Agregar validaciones de formulario
     this.registerFormRegistro = this.formBuilder.group({
-      idproyecto: [{ value: 0, disabled: true }],
+      idproyecto: [{ value: 0, disabled: false }],
       idtipoproyecto: [{ value: 0, disabled: true }],
       //idcliente: [{ value: '', disabled: false }],
       idoportunidad: [{ value: 0, disabled: true }],
-      sustentodoc: [{ value: '', disabled: true }],
-      idrequerimiento: [{ value: 0, disabled: true }],
+      sustentodoc: [{ value: '', disabled: false }],
+      idrequerimiento: [{ value: 0, disabled: false }],
       observacion: [{ value: '', disabled: true }],
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: true }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: true }],
       nrodocumentoadd:[{ value: '', disabled: true }],
       fechaingreso: [{
         value: '',
-        disabled: true,
+        disabled: false,
       }],
-      idordencompra: [{ value: this.idOrdenC, disabled: true }],
-      condicionescomerciales: [{ value: '', disabled: true }],
-      idproveedor: [{ value: 0, disabled: true }],
-      idmoneda: [{ value: 0, disabled: true }],
+      idordencompra: [{ value: this.idOrdenC, disabled: false }],
+      condicionescomerciales: [{ value: '', disabled: false }],
+      idproveedor: [{ value: 0, disabled: false }],
+      idmoneda: [{ value: 0, disabled: false }],
       //idorigen: [{ value: this.IA_data, disabled: false }],
-      idcontacto: [{ value: 0, disabled: true }],
+      idcontacto: [{ value: 0, disabled: false }],
       codtipodoc: [{ value: 'OPO', disabled: true }],
       tiempoentrega: [{ value: 0, disabled: true }],
-      codformapago: [{ value: 0, disabled: true }],
+      codformapago: [{ value: 0, disabled: false }],
       validezoferta: [{ value: 0, disabled: true }],
       lugarentrega: [{ value: '', disabled: true }],
       garantia: [{ value: 0, disabled: true }],
@@ -135,9 +135,11 @@ export class CDetalleComponent implements OnInit, OnDestroy{
       ref01: [{ value: '', disabled: true }],
       ref02: [{ value: '', disabled: true }],
       ref03: [{ value: '', disabled: true }],
-      codtipoorden:[{ value: 'OC', disabled: true }],
-      codigonroorden:[{ value: '', disabled: true }],
+      codtipoorden:[{ value: 'OC', disabled: false }],
+      codigonroorden:[{ value: '', disabled: false }],
       nomproyecto:[{ value: '', disabled: true }],
+      fecentrega: [{value: '',disabled: false,}],
+      terminosdepago:[{ value: '', disabled: false }],
     });
   }
 
@@ -410,12 +412,12 @@ export class CDetalleComponent implements OnInit, OnDestroy{
   changeProyecto(idproyecto : any){
     if (this.registerFormRegistro.get('codtipodoc').value === 'OPO') {  
       const idoportunidad = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].idoportunidad;
-      const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
-      this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
+      // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
+      // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
       this.oportunidadTraerUno(idoportunidad);     
     }    else{
-      const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
-      this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
+      // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
+      // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
       this.verCotizacion = true;
     }
   }
@@ -469,7 +471,7 @@ export class CDetalleComponent implements OnInit, OnDestroy{
     this.ordenCompra.idtrx = item.idtrx;
     const ref = this.dialogService.open(CModalExcTransacComponent, {
         data: this.ordenCompra,
-        header: item.nomtrx +' - '+  this.ordenCompra.labelnrodocumento,
+        header: item.nomtrx,
         closeOnEscape: false,
         styleClass: 'testDialog',
         width: '40%'

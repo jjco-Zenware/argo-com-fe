@@ -8,7 +8,7 @@
             </div>
             <div class="col-3 h-3rem flex flex-column -mt-3">
                 <label class="font-semibold">MONTO</label>
-                <label>{{ordencompra.s_monto_total | number: '3.2'}}</label>
+                <label>{{ordencompra.simbmoneda}}{{ordencompra.s_monto_total | number: '3.2'}}</label>
             </div>
             <div class="col-6 h-3rem flex flex-column -mt-3">
                 <label class="font-semibold">CÓDIGO PROYECTO</label>
@@ -19,7 +19,7 @@
                 <label>{{ordencompra.nomproyecto}}</label>
             </div>  
             <div class="col-12">
-                <label class="font-semibold">DESCRIPCIÓN</label>
+                <label class="font-semibold">COMENTARIO</label>
                 <textarea id="description" name="description" type="text" [(ngModel)]="descripcion" pInputTextarea [rows]="2" style="resize: none" class="w-full mt-1"></textarea>
             </div>
         </div>

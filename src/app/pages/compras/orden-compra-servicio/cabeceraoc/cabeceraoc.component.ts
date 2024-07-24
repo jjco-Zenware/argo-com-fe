@@ -80,6 +80,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   s_igv:number = 0;
   s_monto_total:number = 0;
   lstTransacciones: any[]=[];
+  activeIndex: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -383,14 +384,24 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
           if (this.idOrdenC === 0) {
             this.idOrdenC = rpta.resultProceso;  
             this.registerFormRegistro.get('idordencompra').setValue(rpta.resultProceso);
-            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);            
-           
+            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);  
+
             this.dataAdjunto ={
               idCliente: this.idOrdenC,
               codtipoproc: 7,
               veracciones: 0
             }   
-            this.verAdjunto = true;   
+            this.verAdjunto = true; 
+
+            //preguntar si desea agregar adjuntos
+            this.confirmationService.confirm({
+              key: 'confirm1',
+              header: 'Confirmación',
+              message:  '¿Desea Agregar Adjuntos ',
+              accept: () => {
+                this.activeIndex = 2;
+              }
+          });
           }
           this.traerUnoOrdenC();
          
@@ -747,7 +758,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     this.ordenCompra.idtrx = item.idtrx;
     const ref = this.dialogService.open(CModalExcTransacComponent, {
         data: this.ordenCompra,
-        header: item.nomtrx +' - '+  this.ordenCompra.idordencompra,
+        header: item.nomtrx,
         closeOnEscape: false,
         styleClass: 'testDialog',
         width: '40%'

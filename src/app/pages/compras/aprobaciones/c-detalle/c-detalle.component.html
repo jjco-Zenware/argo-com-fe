@@ -16,14 +16,14 @@
         <div class="p-fluid grid col-7 card border-1 border-round surface-border p-2 m-2"> 
                 
                 <div class="col-6 sm:col-6 lg:col-3 md:col-3 h-3rem field">
-                    <label class="block text-500 font-bold mb-1">Orden</label>
+                    <label class="block text-900 font-bold mb-1">Orden</label>
                     <span class="p-fluid ">
                         <p-dropdown [options]="lstTipo" formControlName="codtipoorden" placeholder="Seleccionar Tipo" optionLabel="name" 
-                        optionValue="code" ></p-dropdown>
+                        optionValue="code" [readonly]=onlyRead></p-dropdown>
                     </span>
                 </div>
                 <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-3rem field">
-                    <label class="block text-500 font-bold">Fecha </label>
+                    <label class="block text-900 font-bold">Fecha </label>
                     <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
                         <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
                         inputStyleClass="w-full cursor-pointer" appendTo="body" [inputStyle]="{'height':'2rem'}" ></p-calendar>
@@ -31,16 +31,16 @@
                 </div>
                 <div class=" sm:col-8 lg:col-3 md:col-12"></div>
                 <div class="sm:col-12 lg:col-3 md:col-12 h-3rem field">
-                    <label class="block text-500 font-bold mb-1">N° OC</label>
+                    <label class="block text-900 font-bold mb-1">N° OC</label>
                     <span class="p-fluid">
-                        <input pInputText type="text" class="font-semibold" formControlName="codigonroorden"/>
+                        <input pInputText type="text" class="font-semibold" formControlName="codigonroorden" [readonly]=onlyRead/>
                     </span>
                 </div>
                 <div class="col-12 -mt-1 -mb-6">
                     <p-divider ></p-divider>
                 </div>
                 <!-- <div class="sm:col-6 lg:col-3 md:col-3 mt-1 h-3rem field">
-                    <label class="block text-500 font-bold mb-1">Origen </label>
+                    <label class="block text-900 font-bold mb-1">Origen </label>
                     <span class="p-fluid mt-1">
                         <p-dropdown [options]="lstOrigen" formControlName="codtipodoc" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
                         optionValue="codproceso" (onChange)="getOrigen($event.value)"></p-dropdown>
@@ -48,30 +48,30 @@
                 </div>   -->
                 <div class=" sm:col-8 lg:col-12 md:col-12"></div>
                 <div class="col-12 field h-4rem -mt-3">
-                    <label class="block text-500 font-bold mb-1">Proyecto </label>                        
+                    <label class="block text-900 font-bold mb-1">Proyecto </label>                        
                     <span class="p-fluid mt-1">
                         <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto"
-                        optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" ></p-dropdown>
+                        optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
                     </span>
                 </div>
                 <div class="col-5 sm:col-6 lg:col-5 md:col-6 h-3rem mt-2">                            
-                    <label class="block text-500 font-bold mb-1">Proveedor </label>                            
+                    <label class="block text-900 font-bold mb-1">Proveedor </label>                            
                     <span>
                         <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" 
-                        optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" ></p-dropdown>            
+                        optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [readonly]=onlyRead></p-dropdown>            
                     </span>
                 </div>                         
                 <div class="col-7 sm:col-6 lg:col-7 md:col-3 h-3rem mt-2">
                     <div class="flex">
-                        <label class="block text-500 font-bold mb-1">Contacto </label>
+                        <label class="block text-900 font-bold mb-1">Contacto </label>
                     </div>                            
                     <span>
                         <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
-                        optionValue="idcontacto" appendTo="body" ></p-dropdown>
+                        optionValue="idcontacto" appendTo="body" [readonly]=onlyRead></p-dropdown>
                     </span>
                 </div>
                 <div *ngIf="verReferencia" class="col-4 field h-4rem mt-6 -mb-2">
-                    <label class="block text-500 font-semibold mb-1">N° Referencia</label>                        
+                    <label class="block text-900 font-semibold mb-1">N° Referencia</label>                        
                     <span class="p-fluid">
                         <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead/>
                     </span>
@@ -80,30 +80,44 @@
                     <p-divider ></p-divider>
                 </div>
                 <div class="sm:col-6 lg:col-4 md:col-3 h-3rem">
-                    <label class="block text-500 font-bold mb-1">Moneda </label>  
+                    <label class="block text-900 font-bold mb-1">Moneda </label>  
                     <span class="p-fluid mt-1">
                         <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                        optionValue="idmoneda" appendTo="body" ></p-dropdown>
+                        optionValue="idmoneda" appendTo="body" [readonly]=onlyRead></p-dropdown>
                     </span>                                      
                 </div> 
-                <div class="sm:col-6 lg:col-4 md:col-3 h-3rem ">
-                    <label class="block text-500 font-bold mb-1">Terminos de Pago </label>
+                <div class="sm:col-6 lg:col-4 md:col-3 h-4rem ">
+                    <label class="block text-900 font-semibold mb-1">Forma de Pago <span class="text-red-500 font-bold"> * </span></label>
                     <span>
                         <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
-                        optionValue="iditem" appendTo="body" ></p-dropdown>
+                        optionValue="iditem" appendTo="body" [readonly]=onlyRead></p-dropdown>
                     </span>
-                </div>    
-                <div class="sm:col-6 lg:col-12 md:col-3 mt-6">                        
-                    <label class="block text-500 font-bold mb-1">Condiciones Comerciales </label>                        
+                </div> 
+                <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field">
+                    <label class="block text-900 font-semibold">Fecha Entrega<span class="text-red-500 font-bold"> * </span></label>
+                    <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;">
+                        <p-calendar formControlName="fecentrega" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                        inputStyleClass="w-full cursor-pointer" appendTo="body"></p-calendar>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-12 md:col-3 mt-1">                        
+                    <label class="block text-900 font-semibold mb-1">Terminos para el Pago de Factura <span class="text-red-500 font-bold"> * </span></label>                        
                     <span class="p-fluid">
-                        <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="6"
-                        style="resize: none" class="w-full mt-1" ></textarea>                       
+                        <textarea type="text" formControlName="terminosdepago" pInputTextarea [rows]="2"
+                        style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
+                    </span>
+                </div>  
+                <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">                        
+                    <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid">
+                        <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="5"
+                        style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
                     </span>
                 </div>                   
-                <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">
-                    <label class="block text-500 font-bold">Observación</label>                        
+                <div class="sm:col-6 lg:col-12 md:col-3 -mt-4">
+                    <label class="block text-900 font-semibold">Observación</label>                        
                     <span class="p-fluid">
-                        <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion" ></textarea>
+                        <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion" [readonly]=onlyRead></textarea>
                     </span>
                 </div>
         </div>                
@@ -134,6 +148,7 @@
                             <th class="surface-200">F. FIN</th>
                             <th class="surface-200">U. MED</th>
                             <th class="surface-200">P. UNI.</th>
+                            <th class="surface-200">CANT.</th>
                             <th class="surface-200">TOTAL</th>
                         </tr>
                     </ng-template>
@@ -150,21 +165,22 @@
                             <td>{{ product.fecfin | date: 'dd/MM/yyyy'}}</td>
                             <td>{{ product.nomunidad }}</td>
                             <td>{{ product.preciocosto | number: '0.2'}}</td>
+                            <td>{{ product.cantidad | number: '0.2'}}</td>
                             <td>{{ product.preciocostototal | number: '0.2'}}</td>
                             
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="footer">
                         <tr>
-                            <td colspan="11" class="text-right">Sub Total: </td>
+                            <td colspan="12" class="text-right">Sub Total: </td>
                             <td>{{s_monto | number: '0.2'}}</td>
                         </tr>
                         <tr>
-                            <td colspan="11" class="text-right">IGV: </td>
+                            <td colspan="12" class="text-right">IGV: </td>
                             <td>{{s_igv | number: '0.2'}}</td>
                         </tr>
                         <tr>
-                            <td colspan="11" class="text-right">Total: </td>
+                            <td colspan="12" class="text-right">Total: </td>
                             <td>{{s_monto_total | number: '0.2'}}</td>
                         </tr>
                     </ng-template>

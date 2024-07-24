@@ -6,7 +6,7 @@
         <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-3rem"></p-splitButton>
     </div>
     <div class="card p-2">
-        <p-tabView >
+        <p-tabView [(activeIndex)]="activeIndex">
             <p-tabPanel>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
@@ -122,7 +122,7 @@
                                     style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
                                 </span>
                             </div>  
-                            <div class="sm:col-6 lg:col-12 md:col-3 mt-3">                        
+                            <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">                        
                                 <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
                                 <span class="p-fluid">
                                     <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="5"
@@ -252,9 +252,9 @@
                     <ng-template pTemplate="header">
                         <tr class="text-sm">
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
+                            <th [ngStyle]="{'width':'120px'}" class="surface-200">FECHA MOV</th>
                             <th class="surface-200">TRANSACCIÓN</th>
                             <th class="surface-200">DESCRIPCIÓN</th>
-                            <th class="surface-200">FECHA MOV</th>
                             <th class="surface-200">USUARIO</th>
                             <th class="surface-200"></th>
                         </tr>
@@ -263,16 +263,17 @@
                         <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
                             <td>
+                                <div [ngStyle]="{'width':'120px'}">
+                                    {{product.fechamov }}
+                                </div>
+                            </td>
+                            <td>
                                 <div [ngStyle]="{'width':'200px'}">
                                     {{product.nomtrx | uppercase}}
                                 </div>
                             </td>
                             <td>{{ product.mensajetrx | uppercase}}</td>
-                            <td>
-                                <div [ngStyle]="{'width':'250px'}">
-                                    {{product.fechamov }}
-                                </div>
-                            </td>
+                            
                             <td>{{ product.nomusuario | uppercase}}</td>
                         </tr>
                     </ng-template>

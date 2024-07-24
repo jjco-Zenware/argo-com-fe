@@ -200,7 +200,7 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
       console.log('onAccion', item);
       const ref = this.dialogService.open(CModalExcTransacComponent, {
           data: this.ordenCompra,
-          header: item.nomtrx +' - '+  this.ordenCompra.labelnrodocumento,
+          header: item.nomtrx,
           closeOnEscape: false,
           styleClass: 'testDialog',
           width: '40%'
