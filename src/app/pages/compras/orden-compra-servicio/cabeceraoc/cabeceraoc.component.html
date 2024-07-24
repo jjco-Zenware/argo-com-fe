@@ -116,14 +116,14 @@
                                 </span>
                             </div>
                             <div class="sm:col-6 lg:col-12 md:col-3 mt-1">                        
-                                <label class="block text-900 font-semibold mb-1">Terminos para el Pago de Factura <span class="text-red-500 font-bold"> * </span></label>                        
+                                <label class="block text-900 font-semibold mb-1">Terminos para el Pago de Factura </label>                        
                                 <span class="p-fluid">
-                                    <textarea type="text" formControlName="terminosdepago" pInputTextarea [rows]="2"
+                                    <textarea type="text" formControlName="terminosdepago" pInputTextarea [rows]="5"
                                     style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
                                 </span>
                             </div>  
                             <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">                        
-                                <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
+                                <label class="block text-900 font-semibold mb-1">Condiciones Comerciales </label>                        
                                 <span class="p-fluid">
                                     <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="5"
                                     style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
@@ -187,7 +187,7 @@
                             <td>{{ product.fecfin }}</td>
                             <td>{{ product.nomunidad }}</td>
                             <td>{{ product.preciocosto | number: '0.2'}}</td>
-                            <td>{{ product.cantidad | number: '0.2'}}</td>
+                            <td>{{ product.cantidad }}</td>
                             <td>{{ product.preciocostototal | number: '0.2'}}</td>
                             <td>
                                 <div *ngIf="verItems" class="flex justify-content-end">

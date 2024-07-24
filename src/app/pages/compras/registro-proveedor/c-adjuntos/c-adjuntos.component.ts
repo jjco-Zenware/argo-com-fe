@@ -237,7 +237,8 @@ getListaArchivos() {
     'image': 'pi-image',
     'word': 'pi-file-word',
     'archive': 'pi-server',
-    'question': 'pi-question'
+    'question': 'pi-question',
+    'html': 'pi-file'
   };
   
   colorIconExtension: { [key: string]: string } = {
@@ -246,7 +247,8 @@ getListaArchivos() {
     'image': '#4CAF50',
     'word': '#2B579A',
     'archive': '#757575',
-    'question': '#FFC107'
+    'question': '#FFC107',
+    'html': '#4CAF50'
   };
   
   extensionesPorTipo: { [key: string]: string[] } = {
@@ -254,7 +256,8 @@ getListaArchivos() {
     'excel': ['xls', 'xlsx', 'xlsm', 'xlsb', 'csv'],
     'image': ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'tiff', 'webp'],
     'word': ['doc', 'docx', 'rtf'],
-    'archive': ['zip', 'rar', '7z', 'tar']
+    'archive': ['zip', 'rar', '7z', 'tar'],
+    'html': ['html']
   };
   
   asignarIconArchivo(extension: string): string {

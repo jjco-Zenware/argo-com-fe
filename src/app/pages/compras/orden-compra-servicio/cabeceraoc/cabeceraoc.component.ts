@@ -431,8 +431,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       next: (rpta: any) => {
         console.info('servicioGenerico : ', rpta);
 
-        let _condicionescomerciales = rpta.filter((x: { iditem: number; }) => x.iditem === 135);
-        this.registerFormRegistro.get('condicionescomerciales').setValue(_condicionescomerciales[0].valoritem);
+        let _terminosdepago = rpta.filter((x: { iditem: number; }) => x.iditem === 135);
+        this.registerFormRegistro.get('terminosdepago').setValue(_terminosdepago[0].valoritem);
       },
       error: (err) => {
       console.info('error : ', err);
