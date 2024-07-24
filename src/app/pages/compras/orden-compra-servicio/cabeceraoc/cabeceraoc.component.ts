@@ -1060,11 +1060,11 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
             _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
-      {
-          this.errorMensaje="Ingresar Condiciones Comerciales...!";
-          _error = true;
-      }
+      // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
+      // {
+      //     this.errorMensaje="Ingresar Condiciones Comerciales...!";
+      //     _error = true;
+      // }
        return _error;
      }
 
