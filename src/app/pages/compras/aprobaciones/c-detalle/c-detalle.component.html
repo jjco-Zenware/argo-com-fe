@@ -141,7 +141,7 @@
                             <th class="surface-200">PRODUCTO</th>
                             <th class="surface-200">DESCRIPCIÓN</th>
                             <th class="surface-200">MARCA</th>
-                            <th class="surface-200">N° SERIE</th>
+                            <!-- <th class="surface-200">N° SERIE</th> -->
                             <th class="surface-200">SKU</th>
                             <th class="surface-200">N° CONTRATO</th>
                             <th class="surface-200">F. INICIO</th>
@@ -158,7 +158,7 @@
                             <td>{{ product.nomtipoprod | uppercase}}</td>
                             <td>{{(product.descripcion.length > 50 ) ? ((product.descripcion ).slice(0, 50) + '...') : product.descripcion }} </td>
                             <td>{{ product.nommarca | uppercase}}</td>
-                            <td>{{ product.serialnumber }}</td>
+                            <!-- <td>{{ product.serialnumber }}</td> -->
                             <td>{{ product.sku }}</td>
                             <td>{{ product.nrocontrato }}</td>
                             <td>{{ product.fecini | date: 'dd/MM/yyyy'}}</td> <!-- | date: 'dd/MM/yyyy' -->
@@ -172,15 +172,15 @@
                     </ng-template>
                     <ng-template pTemplate="footer">
                         <tr>
-                            <td colspan="12" class="text-right">Sub Total: </td>
+                            <td colspan="11" class="text-right">Sub Total: </td>
                             <td>{{s_monto | number: '0.2'}}</td>
                         </tr>
                         <tr>
-                            <td colspan="12" class="text-right">IGV: </td>
+                            <td colspan="11" class="text-right">IGV: </td>
                             <td>{{s_igv | number: '0.2'}}</td>
                         </tr>
                         <tr>
-                            <td colspan="12" class="text-right">Total: </td>
+                            <td colspan="11" class="text-right">Total: </td>
                             <td>{{s_monto_total | number: '0.2'}}</td>
                         </tr>
                     </ng-template>

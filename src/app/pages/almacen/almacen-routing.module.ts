@@ -8,7 +8,7 @@ const routes: Routes = [
     data: { breadcrumb: 'Ingreso OC Proyecto' }
   },
   {
-    path: 'ingreso-oc-interno',
+    path: 'ingreso-oc-req-interno',
     loadChildren: () => import('./ingreso-oc-req-interno/ingreso-oc-req-interno.module').then(m => m.IngresoOcReqInternoModule),
     data: { breadcrumb: 'Ingreso OC Interno' }
   },
@@ -36,6 +36,21 @@ const routes: Routes = [
     path: 'ingreso-por-traslado',
     loadChildren: () => import('./ingreso-por-traslado/ingreso-por-traslado.module').then(m => m.IngresoPorTrasladoModule),
     data: { breadcrumb: 'Ingreso por Traslado' }
+  },
+  {
+    path: 'ingreso-varios',
+    loadChildren: () => import('./ingreso-varios/ingreso-varios.module').then(m => m.IngresoVariosModule),
+    data: { breadcrumb: 'Ingreso Varios' }
+  },
+  {
+    path: 'salida-varios',
+    loadChildren: () => import('./salida-varios/salida-varios.module').then(m => m.SalidaVariosModule),
+    data: { breadcrumb: 'Salida Varios' }
+  },
+  {
+    path: 'salida-por-traslado',
+    loadChildren: () => import('./salida-por-traslado/salida-por-traslado.module').then(m => m.SalidaTrasladoModule),
+    data: { breadcrumb: 'Salida por Traslado' }
   },
 ];
 

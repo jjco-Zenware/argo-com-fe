@@ -51,7 +51,12 @@
                 <div *ngIf="verSku" class="sm:col-12 lg:col-2 md:col-12 ">
                     <label class="font-semibold">SKU</label>
                     <input pInputText type="text" formControlName="sku"/>
-                </div>                
+                </div>   
+                <div *ngIf="verCondic" class="sm:col-12 lg:col-8 md:col-12 ">
+                    <label class="font-semibold">Condiciones de Pago</label>
+                    <textarea id="ref1" type="text" formControlName="ref1" pInputTextarea [rows]="2"
+                        style="resize: none" class="w-full"></textarea>
+                </div>              
                 <div *ngIf="verporLicContrato"class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">N° Contrato</label>
                     <input pInputText type="text" formControlName="nrocontrato"/>

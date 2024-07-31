@@ -1,22 +1,23 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AlmacenesRoutingModule } from './almacenes-routing.module';
-import { CAlmacenesComponent } from './c-almacenes/c-almacenes.component';
+
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CSalidaVariosComponent } from './c-salida-varios/c-salida-varios.component';
+import { SalidaVariosRoutingModule } from './salida-varios-routing.module';
 
 
 @NgModule({
   declarations: [
-    CAlmacenesComponent
+    CSalidaVariosComponent
   ],
   imports: [
     CommonModule,
-    AlmacenesRoutingModule,
+    SalidaVariosRoutingModule,
     SharedAppModule,
     SharedPrimeNgModule,
     FormsModule,
@@ -24,4 +25,4 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
 })
-export class AlmacenesModule { }
+export class SalidaVariosModule { }

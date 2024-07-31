@@ -7,13 +7,12 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 
-
 @Component({
-  selector: 'app-c-ingreso-por-traslado',
-  templateUrl: './c-ingreso-por-traslado.component.html',
-  styleUrls: ['./c-ingreso-por-traslado.component.scss']
+  selector: 'app-c-salida-varios',
+  templateUrl: './c-salida-varios.component.html',
+  styleUrls: ['./c-salida-varios.component.scss']
 })
-export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
+export class CSalidaVariosComponent implements OnInit, OnDestroy{
 
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
@@ -139,7 +138,7 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR INGRESO DE REQUERIMIENTO INTERNO";
+      this.tituloDetalle = "REGISTRAR SALIDA VARIOS";
       
       this.vistaLista = false;
     }
@@ -190,4 +189,3 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
         FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
       }
 }
-

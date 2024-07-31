@@ -4,33 +4,29 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
 import { Subscription } from 'rxjs';
-import { ProyectosService } from '../../proyectos-ganados/service/proyectos.service';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { CItemCotizacionComponent } from '../../proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
-import { OrdencompraService } from '../service/ordencompra.service';
-import { CModalExcTransacComponent } from '../modal-exc-transac/modal-exc-transac.component';
-import { ComprasService } from '../../Service/compraServices';
 import * as  XLSX  from 'xlsx';
+import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
+import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
+import { ComprasService } from '../../compras/Service/compraServices';
+import { CItemCotizacionComponent } from '../../compras/proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
+import { CModalExcTransacComponent } from '../../compras/orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
 
 @Component({
-  selector: 'app-c-cabeceraoc',
-  templateUrl: './cabeceraoc.component.html',
-  styleUrls: ['./cabeceraoc.component.scss']
+  selector: 'app-c-detalle',
+  templateUrl: './detalle.component.html',
+  styleUrls: ['./detalle.component.scss']
 })
-export class CabeceraocComponent implements OnInit, OnDestroy{
+export class CDetalleComponent implements OnInit, OnDestroy{
   @Input() IA_data: any;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
   visibleDocument: boolean = true;
   dataAdjunto: any;
   registerFormRegistro: any= FormGroup;
-  // verOpor: boolean = false;
-  // verInter: boolean = false;
-  // verVent: boolean = false;
-  // verOtro: boolean = false;
   idtipoproyecto: any;
   lstProyectos: any;
   lstCliente: Cliente []=[];
@@ -554,7 +550,16 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         this.cargarProyectos(2);
         this.verReferencia = true;
         break;
+      // case 'VED':
+      //   this.cargarProyectos(3);
+      //   break;
+      // case 'NOA':
+      //   this.registerFormRegistro.get('idproyecto').setValue(0);
+      //   break;
     }    
+    //this.registerFormRegistro.get('sustentodoc').setValue('');  
+    
+    //this.verControles(data);
 
   }
 
@@ -568,6 +573,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: ' 60%',
+      //height: '55%'
     });
     refItem.onClose.subscribe((rpta: any) => {
       

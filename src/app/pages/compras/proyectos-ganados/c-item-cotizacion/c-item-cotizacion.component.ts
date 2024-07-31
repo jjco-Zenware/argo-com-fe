@@ -35,6 +35,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   tagVisible: boolean = false;
   registerFormTag!: FormGroup;  
   verporLicContrato  : boolean = false;
+  verCondic: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -113,6 +114,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       idunidad: [{ value: 130, disabled: false }, [Validators.required]],
       nomunidad: [{ value: '', disabled: false }],
       valor: [{ value: '', disabled: false }],
+      ref1: [{ value: '', disabled: false }],
     })
   }
 
@@ -313,6 +315,7 @@ createFormTag() {
         this.verporSerie = false;
         this.verSku = true;
         this.verporLicContrato = false;
+        this.verCondic = false;
       break;
       case 2:
         this.verporTipo = false;
@@ -320,9 +323,11 @@ createFormTag() {
         this.verporSerie = false;
         this.verSku = false;
         this.verporLicContrato = true;
+        this.verCondic = false;
       break;
       case 3: 
-      this.verporTipo = false;
+        this.verCondic = true;
+        this.verporTipo = false;
         this.verporLic = false;
         this.verporSerie = false;
         this.verSku = false;
@@ -335,6 +340,7 @@ createFormTag() {
         this.verporSerie = false;
         this.verSku = false;
         this.verporLicContrato = true;
+        this.verCondic = false;
       break;
       case 4: 
       case 5: 
@@ -343,6 +349,7 @@ createFormTag() {
         this.verporSerie = false;   
         this.verSku = false; 
         this.verporLicContrato = false;
+        this.verCondic = false;
       break;
       // case 5:  
       //   this.verporTipo = false;

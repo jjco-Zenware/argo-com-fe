@@ -178,9 +178,7 @@
                             <td>{{rowIndex + 1}}</td>
                             <td>{{ product.nomtipoprod | uppercase}}</td>
                             <td>{{ product.descripcion | uppercase}}</td>
-                            <!-- <td>{{(product.descripcion.length > 40 ) ? ((product.descripcion ).slice(0, 50) + '...') : product.descripcion }} </td> -->
                             <td>{{ product.nommarca | uppercase}}</td>
-                            <!-- <td>{{ product.serialnumber }}</td> -->
                             <td>{{ product.sku }}</td>
                             <td>{{ product.nrocontrato }}</td>
                             <td>{{ product.fecini }}</td> <!-- | date: 'dd/MM/yyyy' -->
@@ -199,15 +197,15 @@
                     </ng-template>
                     <ng-template pTemplate="footer">
                         <tr>
-                            <td colspan="11" class="text-right">Sub Total: </td>
+                            <td colspan="12" class="text-right">Sub Total: </td>
                             <td>{{s_monto | number: '0.2'}}</td>
                         </tr>
                         <tr>
-                            <td colspan="11" class="text-right">IGV: </td>
+                            <td colspan="12" class="text-right">IGV: </td>
                             <td>{{s_igv | number: '0.2'}}</td>
                         </tr>
                         <tr>
-                            <td colspan="11" class="text-right">Total: </td>
+                            <td colspan="12" class="text-right">Total: </td>
                             <td>{{s_monto_total | number: '0.2'}}</td>
                         </tr>
                     </ng-template>
@@ -224,66 +222,11 @@
                     </div>
                 </ng-template>             
                 <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
-            </p-tabPanel>
-
-            <p-tabPanel [disabled]=verCotizacion >
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-money-bill"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Cotización
-                        </span>
-                    </div>
-                </ng-template>
-                <app-cotizacion  [IA_data]="dataCT" (OB_back)="getQuotes($event)"></app-cotizacion>         
-            </p-tabPanel>
-
-            <p-tabPanel >
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-cog"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Transacciones 
-                        </span>
-                    </div>
-                </ng-template>    
-                <p-table [value]="lstTransacciones" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [scrollable]="true"  styleClass="p-datatable-sm">
-                    <ng-template pTemplate="header">
-                        <tr class="text-sm">
-                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th [ngStyle]="{'width':'120px'}" class="surface-200">FECHA MOV</th>
-                            <th class="surface-200">TRANSACCIÓN</th>
-                            <th class="surface-200">DESCRIPCIÓN</th>
-                            <th class="surface-200">USUARIO</th>
-                            <th class="surface-200"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                        <tr class="text-sm">
-                            <td>{{rowIndex + 1}}</td>
-                            <td>
-                                <div [ngStyle]="{'width':'120px'}">
-                                    {{product.fechamov }}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'200px'}">
-                                    {{product.nomtrx | uppercase}}
-                                </div>
-                            </td>
-                            <td>{{ product.mensajetrx | uppercase}}</td>
-                            
-                            <td>{{ product.nomusuario | uppercase}}</td>
-                        </tr>
-                    </ng-template>
-                </p-table>                         
-            </p-tabPanel>
+            </p-tabPanel>            
                   
         </p-tabView> 
     </div>
-
-    
+   
 
     <p-dialog [(visible)]="contactoVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '25vw'}" [breakpoints]="{'960px': '75vw'}">
         <p-header> <i class="pi pi-user" style="margin-right: 10px;"></i> Agregar Contacto </p-header>
@@ -352,11 +295,3 @@
 </div>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
-
-
-
-
-
-
-
-

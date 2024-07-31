@@ -38,6 +38,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     ordenCompra: any;
     cols: any[] = [];
     lstExportar: any[] = [];
+    lstExportExcel: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -224,23 +225,29 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     }
 
 
-    getExportarExcel() {
-
+    getExportarExcel(data :any) {
       this.lstExportar = [];
-      for (let i = 0; i < this.lstOrdenCompra.length; i++) {       
+      console.log(data.filteredValue);
+      if (data.filteredValue !== undefined) {
+        this.lstExportExcel = data.filteredValue;
+      }
+      console.log( 'this.lstExportar...',  this.lstExportar);
+
+      
+      for (let i = 0; i < this.lstExportExcel.length; i++) {       
           const objeto = {
               'N°': i + 1,
-              'TIPO': this.lstOrdenCompra[i].nomtipoorden,
-              'N° ORDEN': this.lstOrdenCompra[i].codigonroorden,
-              'N° RUC': this.lstOrdenCompra[i].nrodocumento,
-              'PROVEEDOR': this.lstOrdenCompra[i].nomcomercial,
-              'COD PROYECTO' : this.lstOrdenCompra[i].codigoproyecto,
-              'NOM PROYECTO' : this.lstOrdenCompra[i].nomproyecto,
-              'MONEDA': this.lstOrdenCompra[i].nommoneda,
-              'BASE IMPONIBLE': this.lstOrdenCompra[i].s_monto,
-              'IGV': this.lstOrdenCompra[i].s_igv,
-              'TOTAL': this.lstOrdenCompra[i].s_monto_total,
-              'ESTADO' : this.lstOrdenCompra[i].nomestado
+              'TIPO': this.lstExportExcel[i].nomtipoorden,
+              'N° ORDEN': this.lstExportExcel[i].codigonroorden,
+              'N° RUC': this.lstExportExcel[i].nrodocumento,
+              'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
+              'COD PROYECTO' : this.lstExportExcel[i].codigoproyecto,
+              'NOM PROYECTO' : this.lstExportExcel[i].nomproyecto,
+              'MONEDA': this.lstExportExcel[i].nommoneda,
+              'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
+              'IGV': this.lstExportExcel[i].s_igv,
+              'TOTAL': this.lstExportExcel[i].s_monto_total,
+              'ESTADO' : this.lstExportExcel[i].nomestado
               
           }
           this.lstExportar.push(objeto);
