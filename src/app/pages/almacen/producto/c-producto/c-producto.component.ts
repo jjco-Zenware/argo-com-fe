@@ -26,6 +26,7 @@ export class CProductoComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
+    data:any;
 
     constructor(
         private fb: FormBuilder,
@@ -41,8 +42,10 @@ export class CProductoComponent implements OnInit, OnDestroy{
       this.createFrm();
         this.getListar();
         this.cols = [
+          { field: 'idordencompra', header: 'ID' },
           { field: 'idordencompra', header: 'CÓDIGO' },
           { field: 'nomtipoorden', header: 'PRODUCTO ' },
+          { field: 'nomtipoorden', header: 'TIPO ' },
           { field: 'codigonroorden', header: 'FAMILIA' },
           { field: 'nomcomercial', header: 'SUBFAMILIA' },
           { field: 'nomestado', header: 'ESTADO' }
@@ -110,17 +113,21 @@ export class CProductoComponent implements OnInit, OnDestroy{
       // this.$listSubcription.push($getListarOrdenCompra)
     }
 
-    onVer(dato: any) {
-     
+    onVer(dato: any) {     
         this.tituloDetalle =  dato.nomalmacen;
-        
+        this.data = {
+          idcodigo: dato.idproducto,
+          paramReg:'V'
+        }        
         this.vistaLista = false;
     }
 
-    onEditar(dato: any) {
-      
+    onEditar(dato: any) {      
         this.tituloDetalle = dato.nomalmacen;
-        
+        this.data = {
+          idcodigo: dato.idproducto,
+          paramReg:'E'
+        }  
         this.vistaLista = false;
     }
 
@@ -140,7 +147,10 @@ export class CProductoComponent implements OnInit, OnDestroy{
 
     onNuevo() {        
       this.tituloDetalle = "REGISTRAR PRODUCTO";
-      
+      this.data = {
+        idcodigo: 0,
+        paramReg:'N'
+      }  
       this.vistaLista = false;
     }
 

@@ -1,0 +1,183 @@
+<div class="p-fluid py-0 border-1 surface-border border-round  col-12 mt-2">
+
+    <form [formGroup]="frmDatosItem">
+            <div class="flex grid mt-1">
+                <div class="sm:col-12 lg:col-3 md:col-12">
+                    <label class="block text-900 font-semibold">Producto</label>
+                    <p-dropdown [options]="lstTipoProducto" formControlName="idtipoprod" optionLabel="nomtipoprod" class="p-inputtext-sm"
+                        optionValue="idtipoprod" placeholder="Seleccionar Producto" appendTo="body" (onChange)="verControles($event.value)" ></p-dropdown>
+                </div>
+                <div class="col-12 sm:col-12 lg:col-2 md:col-12">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold">Marca</label>
+                        <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Marca"
+                            tooltipPosition="right" (click)="NuevaMarca();"></i>
+                    </div>
+                    <p-dropdown [options]="lstMarcas" formControlName="idmarca" optionLabel="nommarca"
+                        optionValue="idmarca" placeholder="Seleccionar Marca" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                </div>
+                <div class="sm:col-12 lg:col-7 md:col-12">
+                    <label class="font-semibold">Descripción</label>
+                    <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="1"
+                        style="resize: none" class="w-full" class="p-inputtext-sm"></textarea>
+                </div>                      
+            </div>
+            <div class="flex grid mb-2">    
+                <div class="sm:col-12 lg:col-2 md:col-12 ">
+                    <label class="font-semibold">Código</label>
+                    <input pInputText type="text" formControlName="sku" class="p-inputtext-sm"/>
+                </div>       
+                <div class="sm:col-12 lg:col-2 md:col-12">
+                    <label class="font-semibold">Familia</label>
+                    <span>
+                        <p-dropdown [options]="lstUnidades" formControlName="idunidad" optionLabel="valoritem" placeholder="Seleccionar..."
+                        optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div>  
+                <div class="sm:col-12 lg:col-2 md:col-12">
+                    <label class="font-semibold">SubFamilia</label>
+                    <span>
+                        <p-dropdown [options]="lstUnidades" formControlName="idunidad" optionLabel="valoritem" placeholder="Seleccionar..."
+                        optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div>         
+                <div class="sm:col-12 lg:col-2 md:col-12">
+                    <label class="font-semibold">Cantidad</label>
+                    <p-inputNumber (onInput)="calcularBCQ($event)" formControlName="cantidad" class="p-inputtext-sm"></p-inputNumber>
+                </div>
+                <div class="sm:col-12 lg:col-2 md:col-12">
+                    <label class="font-semibold">Uni. Medida</label>
+                    <span>
+                        <p-dropdown [options]="lstUnidades" formControlName="idunidad" optionLabel="valoritem" placeholder="Seleccionar..."
+                        optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div>               
+            </div>
+            <div class="flex grid">
+                <div *ngIf="verporSerie" class="sm:col-12 lg:col-2 md:col-12">
+                    <label class="font-semibold">N° Serie</label>
+                    <input pInputText type="text" formControlName="serialnumber" class="p-inputtext-sm"/>
+                </div>
+                <div *ngIf="verSku" class="sm:col-12 lg:col-2 md:col-12 ">
+                    <label class="font-semibold">SKU</label>
+                    <input pInputText type="text" formControlName="sku" class="p-inputtext-sm"/>
+                </div>   
+                <div *ngIf="verCondic" class="sm:col-12 lg:col-8 md:col-12 ">
+                    <label class="font-semibold">Condiciones de Pago</label>
+                    <textarea id="ref1" type="text" formControlName="ref1" pInputTextarea [rows]="2"
+                        style="resize: none" class="p-inputtext-sm w-full"></textarea>
+                </div>              
+                <div *ngIf="verporLicContrato"class="sm:col-12 lg:col-2 md:col-12">
+                    <label class="font-semibold">N° Contrato</label>
+                    <input pInputText type="text" formControlName="nrocontrato" class="p-inputtext-sm"/>
+                </div>
+                <div *ngIf="verporLic" class="sm:col-12 lg:col-3 md:col-12 ">
+                    <label class="font-semibold">Fecha Inicio</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" formControlName="fecini"
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
+                    </p-calendar>
+                </div>
+                <div *ngIf="verporLic" class="sm:col-12 lg:col-3 md:col-12 ">
+                    <label class="font-semibold">Fecha Fin</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" formControlName="fecfin"
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
+                </div>
+            </div>
+            <div class="flex grid mt-1">
+                <div class="col-12 -mt-4 -mb-5">
+                    <p-divider ></p-divider>
+                </div>
+                <div class="col-12 sm:col-12 lg:col-3 md:col-12">
+                    <div class="flex">
+                        <label class="block text-900 font-semibold">Tag</label>
+                        <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Tag"
+                        tooltipPosition="right" (click)="NuevoTag();"></i>
+                    </div>
+                    <p-dropdown [options]="lstTag" optionLabel="valoritem" class="p-inputtext-sm"
+                        optionValue="iditem" placeholder="Seleccionar Tag" appendTo="body" (onChange)="addTag($event.value)"></p-dropdown>
+                </div>
+                <div class="col-12 sm:col-12 lg:col-6 md:col-12">
+                    <!-- <div class="flex">
+                        <label class="block text-900 font-semibold">Lista Tag</label>
+                    </div> -->
+                    <p-table [value]="listaTag" class="ml-2" responsiveLayout="sc" [breakpoint]="'560px'" [tableStyle]="{'min-width': '30rem'}"
+                    [scrollable]="true" styleClass="p-datatable-sm">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
+                                <th class="surface-200">TAG</th>
+                                <th class="surface-200">VALOR</th>
+                                <th class="surface-200"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-tag let-rowIndex="rowIndex">
+                            <tr>
+                                <td>{{rowIndex + 1}}</td>
+                                <td>{{ tag.nomtag }}</td>
+                                <td [pEditableColumn]="tag.valor" pEditableColumnField="valor" class="cursor-pointer">
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <div [formGroup]="frmDatosItem">
+                                                <input pInputText type="text" [(ngModel)]="tag.valor" required [ngModelOptions]="{standalone: true}"/>
+                                              </div>
+                                            
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{ tag.valor }}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <!-- <td>{{ tag.valor }}</td> -->
+                                <td>
+                                    <div class="flex justify-content-end">
+                                        <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar" tooltipPosition="left" (click)="eliminarTag(tag)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table> 
+                </div>
+                
+            </div>
+
+           
+    </form>
+</div>
+
+
+
+
+<div class="flex justify-content-end">
+    <button pButton icon="pi pi-check" label="Agregar" (click)="guardarItem()"
+    class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary mt-2"></button> 
+</div>
+
+<p-dialog [(visible)]="marcaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
+    <p-header > <i class="pi pi-tag" style="margin-right: 10px;"></i>{{ headerTitle }} </p-header>
+        <form [formGroup]="registerFormMarca" (ngSubmit)="guardarMarca()">
+            <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
+                <div class="mb-3 field">
+                    <label class="font-semibold">Marca</label>
+                    <input pInputText type="text" formControlName="nommarca" id="nommarca" class="p-inputtext-sm"/>
+                </div>
+            </div>
+            <div class="flex justify-content-end">
+                <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary"></button>
+            </div>
+        </form>
+</p-dialog>
+
+<p-dialog [(visible)]="tagVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
+    <p-header> <i class="pi pi-tag" style="margin-right: 10px;"></i>Agregar TAG </p-header>
+        <form [formGroup]="registerFormTag" (ngSubmit)="guardarTag()">
+            <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
+                <div class="mb-3 field">
+                    <label class="font-semibold">Descripción</label>
+                    <input pInputText type="text" formControlName="nomtag" id="nomtag" class="p-inputtext-sm"/>
+                </div>
+            </div>
+            <div class="flex justify-content-end">
+                <button pButton icon="pi pi-check" label="Agregar" type="submit" class="p-button-primary"></button>
+            </div>
+        </form>
+</p-dialog>

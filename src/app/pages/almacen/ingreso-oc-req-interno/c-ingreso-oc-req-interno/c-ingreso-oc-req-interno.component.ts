@@ -26,6 +26,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
+    dataDet:any;
 
     constructor(
         private fb: FormBuilder,
@@ -113,14 +114,22 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     onVer(dato: any) {
      
         this.tituloDetalle =  dato.nomalmacen;
-        
+        this.dataDet = {
+          idcodigo: dato.idordencompra,
+          paramReg:'V',
+          idtipodocprc: 10
+        } 
         this.vistaLista = false;
     }
 
     onEditar(dato: any) {
       
         this.tituloDetalle = dato.nomalmacen;
-        
+        this.dataDet = {
+          idcodigo: dato.idordencompra,
+          paramReg:'N',
+          idtipodocprc: 10
+        }
         this.vistaLista = false;
     }
 
@@ -140,7 +149,11 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
 
     onNuevo() {        
       this.tituloDetalle = "REGISTRAR INGRESO DE REQUERIMIENTO INTERNO";
-      
+      this.dataDet = {
+        idcodigo: 0,
+        paramReg:'N',
+        idtipodocprc: 10
+      } 
       this.vistaLista = false;
     }
 

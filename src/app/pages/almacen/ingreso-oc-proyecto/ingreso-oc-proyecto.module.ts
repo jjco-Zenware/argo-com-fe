@@ -8,13 +8,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
-import { CDetalleComponent } from '../detalles/detalle.component';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { TagModule } from 'primeng/tag';
+import { AlmacenService } from '../service/almacenServices';
 
 
 @NgModule({
   declarations: [
-    CIngresoOcProyectoComponent,
-    CDetalleComponent
+    CIngresoOcProyectoComponent   
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,10 @@ import { CDetalleComponent } from '../detalles/detalle.component';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
+    SplitButtonModule,
+    SelectButtonModule,
+    TagModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })
 export class IngresoOcProyectoModule { }

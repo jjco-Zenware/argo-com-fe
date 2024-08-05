@@ -1,0 +1,94 @@
+<div class="p-fluid mt-1">
+    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50 h-3rem">
+        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardar()"></button>
+    </div>
+    <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border">                    
+        <div class="p-fluid grid col-6">                            
+            <div class="sm:col-12 lg:col-2 md:col-12 h-4rem field">
+                <label class="font-semibold mb-1">ID </label>
+                <span class="p-fluid">
+                    <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="idprod"/>
+                </span>
+            </div>
+            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field">
+                <label class="font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
+                <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
+                    <p-calendar formControlName="fecactivo" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                    inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                </span>
+            </div>
+            <div class=" sm:col-8 lg:col-3 md:col-12"></div>
+            <div class="sm:col-4 lg:col-4 md:col-12 field h-4rem mt-1">
+                <label class="font-semibold mb-1">Código <span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid">
+                    <input pInputText type="text" formControlName="codproducto" readonly="true" class="p-inputtext-sm"/>
+                </span>
+            </div>
+            <div class="sm:col-6 lg:col-12 md:col-3 -mt-2 field">
+                <label class="font-semibold mb-1">Descripción <span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid">
+                    <textarea type="text" pInputTextarea [rows]="1" formControlName="despro" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                </span>
+            </div>
+            <div class="sm:col-6 lg:col-12 md:col-3 -mt-5 field">
+                <label class="font-semibold mb-1">Descripción Detallada <span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid">
+                    <textarea type="text" pInputTextarea [rows]="2" formControlName="desdet" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                </span>
+            </div>
+            <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem mb-3 -mt-5 field">                            
+                <label class="font-semibold mb-1">Familia <span class="text-red-500 font-bold"> * </span></label>                            
+                <span>
+                    <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar..."  formControlName="tabidfamilia" class="p-inputtext-sm"
+                    optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead></p-dropdown>            
+                </span>
+            </div> 
+            <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem mb-3 -mt-5 field">                            
+                <label class="font-semibold mb-1">SubFamilia <span class="text-red-500 font-bold"> * </span></label>                            
+                <span>
+                    <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar..."  formControlName="tabidfamilia" class="p-inputtext-sm"
+                    optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead></p-dropdown>            
+                </span>
+            </div> 
+            <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem mb-3 -mt-5 field">                            
+                <label class="font-semibold mb-1">Marca <span class="text-red-500 font-bold"> * </span></label>                            
+                <span>
+                    <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar..."  formControlName="tabidfamilia" class="p-inputtext-sm"
+                    optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead></p-dropdown>            
+                </span>
+            </div> 
+            <div class="col-12 -mt-3 -mb-5">
+                <p-divider ></p-divider>
+            </div>
+            <div class="sm:col-6 lg:col-4 md:col-6 field">
+                <label class="font-semibold mb-1">Precio Unit.</label>
+                <p-inputNumber formControlName="valorunit" mode="decimal" locale="en-US" [minFractionDigits]="2" class="p-inputtext-sm"></p-inputNumber>
+            </div>
+            <div class="sm:col-6 lg:col-4 md:col-6 field">
+                <label class="font-semibold">Precio Min.</label>
+                <p-inputNumber formControlName="preciovenmin" mode="decimal" locale="en-US" [minFractionDigits]="2" class="p-inputtext-sm"></p-inputNumber>
+            </div>
+            <div class="sm:col-6 lg:col-4 md:col-6 field">
+                <label class="font-semibold mb-1">Precio Max.</label>
+                <p-inputNumber formControlName="preciovenmax" mode="decimal" locale="en-US" [minFractionDigits]="2" class="p-inputtext-sm"></p-inputNumber>
+            </div>
+            <div class="sm:col-6 lg:col-3 md:col-6 -mt-4 "> 
+                <span>
+                    <p-checkbox formControlName="indprocesado" [binary]="true" inputId="indprocesado" class="p-inputtext-sm"></p-checkbox>
+                </span>                           
+                <label class="font-semibold mb-1 ml-2">Procesado</label>                            
+                
+            </div> 
+            <div class="sm:col-6 lg:col-3 md:col-6 -mt-4 ">  
+                <span>
+                    <p-checkbox formControlName="indmigrado" [binary]="true" inputId="indmigrado" class="p-inputtext-sm"></p-checkbox>
+                </span>                          
+                <label class="font-semibold mb-1 ml-2">Migrado </label>                            
+                
+            </div> 
+        </div>                
+    </form>  
+
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

@@ -8,10 +8,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProyectosGanadosModule } from '../compras/proyectos-ganados/proyectos-ganados.module';
 import { OrdencompraService } from '../compras/orden-compra-servicio/service/ordencompra.service';
 import { ComprasService } from '../compras/Service/compraServices';
+import { TableModule } from 'primeng/table';
+import { CItemOrdenesComponent } from './items-ordenes/c-items-ordenes.component';
+import { CheckboxModule } from 'primeng/checkbox';
+import { CDetalleMovComponent } from './c-detallemov/c-detallemov.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    CItemOrdenesComponent,
+    CDetalleMovComponent
+  ],
   imports: [
     CommonModule,
     AlmacenRoutingModule,
@@ -19,7 +26,9 @@ import { ComprasService } from '../compras/Service/compraServices';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
-    ProyectosGanadosModule
+    ProyectosGanadosModule,
+    TableModule,
+    CheckboxModule
   ],
   providers : [OrdencompraService, ComprasService]
 })

@@ -1,5 +1,4 @@
 
-
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesSpinner } from '@constantes';
@@ -8,6 +7,7 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
+import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 
 
 @Component({
@@ -20,7 +20,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
     visDetalle: boolean = false;
-    lstAlmacen: any;
+    lstIngreos: any;
     tituloDetalle!: string;
     blockedDocument: boolean = false;
     mensajeSpinner: string = "";
@@ -35,7 +35,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
         private utilitariosService: UtilitariosService,
         public dialogService: DialogService  ,   
         private serviceSharedApp: SharedAppService,
-        
+        private proyectosService: ProyectosService,
       ){          
     }
 
@@ -43,10 +43,10 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'ID ALMACÉN' },
-          { field: 'nomtipoorden', header: 'OFICINA ' },
-          { field: 'codigonroorden', header: 'NOMBRE' },
-          { field: 'nomcomercial', header: 'DIRECCIÓN' },
+          { field: 'idordencompra', header: 'CÓDIGO' },
+          { field: 'nomalmacen', header: 'ALMACÉN ' },
+          { field: 'nomcomercial', header: 'PROVEEDOR' },
+          { field: 'alm_idordencompra', header: 'N° ORDEN' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
@@ -86,47 +86,51 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     }
 
     getListar(){
-      //this.setSpinner(true);
-      //this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-      //console.log('this.frmDatos...', this.frmDatos.value);
-      // const objeto = {
-      //   ...this.frmDatos.value,
-      //   idtipodocprc: 8
-      // }
+      this.setSpinner(true);
+      this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+      console.log('this.frmDatos...', this.frmDatos.value);
+      const objeto = {
+        ...this.frmDatos.value,
+        idtipodocprc: 9
+      }
 
-      // const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
-      //   .subscribe({
-      //     next: (rpta:any) => {
-      //         this.setSpinner(false);
-      //         console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
-      //         this.lstOrdenCompra = rpta.ordenescompra
-      //     },
-      //     error:(err)=>{
-      //         this.setSpinner(false);
-      //         this.serviceSharedApp.messageToast()
-      //     },
-      //     complete:() => {
-      //       this.setSpinner(false);
-      //     }
-      //   });
-      // this.$listSubcription.push($getListarOrdenCompra)
+      const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
+        .subscribe({
+          next: (rpta:any) => {
+              this.setSpinner(false);
+              console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
+              this.lstIngreos = rpta.ordenescompra
+          },
+          error:(err)=>{
+              this.setSpinner(false);
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+            this.setSpinner(false);
+          }
+        });
+      this.$listSubcription.push($getListarOrdenCompra)
     }
 
-    onVer(dato: any) {
-     
-        this.tituloDetalle =  dato.nomalmacen;
-        
+    onVer(dato: any) {     
+        this.tituloDetalle =  dato.nomalmacen;  
+        this.dataDet = {
+          idcodigo: dato.idordencompra,
+          paramReg:'V',
+          idtipodocprc: 9
+        }     
         this.vistaLista = false;
     }
 
-    onEditar(dato: any) {
-      
-        this.tituloDetalle = dato.nomalmacen;
-        
+    onEditar(dato: any) {      
+        this.tituloDetalle = dato.nomalmacen;  
+        this.dataDet = {
+          idcodigo: dato.idordencompra,
+          paramReg:'N',
+          idtipodocprc: 9
+        }      
         this.vistaLista = false;
-    }
-
-  
+    }  
 
     getDetalle(dato:boolean){
       this.vistaLista = true;
@@ -144,9 +148,9 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
       this.tituloDetalle = "REGISTRAR INGRESO DE OC PROYECTO";
       this.dataDet = {
         idcodigo: 0,
-        paramReg:'N'
-      }
-      
+        paramReg:'N',
+        idtipodocprc: 9
+      }      
       this.vistaLista = false;
     }
 

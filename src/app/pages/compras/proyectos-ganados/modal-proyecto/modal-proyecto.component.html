@@ -6,7 +6,7 @@
             </div>
             <span class="p-fluid">
                 <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
-                optionValue="idtipoproyecto" (onChange)="changeOrigen($event.value)"></p-dropdown>
+                optionValue="idtipoproyecto" (onChange)="changeOrigen($event.value)" class="p-inputtext-sm"></p-dropdown>
             </span>
         </div>
         <div *ngIf="verOpor" class="col-12 field h-4rem">
@@ -15,7 +15,7 @@
             </div>
             <span class="p-fluid">
                 <p-dropdown [options]="lstCliente" formControlName="idcliente" placeholder="Seleccionar Cliente" optionLabel="nomcomercial"
-                 optionValue="idcliente" appendTo="body" (onChange)="cargarOportunidades($event.value)" autoWidth="false"></p-dropdown>
+                 optionValue="idcliente" appendTo="body" (onChange)="cargarOportunidades($event.value)" autoWidth="false" class="p-inputtext-sm"></p-dropdown>
             </span>
             <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.idcliente.errors">* Debe Seleccionar Cliente</p> -->
         </div>
@@ -25,7 +25,7 @@
             </div>
             <span class="p-fluid">
                 <p-dropdown [options]="lstOportunidad" formControlName="idoportunidad" placeholder="Seleccionar Oportunidad" optionLabel="title"
-                  optionValue="id" appendTo="body" autoWidth="false" ></p-dropdown>
+                  optionValue="id" appendTo="body" autoWidth="false" class="p-inputtext-sm"></p-dropdown>
             </span>
             <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.idoportunidad.errors">* Debe Seleccionar Oportunidad</p> -->
         </div>
@@ -34,7 +34,7 @@
                 <label class="block text-900 font-semibold mb-1">Nombre </label>
             </div>
             <span class="p-fluid">
-                <textarea type="text" pInputTextarea [rows]="2" formControlName="nomproyecto"style="resize: none" class="w-full"></textarea>
+                <textarea type="text" pInputTextarea [rows]="2" formControlName="nomproyecto" style="resize: none" class="w-full p-inputtext-sm"></textarea>
                 <!-- <input pInputText type="text" formControlName="nomproyecto" /> -->
             </span>
             <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.nomproyecto.errors">* Debe Ingresar Nombre</p> -->
@@ -52,7 +52,7 @@
                 <label class="block text-900 font-semibold mb-1">Descripción</label>
             </div>
             <span class="p-fluid">
-                <textarea type="text" pInputTextarea [rows]="3" formControlName="descripcion" style="resize: none" class="w-full" id="descripcion"></textarea>
+                <textarea type="text" pInputTextarea [rows]="3" formControlName="descripcion" style="resize: none" class="w-full p-inputtext-sm" id="descripcion"></textarea>
                 <!-- oninput="this.value=this.value.replace(/[^0-9]/g,'');" -->
             </span>
             <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.nrorequerimiento.errors">* Debe Ingresar Requerimiento</p> -->

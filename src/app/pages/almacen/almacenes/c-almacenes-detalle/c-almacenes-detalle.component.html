@@ -1,0 +1,38 @@
+<div class="p-fluid mt-1">
+    <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardar()"></button>
+    </div>
+    <div class="card p-2">
+        <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border">                    
+            <div class="p-fluid grid col-6 p-2 m-2">                            
+                <div class="sm:col-12 lg:col-2 md:col-12 h-4rem field">
+                    <label class="block text-900 font-semibold mb-1">Código </label>
+                    <span class="p-fluid">
+                        <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="idalmacen"/>
+                    </span>
+                </div>
+                <div class="col-6 sm:col-12 lg:col-4 md:col-12 justify-content-end h-4rem field">
+                    <label class="text-900 font-semibold mb-1">Oficina <span class="text-red-500 font-bold"> * </span></label>
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstOficina" formControlName="idofi" placeholder="Seleccionar Oficina" optionLabel="nomoficina" 
+                        optionValue="idofi" class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div>              
+                <div class="sm:col-6 lg:col-12 md:col-3 mt-1">
+                    <label class="block text-900 font-semibold">Nombre <span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="nomalmacen" [readonly]=onlyRead class="p-inputtext-sm"/>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">
+                    <label class="block text-900 font-semibold">Dirección <span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid">
+                        <textarea type="text" pInputTextarea [rows]="2" formControlName="diralmacen" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                    </span>
+                </div>
+            </div>                
+        </form>
+    </div>  
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

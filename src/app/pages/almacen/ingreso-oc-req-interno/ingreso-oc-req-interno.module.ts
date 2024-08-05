@@ -8,11 +8,12 @@ import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { AlmacenService } from '../service/almacenServices';
 
 
 @NgModule({
   declarations: [
-    CIngresoOcReqInternoComponent
+    CIngresoOcReqInternoComponent,
   ],
   imports: [
     CommonModule,
@@ -22,6 +23,6 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })
 export class IngresoOcReqInternoModule { }

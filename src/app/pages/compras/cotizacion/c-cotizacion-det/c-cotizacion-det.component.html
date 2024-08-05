@@ -1,9 +1,9 @@
 <div class="p-fluid mt-1">
-    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
-        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-3rem" (click)="guardarOC()"></button>
-        <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-outlined w-auto h-3rem" (click)="vistaPreliminar()"></button>
-        <button *ngIf="verbtnOrden" pButton icon="pi pi-file" label="Ver Cotización" class="p-button-outlined w-auto h-3rem" (click)="vistaPreliminar()"></button>
-        <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-3rem"></p-splitButton>
+    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50 h-3rem">
+        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardarOC()"></button>
+        <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>
+        <button *ngIf="verbtnOrden" pButton icon="pi pi-file" label="Ver Cotización" class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>
+        <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
     </div>
     <div class="card p-2">
         <p-tabView >
@@ -19,7 +19,7 @@
 
                 <form [formGroup]="registerFormRegistro" >
                     
-                    <div class="p-fluid grid col-8 border-1 border-round surface-border p-2 m-2"> 
+                    <div class="p-fluid grid col-8 border-1 border-round surface-border m-2"> 
                             
                             <!-- <div class="col-6 sm:col-6 lg:col-3 md:col-3 h-4rem field">
                                 <label class="block text-900 font-semibold mb-1">Orden <span class="text-red-500 font-bold"> * </span></label>
@@ -28,21 +28,21 @@
                                     optionValue="code" [readonly]=onlyRead></p-dropdown>
                                 </span>
                             </div> -->
-                            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field">
+                            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field -mt-3">
                                 <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
-                                <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
+                                <span class="p-input-icon-left w-auto p-fluid -mt-1"  >
                                     <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                                    inputStyleClass="w-full cursor-pointer" appendTo="body" ></p-calendar>
+                                    inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
                                 </span>
                             </div>
                             <div class=" sm:col-8 lg:col-6 md:col-12"></div>
-                            <div class="sm:col-12 lg:col-3 md:col-12 h-4rem field">
-                                <label class="block text-900 font-semibold mb-1">N° Cotización</label>
+                            <div class="sm:col-12 lg:col-3 md:col-12 h-4rem field -mt-3">
+                                <label class="block text-900 font-semibold ">N° Cotización</label>
                                 <span class="p-fluid">
-                                    <input pInputText type="text" class="font-semibold" formControlName="idordencompra"/>
+                                    <input pInputText type="text" class="font-semibold" formControlName="idordencompra" class="p-inputtext-sm"/>
                                 </span>
                             </div>
-                            <div class="col-12 -mt-2 -mb-5">
+                            <div class="col-12 -mt-4 -mb-5">
                                 <p-divider ></p-divider>
                             </div>
                             <!-- <div class="sm:col-6 lg:col-4 md:col-3 mt-1 h-4rem field">
@@ -70,7 +70,7 @@
                             <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem">                            
                                 <label class="block text-900 font-semibold mb-1">Cliente <span class="text-red-500 font-bold"> * </span></label>                            
                                 <span>
-                                    <p-dropdown [options]="lstCliente" placeholder="Seleccionar Cliente"  formControlName="idcliente" 
+                                    <p-dropdown [options]="lstCliente" placeholder="Seleccionar Cliente"  formControlName="idcliente" class="p-inputtext-sm"
                                     optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [readonly]=onlyRead></p-dropdown>            
                                 </span>
                             </div>                         
@@ -82,13 +82,13 @@
                                 </div>                            
                                 <span>
                                     <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
-                                    optionValue="idcontacto" appendTo="body" [readonly]=onlyRead></p-dropdown>
+                                    optionValue="idcontacto" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                                 </span>
                             </div>
                             <div *ngIf="verReferencia" class="col-4 field h-4rem mt-3 -mb-2">
                                 <label class="block text-900 font-semibold mb-1">N° Referencia <span class="text-red-500 font-bold"> * </span></label>                        
                                 <span class="p-fluid">
-                                    <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead/>
+                                    <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
                                 </span>
                             </div>
                             <div class="col-12 mt-2 -mb-5">
@@ -98,28 +98,28 @@
                                 <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
                                 <span class="p-fluid mt-1">
                                     <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead></p-dropdown>
+                                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                                 </span>                                      
                             </div> 
                             <div class="sm:col-6 lg:col-4 md:col-3 h-4rem ">
                                 <label class="block text-900 font-semibold mb-1">Terminos de Pago<span class="text-red-500 font-bold"> * </span></label>
                                 <span>
                                     <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
-                                    optionValue="iditem" appendTo="body" [readonly]=onlyRead></p-dropdown>
+                                    optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                                 </span>
                             </div> 
 
                             <div class="sm:col-6 lg:col-2 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Plazo Entrega(días) </label>
+                                <label class="block text-900 font-semibold mb-1">Plazo (días) </label>
                                 <span>
-                                    <p-inputNumber formControlName="tiempoentrega" locale="es-PE" [min]="0" [readonly]=onlyRead></p-inputNumber>
+                                    <p-inputNumber formControlName="tiempoentrega" locale="es-PE" [min]="0" [readonly]=onlyRead class="p-inputtext-sm"></p-inputNumber>
                                 </span>
                             </div> 
 
                             <div class="sm:col-6 lg:col-2 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Validez Oferta(días)</label>
+                                <label class="block text-900 font-semibold mb-1">Validez (días)</label>
                                 <span>
-                                    <p-inputNumber formControlName="validezoferta" locale="es-PE" [min]="0" [readonly]=onlyRead></p-inputNumber>
+                                    <p-inputNumber formControlName="validezoferta" locale="es-PE" [min]="0" [readonly]=onlyRead class="p-inputtext-sm"></p-inputNumber>
                                 </span>
                             </div>                                  
 
@@ -127,13 +127,14 @@
                                 <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
                                 <span class="p-fluid">
                                     <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="6"
-                                    style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
+                                    style="resize: none" class="w-full mt-1 p-inputtext-sm" [readonly]=onlyRead ></textarea>                       
                                 </span>
                             </div>                   
                             <div class="sm:col-6 lg:col-12 md:col-3 -mt-4">
                                 <label class="block text-900 font-semibold">Observación</label>                        
                                 <span class="p-fluid">
-                                    <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion" [readonly]=onlyRead></textarea>
+                                    <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
+                                    class="w-full p-inputtext-sm" id="observacion" [readonly]=onlyRead></textarea>
                                 </span>
                             </div>
                     </div>                

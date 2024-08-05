@@ -8,11 +8,14 @@ import { SharedPrimeNgModule } from '@primeNgModule';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CAlmacenesDetalleComponent } from './c-almacenes-detalle/c-almacenes-detalle.component';
+import { AlmacenService } from '../service/almacenServices';
 
 
 @NgModule({
   declarations: [
-    CAlmacenesComponent
+    CAlmacenesComponent,
+    CAlmacenesDetalleComponent
   ],
   imports: [
     CommonModule,
@@ -22,6 +25,6 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })
 export class AlmacenesModule { }

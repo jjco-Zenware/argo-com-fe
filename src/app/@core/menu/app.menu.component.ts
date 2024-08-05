@@ -33,23 +33,5 @@ export class AppMenuComponent implements OnInit, OnDestroy {
       this.$listSubcription.forEach((sub) => sub.unsubscribe());
     }
   }
-
-  toggleAll() {
-    const expanded = !this.areAllItemsExpanded();
-    this.model = this.toggleAllRecursive(this.model, expanded);
-}
-
-private toggleAllRecursive(items: MenuItem[], expanded: boolean): MenuItem[] {
-    return items.map((menuItem) => {
-        menuItem.expanded = expanded;
-        if (menuItem.items) {
-            menuItem.items = this.toggleAllRecursive(menuItem.items, expanded);
-        }
-        return menuItem;
-    });
-}
-
-private areAllItemsExpanded(): boolean {
-  return this.model.every((menuItem) => menuItem.expanded);
-}
+ 
 }

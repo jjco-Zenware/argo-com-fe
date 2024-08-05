@@ -117,4 +117,9 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.PrcContactos}`;
         return this.http.post<any>(url, objeto)
     }
+
+    ordencompraaprobadasprovlist(idproveedor:any) {
+        const url = `${constantesApiWeb.ordencompraaprobadasprovlist}${idproveedor}`;
+        return this.http.get<any>(url);
+    }
 }

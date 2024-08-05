@@ -10,6 +10,7 @@ const controllerComercial: string = webApi+'Comercial';
 const controllerMain: string = webApi+'Main';
 const controllerArchivo: string = webApi+'Archivo';
 const controllerPerfil: string = webApi+'Perfil';
+const controllerAlmacen: string = webApi+'Almacen';
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -94,5 +95,10 @@ export const constantesApiWeb = {
     obtenerOportunidadCliente: controllerCRM + '/oportunidadlist03',
     eliminarProyecto: controllerComercial + '/proyectodel',
     listarTrasacciones: controllerMain + '/trxmovimientolist02/',
+
+
+    ListarAlamcen: controllerAlmacen + '/listarAlmacen/',
+    GrabarAlamcen: controllerAlmacen + '/insertarAlmacen/',
+    ordencompraaprobadasprovlist: controllerComercial + '/ordencompraaprobadasprovlist/',
 
 }

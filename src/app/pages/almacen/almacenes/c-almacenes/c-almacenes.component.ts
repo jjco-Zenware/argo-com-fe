@@ -6,6 +6,7 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
+import { AlmacenService } from '../../service/almacenServices';
 
 @Component({
   selector: 'app-c-almacenes',
@@ -25,12 +26,19 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
+    lstOficina = [
+      { nomoficina: 'TODOS', idofi: 0 },
+      { nomoficina: 'OFICINA 01', idofi: 1 },
+      { nomoficina: 'OFICINA 02', idofi: 2 },
+      { nomoficina: 'OFICINA 03', idofi: 3 }
+    ];
+    data:any;
 
     constructor(
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
         public dialogService: DialogService  ,
-        //private proyectosService: ProyectosService,     
+        private almacenService: AlmacenService,     
         private serviceSharedApp: SharedAppService,
         
       ){          
@@ -43,29 +51,22 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
           { field: 'idordencompra', header: 'ID ALMACÉN' },
           { field: 'nomtipoorden', header: 'OFICINA ' },
           { field: 'codigonroorden', header: 'NOMBRE' },
-          { field: 'nomcomercial', header: 'DIRECCIÓN' },
-          { field: 'nomestado', header: 'ESTADO' }
+          { field: 'nomcomercial', header: 'DIRECCIÓN' }
           
       ];
     }
 
     createFrm(){
-      this.frmDatos = this.fb.group({
-        fecini: [
+      this.frmDatos = this.fb.group({        
+        idalmacen: [
           {
-            value: this.utilitariosService.obtenerFechaInicioMes(),
+            value: 0,
             disabled: false,
           },
         ],
-        fecfin: [
+        idofi: [
           {
-            value: this.utilitariosService.obtenerFechaFinMes(),
-            disabled: false,
-          },
-        ],
-        idusuario: [
-          {
-            value: constantesLocalStorage.idusuario,
+            value: 0,
             disabled: false,
           },
         ],
@@ -83,47 +84,48 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
     }
 
     getListar(){
-      //this.setSpinner(true);
-      //this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-      //console.log('this.frmDatos...', this.frmDatos.value);
-      // const objeto = {
-      //   ...this.frmDatos.value,
-      //   idtipodocprc: 8
-      // }
+      this.setSpinner(true);
+      this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+      console.log('this.frmDatos...', this.frmDatos.value);
+      const objeto = {
+        ...this.frmDatos.value
+      }
 
-      // const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
-      //   .subscribe({
-      //     next: (rpta:any) => {
-      //         this.setSpinner(false);
-      //         console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
-      //         this.lstOrdenCompra = rpta.ordenescompra
-      //     },
-      //     error:(err)=>{
-      //         this.setSpinner(false);
-      //         this.serviceSharedApp.messageToast()
-      //     },
-      //     complete:() => {
-      //       this.setSpinner(false);
-      //     }
-      //   });
-      // this.$listSubcription.push($getListarOrdenCompra)
+      const $getListar = this.almacenService.ListarAlamcen(objeto)
+        .subscribe({
+          next: (rpta:any) => {
+              this.setSpinner(false);
+              console.log('rpta lstAlmacen', rpta);
+              this.lstAlmacen = rpta
+          },
+          error:(err)=>{
+              this.setSpinner(false);
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+            this.setSpinner(false);
+          }
+        });
+      this.$listSubcription.push($getListar)
     }
 
-    onVer(dato: any) {
-     
-        this.tituloDetalle =  dato.nomalmacen;
-        
+    onVer(dato: any) {     
+        this.tituloDetalle =  dato.nomalmacen;     
+        this.data = {
+          idcodigo: dato.idalmacen,
+          paramReg:'V'
+        }    
         this.vistaLista = false;
     }
 
-    onEditar(dato: any) {
-      
-        this.tituloDetalle = dato.nomalmacen;
-        
+    onEditar(dato: any) {      
+        this.tituloDetalle = dato.nomalmacen; 
+        this.data = {
+          idcodigo: dato.idalmacen,
+          paramReg:'E'
+        }        
         this.vistaLista = false;
-    }
-
-  
+    }  
 
     getDetalle(dato:boolean){
       this.vistaLista = true;
@@ -138,8 +140,11 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR ALMACÉN";
-      
+      this.tituloDetalle = "REGISTRAR ALMACÉN";  
+      this.data = {
+        idcodigo: 0,
+        paramReg:'N'
+      }     
       this.vistaLista = false;
     }
 

@@ -1,5 +1,5 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
-    <div class="card">
+    <div class="card m-4">
         <div class="grid">
             <div class="flex justify-content-between col-12 mt-2 gap-2">   
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-3rem">
@@ -145,7 +145,7 @@
 
 <ng-template #visSecciones>
 
-    <div class="p-fluid p-3 mb-1 card" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
+    <div class="p-fluid p-3 mb-1 card m-4" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
         <div class="grid">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">

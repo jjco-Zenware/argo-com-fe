@@ -1,37 +1,38 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
-    <div class="card">
+    <div class="card m-4">
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
-                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-3rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="NUEVO"
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
                         pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                 
-                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">REGISTRO DE COMPRAS</span>
                 </div>           
             </div>
         </div>
-        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-2 ml-3">
-            <div class="p-fluid p-formgrid grid col-12 text-sm border-1 border-round surface-border h-7rem">                
-                <div class="field md:col-6 sm:col-4 lg:col-2 -mt-3">
-                    <label htmlFor="fechaInicio" class="font-semibold text-blue-600">FECHA INICIO</label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
-                        [readonlyInput]="true" appendTo="body">
+
+        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
+            <div class="p-fluid p-formgrid grid col-9 text-sm h-5rem -ml-6">
+                <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
+                    <label class="font-semibold text-blue-600">FECHA INICIO</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini"
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
                     </p-calendar>
                 </div>
-                <div class="field md:col-6 sm:col-4 lg:col-2 -mt-3">
-                    <label htmlFor="fechaFin" class="font-semibold text-blue-600">FECHA FIN</label>
+                <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
+                    <label class="font-semibold text-blue-600">FECHA FIN</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
-                        [readonlyInput]="true" appendTo="body"></p-calendar>
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
                 </div>
-                <div class="field col-12 md:col-2 -mt-3 gap-2">
-                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                        class="font-semibold mt-4 justify-content-center h-3rem w-3rem w-auto" icon="pi pi-search"></button>
-                        <button pButton type="button" pTooltip="Exportar Excel" tooltipPosition="bottom" 
-                        class="font-semibold mt-4 justify-content-center h-3rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
+                <div class="field col-12 md:col-2 -mt-4 gap-2">
+                    <button pButton type="button" (click)="cargarLista()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                        class="font-semibold mt-4 justify-content-center h-2rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
                 </div>
             </div>
-        </form>
+        </form> 
+
+    
 
         <p-table #dt1 [value]="lstCompras" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
@@ -193,7 +194,7 @@
 
 <ng-template #visSecciones>
 
-    <div class="p-fluid p-3 mb-1 card" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
+    <div class="p-fluid p-3 mb-1 card m-4" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
         <div class="grid">
             <div class="flex justify-content-between col-12 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem -ml-1">

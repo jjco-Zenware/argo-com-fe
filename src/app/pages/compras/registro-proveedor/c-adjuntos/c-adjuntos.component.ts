@@ -140,7 +140,7 @@ getListaArchivos() {
             message: '¿Estás seguro de Descargar el Adjunto?...',
             accept: () => {
                 const objeto = {
-                  idoportunidad: 0,
+                  idoportunidad: data.idnroproceso,
                   urlasset: data.nomasset
                   }
                   const $downloadArchivo = this.comprasService.downloadArchivo(objeto)

@@ -8,11 +8,14 @@ import { SharedPrimeNgModule } from '@primeNgModule';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CProductoDetalleComponent } from './c-producto-detalle/c-producto-detalle.component';
+import { AlmacenService } from '../service/almacenServices';
 
 
 @NgModule({
   declarations: [
-    CProductoComponent
+    CProductoComponent,
+    CProductoDetalleComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +24,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
+    
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })
 export class ProductoModule { }
