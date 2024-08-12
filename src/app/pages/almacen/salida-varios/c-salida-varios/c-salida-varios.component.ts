@@ -9,9 +9,9 @@ import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 
 @Component({
-  selector: 'app-c-salida-por-traslado',
-  templateUrl: './c-salida-por-traslado.component.html',
-  styleUrls: ['./c-salida-por-traslado.component.scss']
+  selector: 'app-c-salida-varios',
+  templateUrl: './c-salida-varios.component.html',
+  styleUrls: ['./c-salida-varios.component.scss']
 })
 export class CSalidaVariosComponent implements OnInit, OnDestroy{
 
