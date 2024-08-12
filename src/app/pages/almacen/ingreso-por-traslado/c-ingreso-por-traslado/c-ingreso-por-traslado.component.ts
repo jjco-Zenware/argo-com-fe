@@ -6,6 +6,7 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
+import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 
 
 @Component({
@@ -18,7 +19,7 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
     visDetalle: boolean = false;
-    lstAlmacen: any;
+    lstMovimientos: any;
     tituloDetalle!: string;
     blockedDocument: boolean = false;
     mensajeSpinner: string = "";
@@ -26,12 +27,13 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
+    dataDet:any;
 
     constructor(
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
         public dialogService: DialogService  ,
-        //private proyectosService: ProyectosService,     
+        private proyectosService: ProyectosService,     
         private serviceSharedApp: SharedAppService,
         
       ){          
@@ -84,43 +86,52 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
     }
 
     getListar(){
-      //this.setSpinner(true);
-      //this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-      //console.log('this.frmDatos...', this.frmDatos.value);
-      // const objeto = {
-      //   ...this.frmDatos.value,
-      //   idtipodocprc: 8
-      // }
+      this.setSpinner(true);
+      this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+      console.log('this.frmDatos...', this.frmDatos.value);
+      const objeto = {
+        ...this.frmDatos.value,
+        idtipodocprc: 11
+      }
 
-      // const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
-      //   .subscribe({
-      //     next: (rpta:any) => {
-      //         this.setSpinner(false);
-      //         console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
-      //         this.lstOrdenCompra = rpta.ordenescompra
-      //     },
-      //     error:(err)=>{
-      //         this.setSpinner(false);
-      //         this.serviceSharedApp.messageToast()
-      //     },
-      //     complete:() => {
-      //       this.setSpinner(false);
-      //     }
-      //   });
-      // this.$listSubcription.push($getListarOrdenCompra)
+      const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
+        .subscribe({
+          next: (rpta:any) => {
+              this.setSpinner(false);
+              console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
+              this.lstMovimientos = rpta.ordenescompra
+          },
+          error:(err)=>{
+              this.setSpinner(false);
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+            this.setSpinner(false);
+          }
+        });
+      this.$listSubcription.push($getListarOrdenCompra)
     }
+
 
     onVer(dato: any) {
      
         this.tituloDetalle =  dato.nomalmacen;
-        
+        this.dataDet = {
+          idcodigo: dato.idordencompra,
+          paramReg:'V',
+          idtipodocprc: 11
+        } 
         this.vistaLista = false;
     }
 
     onEditar(dato: any) {
       
         this.tituloDetalle = dato.nomalmacen;
-        
+        this.dataDet = {
+          idcodigo: dato.idordencompra,
+          paramReg:'E',
+          idtipodocprc: 11
+        } 
         this.vistaLista = false;
     }
 
@@ -139,8 +150,12 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR INGRESO DE REQUERIMIENTO INTERNO";
-      
+      this.tituloDetalle = "REGISTRAR INGRESO POR TRASLADO";
+      this.dataDet = {
+        idcodigo: 0,
+        paramReg:'N',
+        idtipodocprc: 11
+      } 
       this.vistaLista = false;
     }
 

@@ -8,11 +8,15 @@ import { SharedPrimeNgModule } from '@primeNgModule';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { CDetalleMovTrasladoComponent } from './c-detallemovtraslado/c-detallemovtras.component';
+import { AlmacenService } from '../service/almacenServices';
+import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 
 
 @NgModule({
   declarations: [
-    CIngresoPorTrasladoComponent
+    CIngresoPorTrasladoComponent,
+    CDetalleMovTrasladoComponent
   ],
   imports: [
     CommonModule,
@@ -21,7 +25,8 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
+    RegistroProveedorModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })
 export class IngresoPorTrasladoModule { }

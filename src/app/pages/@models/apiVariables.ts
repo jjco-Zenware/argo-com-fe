@@ -11,6 +11,7 @@ const controllerMain: string = webApi+'Main';
 const controllerArchivo: string = webApi+'Archivo';
 const controllerPerfil: string = webApi+'Perfil';
 const controllerAlmacen: string = webApi+'Almacen';
+const controllerProducto: string = webApi+'Producto';
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -100,5 +101,10 @@ export const constantesApiWeb = {
     ListarAlamcen: controllerAlmacen + '/listarAlmacen/',
     GrabarAlamcen: controllerAlmacen + '/insertarAlmacen/',
     ordencompraaprobadasprovlist: controllerComercial + '/ordencompraaprobadasprovlist/',
-
+    listarProducto: controllerProducto + '/listarproducto',
+    prcProducto: controllerProducto + '/actualizarProducto/',
+    traerunoProducto: controllerProducto + '/traerUnoProducto/',
+    listarFamilia: controllerProducto + '/familialist',
+    listarSubFamilia: controllerProducto + '/subfamilialist/',
+    traerProductoPorCodigo: controllerProducto + '/traerProductoPorCodigo/',
 }

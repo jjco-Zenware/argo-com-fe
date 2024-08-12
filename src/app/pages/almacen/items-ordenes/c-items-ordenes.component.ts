@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
 import { ComprasService } from '../../compras/Service/compraServices';
+import { AlmacenService } from '../service/almacenServices';
 
 @Component({
   selector: 'app-c-items-ordenes',
@@ -47,7 +48,8 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private proyectosService: ProyectosService,
     private comprasService: ComprasService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private almacenService: AlmacenService
   ) { }
 
   get formContacto() { return this.registerFormMarca.controls; }
@@ -59,7 +61,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
     this.createFormContacto(); 
     this.createFormTag();   
     this.listarTipoProducto();
-    this.listarMarcas();
+    //this.listarMarcas();
     this.listarItemsTabla();
     this.listarItemsTag();
     
@@ -82,8 +84,8 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
     this.frmDatosItem = this.fb.group({
       idordencompraitem: [{ value: 0, disabled: false }],
       idordencompra: [{ value: 0, disabled: false }],
-      idtipoprod: [{ value: '', disabled: false }, [Validators.required]],
-      idprod: [{ value: 0, disabled: false }],
+      idtipoprod: [{ value: 0, disabled: false }, [Validators.required]],
+      idprod: [{ value: '', disabled: false }],
       descripcion: [{ value: '', disabled: false }, [Validators.required]],
       cantidad: [{ value: 1, disabled: false }, [Validators.required]],
       codunidad: [{ value: 'UNID', disabled: false }],
@@ -115,6 +117,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
       nomunidad: [{ value: '', disabled: false }],
       valor: [{ value: '', disabled: false }],
       ref1: [{ value: '', disabled: false }],
+      codproducto: [{ value: '', disabled: false }],
     })
   }
 
@@ -188,21 +191,21 @@ createFormTag() {
 
   }
 
-  listarMarcas() {
-    const $listarMarcas = this.proyectosService.obtenerMarcas().subscribe({
-      next: (rpta: any) => {
-        this.lstMarcas = rpta;
-      },
-      error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => {
-      },
-    });
-    this.$listSubcription.push($listarMarcas);
+  // listarMarcas() {
+  //   const $listarMarcas = this.proyectosService.obtenerMarcas().subscribe({
+  //     next: (rpta: any) => {
+  //       this.lstMarcas = rpta;
+  //     },
+  //     error: (err) => {
+  //       console.info('error : ', err);
+  //       this.serviceSharedApp.messageToast()
+  //     },
+  //     complete: () => {
+  //     },
+  //   });
+  //   this.$listSubcription.push($listarMarcas);
 
-  }
+  // }
 
   calcularBCQ(event: any) {
     if (event.value > 0) {
@@ -219,39 +222,46 @@ createFormTag() {
   }
 
   guardarItem() {
-
-    if (this.frmDatosItem.get('descripcion')?.value == 0) {
-      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Descripción'});
+    if (this.frmDatosItem.get('idprod')?.value === 0 || this.frmDatosItem.get('idprod')?.value === null) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Ingresar Código'});
       return;
     }
 
-      
-
-    if (this.frmDatosItem.invalid) {
-      this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
+    if (this.frmDatosItem.get('nommarca')?.value === '' || 
+    this.frmDatosItem.get('nommarca')?.value === null|| 
+    this.frmDatosItem.get('descripcion')?.value === ''|| 
+    this.frmDatosItem.get('descripcion')?.value === null) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Debe buscar el Producto...'});
       return;
     }
 
-    if (this.frmDatosItem.get('idtipoprod')?.value  === 6 || this.frmDatosItem.get('idtipoprod')?.value  === 7) {
-      if (this.frmDatosItem.get('fecini')?.value === null) {
-        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Inicio'});
-        return;
-      }
-      if (this.frmDatosItem.get('fecfin')?.value === null) {
-        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Final'});
-        return;
-      }
-      const _fecini = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecini')?.value);
-      this.frmDatosItem.get('fecini')?.setValue(_fecini);
-      const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
-      this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
-    }   
+   
 
-    const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
-    this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
+    // if (this.frmDatosItem.invalid) {
+    //   this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
+    //   return;
+    // }
 
-    const _marca:string=this.lstMarcas.filter(x=>x.idmarca == this.frmDatosItem.get('idmarca')?.value)[0].nommarca;
-    this.frmDatosItem.get('nommarca')?.setValue(_marca)
+    // if (this.frmDatosItem.get('idtipoprod')?.value  === 6 || this.frmDatosItem.get('idtipoprod')?.value  === 7) {
+    //   if (this.frmDatosItem.get('fecini')?.value === null) {
+    //     this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Inicio'});
+    //     return;
+    //   }
+    //   if (this.frmDatosItem.get('fecfin')?.value === null) {
+    //     this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Final'});
+    //     return;
+    //   }
+    //   const _fecini = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecini')?.value);
+    //   this.frmDatosItem.get('fecini')?.setValue(_fecini);
+    //   const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
+    //   this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
+    // }   
+
+    // const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
+    // this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
+
+    // const _marca:string=this.lstMarcas.filter(x=>x.idmarca == this.frmDatosItem.get('idmarca')?.value)[0].nommarca;
+    // this.frmDatosItem.get('nommarca')?.setValue(_marca)
     
     const _nomunidad:string=this.lstUnidades.filter(x=>x.iditem == this.frmDatosItem.get('idunidad')?.value)[0].valoritem;
     this.frmDatosItem.get('nomunidad')?.setValue(_nomunidad)
@@ -267,41 +277,8 @@ createFormTag() {
     this.refDatoItem.close({objeto});
   }
 
-  NuevaMarca()  {
-    this.submitted = false;
-    this.headerTitle= 'Nueva Marca' ;
-    this.marcaVisible = true;
-  }
 
-  guardarMarca() {
-      this.submitted = true;
-      if (this.registerFormMarca.invalid) {
-          this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
-          return;
-      }
-      if(this.submitted)
-      {
-          const objeto = {
-              idmarca: 0,
-              nommarca: this.registerFormMarca.value.nommarca,
-              idproveedor: 0
-            }
-            const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
-              next: (rpta: any) => {
-                this.listarMarcas();
-              },
-              error: (err) => {
-                console.info('error : ', err);
-                this.serviceSharedApp.messageToast()
-              },
-              complete: () => {
-              },
-            });
-            this.$listSubcription.push($prcMarcas);
-
-          this.marcaVisible=false;
-      }
-  }
+  
 
   verControles(dato: any){
     console.log('verControles', dato);
@@ -441,5 +418,36 @@ createFormTag() {
       iditemdocumento: this.frmDatosItem.value.idordencompraitem
     }
     this.listaTag.unshift(objeto);
+  }
+
+  buscarProducto(){
+    const valor = this.frmDatosItem.get('codproducto')?.value;
+    console.log('buscarProducto...', valor);
+
+    if (valor === '' || valor === null) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Ingresar Código Producto...'});
+      return;
+    }
+
+    this.traerUnoProducto(valor);
+  }
+
+  traerUnoProducto(codigo: any){   
+    const $traerUno = this.almacenService.traerProductoPorCodigo(codigo)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta.traerUnoProducto', rpta);  
+          this.frmDatosItem.get('idprod')?.setValue(rpta.idprod);
+          this.frmDatosItem.get('nommarca')?.setValue(rpta.nommarca);
+          this.frmDatosItem.get('descripcion')?.setValue(rpta.despro); 
+          this.frmDatosItem.get('idmarca')?.setValue(rpta.idmarca);         
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {        
+        }
+      });
+    this.$listSubcription.push($traerUno)
   }
 }

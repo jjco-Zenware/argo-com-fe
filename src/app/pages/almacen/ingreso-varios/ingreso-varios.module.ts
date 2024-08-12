@@ -9,11 +9,14 @@ import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { IngresosVariosRoutingModule } from './ingreso-varios-routing.module';
 import { CIngresosVariosComponent } from './c-ingreso-varios/c-ingreso-varios.component';
+import { CDetalleMovVariosComponent } from './c-detallemovvarios/c-detallemovvarios.component';
+import { AlmacenService } from '../service/almacenServices';
 
 
 @NgModule({
   declarations: [
-    CIngresosVariosComponent
+    CIngresosVariosComponent,
+    CDetalleMovVariosComponent
   ],
   imports: [
     CommonModule,
@@ -23,6 +26,6 @@ import { CIngresosVariosComponent } from './c-ingreso-varios/c-ingreso-varios.co
     FormsModule,
     ReactiveFormsModule,
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })
 export class IngresoVariosModule { }

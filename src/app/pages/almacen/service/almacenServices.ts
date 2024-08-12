@@ -9,12 +9,10 @@ export class AlmacenService {
 
     ListarAlamcen(objeto: any) {
         const url = `${constantesApiWeb.ListarAlamcen}`;
-        console.log("url alamacen : ", url);
         return this.http.post<any>(url, objeto)
     }
 
     GrabarAlamcen(objeto: any) {
-        console.log("prcClientes : ", objeto);
         const url = `${constantesApiWeb.GrabarAlamcen}`;
         return this.http.post<any>(url, objeto)
     }
@@ -30,5 +28,33 @@ export class AlmacenService {
     //     return this.http.get<any>(url);
     // }
 
+    listarProducto() {
+        const url = `${constantesApiWeb.listarProducto}`;
+        return this.http.get<any>(url)
+    }
 
+    prcProducto(objeto: any) {
+        const url = `${constantesApiWeb.prcProducto}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    traerunoProducto(codigo: any) {
+        const url = `${constantesApiWeb.traerunoProducto}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    listarFamilia() {
+        const url = `${constantesApiWeb.listarFamilia}`;
+        return this.http.get<any>(url);
+    }
+
+    listarSubFamilia(codigo: any) {
+        const url = `${constantesApiWeb.listarSubFamilia}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    traerProductoPorCodigo(codigo: any) {
+        const url = `${constantesApiWeb.traerProductoPorCodigo}${codigo}`;
+        return this.http.get<any>(url);
+    }
 }

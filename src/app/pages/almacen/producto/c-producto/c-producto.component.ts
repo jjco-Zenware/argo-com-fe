@@ -6,6 +6,7 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
+import { AlmacenService } from '../../service/almacenServices';
 
 @Component({
   selector: 'app-c-producto',
@@ -18,7 +19,7 @@ export class CProductoComponent implements OnInit, OnDestroy{
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
     visDetalle: boolean = false;
-    lstAlmacen: any;
+    lstProducto: any;
     tituloDetalle!: string;
     blockedDocument: boolean = false;
     mensajeSpinner: string = "";
@@ -32,7 +33,7 @@ export class CProductoComponent implements OnInit, OnDestroy{
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
         public dialogService: DialogService  ,
-        //private proyectosService: ProyectosService,     
+        private almacenService: AlmacenService,     
         private serviceSharedApp: SharedAppService,
         
       ){          
@@ -45,9 +46,9 @@ export class CProductoComponent implements OnInit, OnDestroy{
           { field: 'idordencompra', header: 'ID' },
           { field: 'idordencompra', header: 'CÓDIGO' },
           { field: 'nomtipoorden', header: 'PRODUCTO ' },
-          { field: 'nomtipoorden', header: 'TIPO ' },
           { field: 'codigonroorden', header: 'FAMILIA' },
           { field: 'nomcomercial', header: 'SUBFAMILIA' },
+          { field: 'stock', header: 'STOCK' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
@@ -87,45 +88,40 @@ export class CProductoComponent implements OnInit, OnDestroy{
     }
 
     getListar(){
-      //this.setSpinner(true);
-      //this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-      //console.log('this.frmDatos...', this.frmDatos.value);
-      // const objeto = {
-      //   ...this.frmDatos.value,
-      //   idtipodocprc: 8
-      // }
-
-      // const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
-      //   .subscribe({
-      //     next: (rpta:any) => {
-      //         this.setSpinner(false);
-      //         console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
-      //         this.lstOrdenCompra = rpta.ordenescompra
-      //     },
-      //     error:(err)=>{
-      //         this.setSpinner(false);
-      //         this.serviceSharedApp.messageToast()
-      //     },
-      //     complete:() => {
-      //       this.setSpinner(false);
-      //     }
-      //   });
-      // this.$listSubcription.push($getListarOrdenCompra)
+      this.setSpinner(true);
+      this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+    
+      const $getListarProducto = this.almacenService.listarProducto()
+        .subscribe({
+          next: (rpta:any) => {
+              this.setSpinner(false);
+              console.log('rpta getListarProducto', rpta);
+              this.lstProducto = rpta
+          },
+          error:(err)=>{
+              this.setSpinner(false);
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+            this.setSpinner(false);
+          }
+        });
+      this.$listSubcription.push($getListarProducto)
     }
 
     onVer(dato: any) {     
-        this.tituloDetalle =  dato.nomalmacen;
+        this.tituloDetalle =  dato.despro;
         this.data = {
-          idcodigo: dato.idproducto,
+          idcodigo: dato.idprod,
           paramReg:'V'
         }        
         this.vistaLista = false;
     }
 
     onEditar(dato: any) {      
-        this.tituloDetalle = dato.nomalmacen;
+        this.tituloDetalle = dato.despro;
         this.data = {
-          idcodigo: dato.idproducto,
+          idcodigo: dato.idprod,
           paramReg:'E'
         }  
         this.vistaLista = false;

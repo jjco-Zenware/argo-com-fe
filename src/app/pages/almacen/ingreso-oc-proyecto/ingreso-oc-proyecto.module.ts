@@ -12,11 +12,14 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
 import { AlmacenService } from '../service/almacenServices';
+import { CDetalleMovComponent } from './c-detallemov/c-detallemov.component';
+import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 
 
 @NgModule({
   declarations: [
-    CIngresoOcProyectoComponent   
+    CIngresoOcProyectoComponent,
+    CDetalleMovComponent   
   ],
   imports: [
     CommonModule,
@@ -27,7 +30,8 @@ import { AlmacenService } from '../service/almacenServices';
     ReactiveFormsModule,
     SplitButtonModule,
     SelectButtonModule,
-    TagModule
+    TagModule,
+    RegistroProveedorModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })

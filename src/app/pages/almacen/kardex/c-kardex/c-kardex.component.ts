@@ -7,6 +7,7 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-c-kardex',
@@ -23,15 +24,19 @@ export class CKardexComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
+    lstProducto:any;
 
     constructor(
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
         public dialogService: DialogService  ,
-        //private proyectosService: ProyectosService,     
+        //private proyectosService: ProyectosService,   
+        private confirmationService: ConfirmationService,  
         private serviceSharedApp: SharedAppService,
+        private messageService: MessageService,
         
-      ){          
+      ){    
+        
     }
 
     ngOnInit(): void{
@@ -45,6 +50,15 @@ export class CKardexComponent implements OnInit, OnDestroy{
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
+
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            header: 'Aviso',
+            message:  'Existen Nuevas Funcionalidades...',
+            accept: () => {
+              this.acceptfuncionalidad();
+            }
+        });
     }
 
     createFrm(){
@@ -152,5 +166,19 @@ export class CKardexComponent implements OnInit, OnDestroy{
       });
       FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
     }
+
+    acceptfuncionalidad() {
+        this.confirmationService.confirm({
+            message: 'Se agrego este nuevo filtro para la busqueda de Productos...',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => {
+                this.messageService.add({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted' });
+            },
+            reject: () => {
+                this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            }
+        });
+    }
+    
 }
 

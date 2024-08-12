@@ -24,7 +24,7 @@
             </div>
         </form> 
 
-        <p-table #dt1 [value]="lstAlmacen" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+        <p-table #dt1 [value]="lstProducto" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
             currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
 
@@ -52,17 +52,17 @@
                     </th>
                     <th [ngStyle]="{'width':'70px'}" class="surface-200" >
                         <div class="justify-content-between align-items-center">
-                            TIPO 
-                        </div>
-                    </th>
-                    <th [ngStyle]="{'width':'70px'}" class="surface-200" >
-                        <div class="justify-content-between align-items-center">
                             FAMILIA 
                         </div>
                     </th>
                     <th style="width: 150px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             SUBFAMILIA
+                        </div>
+                    </th>
+                    <th style="width: 40px" class="surface-200" >
+                        <div [ngStyle]="{'width':'40px','text-align':'center'}">
+                            STOCK
                         </div>
                     </th>
                     <th style="width: 80px" class="surface-200" >
@@ -91,32 +91,32 @@
                     </td>
                     <td >
                         <div [ngStyle]="{'width':'20px'}">
-                            {{data.idordencompra}}
+                            {{data.idprod}}
                         </div>
                     </td>
                     <td >
                         <div [ngStyle]="{'width':'50px'}">
-                            {{data.idordencompra}}
+                            {{data.codproducto}}
                         </div>
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'70px'}">
-                            {{data.nomtipoorden}}
+                            {{data.despro}}
                         </div>
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'100px'}">
-                            {{data.codigonroorden}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.codigonroorden}}
+                            {{data.nomfamilia}}
                         </div>
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'60px'}">
-                            {{data.nommoneda | uppercase}}
+                            {{data.nomsubfamilia | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngClass]="{'width':'30px', 'outofstock': data.stock === 0, 'lowstock': (data.stock > 0 && data.stock < 10),'instock': data.stock > 0}">
+                            {{data.stock}}
                         </div>
                     </td>
                     <td>                       
@@ -127,7 +127,7 @@
                     <td>
                         <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                             <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                            <button *ngIf="data.estado === 'REG' || data.estado === 'OBS'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                             
                         </div>
                     </td>

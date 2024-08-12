@@ -76,7 +76,7 @@
                             </div>                            
                             <span>
                                 <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
-                                optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                optionValue="idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="getOCtraerItems($event.value)"></p-dropdown>
                             </span>
                         </div> 
                         <!-- <div class="sm:col-6 lg:col-4 md:col-3 h-4rem">
@@ -161,11 +161,9 @@
                         </span>
                     </div>
                 </ng-template>
-                <div *ngIf="verItems" class="flex mt-3 ml-2 gap-2">
+                <!-- <div *ngIf="verItems" class="flex mt-3 ml-2 gap-2">
                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
-                    <!-- <button pButton class="font-semibold p-button-outlined w-auto" pTooltip="Descargar Plantilla" icon="pi pi-cloud-download" (click)="descargarPlantilla()" label="Descargar" ></button>
-                    <button pButton class="font-semibold w-auto bg-green-400" pTooltip="Importar Plantilla" icon="pi pi-cloud-upload" label="Importar" (click)="importarPlantilla()"></button> -->
-                </div>
+                </div> -->
                 <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
                 [(selection)]="selectedProducts" [scrollable]="true"  styleClass="p-datatable-sm">
                     <ng-template pTemplate="header">
@@ -184,7 +182,7 @@
                             <!-- <th class="surface-200">P. UNI.</th> -->
                             <th class="surface-200">CANT.</th>
                             <!-- <th class="surface-200">TOTAL</th> -->
-                            <th class="surface-200"></th>
+                            <!-- <th class="surface-200"></th> -->
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
@@ -204,12 +202,12 @@
                             <!-- <td>{{ product.preciocosto | number: '0.2'}}</td> -->
                             <td>{{ product.cantidad }}</td>
                             <!-- <td>{{ product.preciocostototal | number: '0.2'}}</td> -->
-                            <td>
+                            <!-- <td>
                                 <div *ngIf="verItems" class="flex justify-content-end">
                                     <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
                                     <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
                                 </div>
-                            </td>
+                            </td> -->
                         </tr>
                     </ng-template>
                     <!-- <ng-template pTemplate="footer">

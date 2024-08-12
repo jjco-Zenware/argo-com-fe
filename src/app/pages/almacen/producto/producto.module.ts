@@ -23,8 +23,7 @@ import { AlmacenService } from '../service/almacenServices';
     SharedAppModule,
     SharedPrimeNgModule,
     FormsModule,
-    ReactiveFormsModule,
-    
+    ReactiveFormsModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })

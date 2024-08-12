@@ -6,18 +6,19 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
+import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 
 @Component({
-  selector: 'app-c-salida-varios',
-  templateUrl: './c-salida-varios.component.html',
-  styleUrls: ['./c-salida-varios.component.scss']
+  selector: 'app-c-salida-por-traslado',
+  templateUrl: './c-salida-por-traslado.component.html',
+  styleUrls: ['./c-salida-por-traslado.component.scss']
 })
 export class CSalidaVariosComponent implements OnInit, OnDestroy{
 
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
     visDetalle: boolean = false;
-    lstAlmacen: any;
+    lstMovimientos: any;
     tituloDetalle!: string;
     blockedDocument: boolean = false;
     mensajeSpinner: string = "";
@@ -25,12 +26,13 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
+    dataDet: any;
 
     constructor(
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
         public dialogService: DialogService  ,
-        //private proyectosService: ProyectosService,     
+        private proyectosService: ProyectosService,     
         private serviceSharedApp: SharedAppService,
         
       ){          
@@ -83,43 +85,51 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
     }
 
     getListar(){
-      //this.setSpinner(true);
-      //this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-      //console.log('this.frmDatos...', this.frmDatos.value);
-      // const objeto = {
-      //   ...this.frmDatos.value,
-      //   idtipodocprc: 8
-      // }
+      this.setSpinner(true);
+      this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+      console.log('this.frmDatos...', this.frmDatos.value);
+      const objeto = {
+        ...this.frmDatos.value,
+        idtipodocprc: 12
+      }
 
-      // const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
-      //   .subscribe({
-      //     next: (rpta:any) => {
-      //         this.setSpinner(false);
-      //         console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
-      //         this.lstOrdenCompra = rpta.ordenescompra
-      //     },
-      //     error:(err)=>{
-      //         this.setSpinner(false);
-      //         this.serviceSharedApp.messageToast()
-      //     },
-      //     complete:() => {
-      //       this.setSpinner(false);
-      //     }
-      //   });
-      // this.$listSubcription.push($getListarOrdenCompra)
+      const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
+        .subscribe({
+          next: (rpta:any) => {
+              this.setSpinner(false);
+              console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
+              this.lstMovimientos = rpta.ordenescompra
+          },
+          error:(err)=>{
+              this.setSpinner(false);
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+            this.setSpinner(false);
+          }
+        });
+      this.$listSubcription.push($getListarOrdenCompra)
     }
 
     onVer(dato: any) {
      
         this.tituloDetalle =  dato.nomalmacen;
-        
+        this.dataDet = {
+          idcodigo: dato.idordencompra,
+          paramReg:'V',
+          idtipodocprc: 12
+        } 
         this.vistaLista = false;
     }
 
     onEditar(dato: any) {
       
         this.tituloDetalle = dato.nomalmacen;
-        
+        this.dataDet = {
+          idcodigo: dato.idordencompra,
+          paramReg:'E',
+          idtipodocprc: 12
+        }
         this.vistaLista = false;
     }
 
@@ -139,7 +149,11 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
 
     onNuevo() {        
       this.tituloDetalle = "REGISTRAR SALIDA VARIOS";
-      
+      this.dataDet = {
+        idcodigo: 0,
+        paramReg:'N',
+        idtipodocprc: 12
+      }
       this.vistaLista = false;
     }
 

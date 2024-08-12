@@ -8,19 +8,19 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
-import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
-import { ComprasService } from '../../compras/Service/compraServices';
-import { CModalExcTransacComponent } from '../../compras/orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
-import { AlmacenService } from '../service/almacenServices';
-import { CItemOrdenesComponent } from '../items-ordenes/c-items-ordenes.component';
+import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
+import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
+import { AlmacenService } from '../../service/almacenServices';
+import { CModalExcTransacComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
+import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
 
 @Component({
-  selector: 'app-c-detallemov',
-  templateUrl: './c-detallemov.component.html',
-  styleUrls: ['./c-detallemov.component.scss']
+  selector: 'app-c-detallemovvarios',
+  templateUrl: './c-detallemovvarios.component.html',
+  styleUrls: ['./c-detallemovvarios.component.scss']
 })
-export class CDetalleMovComponent implements OnInit, OnDestroy{
+export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
   @Input() IA_data: any;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
@@ -248,8 +248,8 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
         next: (rpta:any) => {
           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
             this.setSpinner(false);
-            this.ordenCompra = rpta.ordencompra[0];
-            this.getOcproveedor(rpta.ordencompra[0].idproveedor);      
+            this.ordenCompra = rpta.ordencompra[0]; 
+            this.getOcproveedor(rpta.ordencompra[0].idproveedor);     
             if (rpta.ordencompra[0].items !== undefined) {
               this.lstItemOC = rpta.ordencompra[0].items;
             }  
@@ -439,11 +439,10 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
     console.log('CItemOrdenesComponent', data);
     const refItem = this.dialogService.open(CItemOrdenesComponent, {
       data: data,
-      header: data.length == 0 ? "Agregar Registro" : "Editar Registro - " + data.idordencompraitem,
+      header: data.length == 0 ? "Agregar Item" : "Editar Item - " + data.idordencompraitem,
       closeOnEscape: false,
       styleClass: 'testDialog',
-      width: ' 60%',
-      //height: '55%'
+      width: ' 40%'
     });
     refItem.onClose.subscribe((rpta: any) => {
       
@@ -566,35 +565,35 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && this.registerFormRegistro.value.idproveedor === null)
-      {
-          this.errorMensaje="Seleccionar Proveedor...!";
-          _error = true;
-      }
+      // if (!_error && this.registerFormRegistro.value.idproveedor === null)
+      // {
+      //     this.errorMensaje="Seleccionar Proveedor...!";
+      //     _error = true;
+      // }
 
-      if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null))
-      {
-          this.errorMensaje="Seleccionar Orden Compra...!";
-          _error = true;
-      }
+      // if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null))
+      // {
+      //     this.errorMensaje="Seleccionar Orden Compra...!";
+      //     _error = true;
+      // }
 
-      if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
-      {
-          this.errorMensaje="Ingresar N° de Referencia...!";
-          _error = true;
-      }
+      // if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
+      // {
+      //     this.errorMensaje="Ingresar N° de Referencia...!";
+      //     _error = true;
+      // }
 
-      if (!_error && this.registerFormRegistro.value.idmoneda === null)
-      {
-            this.errorMensaje="Seleccionar Moneda...!";
-            _error = true;
-      }
+      // if (!_error && this.registerFormRegistro.value.idmoneda === null)
+      // {
+      //       this.errorMensaje="Seleccionar Moneda...!";
+      //       _error = true;
+      // }
 
-      if (!_error && this.registerFormRegistro.value.codformapago === null)
-      {
-            this.errorMensaje="Seleccionar Termino de Pago...!";
-            _error = true;
-      }
+      // if (!_error && this.registerFormRegistro.value.codformapago === null)
+      // {
+      //       this.errorMensaje="Seleccionar Termino de Pago...!";
+      //       _error = true;
+      // }
 
       // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
       // {
@@ -622,6 +621,46 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
           }
         });
       this.$listSubcription.push($getListar)
+    }
+
+    getOCtraerItems(dato: any) {  
+      console.info('dato : ', dato);
+      this.lstItemOC = []
+      const objeto ={
+        idordencompra: dato,
+        idusuario: constantesLocalStorage.idusuario
+      }
+      const $personaProveedorlist = this.proyectosService.ordenCompraTraeruno(objeto).subscribe({
+          next: (rpta: any) => {
+              this.setSpinner(false);
+              console.info('getOCtraerItems : ', rpta);  
+
+              
+
+              if (rpta.ordencompra[0].items !== undefined) {
+
+                const data = rpta.ordencompra[0].items.map((item: any) => ({
+                  ...item,
+                  idordencompraitem: 0,    
+                  idordencompra: this.idMovimiento,   
+                }))
+                this.lstItemOC = data;
+              }
+              console.info('lstItemOC : ', this.lstItemOC);  
+          },
+          error: (err) => {
+              this.setSpinner(false);
+              console.info('error : ', err);
+              this.messageService.clear();
+              this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: mensajesQuestion.msgErrorGenerico,
+              });
+          },
+          complete: () => {},
+      });
+      this.$listSubcription.push($personaProveedorlist);
     }
 
 }

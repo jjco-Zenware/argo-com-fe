@@ -9,11 +9,15 @@ import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CSalidaTrasladoComponent } from './c-salida-por-traslado/c-salida-por-traslado.component';
 import { SalidaTrasladoRoutingModule } from './salida-por-traslado-routing.module';
+import { CDetalleMovSalTrasladoComponent } from './c-detallemovsaltras/c-detallemovsaltras.component';
+import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
+import { AlmacenService } from '../service/almacenServices';
 
 
 @NgModule({
   declarations: [
-    CSalidaTrasladoComponent
+    CSalidaTrasladoComponent,
+    CDetalleMovSalTrasladoComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +26,8 @@ import { SalidaTrasladoRoutingModule } from './salida-por-traslado-routing.modul
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
+    RegistroProveedorModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })
 export class SalidaTrasladoModule { }

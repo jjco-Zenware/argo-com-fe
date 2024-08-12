@@ -1,7 +1,7 @@
 <div class="w-full flex flex-column gap-3 px-3 pb-6" (keydown.enter)="validaNombreUsuario()">
     <span class="p-input-icon-left">
         <i class="pi pi-envelope"></i>
-        <input type="text" class="w-full" [formControl]="loginUser" pInputText placeholder="Usuario" />
+        <input type="text" class="w-full p-inputtext-sm" [formControl]="loginUser" pInputText placeholder="Usuario" />
     </span>
     <button pButton pRipple class="w-full my-3 px-3" style="background-color: #03A9F4" label="Siguiente"
         [loading]="isLoading" (click)="validaNombreUsuario()"></button>

@@ -15,7 +15,7 @@ import { AppSidebarComponent } from './sidebar/app.sidebar.component';
 import { AppTopbarComponent } from './topbar/app.topbar.component';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { MenuService } from './app.menu.service';
-import { PanelMenuModule } from 'primeng/panelmenu';
+import { MenuModule } from 'primeng/menu';
 
 @NgModule({
     declarations: [
@@ -36,7 +36,7 @@ import { PanelMenuModule } from 'primeng/panelmenu';
         AppConfigModule,
         SharedPrimeNgModule,
         ReactiveFormsModule,
-        PanelMenuModule 
+        MenuModule 
     ],
     exports: [
         AppBreadcrumbComponent,
