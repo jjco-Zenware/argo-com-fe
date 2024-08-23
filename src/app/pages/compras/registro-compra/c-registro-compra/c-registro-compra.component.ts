@@ -29,6 +29,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
   dataPrc:any;
   blockedDocument: boolean = false;
     mensajeSpinner: string = "";
+    lstProveedores: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -42,13 +43,12 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void{
       this.createFrm();
+      this.listaProveedores();
       this.getListar();
       this.cols = [
         { field: 'idordencompra', header: 'REG COMPRA' },
         { field: 'nomtipoorden', header: 'PROVEEDOR' },
         { field: 'codigonroorden', header: 'N° FACTURA' },
-        { field: 'nomcomercial', header: 'COD PROYECTO' },
-        { field: 'nommoneda', header: 'PROYECTO' },
         { field: 'codigoproyecto', header: 'MONEDA' },
         { field: 's_monto', header: 'SUBTOTAL' },
         { field: 's_monto', header: 'IGV' },
@@ -71,6 +71,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}],       
         fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],     
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
+        idproveedor: [{value: '',disabled: false}],
     }) 
   }
 
@@ -87,7 +88,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
-            console.log('rpta getListar', rpta.ordenescompra);
+            console.log('rpta getListar', rpta);
             this.lstCompras = rpta.ordenescompra
         },
         error:(err)=>{
@@ -101,8 +102,28 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($getListarOrdenCompra)
   }
 
+  listaProveedores() {
+
+    const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+      next: (rpta: any) => {
+        this.lstProveedores = rpta;
+        console.log('this.lstProveedores', this.lstProveedores);
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($getClientes);
+
+  }
+
   onVer(data: dOperacion) {
       console.log('onVer...', data);
+      this.dataPrc = {
+        idordencompra: data.idordencompra,
+        paramReg:'V'
+      }
       this.tituloDetalle = "Ver Orden de Compra/Servicio N° " + data.idordencompra;
       this.vistaLista = false;
       this.visDetalle = true;
@@ -110,18 +131,15 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
   }
 
   onEditar(data: dOperacion) {
-      console.log('onVer...', data);
+      console.log('onEditar...', data);
+      this.dataPrc = {
+        idordencompra: data.idordencompra,
+        paramReg:'E'
+      }
       this.tituloDetalle = "Editar Compra/Servicio N° " + data.idordencompra;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
-  }
-  verCotiza(data: dOperacion) {
-      console.log('onVer...', data);
-      this.tituloDetalle = "Cotización de Compra/Servicio N° " + data.idordencompra;
-      this.vistaLista = false;
-      this.visDetalle = false;
-      this.visQuote = true;
   }
 
   getDetalle(dato:boolean){
@@ -132,6 +150,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
 
   getBack() {
       this.vistaLista = true;
+      this.getListar();
       this.visDetalle = false;
       this.visQuote = false;
     }

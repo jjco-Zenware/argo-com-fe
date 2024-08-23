@@ -11,6 +11,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CDetalleMovTrasladoComponent } from './c-detallemovtraslado/c-detallemovtras.component';
 import { AlmacenService } from '../service/almacenServices';
 import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { RegistroProveedorModule } from '../../compras/registro-proveedor/regist
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
-    RegistroProveedorModule
+    RegistroProveedorModule,
+    TagModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })

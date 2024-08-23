@@ -12,6 +12,7 @@ import { SalidaTrasladoRoutingModule } from './salida-por-traslado-routing.modul
 import { CDetalleMovSalTrasladoComponent } from './c-detallemovsaltras/c-detallemovsaltras.component';
 import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 import { AlmacenService } from '../service/almacenServices';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { AlmacenService } from '../service/almacenServices';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
-    RegistroProveedorModule
+    RegistroProveedorModule,
+    TagModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })

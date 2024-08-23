@@ -599,7 +599,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       header: 'Confirmación',
       message:  '¿Desea Eliminar Item ' + '<b>' + data.descripcion + '</b>' + '?' ,
       accept: () => {
-        if (data.idcotizaitem > 0) {
+        if (data.idordencompra > 0) {
           const _posAll: number = this.lstItemOC.findIndex((x => x.idordencompraitem == data.idordencompraitem))
           if (_posAll != -1) {
           this.lstItemOC.splice(_posAll, 1)

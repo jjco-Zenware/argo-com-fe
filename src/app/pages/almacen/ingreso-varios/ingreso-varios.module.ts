@@ -11,6 +11,8 @@ import { IngresosVariosRoutingModule } from './ingreso-varios-routing.module';
 import { CIngresosVariosComponent } from './c-ingreso-varios/c-ingreso-varios.component';
 import { CDetalleMovVariosComponent } from './c-detallemovvarios/c-detallemovvarios.component';
 import { AlmacenService } from '../service/almacenServices';
+import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
@@ -25,6 +27,8 @@ import { AlmacenService } from '../service/almacenServices';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
+    RegistroProveedorModule,
+    TagModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })

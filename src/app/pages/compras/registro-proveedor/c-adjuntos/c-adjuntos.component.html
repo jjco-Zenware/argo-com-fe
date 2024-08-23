@@ -1,11 +1,11 @@
 <div  class="flex grid col">
     <div *ngIf="verAcciones" class="field col-5">
         <label class="block font-semibold text-blue-600">Descripción</label>
-        <input pInputText type="text" class="mt-1 w-full" [formControl]="descripcion" placeholder="Ingresar Descripción para Adjuntar Archivo..."/>
+        <input pInputText type="text" class="mt-1 w-full p-inputtext-sm"[formControl]="descripcion" placeholder="Ingresar Descripción para Adjuntar Archivo..."/>
     </div>
     <div *ngIf="verAcciones" class="field mt-6">
         <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" [auto]="true" chooseLabel="Archivo" chooseIcon="pi pi-file" 
-            class="text-sm" [disabled]="disabUpload" (uploadHandler)="onUpload($event, fubauto)" >
+            class="text-sm p-inputtext-sm" [disabled]="disabUpload" (uploadHandler)="onUpload($event, fubauto)" >
         </p-fileUpload>
     </div>
 </div>

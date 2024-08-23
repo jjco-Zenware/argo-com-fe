@@ -99,7 +99,7 @@ export const constantesApiWeb = {
 
 
     ListarAlamcen: controllerAlmacen + '/listarAlmacen/',
-    GrabarAlamcen: controllerAlmacen + '/insertarAlmacen/',
+    GrabarAlamcen: controllerAlmacen + '/almacenprc/',
     ordencompraaprobadasprovlist: controllerComercial + '/ordencompraaprobadasprovlist/',
     listarProducto: controllerProducto + '/listarproducto',
     prcProducto: controllerProducto + '/actualizarProducto/',
@@ -107,4 +107,11 @@ export const constantesApiWeb = {
     listarFamilia: controllerProducto + '/familialist',
     listarSubFamilia: controllerProducto + '/subfamilialist/',
     traerProductoPorCodigo: controllerProducto + '/traerProductoPorCodigo/',
+    buscarProducto: controllerAlmacen + '/buscarproducto',
+    almacenTraeruno: controllerAlmacen + '/traerUnoalmacen/',
+    buscarporRUC: controllerMain + '/personatraerunoruc',
+    kardexlistar: controllerAlmacen + '/kardexlistar',
+    productotaglist: controllerProducto + '/taglist/',
+    tagNew: controllerProducto + '/tagNew',
+    
 }

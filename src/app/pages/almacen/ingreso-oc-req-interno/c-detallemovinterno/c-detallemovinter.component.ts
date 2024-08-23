@@ -65,6 +65,8 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
   activeIndex: number = 0;
   lstAlmacen: any;
   selectedProducts: any;
+  _alm_idordencompra:number = 0;
+  selectedItems: any;
 
   constructor(
     private fb: FormBuilder,
@@ -155,7 +157,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       fecentrega: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
       terminosdepago:[{ value: '', disabled: false }],
       idalmacen:[{ value: 0, disabled: false }],
-      alm_idordencompra:[{ value: 0, disabled: false }],
+      alm_idordencompra:[{ value: this._alm_idordencompra, disabled: false }],
     });
   }
 
@@ -264,6 +266,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
           // this.s_monto_total = rpta.ordencompra[0].s_monto_total; 
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
           this.cargarMenu(rpta.ordencompra[0].acciones);
           this.mostrarBotones(rpta.ordencompra[0].estado);                
         },
@@ -558,6 +561,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
     let _error = false;
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
+    this.registerFormRegistro.get('alm_idordencompra').setValue(this._alm_idordencompra);
 
       if (this.registerFormRegistro.value.idalmacen === null || this.registerFormRegistro.value.idalmacen === 0)
       {
@@ -571,7 +575,8 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null))
+      if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null || 
+        this._alm_idordencompra === 0 || this._alm_idordencompra === null))
       {
           this.errorMensaje="Seleccionar Orden Compra...!";
           _error = true;
@@ -625,7 +630,9 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
 
     getOCtraerItems(dato: any) {  
       console.info('dato : ', dato);
+      this._alm_idordencompra = dato;
       this.lstItemOC = []
+      this.selectedItems=[];
       const objeto ={
         idordencompra: dato,
         idusuario: constantesLocalStorage.idusuario
@@ -633,16 +640,15 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       const $personaProveedorlist = this.proyectosService.ordenCompraTraeruno(objeto).subscribe({
           next: (rpta: any) => {
               this.setSpinner(false);
-              console.info('getOCtraerItems : ', rpta);  
-
-              
+              console.info('getOCtraerItems : ', rpta);                
 
               if (rpta.ordencompra[0].items !== undefined) {
 
                 const data = rpta.ordencompra[0].items.map((item: any) => ({
                   ...item,
                   idordencompraitem: 0,    
-                  idordencompra: this.idMovimiento,   
+                  idordencompra: this.idMovimiento, 
+                  coditem: 1  ,
                 }))
                 this.lstItemOC = data;
               }
@@ -661,6 +667,18 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
           complete: () => {},
       });
       this.$listSubcription.push($personaProveedorlist);
+    }
+
+    selectCheckbox(dato: any){
+      console.log('selectCheckbox...', dato);
+      console.log('selectCheckbox...', this.selectedItems);
+
+      const data = this.lstItemOC.map((item: any) => ({
+        ...item,
+        indcompleto: dato.checked === true ? true : false,
+      }))
+
+      this.lstItemOC = data;
     }
 
 }

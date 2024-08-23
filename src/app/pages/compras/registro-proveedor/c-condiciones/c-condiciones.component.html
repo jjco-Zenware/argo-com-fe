@@ -1,17 +1,17 @@
 <div class="flex">
     <div class="field col-2 -ml-3">
         <label class="font-semibold text-blue-600">Terminos de Pago</label>
-        <p-dropdown [options]="lstTermino" [ngModel]="idestado" optionLabel="valoritem" placeholder="Seleccionar..."
+        <p-dropdown [options]="lstTermino" [ngModel]="idestado" optionLabel="valoritem" placeholder="Seleccionar..." class="p-inputtext-sm"
                 optionValue="iditem" appendTo="body" [ngModelOptions]="{standalone: true}" (onChange)="saveTerminoPago($event.value)" ></p-dropdown>
     </div>
 </div>
 
 <div class="grid">
     <div class="flex justify-content-between col-12 -mt-3">
-        <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead2 w-full">
+        <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead2 w-full align-items-center">
             <span class="text-base font-semibold">LÍNEAS DE CRÉDITO</span>
         </div>
-        <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+        <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem">
             <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-plus" label="Agregar" (click)="agregarLinea()"></button>
         </div>
     </div>
@@ -127,7 +127,7 @@
                     </div>
                     <span class="p-fluid">
                         <input pInputText type="text" class="w-full" formControlName="nomlinea"/>
-                        <p class="text-red-600" *ngIf="submittedLinea && formLinea.nomlinea.errors">* Debe Ingresar Línea</p>
+                        <p class="text-red-600" *ngIf="submittedLinea && formLinea.nomlinea.errors" class="p-inputtext-sm">* Debe Ingresar Línea</p>
                     </span>
                 </div>
                 <div class="col-6 field h-4rem ">
@@ -136,7 +136,7 @@
                     </div>
                     <span class="p-fluid">
                         <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechavcto" dateType="string" 
-                            [readonlyInput]="true" appendTo="body" formControlName="fechavcto">
+                            [readonlyInput]="true" appendTo="body" formControlName="fechavcto" >
                         </p-calendar>
                         <p class="text-red-600" *ngIf="submittedLinea && formLinea.fechavcto.errors">* Debe Ingresar Desde</p>
                     </span>
@@ -158,7 +158,7 @@
                     </div>
                     <span class="p-fluid">
                         <p-dropdown [options]="lstMoneda" formControlName="idmoneda" placeholder="Seleccionar..." optionLabel="desmoneda"
-                          optionValue="idmoneda" appendTo="body" ></p-dropdown>
+                          optionValue="idmoneda" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
                           <p class="text-red-600" *ngIf="submittedLinea && formLinea.idmoneda.errors">* Debe Seleccionar Moneda</p>
                     </span>
                 </div>
@@ -167,7 +167,7 @@
                         <label class="block text-900 font-semibold mb-1">Monto</label>
                     </div>
                     <span class="p-fluid">
-                        <p-inputNumber class="w-full" formControlName="montolinea" locale="es-PE" mode="decimal" [minFractionDigits]="2"></p-inputNumber>
+                        <p-inputNumber class="w-full" formControlName="montolinea" locale="es-PE" mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"></p-inputNumber>
                         <p class="text-red-600" *ngIf="submittedLinea && formLinea.montolinea.errors">* Debe Ingresar Monto</p>
                     </span>
                 </div>
@@ -176,7 +176,7 @@
                         <label class="block text-900 font-semibold mb-1">Saldo</label>
                     </div>
                     <span class="p-fluid">
-                        <p-inputNumber class="w-full" formControlName="saldo" locale="es-PE" mode="decimal" [minFractionDigits]="2"></p-inputNumber>
+                        <p-inputNumber class="w-full" formControlName="saldo" locale="es-PE" mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"></p-inputNumber>
                         <p class="text-red-600" *ngIf="submittedLinea && formLinea.saldo.errors">* Debe Ingresar Saldo</p>
                     </span>
                     
@@ -184,7 +184,7 @@
                 
             </div>
             <div class="flex justify-content-end">
-                <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary w-auto"></button>
+                <button pButton icon="pi pi-check" label="Guardar" type="submit" class="p-button-primary w-auto h-2rem"></button>
             </div>
         </form>
 

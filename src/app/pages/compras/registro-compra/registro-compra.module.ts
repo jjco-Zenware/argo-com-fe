@@ -11,7 +11,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatoCompraComponent } from './c-dato-compra/c-dato-compra.component';
 import { ProyectosService } from '../proyectos-ganados/service/proyectos.service';
 import { OrdencompraService } from '../orden-compra-servicio/service/ordencompra.service';
-
+import { FieldsetModule } from 'primeng/fieldset';
+import { AlmacenModule } from '../../almacen/almacen.module';
+import { AlmacenService } from '../../almacen/service/almacenServices';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TagModule } from 'primeng/tag';
+import { RegistroProveedorModule } from '../registro-proveedor/registro-proveedor.module';
 
 @NgModule({
   declarations: [
@@ -24,8 +29,13 @@ import { OrdencompraService } from '../orden-compra-servicio/service/ordencompra
     SharedAppModule,
     SharedPrimeNgModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FieldsetModule ,
+    AlmacenModule,
+    InputNumberModule ,
+    TagModule,
+    RegistroProveedorModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService]
 })
 export class RegistroCompraModule { }

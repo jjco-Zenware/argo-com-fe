@@ -176,9 +176,11 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
       ref01: [{ value: '', disabled: false }],
       ref02: [{ value: '', disabled: false }],
       ref03: [{ value: '', disabled: false }],
-      codtipoorden:[{ value: 'OC', disabled: false }],
+      codtipoorden:[{ value: 'COT', disabled: false }],
       codigonroorden:[{ value: '', disabled: true }],
       nomproyecto:[{ value: '', disabled: false }],
+      nrodocumento:[{ value: '', disabled: false }],
+      direcresumen:[{ value: '', disabled: false }],
     });
   }
 
@@ -574,8 +576,10 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
     const $personaProveedorlist = this.comprasService.ListaContactos(dato).subscribe({
         next: (rpta: any) => {
             this.setSpinner(false);
-            console.info('next : ', rpta);
+            console.info('getContactos : ', rpta);
             this.lstContacto = rpta;
+            this.registerFormRegistro.get('nrodocumento').setValue(rpta[0].nrodocumento);
+            this.registerFormRegistro.get('direcresumen').setValue(rpta[0].direcresumen);
         },
         error: (err) => {
             this.setSpinner(false);

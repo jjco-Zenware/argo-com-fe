@@ -27,16 +27,11 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
   submitted?: boolean;
   registerFormMarca: any = FormGroup;
   verporTipo: boolean = false;
-  verporLic: boolean = false;
-  verporSerie: boolean = false;
-  verSku: boolean = false;
   lstUnidades: any[]=[];
   lstTag: any[]=[];
   listaTag: any = [];
   tagVisible: boolean = false;
-  registerFormTag!: FormGroup;  
-  verporLicContrato  : boolean = false;
-  verCondic: boolean = false;
+  registerFormTag!: FormGroup; 
 
   constructor(
     private fb: FormBuilder,
@@ -71,7 +66,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
     //   this.verControles(this.param.idtipoprod);
     // }    
     this.getRegistro();
-    this.verControles(this.param.idtipoprod);
+    this.verControles(this.param.origenreg);
   }
 
   ngOnDestroy() {
@@ -137,6 +132,7 @@ createFormTag() {
 
   getRegistro(){
     this.frmDatosItem.patchValue(this.param);
+    console.log('getRegistro... : ', this.param);
     // if (this.param.idordencompra > 0) {
        this.listaTag = this.param.tags;
     // }
@@ -228,19 +224,17 @@ createFormTag() {
     }
 
     if (this.frmDatosItem.get('nommarca')?.value === '' || 
-    this.frmDatosItem.get('nommarca')?.value === null|| 
-    this.frmDatosItem.get('descripcion')?.value === ''|| 
-    this.frmDatosItem.get('descripcion')?.value === null) {
-      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Debe buscar el Producto...'});
-      return;
+      this.frmDatosItem.get('nommarca')?.value === null|| 
+      this.frmDatosItem.get('descripcion')?.value === ''|| 
+      this.frmDatosItem.get('descripcion')?.value === null) {
+        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Debe buscar el Producto...'});
+        return;
     }
 
-   
-
-    // if (this.frmDatosItem.invalid) {
-    //   this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
-    //   return;
-    // }
+   if (this.param.origenreg === 'RC' && this.frmDatosItem.get('preciocosto')?.value === 0 ) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Ingresar Precio Unitario...'});
+      return;
+   }
 
     // if (this.frmDatosItem.get('idtipoprod')?.value  === 6 || this.frmDatosItem.get('idtipoprod')?.value  === 7) {
     //   if (this.frmDatosItem.get('fecini')?.value === null) {
@@ -256,12 +250,6 @@ createFormTag() {
     //   const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
     //   this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
     // }   
-
-    // const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
-    // this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
-
-    // const _marca:string=this.lstMarcas.filter(x=>x.idmarca == this.frmDatosItem.get('idmarca')?.value)[0].nommarca;
-    // this.frmDatosItem.get('nommarca')?.setValue(_marca)
     
     const _nomunidad:string=this.lstUnidades.filter(x=>x.iditem == this.frmDatosItem.get('idunidad')?.value)[0].valoritem;
     this.frmDatosItem.get('nomunidad')?.setValue(_nomunidad)
@@ -283,55 +271,12 @@ createFormTag() {
   verControles(dato: any){
     console.log('verControles', dato);
     switch (dato) {
-      case 1:  
+      case 'RC':  
         this.verporTipo = true;
-        this.verporLic = false;
-        this.verporSerie = false;
-        this.verSku = true;
-        this.verporLicContrato = false;
-        this.verCondic = false;
       break;
-      case 2:
+      case 'OC':
         this.verporTipo = false;
-        this.verporLic = false;
-        this.verporSerie = false;
-        this.verSku = false;
-        this.verporLicContrato = true;
-        this.verCondic = false;
       break;
-      case 3: 
-        this.verCondic = true;
-        this.verporTipo = false;
-        this.verporLic = false;
-        this.verporSerie = false;
-        this.verSku = false;
-        this.verporLicContrato = false;
-      break;
-      case 6: 
-      case 7:  
-        this.verporTipo = false;
-        this.verporLic = true;
-        this.verporSerie = false;
-        this.verSku = false;
-        this.verporLicContrato = true;
-        this.verCondic = false;
-      break;
-      case 4: 
-      case 5: 
-        this.verporTipo = false;
-        this.verporLic = false;  
-        this.verporSerie = false;   
-        this.verSku = false; 
-        this.verporLicContrato = false;
-        this.verCondic = false;
-      break;
-      // case 5:  
-      //   this.verporTipo = false;
-      //   this.verporLic = false; 
-      //   this.verporSerie = false; 
-      //   this.verSku = false;    
-      //   this.verporLicContrato = false;
-      // break;
     }
   }
 

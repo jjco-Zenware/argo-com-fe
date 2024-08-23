@@ -4,35 +4,40 @@
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
-                        pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
+                        pTooltip="Nueva Orden" tooltipPosition="bottom" (click)="onNuevo()" ></button>
                 </div>                 
-                <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">REGISTRO DE COMPRAS</span>
                 </div>           
             </div>
         </div>
 
-        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
-            <div class="p-fluid p-formgrid grid col-9 text-sm h-5rem -ml-6">
-                <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
+        <form [formGroup]="frmDatos" class="-mr-3 mt-1 ml-3 -mb-4">
+            <div class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm -ml-6">
+                <div class="sm:col-12 lg:col-3 md:col-6 -mt-4">                            
+                    <label class=" font-semibold text-blue-600">PROVEEDOR</label>                            
+                    <span>
+                        <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+                        optionLabel="razonsocial" optionValue="idcliente" appendTo="body"></p-dropdown>            
+                    </span>
+                </div>  
+                <div class="md:col-6 sm:col-12 lg:col-2 -mt-4">
                     <label class="font-semibold text-blue-600">FECHA INICIO</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini"
-                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
-                    </p-calendar>
+                        [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
+                    </p-calendar>                    
                 </div>
-                <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
+                <div class="md:col-6 sm:col-12 lg:col-2 -mt-4">
                     <label class="font-semibold text-blue-600">FECHA FIN</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
-                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
                 </div>
-                <div class="field col-12 md:col-2 -mt-4 gap-2">
-                    <button pButton type="button" (click)="cargarLista()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                        class="font-semibold mt-4 justify-content-center h-2rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
+                <div class="field md:col-2 -mt-3 gap-2">
+                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                        class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
                 </div>
             </div>
         </form> 
-
-    
 
         <p-table #dt1 [value]="lstCompras" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
@@ -60,7 +65,7 @@
                             N° FACTURA
                         </div>
                     </th>
-                    <th style="width: 250px;" class="surface-200" >
+                    <!-- <th style="width: 250px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             ID PROYECTO
                         </div>
@@ -69,7 +74,7 @@
                         <div class="justify-content-between align-items-center">
                             PROYECTO
                         </div>
-                    </th>
+                    </th> -->
                     <th style="width: 250px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             MONEDA
@@ -118,20 +123,20 @@
                     </td>
                     <td >
                         <div [ngStyle]="{'width':'50px'}">
-                            {{data.nrooperacion}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'50px'}">
                             {{data.idordencompra}}
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'250px'}">
+                        <div [ngStyle]="{'width':'200px'}">
+                            {{data.nomcomercial}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px'}">
                             {{data.nomproveedor | uppercase}}
                         </div>
                     </td>
-                    <td >
+                    <!-- <td >
                         <div [ngStyle]="{'width':'80px'}">
                             {{data.idproyecto }}
                         </div>
@@ -140,7 +145,7 @@
                         <div [ngStyle]="{'width':'80px'}">
                             {{data.nomproyecto | uppercase}}
                         </div>
-                    </td>
+                    </td> -->
                     <td>
                         <div [ngStyle]="{'width':'100px'}">
                             {{data.nommoneda | uppercase}}
@@ -148,17 +153,17 @@
                     </td>                  
                     <td>
                         <div [ngStyle]="{'width':'70px','text-align':'right'}">
-                            {{data.s_monto | number: '3.2' }}
+                            {{data.s_monto | number: '0.2-2'  }}
                         </div>
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'50px','text-align':'right'}">
-                            {{data.s_igv | number: '3.2' }}
+                            {{data.s_igv | number: '0.2-2'  }}
                         </div>
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'70px','text-align':'right'}">
-                            {{data.s_monto_total | number: '3.2' }}
+                            {{data.s_monto_total | number: '0.2-2'  }}
                         </div>
                     </td>
                     <td>                       
@@ -168,9 +173,8 @@
                     </td>
                     <td>
                         <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
-                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="left" pTooltip="Ver Reg Compras" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="left" pTooltip="Editar Reg Compras" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
-                            <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="left" pTooltip="Ver Factura" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="verCotiza(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                         </div>
                     </td>
                 </tr>
@@ -187,21 +191,19 @@
             </ng-template>
         </p-table>
 
-
-
     </div>
 </ng-container>
 
 <ng-template #visSecciones>
 
     <div class="p-fluid p-3 mb-1 card m-4" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
-        <div class="grid">
+        <div class="grid ">
             <div class="flex justify-content-between col-12 gap-2">
-                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem -ml-1">
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar a Bandeja" tooltipPosition="left" (click)="getBack()" ></button>
                 </div>
-                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-lg font-semibold">{{tituloDetalle}}</span>
                 </div>
             </div>
@@ -210,7 +212,7 @@
     </div>
 
     <div class="p-fluid p-3 mb-1 card" *ngIf="visQuote" (OB_back)="getDetalle($event)">
-        <div class="grid">
+        <div class="grid ">
             <div class="flex justify-content-between col-12 -mt-3">
                 <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
                     <span class="text-lg font-semibold">{{tituloDetalle}}</span>
@@ -227,3 +229,4 @@
 
 
 </ng-template>
+<p-toast></p-toast>

@@ -57,4 +57,15 @@ export class AlmacenService {
         const url = `${constantesApiWeb.traerProductoPorCodigo}${codigo}`;
         return this.http.get<any>(url);
     }
+
+    buscarProducto(objeto: any) {
+        const url = `${constantesApiWeb.buscarProducto}`;
+        console.log('buscarProducto url...', url)
+        return this.http.post<any>(url, objeto)
+    }
+
+    almacenTraeruno(codigo: any) {
+        const url = `${constantesApiWeb.almacenTraeruno}${codigo}`;
+        return this.http.get<any>(url);
+    }
 }

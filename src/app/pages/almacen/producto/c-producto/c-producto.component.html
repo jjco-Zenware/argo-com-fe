@@ -14,7 +14,7 @@
         </div>
 
         <form [formGroup]="frmDatos" class="mb-2 -mr-3 ml-3">
-            <div class="p-fluid p-formgrid grid col-12 text-sm border-1 border-round surface-border h-3rem">
+            <div class="p-fluid p-formgrid grid col-12 text-sm h-3rem">
                 <div class="field col-12 md:col-2 -mt-6 gap-2">
                     <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                         class="font-semibold mt-4 justify-content-center h-2rem w-3rem w-auto -ml-4" icon="pi pi-search"></button>
@@ -60,14 +60,19 @@
                             SUBFAMILIA
                         </div>
                     </th>
-                    <th style="width: 40px" class="surface-200" >
-                        <div [ngStyle]="{'width':'40px','text-align':'center'}">
-                            STOCK
+                    <th style="width: 80px" class="surface-200" >
+                        <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                            MARCA
                         </div>
                     </th>
                     <th style="width: 80px" class="surface-200" >
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                            ESTADO
+                            MONEDA
+                        </div>
+                    </th>
+                    <th style="width: 80px" class="surface-200" >
+                        <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                            UNIDAD
                         </div>
                     </th>
                     <th style="width: 80px;" class="surface-200" >
@@ -114,14 +119,19 @@
                             {{data.nomsubfamilia | uppercase}}
                         </div>
                     </td>
-                    <td>
-                        <div [ngClass]="{'width':'30px', 'outofstock': data.stock === 0, 'lowstock': (data.stock > 0 && data.stock < 10),'instock': data.stock > 0}">
-                            {{data.stock}}
+                    <td>                       
+                        <div [ngStyle]="{'width':'60px'}">
+                            {{data.nommarca | uppercase}}
                         </div>
                     </td>
                     <td>                       
-                        <div [ngStyle]="{'width':'80px','text-align': 'center'}">
-                            <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
+                        <div [ngStyle]="{'width':'60px'}">
+                            {{data.desmoneda | uppercase}}
+                        </div>
+                    </td>
+                    <td>                       
+                        <div [ngStyle]="{'width':'60px'}">
+                            {{data.nomunidad | uppercase}}
                         </div>
                     </td>
                     <td>

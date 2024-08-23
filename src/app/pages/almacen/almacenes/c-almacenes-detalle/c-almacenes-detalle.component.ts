@@ -1,13 +1,12 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
-import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
 import { Subscription } from 'rxjs';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
-import { DialogService } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AlmacenService } from '../../service/almacenServices';
 
 @Component({
@@ -30,9 +29,9 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   param:any;
   lstOficina = [
     { nomoficina: 'TODOS', idofi: 0 },
-    { nomoficina: 'OFICINA 01', idofi: 1 },
-    { nomoficina: 'OFICINA 02', idofi: 2 },
-    { nomoficina: 'OFICINA 03', idofi: 3 }
+    { nomoficina: 'OFICINA 401', idofi: 1 },
+    { nomoficina: 'OFICINA 402', idofi: 2 },
+    { nomoficina: 'OFICINA 403', idofi: 3 }
   ];
 
   constructor(
@@ -44,17 +43,18 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
     public dialogService: DialogService,
     private confirmationService: ConfirmationService,
     private almacenService: AlmacenService,
+    public refDatoItem: DynamicDialogRef,
+    public config: DynamicDialogConfig,
   ) { }
 
   ngOnInit(): void {
-    this.idAlmacen = this.IA_data.idcodigo;
-    this.param = this.IA_data.paramReg;
+    console.log('this.config', this.config);
+    this.idAlmacen = this.config.data.idcodigo;
+    this.param = this.config.data.paramReg;
     this.createFormRegistro(); 
     
     if (this.idAlmacen > 0) {      
       this.traerUno();
-    }else{          
-      this.mostrarBotones(this.param);
     }   
   }
 
@@ -82,52 +82,27 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
     this.blockedDocument = valor;
   }
 
-  mostrarBotones(data:any){
-    console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
-    switch (data) {
-      case 'E':
-        this.verbtnGrabar = true;
-        this.onlyRead = false;
-      break;
-      case 'N':
-        this.verbtnGrabar = true;
-        this.onlyRead = false;
-      break;
-      case 'V':
-        this.verbtnGrabar = false;
-        this.onlyRead = true;
-      break;
-    
-      default:
-        break;
-    }    
-  }
-
   traerUno(){
-    // this.setSpinner(true);
-    // this.mensajeSpinner = 'Cargando...!';
-    const objeto ={
-      idalmacen: this.idAlmacen,
-      idusuario: constantesLocalStorage.idusuario
-    }
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Cargando...!';
 
-    // const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
-    //   .subscribe({
-    //     next: (rpta:any) => {
-    //       console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-    //         this.setSpinner(false);
-    //       this.mostrarBotones(rpta.ordencompra[0].estado);                
-    //     },
-    //     error:(err)=>{
-    //         this.setSpinner(false);
-    //         this.serviceSharedApp.messageToast()
-    //     },
-    //     complete:() => {
-    //       this.setSpinner(false);
+    const $cargarOrdenC = this.almacenService.almacenTraeruno(this.idAlmacen)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta', rpta);
+            this.setSpinner(false);
+            this.registerFormRegistro.patchValue(rpta);                
+        },
+        error:(err)=>{
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+          this.setSpinner(false);
           
-    //     }
-    //   });
-    // this.$listSubcription.push($cargarOrdenC)
+        }
+      });
+    this.$listSubcription.push($cargarOrdenC)
   }
 
   guardar(){
@@ -155,7 +130,8 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
             this.idAlmacen = rpta.resultProceso;   
 
           }
-          this.traerUno();
+          this.cerrar();
+          //this.traerUno();
          
         }else{
         this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
@@ -175,7 +151,9 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   });
   }
  
-
+  cerrar() {    
+    this.refDatoItem.close();
+  }
   
 
   validarDatos():boolean{

@@ -29,10 +29,15 @@
                                 inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
                             </span>
                         </div>
-                        <div class=" sm:col-8 lg:col-5 md:col-12"></div>
-                        <div class="col-12 -mt-2 -mb-5">
-                            <p-divider ></p-divider>
-                        </div>
+                        <div class=" sm:col-8 lg:col-2 md:col-12"></div>                        
+                        <div class="col-4 sm:col-6 lg:col-5 md:col-6 h-4rem">                            
+                            <label class="block text-900 font-semibold mb-1">Almacen <span class="text-red-500 font-bold"> * </span></label>                            
+                            <span>
+                                <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
+                                optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                            </span>
+                        </div> 
+                       
                             <!-- <div class="sm:col-6 lg:col-4 md:col-3 mt-1 h-4rem field">
                                 <label class="block text-900 font-semibold mb-1">Origen <span class="text-red-500 font-bold"> * </span></label>
                                 <span class="p-fluid mt-1">
@@ -55,14 +60,6 @@
                                 </span>
                             </div> -->
 
-                        <div class="col-4 sm:col-6 lg:col-5 md:col-6 h-4rem mb-3">                            
-                            <label class="block text-900 font-semibold mb-1">Almacen <span class="text-red-500 font-bold"> * </span></label>                            
-                            <span>
-                                <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
-                                optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
-                            </span>
-                        </div> 
-                        <div class="sm:col-8 lg:col-7 md:col-12"></div>
                         <div class="col-4 sm:col-6 lg:col-5 md:col-6 h-4rem">                            
                             <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
                             <span>
@@ -165,16 +162,18 @@
                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
                 </div> -->
                 <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [(selection)]="selectedProducts" [scrollable]="true"  styleClass="p-datatable-sm">
+                [(selection)]="selectedProducts" [scrollable]="true"  styleClass="p-datatable-sm" [(selection)]="selectedItems">
                     <ng-template pTemplate="header">
                         <tr class="text-sm">
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th style="width: 4rem" class="surface-200"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+                            <th [ngStyle]="{'width':'50px'}" class="surface-200">
+                                <!-- <p-tableHeaderCheckbox style="width:15px; height:15px;"></p-tableHeaderCheckbox> -->
+                            </th>                            
                             <th class="surface-200">PRODUCTO</th>
                             <th class="surface-200">DESCRIPCIÓN</th>
                             <th class="surface-200">MARCA</th>
                             <!-- <th class="surface-200">N° SERIE</th> -->
-                            <th class="surface-200">SKU</th>
+                            <th class="surface-200">SKU</th>                         
                             <th class="surface-200">N° CONTRATO</th>
                             <!-- <th class="surface-200">F. INICIO</th>
                             <th class="surface-200">F. FIN</th> -->
@@ -189,7 +188,8 @@
                         <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
                             <td>
-                                <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                                <input type="checkbox" [(ngModel)]="product.indcompleto" [ngModelOptions]="{standalone: true}" 
+                                style="width:15px; height:15px; cursor:pointer">
                             </td>
                             <td>{{ product.nomtipoprod | uppercase}}</td>
                             <td>{{ product.descripcion | uppercase}}</td>

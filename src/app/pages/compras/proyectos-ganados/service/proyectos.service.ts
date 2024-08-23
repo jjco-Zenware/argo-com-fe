@@ -139,8 +139,8 @@ export class ProyectosService {
         return this.http.get<any>(url);
     } 
 
-    prcItem(objeto:any) {
-        const url = `${constantesApiWeb.prcItem}`;
+    tagNew(objeto:any) {
+        const url = `${constantesApiWeb.tagNew}`;
         return  this.http.post<any>(url, objeto)
     }
 
@@ -157,5 +157,20 @@ export class ProyectosService {
     listarTrasacciones(codigo:any) {
         const url = `${constantesApiWeb.listarTrasacciones}${codigo}`;
         return this.http.get<any>(url);
+    }
+
+    kardexlistar(objeto:any) {
+        const url = `${constantesApiWeb.kardexlistar}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    productotaglist(codigo:any) {
+        const url = `${constantesApiWeb.productotaglist}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    prcItem(objeto:any) {
+        const url = `${constantesApiWeb.prcItem}`;
+        return  this.http.post<any>(url, objeto)
     }
 }

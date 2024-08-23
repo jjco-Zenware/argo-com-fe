@@ -122,4 +122,9 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.ordencompraaprobadasprovlist}${idproveedor}`;
         return this.http.get<any>(url);
     }
+
+    buscarporRUC(objeto:any) {
+        const url = `${constantesApiWeb.buscarporRUC}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

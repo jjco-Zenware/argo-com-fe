@@ -10,7 +10,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { AlmacenService } from '../../service/almacenServices';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
-import { Marca } from '@interfaces';
+import { Marca, Moneda } from '@interfaces';
 
 @Component({
   selector: 'app-c-producto-detalle',
@@ -41,6 +41,8 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
   lstMarcas: Marca[] = [];
   marcaVisible?: boolean;
   registerFormMarca: any = FormGroup;
+  lstUnidades: any[]=[];
+  lstMonedas: Moneda[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -65,7 +67,9 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
     this.createFormTag();  
     this.listarItemsTag();
     this.listarMarcas();
-    this.listarFamilia();
+    this.listarFamilia();    
+    this.listarItemsTabla();
+    this.listaMonedas() ;
     
     if (this.idprod > 0) {     
       this.traerUno();
@@ -84,13 +88,17 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
       despro:[{ value: '', disabled: false }],
       desdet:[{ value: '', disabled: false }],
       valorunit:[{ value: '', disabled: false }],
-      preciovenmax:[{ value: 0, disabled: false }],
-      preciovenmin:[{ value: 0, disabled: false }],
+      preciovenmax:[{ value: '', disabled: false }],
+      preciovenmin:[{ value: '', disabled: false }],
       fecactivo: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idfamilia:[{ value: 0, disabled: false }],
       idsubfamilia: [{ value: 0, disabled: false }],
       idmarca: [{ value: 0, disabled: false }],
+      idunidad: [{ value: 0, disabled: false }],
+      stockmin: [{ value: '', disabled: false }],
+      stockmax: [{ value: '', disabled: false }],
+      idmoneda: [{ value: '', disabled: false }],
     });
   }
 
@@ -113,8 +121,6 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
       this.$listSubcription.forEach((sub) => sub.unsubscribe());
     }
   }
-
-  
 
   setSpinner(valor: boolean) {
     this.blockedDocument = valor;
@@ -148,10 +154,11 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
     const $traerUno = this.almacenService.traerunoProducto(this.idprod)
       .subscribe({
         next: (rpta:any) => {
-          console.log('rpta.traerUno', rpta);
+          console.log('rpta.traerUno', rpta.producto[0]);
           this.setSpinner(false);          
-          this.getSubFamilia(rpta.idfamilia); 
-          this.registerFormRegistro.patchValue(rpta);
+          this.getSubFamilia(rpta.producto[0].idfamilia); 
+          this.listaTag = rpta.producto[0].tags;
+          this.registerFormRegistro.patchValue(rpta.producto[0]);
           this.mostrarBotones(this.IA_data.paramReg);                
         },
         error:(err)=>{
@@ -188,6 +195,7 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
 
     const objeto = {
       ...this.registerFormRegistro.getRawValue(),
+      tags: this.listaTag
       //fechaingreso,
       //fecentrega,
     }
@@ -238,6 +246,38 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($listarMarcas);
   }
 
+  listarItemsTabla() {
+    this.comprasService.obtenerItemsTabla(107).subscribe({
+        next: (rpta: any) => {
+            this.lstUnidades = rpta;
+            console.log('lstUnidades : ', rpta);
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
+    }
+
+    listaMonedas() {
+      const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
+        next: (rpta: any) => {
+          console.log('listaMonedas', rpta);
+          this.lstMonedas = rpta;       
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+      });
+      this.$listSubcription.push($listaMonedas);
+  
+    }
+
   validarDatos():boolean{
     let _error = false;
     this.errorMensaje="";
@@ -279,16 +319,23 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
             _error = true;
       }
 
-      // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
-      // {
-      //     this.errorMensaje="Ingresar Condiciones Comerciales...!";
-      //     _error = true;
-      // }
+      if (!_error && (this.registerFormRegistro.value.stockmin > this.registerFormRegistro.value.stockmax ))
+      {
+            this.errorMensaje="Stock Mínimo no puede ser Mayor que Stock Máximo...!";
+            _error = true;
+      }
+
+      if (!_error && (this.registerFormRegistro.value.preciovenmin > this.registerFormRegistro.value.preciovenmax ))
+      {
+            this.errorMensaje="Precio Venta Mínimo no puede ser Mayor que Precio Venta Máximo...!";
+            _error = true;
+      }
+     
        return _error;
      }
      
      listarItemsTag() {
-      this.comprasService.obtenerItemsTabla(108).subscribe({
+      this.proyectosService.productotaglist(2).subscribe({
           next: (rpta: any) => {
               this.lstTag = rpta;
           },
@@ -317,17 +364,25 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
       if(this.submitted)
       {
           const objeto = {
-              iditem: 0,
-              idtabla: 108,
-              valor: this.registerFormTag.value.nomtag,
-              coditem: ''
+              idtag: 0,
+              nomtag: this.registerFormTag.value.nomtag,
+              idusuario: constantesLocalStorage.idusuario,
+              tipotag: 2
             }
-            const $prcMarcas = this.proyectosService.prcItem(objeto).subscribe({
+            const $prcMarcas = this.proyectosService.tagNew(objeto).subscribe({
               next: (rpta: any) => {
                 if (rpta.procesoSwitch === 0){
                   this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
                   this.tagVisible=false;
                   this.listarItemsTag();
+
+                  const objeto = {
+                    idtag: rpta.resultProceso,
+                    nomtag: this.registerFormTag.value.nomtag,
+                    valor: '',
+                    iditemdocumento: this.idprod
+                  }
+                  this.listaTag.unshift(objeto);
                 }else{
                 this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
                 }
@@ -371,11 +426,11 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
         }
       //}    
   
-      let _objeto = this.lstTag.filter(x => x.iditem === data);
+      let _objeto = this.lstTag.filter(x => x.idtag === data);
       
       const objeto = {
         idtag: data,
-        nomtag: _objeto[0].valoritem,
+        nomtag: _objeto[0].nomtag,
         valor: '',
         iditemdocumento: this.idprod
       }
@@ -455,4 +510,47 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
       this.$listSubcription.push($getSubFamilia);
     }
 
+    validarStock(dato: any,valor:any){
+      let _min;
+      let _max;
+      if (valor === 0) {
+        _min = dato;
+        _max = this.registerFormRegistro.value.stockmax;
+      }else{
+        _min = this.registerFormRegistro.value.stockmin;
+        _max = dato;
+      }
+      
+      console.log('MINIMO', _min,'MAXIMO',  _max, 'STOCKVALOR', valor);
+      if (_min > _max && valor === 0) {        
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Stock Mínimo no puede ser Mayor que Stock Máximo..."});  
+        //this.registerFormRegistro.get('stockmin').setValue(this.stockmin);
+      }
+      if (_max < _min && valor === 1) {        
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Stock Máximo no puede ser Menor que Stock Mínimo..."}); 
+        //this.registerFormRegistro.get('stockmax').setValue( this.stockmax);
+      }
+    }
+
+    validarVenta(dato: any, valor: any){
+      let _min;
+      let _max;
+      if (valor === 0) {
+        _min = dato;
+        _max = this.registerFormRegistro.value.preciovenmax;
+      }else{
+        _min = this.registerFormRegistro.value.preciovenmin;
+        _max = dato;
+      }
+      
+      console.log('MINIMO', _min,'MAXIMO',  _max,  'PRECIOVALOR', valor);
+      if (_min > _max && valor === 0) {        
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Precio Venta Mínimo no puede ser Mayor que Precio Venta Máximo..."});  
+        //this.registerFormRegistro.get('preciovenmin').setValue( this.premin);
+      }
+      if (_max < _min && valor === 1) {        
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Precio Venta Máximo no puede ser Menor que Precio Venta Mínimo..."});  
+        //this.registerFormRegistro.get('preciovenmax').setValue( this.premax);
+      }
+    }
 }

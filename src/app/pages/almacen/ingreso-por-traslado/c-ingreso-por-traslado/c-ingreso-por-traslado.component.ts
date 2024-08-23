@@ -43,7 +43,6 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'ID ALMACÉN' },
           { field: 'nomtipoorden', header: 'OFICINA ' },
           { field: 'codigonroorden', header: 'NOMBRE' },
           { field: 'nomcomercial', header: 'DIRECCIÓN' },

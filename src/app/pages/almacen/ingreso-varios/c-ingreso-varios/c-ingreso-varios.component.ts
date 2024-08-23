@@ -45,7 +45,6 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
           { field: 'idordencompra', header: 'ID ALMACÉN' },
           { field: 'nomtipoorden', header: 'OFICINA ' },
           { field: 'codigonroorden', header: 'NOMBRE' },
-          { field: 'nomcomercial', header: 'DIRECCIÓN' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];

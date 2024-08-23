@@ -64,7 +64,7 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
   s_monto_total:number = 0;
   activeIndex: number = 0;
   lstAlmacen: any;
-  selectedProducts: any;
+  selectedItems: any;
 
   constructor(
     private fb: FormBuilder,
@@ -474,7 +474,7 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
       header: 'Confirmación',
       message:  '¿Desea Eliminar Item ' + '<b>' + data.descripcion + '</b>' + '?' ,
       accept: () => {
-        if (data.idcotizaitem > 0) {
+        if (data.idordencompra > 0) {
           const _posAll: number = this.lstItemOC.findIndex((x => x.idordencompraitem == data.idordencompraitem))
           if (_posAll != -1) {
           this.lstItemOC.splice(_posAll, 1)
@@ -625,7 +625,9 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
 
     getOCtraerItems(dato: any) {  
       console.info('dato : ', dato);
+      //this._alm_idordencompra = dato;
       this.lstItemOC = []
+      this.selectedItems=[];
       const objeto ={
         idordencompra: dato,
         idusuario: constantesLocalStorage.idusuario
@@ -633,16 +635,15 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
       const $personaProveedorlist = this.proyectosService.ordenCompraTraeruno(objeto).subscribe({
           next: (rpta: any) => {
               this.setSpinner(false);
-              console.info('getOCtraerItems : ', rpta);  
-
-              
+              console.info('getOCtraerItems : ', rpta);                
 
               if (rpta.ordencompra[0].items !== undefined) {
 
                 const data = rpta.ordencompra[0].items.map((item: any) => ({
                   ...item,
                   idordencompraitem: 0,    
-                  idordencompra: this.idMovimiento,   
+                  idordencompra: this.idMovimiento, 
+                  coditem: 1  ,
                 }))
                 this.lstItemOC = data;
               }
@@ -661,6 +662,18 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
           complete: () => {},
       });
       this.$listSubcription.push($personaProveedorlist);
+    }
+
+    selectCheckbox(dato: any){
+      console.log('selectCheckbox...', dato);
+      console.log('selectCheckbox...', this.selectedItems);
+
+      const data = this.lstItemOC.map((item: any) => ({
+        ...item,
+        indcompleto: dato.checked === true ? true : false,
+      }))
+
+      this.lstItemOC = data;
     }
 
 }

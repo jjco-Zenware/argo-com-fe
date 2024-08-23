@@ -43,13 +43,14 @@ export class CProductoComponent implements OnInit, OnDestroy{
       this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'ID' },
-          { field: 'idordencompra', header: 'CÓDIGO' },
-          { field: 'nomtipoorden', header: 'PRODUCTO ' },
-          { field: 'codigonroorden', header: 'FAMILIA' },
-          { field: 'nomcomercial', header: 'SUBFAMILIA' },
-          { field: 'stock', header: 'STOCK' },
-          { field: 'nomestado', header: 'ESTADO' }
+          { field: 'idprod', header: 'ID' },
+          { field: 'codproducto', header: 'CÓDIGO' },
+          { field: 'despro', header: 'PRODUCTO ' },
+          { field: 'nomfamilia', header: 'FAMILIA' },
+          { field: 'nomsubfamilia', header: 'SUBFAMILIA' },
+          { field: 'nommarca', header: 'MARCA' },
+          { field: 'desmoneda', header: 'MONEDA' },
+          { field: 'nomunidad', header: 'UNIDAD' }
           
       ];
     }
@@ -187,12 +188,16 @@ export class CProductoComponent implements OnInit, OnDestroy{
         });
       }
   
-      saveAsExcelFile(buffer: any, fileName: string): void {
-        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-        let EXCEL_EXTENSION = '.xlsx';
-        const data: Blob = new Blob([buffer], {
-            type: EXCEL_TYPE
-        });
-        FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
-      }
+    saveAsExcelFile(buffer: any, fileName: string): void {
+      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+      let EXCEL_EXTENSION = '.xlsx';
+      const data: Blob = new Blob([buffer], {
+          type: EXCEL_TYPE
+      });
+      FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
+    }
+
+    verDetalleProducto(data :any){
+      console.log('verDetalleProducto', data);
+    }
 }

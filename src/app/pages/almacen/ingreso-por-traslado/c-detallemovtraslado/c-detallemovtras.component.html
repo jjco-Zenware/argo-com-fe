@@ -29,126 +29,16 @@
                                 inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
                             </span>
                         </div>
-                        <div class=" sm:col-8 lg:col-5 md:col-12"></div>
-                        <div class="col-12 -mt-2 -mb-5">
-                            <p-divider ></p-divider>
-                        </div>
-                            <!-- <div class="sm:col-6 lg:col-4 md:col-3 mt-1 h-4rem field">
-                                <label class="block text-900 font-semibold mb-1">Origen <span class="text-red-500 font-bold"> * </span></label>
-                                <span class="p-fluid mt-1">
-                                    <p-dropdown [options]="lstOrigen" formControlName="codtipodoc" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
-                                    optionValue="codproceso" (onChange)="getOrigen($event.value)" [readonly]=onlyRead></p-dropdown>
-                                </span>
-                            </div>  
-                            <div class=" sm:col-8 lg:col-7 md:col-12"></div>
-                            <div class="col-12 field h-4rem mt-1">
-                                <label class="block text-900 font-semibold mb-1">Proyecto <span class="text-red-500 font-bold"> * </span></label>                        
-                                <span class="p-fluid mt-1">
-                                    <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto"
-                                    optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
-                                </span>
-                            </div> -->
-                            <!-- <div class="col-8 field h-4rem mt-1">
-                                <label class="block text-900 font-semibold mb-1">Descripción Proyecto</label>                        
-                                <span class="p-fluid">
-                                    <input pInputText type="text" formControlName="nomproyecto" readonly="true"/>
-                                </span>
-                            </div> -->
-
+                        <div class=" sm:col-8 lg:col-2 md:col-12"></div>  
                         <div class="col-4 sm:col-6 lg:col-5 md:col-6 h-4rem">                            
-                            <label class="block text-900 font-semibold mb-1">Almacen Origen<span class="text-red-500 font-bold"> * </span></label>                            
+                            <label class="block text-900 font-semibold mb-1">Almacen<span class="text-red-500 font-bold"> * </span></label>                            
                             <span>
                                 <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
                                 optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
                             </span>
-                        </div> 
-                        <div class="col-4 sm:col-6 lg:col-5 md:col-6 h-4rem">                            
-                            <label class="block text-900 font-semibold mb-1">Almacen Destino<span class="text-red-500 font-bold"> * </span></label>                            
-                            <span>
-                                <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
-                                optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
-                            </span>
-                        </div> 
-                        <div class="sm:col-8 lg:col-7 md:col-12"></div>
-                        <!-- <div class="col-4 sm:col-6 lg:col-5 md:col-6 h-4rem">                            
-                            <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
-                            <span>
-                                <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
-                                optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead></p-dropdown>            
-                            </span>
-                        </div>   
-                        <div class="sm:col-6 lg:col-7 md:col-3 h-4rem">
-                            <div class="flex">
-                                <label class="block text-900 font-semibold mb-1">Orden Compra <span class="text-red-500 font-bold"> * </span></label>
-                            </div>                            
-                            <span>
-                                <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
-                                optionValue="idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="getOCtraerItems($event.value)"></p-dropdown>
-                            </span>
-                        </div>  -->
-                        <!-- <div class="sm:col-6 lg:col-4 md:col-3 h-4rem">
-                            <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
-                            <span class="p-fluid mt-1">
-                                <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                                optionValue="idmoneda" appendTo="body" [readonly]=onlyRead></p-dropdown>
-                            </span>                                      
-                        </div>                       -->
-                            <!-- <div class="sm:col-6 lg:col-8 md:col-3 h-4rem">
-                                <div class="flex">
-                                    <label class="block text-900 font-semibold mb-1">Contacto <span class="text-red-500 font-bold"> * </span></label>
-                                    <i *ngIf="verItems" class="pi pi-user-plus cursor-pointer" style="margin-left: 10px;" pTooltip="Alta rapida Contacto"
-                                    tooltipPosition="right" (click)="AgregarContacto();" ></i>
-                                </div>                            
-                                <span>
-                                    <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
-                                    optionValue="idcontacto" appendTo="body" [readonly]=onlyRead></p-dropdown>
-                                </span>
-                            </div> -->
-                            <!-- <div *ngIf="verReferencia" class="col-4 field h-4rem mt-3 -mb-2">
-                                <label class="block text-900 font-semibold mb-1">N° Referencia <span class="text-red-500 font-bold"> * </span></label>                        
-                                <span class="p-fluid">
-                                    <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead/>
-                                </span>
-                            </div> -->
-                            <!-- <div class="col-12 mt-2 -mb-5">
-                                <p-divider ></p-divider>
-                            </div>
-                            <div class="sm:col-6 lg:col-4 md:col-3 h-4rem">
-                                <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
-                                <span class="p-fluid mt-1">
-                                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead></p-dropdown>
-                                </span>                                      
-                            </div> 
-                            <div class="sm:col-6 lg:col-4 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Forma de Pago <span class="text-red-500 font-bold"> * </span></label>
-                                <span>
-                                    <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
-                                    optionValue="iditem" appendTo="body" [readonly]=onlyRead></p-dropdown>
-                                </span>
-                            </div>    
-                            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field">
-                                <label class="block text-900 font-semibold">Fecha Entrega<span class="text-red-500 font-bold"> * </span></label>
-                                <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;">
-                                    <p-calendar formControlName="fecentrega" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                                    inputStyleClass="w-full cursor-pointer" appendTo="body"></p-calendar>
-                                </span>
-                            </div>
-                            <div class="sm:col-6 lg:col-12 md:col-3 mt-1">                        
-                                <label class="block text-900 font-semibold mb-1">Terminos para el Pago de Factura </label>                        
-                                <span class="p-fluid">
-                                    <textarea type="text" formControlName="terminosdepago" pInputTextarea [rows]="5"
-                                    style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
-                                </span>
-                            </div>  
-                            <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">                        
-                                <label class="block text-900 font-semibold mb-1">Condiciones Comerciales </label>                        
-                                <span class="p-fluid">
-                                    <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="5"
-                                    style="resize: none" class="w-full mt-1" [readonly]=onlyRead></textarea>                       
-                                </span>
-                            </div>                    -->
-                        <div class="sm:col-6 lg:col-10 md:col-3 -mt-3">
+                        </div>                       
+                           
+                        <div class="sm:col-6 lg:col-12 md:col-3 -mt-1">
                             <label class="block text-900 font-semibold">Observación</label>                        
                             <span class="p-fluid">
                                 <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
@@ -172,11 +62,13 @@
                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
                 </div>
                 <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [(selection)]="selectedProducts" [scrollable]="true"  styleClass="p-datatable-sm">
+                [scrollable]="true"  styleClass="p-datatable-sm" [(selection)]="selectedItems">
                     <ng-template pTemplate="header">
                         <tr class="text-sm">
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th style="width: 4rem" class="surface-200"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+                            <th [ngStyle]="{'width':'50px'}" class="surface-200">
+                                <!-- <p-tableHeaderCheckbox style="width:15px; height:15px;"></p-tableHeaderCheckbox> -->
+                            </th> 
                             <th class="surface-200">CÓDIGO</th>
                             <th class="surface-200">DESCRIPCIÓN</th>
                             <th class="surface-200">MARCA</th>
@@ -189,14 +81,15 @@
                             <!-- <th class="surface-200">P. UNI.</th> -->
                             <th class="surface-200">CANT.</th>
                             <!-- <th class="surface-200">TOTAL</th> -->
-                            <!-- <th class="surface-200"></th> -->
+                            <th class="surface-200">ACCIONES</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
                         <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
                             <td>
-                                <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                                <input type="checkbox" [(ngModel)]="product.indcompleto" [ngModelOptions]="{standalone: true}" 
+                                style="width:15px; height:15px; cursor:pointer">
                             </td>
                             <td>{{ product.codproducto }}</td>
                             <td>{{ product.descripcion | uppercase}}</td>
@@ -209,12 +102,12 @@
                             <!-- <td>{{ product.preciocosto | number: '0.2'}}</td> -->
                             <td>{{ product.cantidad }}</td>
                             <!-- <td>{{ product.preciocostototal | number: '0.2'}}</td> -->
-                            <!-- <td>
-                                <div *ngIf="verItems" class="flex justify-content-end">
+                            <td>
+                                <div *ngIf="verItems" >
                                     <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
                                     <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
                                 </div>
-                            </td> -->
+                            </td>
                         </tr>
                     </ng-template>
                     <!-- <ng-template pTemplate="footer">

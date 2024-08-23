@@ -54,7 +54,7 @@ ngOnInit(): void {
   if (this.config.data.idproyecto > 0) {
     this.traerunoProyecto();
   }else{
-    this.verControles(1);
+    this.verControles(2);
   }
 }
 

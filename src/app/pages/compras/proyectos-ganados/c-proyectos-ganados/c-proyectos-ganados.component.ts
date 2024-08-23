@@ -194,7 +194,7 @@ export class CProyectosGanadosComponent implements OnInit{
         // }
 
         const objeto = {
-            idtipoproyecto : 1,
+            idtipoproyecto : 2,
             idproyecto: 0,
             indEditar: false
         }

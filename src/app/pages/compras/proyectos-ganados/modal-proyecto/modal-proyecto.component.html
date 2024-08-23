@@ -6,7 +6,7 @@
             </div>
             <span class="p-fluid">
                 <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
-                optionValue="idtipoproyecto" (onChange)="changeOrigen($event.value)" class="p-inputtext-sm"></p-dropdown>
+                optionValue="idtipoproyecto" (onChange)="changeOrigen($event.value)" class="p-inputtext-sm" readonly="true"></p-dropdown>
             </span>
         </div>
         <div *ngIf="verOpor" class="col-12 field h-4rem">

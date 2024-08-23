@@ -11,11 +11,13 @@ import { ComprasService } from '../compras/Service/compraServices';
 import { TableModule } from 'primeng/table';
 import { CItemOrdenesComponent } from './items-ordenes/c-items-ordenes.component';
 import { CheckboxModule } from 'primeng/checkbox';
+import { CBusquedaProductoComponent } from './busqueda-producto/c-busqueda-producto.component';
 
 
 @NgModule({
   declarations: [
-    CItemOrdenesComponent
+    CItemOrdenesComponent,
+    CBusquedaProductoComponent
   ],
   imports: [
     CommonModule,

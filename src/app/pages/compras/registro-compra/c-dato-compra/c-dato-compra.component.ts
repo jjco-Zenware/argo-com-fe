@@ -9,10 +9,10 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { CItemCotizacionComponent } from '../../proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
 import { ComprasService } from '../../Service/compraServices';
 import * as  XLSX  from 'xlsx';
 import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
+import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 
 @Component({
   selector: 'app-c-dato-compra',
@@ -72,9 +72,11 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   lstTipoProducto:any;
   verImportar: boolean = true;
   onlyRead: boolean = false;
-  verReferencia: boolean = false;
+  //verReferencia: boolean = false;
+  verProyecto: boolean = false;
   lstUnidades:any;
   errorMensaje: string = "";
+  lstComprobante:any;
 
   constructor(
     private fb: FormBuilder,
@@ -90,7 +92,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   ) { }
 
   ngOnInit(): void {
-    //this.idOrdenC = this.IA_data.idordencompra;
+    this.idOrdenC = this.IA_data.idordencompra;
 
     this.createFrm();
     this.createFormRegistro();
@@ -101,6 +103,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.listaMonedas();  
     this.listarItemsTabla(); 
     this.listarItemsTablaUnidad() ;
+    this.listarItemsTablaComprobante() ;
     
     if (this.idOrdenC > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -116,7 +119,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           veracciones: 0
         }
       }  
-      this.verAdjunto = true; 
+      this.verAdjunto = true;      
+      this.traerUno();
     }else{
       //this.verControles('NOA');
       this.cargarProyectos(1); 
@@ -158,17 +162,14 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd:[{ value: '', disabled: false }],
-      fechaingreso: [{
-        value: this.serviceUtilitario.obtenerFechaActual(),
-        disabled: false,
-      }],
+      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       idordencompra: [{ value: this.idOrdenC, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
-      idproveedor: [{ value: 0, disabled: false }],
+      idproveedor: [{ value: '', disabled: false }],
       idmoneda: [{ value: 0, disabled: false }],
       //idorigen: [{ value: this.IA_data, disabled: false }],
       idcontacto: [{ value: 0, disabled: false }],
-      codtipodoc: [{ value: 'OPO', disabled: false }],
+      codtipodoc: [{ value: 'OTR', disabled: false }],
       tiempoentrega: [{ value: 0, disabled: false }],
       codformapago: [{ value: 0, disabled: false }],
       validezoferta: [{ value: 0, disabled: false }],
@@ -181,6 +182,13 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       codtipoorden:[{ value: 'OC', disabled: false }],
       codigonroorden:[{ value: '', disabled: true }],
       nomproyecto:[{ value: '', disabled: false }],
+      nrodocumento:[{ value: '', disabled: false }],
+      fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      tc:[{ value: '', disabled: false }],
+      tipodoc_ctb:[{ value: '', disabled: false }],
+      nroserie_ctb:[{ value: '', disabled: false }],
+      nrodocumento_ctb:[{ value: '', disabled: false }],
+      fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
     });
   }
 
@@ -276,6 +284,48 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     
   }
 
+  traerUno(){
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Cargando...!';
+    const objeto ={
+      idordencompra: this.idOrdenC,
+      idusuario: constantesLocalStorage.idusuario
+    }
+
+    const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+            this.setSpinner(false);
+            this.ordenCompra = rpta.ordencompra[0];     
+            //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
+            if (rpta.ordencompra[0].items !== undefined) {
+              this.lstItemOC = rpta.ordencompra[0].items;
+            }  
+            if (rpta.ordencompra[0].quotes !== undefined) {
+              this.lstQuotes =  rpta.ordencompra[0].quotes; 
+            }    
+                         
+          this.visibleDocument = false;
+
+          this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this.registerFormRegistro.get('tipodoc_ctb').setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
+          //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
+          //this.cargarMenu(rpta.ordencompra[0].acciones);
+          this.mostrarBotones(rpta.ordencompra[0].estado);       
+         
+        },
+        error:(err)=>{
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+          this.setSpinner(false);
+          
+        }
+      });
+    this.$listSubcription.push($cargarOrdenC)
+  }
  
   guardarOC(){
 
@@ -307,7 +357,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     const objeto = {
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
-      fechaingreso
+      fechaingreso,
+      tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString()
     }
 
     console.log('guardarOC...', objeto);
@@ -354,7 +405,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     
     this.comprasService.obtenerItemsTabla(109).subscribe({
       next: (rpta: any) => {
-        console.info('servicioGenerico : ', rpta);
 
         let _condicionescomerciales = rpta.filter((x: { iditem: number; }) => x.iditem === 135);
         this.registerFormRegistro.get('condicionescomerciales').setValue(_condicionescomerciales[0].valoritem);
@@ -396,9 +446,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           },
           complete: () => {
           },
-      });
-    
-      }
+      });    
+    }
 
   listaProveedores() {
 
@@ -455,6 +504,12 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.ordencompraService.tipoProyectoList().subscribe({
       next: (rpta: any) => {
       this.lstOrigen = rpta;
+      const objeto = {
+        idtipoproyecto: 4,
+        nomtipoproyecto: 'Otros',
+        codproceso:'OTR'
+      }
+      this.lstOrigen.unshift(objeto);
       },
       error: (err) => {
       this.messageService.clear();
@@ -473,11 +528,18 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     switch (data) {
       case 'OPO':
         this.cargarProyectos(1);
-        this.verReferencia = false;
+        //this.verReferencia = false;
+        this.verProyecto = true;
         break;
       case 'REQ':
         this.cargarProyectos(2);
-        this.verReferencia = true;
+        //this.verReferencia = true;
+        this.verProyecto = true;
+        break;        
+      case 'OTR':
+        //this.cargarProyectos(2);
+        //this.verReferencia = false;
+        this.verProyecto = false;
         break;
       // case 'VED':
       //   this.cargarProyectos(3);
@@ -495,16 +557,18 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   getItem(data: any,index: number) {
     data.nroindex = index;
     data.idordencompra = this.idOrdenC;
-    console.log('CItemCotizacionComponent', data);
-    const refItem = this.dialogService.open(CItemCotizacionComponent, {
+    data.origenreg = 'RC';
+    console.log('CItemOrdenesComponent', data);
+    const refItem = this.dialogService.open(CItemOrdenesComponent, {
       data: data,
-      header: data.length == 0 ? "Agregar Registro" : "Editar Registro - " + data.idordencompraitem,
+      header: data.length == 0 ? "Agregar Producto" : "Editar Producto - " + data.idordencompraitem,
       closeOnEscape: false,
       styleClass: 'testDialog',
-      width: ' 60%',
-      //height: '55%'
+      width: '40%'
     });
     refItem.onClose.subscribe((rpta: any) => {
+      
+      console.log('onClose',rpta);
       if (rpta != undefined) {
           const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == index))
           if (_posAll != -1) {
@@ -514,17 +578,17 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.lstItemOC.push(rpta.objeto);
         console.log('this.lstItemOC',this.lstItemOC);
       }
-      this.calcularTotales();
+      //this.calcularTotales();
     });
   }
 
-  calcularTotales() {
-    let totalpreventot = 0;    
-    for (let lstCotiza of this.lstItemOC) {
-        totalpreventot = totalpreventot + lstCotiza.preciocostototal;
-    }    
-    this.montoTotal = totalpreventot;
-  }
+  // calcularTotales() {
+  //   let totalpreventot = 0;    
+  //   for (let lstCotiza of this.lstItemOC) {
+  //       totalpreventot = totalpreventot + lstCotiza.preciocostototal;
+  //   }    
+  //   this.montoTotal = totalpreventot;
+  // }
 
   eliminarItem(data: any) {
     this.confirmationService.confirm({
@@ -543,12 +607,16 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           this.lstItemOC.splice(_posAll, 1)
           }
       }
-      this.calcularTotales();
+      //this.calcularTotales();
       }
   });
   }
 
   getContactos(dato: any) {  
+
+    const _nrodoc:string=this.lstProveedores.filter(x=>x.idcliente === dato)[0].nrodocumento.toString();
+    this.registerFormRegistro.get('nrodocumento')?.setValue(_nrodoc)
+
     const $personaProveedorlist = this.comprasService.ListaContactos(dato).subscribe({
         next: (rpta: any) => {
             this.setSpinner(false);
@@ -637,7 +705,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         console.log( 'listaitems...' ,this.lstItemOC);
     }
     fubauto.clear();
-    this.calcularTotales();
+    //this.calcularTotales();
     this.itemVisible = false;
   }
 
@@ -646,11 +714,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       next: (rpta: any) => {
       this.lstProyectos = rpta;
 
-      if (this.idOrdenC > 0) {
-        this.changeProyecto(this.registerFormRegistro.get('idproyecto').value);
-      }
-
-      },
+          },
 
       error: (err) => {
       this.messageService.clear();
@@ -666,19 +730,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   }
 
 
-  changeProyecto(idproyecto : any){
-    if (this.registerFormRegistro.get('codtipodoc').value === 'OPO') {  
-      const idoportunidad = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].idoportunidad;
-      const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
-      this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
-    }    else{
-      const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
-      this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
-      this.verCotizacion = true;
-    }
-  }
-
-
+ 
 
   vistaPreliminar(){
     this.setSpinner(true);
@@ -728,20 +780,20 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($cargarOrdenC)
   }
 
-  getQuotes(dato: any){
-    let objeto = {
-      idcotiza: dato.idcotiza,
-      indseleccion: dato.indseleccion
-    }
-    if (dato.indseleccion) {
-      this.lstQuotes.push(objeto);
-    }else{
-      const _posAll: number = this.lstQuotes.findIndex(((x: { idcotiza: any; }) => x.idcotiza == dato.idcotiza))
-          if (_posAll != -1) {
-          this.lstQuotes.splice(_posAll, 1)
-        }
-    }    
-  }
+  // getQuotes(dato: any){
+  //   let objeto = {
+  //     idcotiza: dato.idcotiza,
+  //     indseleccion: dato.indseleccion
+  //   }
+  //   if (dato.indseleccion) {
+  //     this.lstQuotes.push(objeto);
+  //   }else{
+  //     const _posAll: number = this.lstQuotes.findIndex(((x: { idcotiza: any; }) => x.idcotiza == dato.idcotiza))
+  //         if (_posAll != -1) {
+  //         this.lstQuotes.splice(_posAll, 1)
+  //       }
+  //   }    
+  // }
 
   AgregarContacto(){
     if (this.registerFormRegistro.get('idproveedor').value === null) {
@@ -851,94 +903,114 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
 
   }
 
-  descargarPlantilla(){
-    this.setSpinner(true);
-    this.mensajeSpinner = 'Descargando Plantilla...!';
-
-    const $cargarOrdenC = this.ordencompraService.descargarPlantilla(2).subscribe({
-      next: (rpta: any) => {
-        this.setSpinner(false);      
-        
-        const mediaType = 'application/pdf';
-          const blob = new Blob([rpta.body], { type: mediaType });
-          const filename = 'PlantillaItemsOC.xlsx';
-  
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          ///a.target = '_blank';
-          a.click();
-
-          //window.open(url);
-
-          // setTimeout(() => {
-          //     document.body.removeChild(a);
-          //     window.URL.revokeObjectURL(url);
-          // }, 100);
-      },
-          error: (err) => {
-            this.setSpinner(false);
-          this.messageService.clear();
-          this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: mensajesQuestion.msgErrorGenerico,
-          });
-      },
-          complete: () => {
-      },
-    });
-    this.$listSubcription.push($cargarOrdenC)
-  }
-
   validarDatos():boolean{
     let _error = false;
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-      if (this.registerFormRegistro.value.idproyecto === null)
+    if (this.registerFormRegistro.value.nrodocumento === null ||this.registerFormRegistro.value.nrodocumento ==='' )
+    {
+        this.errorMensaje="Ingresar RUC...!";
+        _error = true;
+    }
+
+    if (!_error && (this.registerFormRegistro.value.idproveedor === null || this.registerFormRegistro.value.idproveedor === ''))
+    {
+        this.errorMensaje="Buscar Proveedor por RUC...!";
+        _error = true;
+    }
+
+    if (!_error && (this.registerFormRegistro.value.tipodoc_ctb === '' || this.registerFormRegistro.value.tipodoc_ctb === null))
+    {
+        this.errorMensaje="Seleccionar Tipo de Documento...!";
+        _error = true;
+    }
+
+    if (!_error && (this.registerFormRegistro.value.nroserie_ctb === '' || this.registerFormRegistro.value.nroserie_ctb === null))
+    {
+        this.errorMensaje="Ingresar Serie de Documento...!";
+        _error = true;
+    }
+  
+    if (!_error && (this.registerFormRegistro.value.nrodocumento_ctb === '' || this.registerFormRegistro.value.nrodocumento_ctb === null))
       {
-          this.errorMensaje="Seleccionar Proyecto...!";
+          this.errorMensaje="Ingresar Número de Documento...!";
           _error = true;
       }
 
-      if (!_error && this.registerFormRegistro.value.idproveedor === null)
-      {
-          this.errorMensaje="Seleccionar Proveedor...!";
+    if (!_error && this.registerFormRegistro.value.idmoneda === null)
+    {
+          this.errorMensaje="Seleccionar Moneda...!";
           _error = true;
-      }
+    }
 
-      if (!_error && (this.registerFormRegistro.value.idcontacto === 0 || this.registerFormRegistro.value.idcontacto === null))
-      {
-          this.errorMensaje="Seleccionar Contacto...!";
+    if (!_error && (this.registerFormRegistro.value.tc === null || this.registerFormRegistro.value.tc === ''))
+    {
+          this.errorMensaje="Ingresar Tipo Cambio...!";
           _error = true;
-      }
+    }
 
-      if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
-      {
-          this.errorMensaje="Ingresar N° de Referencia...!";
-          _error = true;
-      }
+    // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
+    // {
+    //     this.errorMensaje="Ingresar Condiciones Comerciales...!";
+    //     _error = true;
+    // }
+      return _error;
+    }
 
-      if (!_error && this.registerFormRegistro.value.idmoneda === null)
-      {
-            this.errorMensaje="Seleccionar Moneda...!";
-            _error = true;
-      }
+  getBusquedaRUC(){
+    const _nro =  this.registerFormRegistro.get('nrodocumento')?.value;
+    console.log('getBusquedaRUC...', _nro); 
 
-      if (!_error && this.registerFormRegistro.value.codformapago === null)
-      {
-            this.errorMensaje="Seleccionar Termino de Pago...!";
-            _error = true;
-      }
+    if(_nro === null || _nro === ''){
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Ingresar Ruc...' });
+      return;
+    }
+    console.log('length...', _nro.length); 
+    if(_nro.length < 11){
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Ruc no Valido...' });
+      return;
+    }
 
-      if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
-      {
-          this.errorMensaje="Ingresar Condiciones Comerciales...!";
-          _error = true;
-      }
-       return _error;
-     }
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Buscando...!';
+
+    const objet = {
+      nrodocumento: _nro
+    }
+
+    this.ordencompraService.buscarporRUC(objet).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        console.log('rpta...', rpta); 
+        this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
+      },
+      error: (err) => {
+        this.setSpinner(false);
+      this.messageService.clear();
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+          });
+      },
+      complete: () => {
+      },
+  });
+  }
+
+  listarItemsTablaComprobante() {
+    this.comprasService.obtenerItemsTabla(112).subscribe({
+        next: (rpta: any) => {
+          console.info('listarItemsTablaComprobante : ', rpta);
+            this.lstComprobante = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });    
+  }
 }

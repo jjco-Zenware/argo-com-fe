@@ -9,6 +9,7 @@ import { CKardexComponent } from './c-kardex/c-kardex.component';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { AlmacenService } from '../service/almacenServices';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,6 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
     ReactiveFormsModule,
     ConfirmPopupModule 
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })
 export class KardexModule { }

@@ -10,9 +10,9 @@
             <p-tabPanel>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
-                        <i class="pi pi-building"></i>
+                        <i class="pi pi-cog"></i>
                         <span class="font-bold white-space-nowrap m-0">
-                            Datos Cliente
+                            Detalles 
                         </span>
                     </div>
                 </ng-template>
@@ -42,31 +42,12 @@
                                     <input pInputText type="text" class="font-semibold" formControlName="idordencompra" class="p-inputtext-sm"/>
                                 </span>
                             </div>
-                            <div class="col-12 -mt-4 -mb-5">
+                            <!-- <div class="col-12 -mt-4 -mb-5">
                                 <p-divider ></p-divider>
-                            </div>
-                            <!-- <div class="sm:col-6 lg:col-4 md:col-3 mt-1 h-4rem field">
-                                <label class="block text-900 font-semibold mb-1">Origen <span class="text-red-500 font-bold"> * </span></label>
-                                <span class="p-fluid mt-1">
-                                    <p-dropdown [options]="lstOrigen" formControlName="codtipodoc" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
-                                    optionValue="codproceso" (onChange)="getOrigen($event.value)" [readonly]=onlyRead></p-dropdown>
-                                </span>
-                            </div>  
-                            <div class=" sm:col-8 lg:col-7 md:col-12"></div> -->
-                            <!-- <div class="col-12 field h-4rem mt-1">
-                                <label class="block text-900 font-semibold mb-1">Proyecto <span class="text-red-500 font-bold"> * </span></label>                        
-                                <span class="p-fluid mt-1">
-                                    <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto"
-                                    optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
-                                </span>
                             </div> -->
-                            <!-- <div class="col-8 field h-4rem mt-1">
-                                <label class="block text-900 font-semibold mb-1">Descripción Proyecto</label>                        
-                                <span class="p-fluid">
-                                    <input pInputText type="text" formControlName="nomproyecto" readonly="true"/>
-                                </span>
-                            </div> -->
-                            
+                            <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 h-3rem -mt-3 mb-2">
+                                <span class="p-tag text-sm">Datos Cliente</span>
+                            </p-divider>                            
                             <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem">                            
                                 <label class="block text-900 font-semibold mb-1">Cliente <span class="text-red-500 font-bold"> * </span></label>                            
                                 <span>
@@ -85,15 +66,29 @@
                                     optionValue="idcontacto" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                                 </span>
                             </div>
+                            <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem mt-2">                            
+                                <label class="block text-900 font-semibold mb-1">Ruc</label>                            
+                                <span>
+                                    <input pInputText type="text" class="font-semibold" formControlName="nrodocumento" class="p-inputtext-sm" readonly="true"/>
+                                </span>
+                            </div>                         
+                            <div class="sm:col-6 lg:col-8 md:col-3 h-4rem mt-2">
+                                <div class="flex">
+                                    <label class="block text-900 font-semibold mb-1">Dirección</label>
+                                </div>                            
+                                <span>
+                                    <input pInputText type="text" class="font-semibold" formControlName="direcresumen" class="p-inputtext-sm" readonly="true"/>
+                                </span>
+                            </div>
                             <div *ngIf="verReferencia" class="col-4 field h-4rem mt-3 -mb-2">
                                 <label class="block text-900 font-semibold mb-1">N° Referencia <span class="text-red-500 font-bold"> * </span></label>                        
                                 <span class="p-fluid">
                                     <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
                                 </span>
                             </div>
-                            <div class="col-12 mt-2 -mb-5">
-                                <p-divider ></p-divider>
-                            </div>
+                            <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 h-3rem -mt-1 mb-2">
+                                <span class="p-tag text-sm">Condiciones</span>
+                            </p-divider>
                             <div class="sm:col-6 lg:col-4 md:col-3 h-4rem">
                                 <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
                                 <span class="p-fluid mt-1">

@@ -6,6 +6,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ComprasService } from '../../Service/compraServices';
 import { Subscription } from 'rxjs';
 import { SharedAppService } from '@sharedAppService';
+import { UtilitariosService } from 'src/app/services/utilitarios.service';
 
 @Component({
   selector: 'app-c-dato-proveedor',
@@ -58,6 +59,7 @@ constructor(
    private formBuilder: FormBuilder,
    private comprasService: ComprasService,
    private serviceSharedApp: SharedAppService,
+   private serviceUtilitario: UtilitariosService,
 ) {
   this.comprasService.emitirEvento(0);
 }
@@ -125,10 +127,11 @@ createFormCliente() {
   indmigrado :  [{ value: false, disabled: false }],
   indestado:  [{ value: '1', disabled: false }],
   indvig :  [{ value: true, disabled: false }],
-  fechareg: [{ value: new Date(), disabled: false }],
-  iduserreg : [{ value: 1, disabled: false }],
-  fechaact: [{ value: new Date(), disabled: false }],
-  iduseract: [{ value: 1, disabled: false }],
+  // fechareg: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
+  // iduserreg : [{ value: 1, disabled: false }],
+  // fechaact: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
+  // iduseract: [{ value: 1, disabled: false }],
+  idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
   idpersona: [{ value: 0, disabled: false }],
   });
 }
@@ -248,6 +251,7 @@ guardar() {
   }else{
       this.cliente.idpersona = 0;
   }
+  
   console.log('guardar...', this.cliente);
 
   //Verdadero si todos los campos están llenos
@@ -275,6 +279,7 @@ guardar() {
                 }
           },
           error:(err)=>{
+            this.setSpinner(false);
               console.error('error : ',err)
               this.messageService.clear();
               this.messageService.add({

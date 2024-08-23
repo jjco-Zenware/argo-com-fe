@@ -3,7 +3,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { constantesApiWeb } from '@apiVariables';
 import { globalVariable } from '@constantes';
 import { I_RespuestaProceso } from '@interfaces';
-import { BehaviorSubject, Subject, tap } from 'rxjs';
 
 @Injectable()
 export class ComprasService {
@@ -26,7 +25,6 @@ export class ComprasService {
     }
 
     prcClientes(objeto: any) {
-        console.log("prcClientes : ", objeto);
         const url = `${constantesApiWeb.prcClientes}`;
         return this.http.post<any>(url, objeto)
     }

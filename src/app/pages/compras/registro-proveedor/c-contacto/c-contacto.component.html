@@ -106,7 +106,7 @@
                     <label for="start">Nombre</label>
                 </div>
                 <span class="p-fluid">
-                    <input pInputText type="text" formControlName="nombrecontacto" />
+                    <input pInputText type="text" formControlName="nombrecontacto" class="p-inputtext-sm"/>
                     <p class="text-red-600" *ngIf="submitted && formContacto.nombrecontacto.errors">* Debe ingresar Nombre</p>
                 </span>
             </div>
@@ -115,7 +115,7 @@
                     <label for="email">Email</label>
                 </div>
                 <span class="p-fluid">
-                    <input pInputText type="email" formControlName="email"/>
+                    <input pInputText type="email" formControlName="email" class="p-inputtext-sm"/>
                     <div *ngIf="submitted && formContacto.email.errors" class="text-red-600">
                     <div *ngIf="formContacto.email.errors.required">Debe ingresar Email</div>
                         <div *ngIf="formContacto.email.errors.email">El correo electrónico no es válido</div>
@@ -127,7 +127,7 @@
                     <label htmlFor="cel1">Celular</label>
                 </div>
                 <span class="p-fluid">
-                    <input pInputText type="text" formControlName="telefono"/>
+                    <input pInputText type="text" formControlName="telefono" class="p-inputtext-sm"/>
                     <p class="text-red-600" *ngIf="submitted && formContacto.telefono.errors">* Debe ingresar Celular</p>
                 </span>
             </div>
@@ -136,7 +136,7 @@
                     <label htmlFor="age1">Cargo</label>
                 </div>
                 <span class="p-fluid">
-                    <input pInputText type="text" formControlName="cargo"/>
+                    <input pInputText type="text" formControlName="cargo" class="p-inputtext-sm"/>
                     <p class="text-red-600" *ngIf="submitted && formContacto.cargo.errors">* Debe ingresar Cargo</p>
                 </span>
             </div>
@@ -145,13 +145,12 @@
                     <label class="font-semibold">Rol</label>
                 </div>
                 <span class="p-fluid">
-                    <p-dropdown appendto="body" [options]="lstTipoRol" optionLabel="valoritem" optionValue="iditem" formControlName="tiporol" placeholder="Seleccionar Rol"></p-dropdown>
+                    <p-dropdown appendto="body" [options]="lstTipoRol" optionLabel="valoritem" optionValue="iditem" formControlName="tiporol" placeholder="Seleccionar Rol" class="p-inputtext-sm"></p-dropdown>
                     <p class="text-red-600" *ngIf="submitted && formContacto.tiporol.errors">* Debe Seleccionar el Rol</p>
                 </span>
             </div>
             <div class="flex justify-content-end">
-                <button pButton icon="pi pi-save" label="Grabar" (click)="guardarContacto()" class="font-bold w-auto mb-3 p-button-primary h-3rem"></button>
-    
+                <button pButton icon="pi pi-save" label="Grabar" (click)="guardarContacto()" class="font-bold w-auto mb-3 p-button-primary h-2rem"></button>    
             </div>
         </div>
        
