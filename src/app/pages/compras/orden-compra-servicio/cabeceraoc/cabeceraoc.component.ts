@@ -14,6 +14,7 @@ import { OrdencompraService } from '../service/ordencompra.service';
 import { CModalExcTransacComponent } from '../modal-exc-transac/modal-exc-transac.component';
 import { ComprasService } from '../../Service/compraServices';
 import * as  XLSX  from 'xlsx';
+import { AlmacenService } from 'src/app/pages/almacen/service/almacenServices';
 
 @Component({
   selector: 'app-c-cabeceraoc',
@@ -31,7 +32,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   // verInter: boolean = false;
   // verVent: boolean = false;
   // verOtro: boolean = false;
-  idtipoproyecto: any;
+  //idtipoproyecto: any;
   lstProyectos: any;
   lstCliente: Cliente []=[];
   lstProveedores: Cliente[] = [];
@@ -73,7 +74,6 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   lstTipoProducto:any;
   verImportar: boolean = true;
   onlyRead: boolean = false;
-  verReferencia: boolean = false;
   lstUnidades:any;
   errorMensaje: string = "";
   s_monto:number = 0;
@@ -81,6 +81,10 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   s_monto_total:number = 0;
   lstTransacciones: any[]=[];
   activeIndex: number = 0;
+  idfamilia: any;
+  idsubfamilia: any;
+  lstFamilia:any;
+    lstSubFamilia:any;
 
   constructor(
     private fb: FormBuilder,
@@ -93,6 +97,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     private confirmationService: ConfirmationService,
     private ordencompraService: OrdencompraService,
     private comprasService: ComprasService,
+    private almacenService: AlmacenService
   ) { }
 
   ngOnInit(): void {
@@ -307,7 +312,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
               this.lstQuotes =  rpta.ordencompra[0].quotes; 
             }    
            
-            this.getOrigen(rpta.ordencompra[0].codtipodoc);               
+            this.getOrigen(rpta.ordencompra[0].idtipoproyecto);               
             this.visibleDocument = false;
             console.log('s_monto', rpta.ordencompra[0].s_monto);
           this.s_monto = rpta.ordencompra[0].s_monto;
@@ -529,6 +534,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   listaProyectoTipo(){
     this.ordencompraService.tipoProyectoList().subscribe({
       next: (rpta: any) => {
+        console.log('listaProyectoTipo', rpta);
       this.lstOrigen = rpta;
       },
       error: (err) => {
@@ -545,16 +551,16 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   }
    
   getOrigen(data:any){
-    switch (data) {
-      case 'OPO':
-        this.cargarProyectos(1);
-        this.verReferencia = false;
-        break;
-      case 'REQ':
-        this.cargarProyectos(2);
-        this.verReferencia = true;
-        break;
-    }    
+    console.log('getOrigen', data);
+    this.cargarProyectos(data);
+    // switch (data) {
+    //   case 'OPO':
+    //     this.cargarProyectos(1);
+    //     break;
+    //   case 'REQ':
+    //     this.cargarProyectos(2);
+    //     break;
+    // }    
 
   }
 
@@ -564,10 +570,10 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     console.log('CItemCotizacionComponent', data);
     const refItem = this.dialogService.open(CItemCotizacionComponent, {
       data: data,
-      header: data.length == 0 ? "Agregar Registro" : "Editar Registro - " + data.idordencompraitem,
+      header: data.length == 0 ? "Agregar Item" : "Editar Item - " + data.idordencompraitem,
       closeOnEscape: false,
       styleClass: 'testDialog',
-      width: ' 60%',
+      width: ' 50%',
     });
     refItem.onClose.subscribe((rpta: any) => {
       
@@ -638,7 +644,6 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   }
 
   ReadExcel(event: any, fubauto: any){
-    //this.lstItemOC = [];
     let file = event.files[0];
     let s_nombre = file.name.split('.').pop();  
 
@@ -655,56 +660,100 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         var workBook = XLSX.read(fileReader.result,{type:'binary'});
         var sheetNames = workBook.SheetNames;
         this.ExcelData = XLSX.utils.sheet_to_json(workBook.Sheets[sheetNames[0]])
-        console.log(this.ExcelData);
+        console.log('ReadExcel...', this.ExcelData.filter((x: { CodProducto: any; })=>x.CodProducto !== undefined));
 
-        const _nomtipoprod:string =this.lstTipoProducto.filter((x: { idtipoprod: any; })=>x.idtipoprod == this.idtipoprod)[0].nomtipoprod;
-        const _nommarca:string =this.lstMarcas.filter((x: { idmarca: any; })=>x.idmarca == this.idmarca)[0].nommarca;
-        const _nomunidad:string=this.lstUnidades.filter((x: { iditem: number; })=>x.iditem == 130)[0].valoritem;
+        //validar código de producto
+      //   const lstCodProducto = this.ExcelData.filter((x: { CodProducto: any})=>x.CodProducto !== undefined ); 
+      //   console.log('lstCodProducto...', lstCodProducto);
+
+      //   for (let i = 0; i < lstCodProducto.length; i++) {
+      //     this.almacenService.traerProductoPorCodigo(lstCodProducto[i].CodProducto)
+      //    .subscribe({
+      //      next: (rpta:any) => {
+      //        console.log('rpta...', rpta);
+      //        if (rpta === null || rpta === undefined) {
+      //          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'el Código de Producto: ' +lstCodProducto[i].CodProducto + ' No Existe...' });
+      //          return;
+      //        }                    
+      //      },
+      //      error:(err)=>{
+      //          this.serviceSharedApp.messageToast()
+      //      },
+      //      complete:() => {        
+      //      }
+      //    });  
+      //  }
+
+       const _idtipoprod:string =this.lstSubFamilia.filter((x: { idsubfamilia: any; })=>x.idsubfamilia == this.idsubfamilia)[0].idtipoprod;
+       const _nomtipoprod:string =this.lstSubFamilia.filter((x: { idsubfamilia: any; })=>x.idsubfamilia == this.idsubfamilia)[0].nomtipoprod;
+       const _nommarca:string =this.lstMarcas.filter((x: { idmarca: any; })=>x.idmarca == this.idmarca)[0].nommarca;
+       const _nomunidad:string=this.lstUnidades.filter((x: { iditem: number; })=>x.iditem == 130)[0].valoritem;
     
-        this.ExcelData.forEach((item: any) => {
-          console.log('ExcelData...', item);          
-          
-          item.items = item.Item === undefined ? 0 : item.Item,
-          item.idmarca = this.idmarca,
-          item.idtipoprod = this.idtipoprod,
-          item.nommarca  = _nommarca,
-          item.nomtipoprod  = _nomtipoprod,
-          item.coditem = item.Item === undefined ? 0 : item.Item,
-          item.descuento = 0,
-          item.fecact = new Date(),
-          item.fecfin = item.FechaFin === undefined ? null : item.FechaFin,
-          item.fecini = item.FechaInicio === undefined ? null : item.FechaInicio,
-          item.fecreg = new Date(),
-          item.idordencompra = 0,
-          item.idordencompraitem = 0,
-          item.idprod = 0,
-          item.idunidad = 130,
-          item.iduseract = 0,
-          item.iduserreg = 0,
-          item.indvig = true,
-          item.margen = 0,
-          item.nomprod = null,
-          item.nomproveedor = '',
-          item.nrocontrato = item.NroContrato === undefined ? '': item.NroContrato,
-          item.nromeses = 0,
-          item.preprofit = 0,
-          item.serialnumber = '',
-          item.sku = item.CodigoSKU === undefined ? '': item.CodigoSKU.toString(),
-          item.codunidad = 'UNID',
-          item.nomunidad = _nomunidad,
-          item.descripcion = item.Descripcion === undefined ? '': item.Descripcion,
-          item.codproveedor = item.CodProveedor === undefined ? '': item.CodProveedor,
-          item.cantidad = item.Cantidad === undefined ? '' : item.Cantidad,
-          item.preciocosto = item.PrecioUnitario === undefined ? '': item.PrecioUnitario,
-          item.preciocostototal = item.Total === undefined ? '' : item.Total,
-
-          this.lstItemOC.push(item)
-        });
-        console.log( 'listaitems...' ,this.lstItemOC);
+       this.ExcelData.forEach((item: any) => {         
+         item.items = item.Item === undefined ? 0 : item.Item,
+         item.idmarca = this.idmarca,
+         item.idtipoprod = _idtipoprod,
+         item.nommarca  = _nommarca,
+         item.nomtipoprod = _nomtipoprod,
+         item.coditem = item.Item === undefined ? 0 : item.Item,
+         item.descuento = 0,
+         item.fecact = new Date(),
+         item.fecfin = item.FechaFin === undefined ? null : item.FechaFin,
+         item.fecini = item.FechaInicio === undefined ? null : item.FechaInicio,
+         item.fecreg = new Date(),
+         item.idordencompra = 0,
+         item.idordencompraitem = 0,
+         item.idprod = 0,
+         item.idunidad = 130,
+         item.iduseract = 0,
+         item.iduserreg = 0,
+         item.indvig = true,
+         item.margen = 0,
+         item.nomprod = null,
+         item.nomproveedor = '',
+         item.nrocontrato = item.NroContrato === undefined ? '': item.NroContrato,
+         item.nromeses = 0,
+         item.preprofit = 0,
+         item.serialnumber = '',
+         item.sku = item.CodigoSKU === undefined ? '': item.CodigoSKU.toString(),
+         item.codunidad = 'UNID',
+         item.nomunidad = _nomunidad,
+         item.descripcion = item.Descripcion === undefined ? '': item.Descripcion,
+         item.codproveedor = item.CodProveedor === undefined ? '': item.CodProveedor,
+         item.cantidad = item.Cantidad === undefined ? '' : item.Cantidad,
+         item.preciocosto = item.PrecioUnitario === undefined ? '': item.PrecioUnitario,
+         item.preciocostototal = item.Total === undefined ? '' : item.Total,
+         item.codproducto = item.CodProducto === undefined ? null : item.CodProducto,
+         item.idfamilia = this.idfamilia,
+         item.idsubfamilia = this.idsubfamilia,
+    
+         this.lstItemOC.push(item)
+       });
     }
+   
+    console.log( 'listaitems...' ,this.lstItemOC);
     fubauto.clear();
-    this.calcularTotales();
+    //this.calcularTotales();
     this.itemVisible = false;
+  }
+
+  traerUnoProducto(codigo: any): any{   
+    let rptaProd;
+    this.almacenService.traerProductoPorCodigo(codigo)
+      .subscribe({
+        next: (rpta:any) => {
+          //console.log( 'rpta...' ,rpta);
+          rptaProd = rpta;  
+          //console.log( 'rptaProd...' ,rptaProd);     
+          
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {        
+        }
+      });
+      return rptaProd;
   }
 
   cargarProyectos(dato:any){
@@ -798,7 +847,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
 
   vistaPreliminar(){
     this.setSpinner(true);
-    this.mensajeSpinner = 'Descargando Vista Preliminar...!';
+    this.mensajeSpinner = 'Descargando...!';
 
     const objeto = {
       idusuario : constantesLocalStorage.idusuario,
@@ -917,18 +966,21 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         }
   }
 
-  importarPlantilla(){
-    this.listarTipoProducto();
+  importarPlantilla(){    
+    this.listarFamilia();
+    //this.listarTipoProducto();
     this.listarMarcas();
     this.idtipoprod = null;
     this.idmarca = null;
+    this.idfamilia = null;
+    this.idsubfamilia = null;
     this.verImportar= true;
     this.itemVisible = true;
   }
 
   disabelImportar(){
-    console.log(this.idtipoprod , this.idmarca)
-    if (this.idtipoprod != null && this.idmarca != null) {
+    console.log('idfamilia...',this.idfamilia , 'idsubfamilia...',this.idsubfamilia, 'idmarca...',this.idmarca)
+    if (this.idfamilia != null && this.idsubfamilia != null && this.idmarca != null) {
       this.verImportar= false;
     }
   }
@@ -1072,5 +1124,63 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       });
       this.$listSubcription.push($lstTransacciones);
   
+    }
+
+    listarFamilia() {
+      const $listarFamilia = this.almacenService.listarFamilia().subscribe({
+        next: (rpta: any) => {
+          this.lstFamilia = rpta;
+          const objet = {
+            idfamilia: 0,
+            nomfamilia: 'TODOS'
+          }
+          this.lstFamilia.unshift(objet);
+        },
+        error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+      });
+      this.$listSubcription.push($listarFamilia);
+    }
+
+    getSubFamilia(dato: any) {  
+      const $getSubFamilia = this.almacenService.listarSubFamilia(dato).subscribe({
+          next: (rpta: any) => {
+              this.setSpinner(false);
+              console.info('next : ', rpta);
+              this.lstSubFamilia = rpta;
+              const objet = {
+                idsubfamilia: 0,
+                nomsubfamilia: 'TODOS'
+              }
+              this.lstSubFamilia.unshift(objet);
+          },
+          error: (err) => {
+              this.setSpinner(false);
+              console.info('error : ', err);
+              this.messageService.clear();
+              this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: mensajesQuestion.msgErrorGenerico,
+              });
+          },
+          complete: () => {},
+      });
+      this.$listSubcription.push($getSubFamilia);
+    }
+
+    deleteItem(){
+      this.confirmationService.confirm({
+        key: 'confirm1',
+        header: 'Confirmación',
+        message:  '¿Desea Eliminar Todos los Items...?' ,
+        accept: () => {
+          this.lstItemOC = [];
+        }
+    });
     }
 }

@@ -124,7 +124,7 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
           header: "Editar Almacén" ,
           closeOnEscape: false,
           styleClass: 'testDialog',
-          width: '40%'
+          width: '30%'
         });
         refItem.onClose.subscribe((rpta: any) => {    
           console.log('onClose',rpta);  
@@ -158,7 +158,7 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
         header: "Registrar Almacén" ,
         closeOnEscape: false,
         styleClass: 'testDialog',
-        width: ' 40%'
+        width: ' 30%'
       });
       refItem.onClose.subscribe((rpta: any) => {   
         console.log('onClose',rpta);   

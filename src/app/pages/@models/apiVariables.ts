@@ -80,7 +80,8 @@ export const constantesApiWeb = {
     portipoProyectoList: controllerComercial + '/proyectolist02/',
 
     procesarTrx: controllerMain + '/prctrxdoc',
-    prcDocumento: controllerMain + '/prcdocumento',
+    prcDocumento: controllerMain + '/prcdocumentordlc',
+    //prcDocumento: controllerMain + '/prcdocumento',
     listarFlujo: controllerComercial + '/trackflujolist',
     grabarRegla: controllerComercial + '/reglaflujoprc/',
     listarReglaFlujo: controllerComercial + '/reglaflujolist',
@@ -113,5 +114,10 @@ export const constantesApiWeb = {
     kardexlistar: controllerAlmacen + '/kardexlistar',
     productotaglist: controllerProducto + '/taglist/',
     tagNew: controllerProducto + '/tagNew',
+
+    traerunoFamilia: controllerAlmacen + '/familiatraeruno/',
+    traerunoSubFamilia: controllerAlmacen + '/subfamiliatraeruno/',
     
+    prcFamilia: controllerAlmacen + '/familiaprc/',
+    prcSubFamilia: controllerAlmacen + '/subfamiliaprc/',
 }

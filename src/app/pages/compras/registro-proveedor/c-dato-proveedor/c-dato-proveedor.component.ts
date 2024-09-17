@@ -53,6 +53,11 @@ dropdownItemsSector = [
   { name: 'PRIVADO', code: 'PRI' }
 ];
 
+lstEnti = [
+  { id:'P', name: 'PRIVADO' },
+  { id: 'E', name: 'ESTADO' },
+];
+
 constructor(
   private messageService: MessageService,
    private confirmationService: ConfirmationService,
@@ -133,6 +138,7 @@ createFormCliente() {
   // iduseract: [{ value: 1, disabled: false }],
   idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
   idpersona: [{ value: 0, disabled: false }],
+  tipoentidad: [{ value: null, disabled: false }, [Validators.required]],
   });
 }
 

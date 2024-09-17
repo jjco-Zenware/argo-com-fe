@@ -46,8 +46,8 @@ export class CProductoComponent implements OnInit, OnDestroy{
           { field: 'idprod', header: 'ID' },
           { field: 'codproducto', header: 'CÓDIGO' },
           { field: 'despro', header: 'PRODUCTO ' },
-          { field: 'nomfamilia', header: 'FAMILIA' },
-          { field: 'nomsubfamilia', header: 'SUBFAMILIA' },
+          { field: 'nomfamilia', header: 'GRUPO' },
+          { field: 'nomsubfamilia', header: 'CATEGORIA' },
           { field: 'nommarca', header: 'MARCA' },
           { field: 'desmoneda', header: 'MONEDA' },
           { field: 'nomunidad', header: 'UNIDAD' }

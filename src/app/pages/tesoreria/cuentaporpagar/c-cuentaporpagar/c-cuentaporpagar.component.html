@@ -1,0 +1,153 @@
+<div class="card m-4">
+    <div class="grid mt-2">
+        <div class="flex justify-content-between col-12 -mt-3 gap-2">                                  
+            <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                <span class="text-base font-semibold">CUENTAS POR PAGAR</span>
+            </div>                         
+        </div>
+    </div>
+
+    <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 -ml-3">
+        <div class="p-fluid p-formgrid grid col-9 text-sm h-5rem">
+            <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
+                <label class="font-semibold text-blue-600">FECHA INICIO</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
+                </p-calendar>
+            </div>
+            <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
+                <label class="font-semibold text-blue-600">FECHA FIN</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
+            </div>
+            <div class="sm:col-6 lg:col-4 md:col-6 -mt-4">                            
+                <label class="font-semibold text-blue-600">PROVEEDOR</label>                            
+                <span>
+                    <p-dropdown [options]="lstProveedor" placeholder="Seleccionar..."  formControlName="idproveedor" class="p-inputtext-sm"
+                    optionLabel="razonsocial" optionValue="idcliente" appendTo="body" ></p-dropdown>            
+                </span>
+            </div>    
+            <div class="sm:col-6 lg:col-2 md:col-6 -mt-4">
+                <label class="font-semibold text-blue-600">MONEDA</label>  
+                <span class="p-fluid mt-1">
+                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar..." optionLabel="desmoneda" 
+                    optionValue="idmoneda" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                </span>                                      
+            </div>           
+           
+            <div class="field col-12 md:col-2 -mt-4 gap-2">
+                <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
+                <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
+            </div>
+        </div>
+    </form> 
+
+    <p-table #dt1 [value]="lstCatalogo" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+        [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
+        styleClass="p-datatable-sm card border-1 border-round surface-border">
+        <ng-template pTemplate="header">
+            <tr class="text-sm">
+                <th style="width: 10px" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        N°
+                    </div>
+                </th>
+                <th style="width: 150px;" class="surface-200" >
+                    <div class="justify-content-between align-items-center">
+                        PROVEEDOR
+                    </div>
+                </th>
+                <th style="width: 50px;" class="surface-200" >
+                    <div class="justify-content-between align-items-center">
+                        FECHA
+                    </div>
+                </th>
+                <th style="width: 60px;" class="surface-200" >
+                    <div class="justify-content-between align-items-center">
+                        MONEDA
+                    </div>
+                </th>
+                <th style="width: 70px;" class="surface-200" >
+                    <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                        MONTO
+                    </div>
+                </th>
+                <th style="width: 50px" class="surface-200" >
+                    <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                        ESTADO
+                    </div>
+                </th>
+                <th style="width: 80px;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        ACCIONES
+                    </div>
+                </th>
+            </tr>
+            <tr >
+                <th></th>
+                <th *ngFor="let col of cols">
+                    <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
+                </th>
+            </tr>
+    
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td [ngStyle]="{'width':'10px'}">
+                    {{rowIndex + 1}}
+                </td>
+                <td >
+                    <div [ngStyle]="{'width':'50px'}">
+                        {{data.nomcomercial | uppercase}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'100px'}">
+                        {{data.fecha}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'150px'}">
+                        {{data.nommoneda | uppercase}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                        {{data.s_monto_total | number: '0.2-2' }}
+                    </div>
+                </td>
+                <td>                       
+                    <div [ngStyle]="{'width':'80px','text-align': 'center'}">
+                        <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
+                        <!-- <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                        <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                    -->
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="12">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="12">Cargando datos. Espere por favor.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>
+
+<p-toast></p-toast>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '350px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>

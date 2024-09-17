@@ -1,0 +1,53 @@
+<form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border mt-2">                    
+    <div class="p-fluid grid sm:col-12 lg:col-12 md:col-12 mt-2">                            
+        
+        <div class="sm:col-12 lg:col-12 md:col-12 -mt-2 field">
+            <label class="font-semibold mb-1">Descripción <span class="text-red-500 font-bold"> * </span></label>                        
+            <span class="p-fluid">
+                <textarea type="text" pInputTextarea [rows]="1" formControlName="despro" style="resize: none" class="w-full p-inputtext-sm" ></textarea>
+            </span>
+        </div>
+        <div class="sm:col-12 lg:col-6 md:col-6 h-4rem mb-3 -mt-5 field">                            
+            <label class="font-semibold mb-1">Grupo <span class="text-red-500 font-bold"> * </span></label>                            
+            <span>
+                <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..."  formControlName="idfamilia" class="p-inputtext-sm"
+                optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body"  (onChange)="getSubFamilia($event.value)"></p-dropdown>            
+            </span>
+        </div> 
+        <div class="sm:col-12 lg:col-6 md:col-6 h-4rem mb-3 -mt-5 field">                            
+            <label class="font-semibold mb-1">Categoría <span class="text-red-500 font-bold"> * </span></label>                            
+            <span>
+                <p-dropdown [options]="lstSubFamilia" placeholder="Seleccionar..."  formControlName="idsubfamilia" class="p-inputtext-sm"
+                optionLabel="nomsubfamilia" optionValue="idsubfamilia" appendTo="body" ></p-dropdown>            
+            </span>
+        </div> 
+        <div class="sm:col-12 lg:col-6 md:col-6 h-4rem field">        
+            <label class="block text-900 font-semibold">Marca <span class="text-red-500 font-bold"> * </span></label> 
+            <span>
+                <p-dropdown [options]="lstMarcas" formControlName="idmarca" optionLabel="nommarca" class="p-inputtext-sm"
+                    optionValue="idmarca" placeholder="Seleccionar Marca" appendTo="body" ></p-dropdown>
+            </span>           
+        </div> 
+        <div class="sm:col-12 lg:col-6 md:col-6 h-4rem field">
+            <label class="font-semibold">Uni. Medida <span class="text-red-500 font-bold"> * </span></label>
+            <span>
+                <p-dropdown [options]="lstUnidades" formControlName="idunidad" optionLabel="valoritem" placeholder="Seleccionar..."
+                optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+            </span>
+        </div> 
+        <div class="sm:col-12 lg:col-6 md:col-6 h-4rem field">
+            <label class="font-semibold">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+            <span >
+                <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                optionValue="idmoneda" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+            </span>                                      
+        </div>        
+    </div>                
+</form> 
+
+<div class="flex justify-content-end">
+    <button pButton icon="pi pi-save" label="Guardar" (click)="guardarProducto()"
+    class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary mt-2"></button> 
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

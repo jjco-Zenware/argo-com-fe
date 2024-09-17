@@ -92,7 +92,9 @@
                     {{rowIndex + 1}}
                 </td>
                 <td>
-                    {{data.razonsocial | uppercase}}
+                    <div pTooltip="{{data.razonsocial | uppercase}}">
+                        {{(data.razonsocial.length > 40) ? ((data.razonsocial).slice(0, 40) + '...' | uppercase) : data.razonsocial | uppercase}}
+                    </div> 
                 </td>
                 <td>
                     {{data.nomcomercial | uppercase}}

@@ -20,6 +20,7 @@ import { CDatoCotizacionComponent } from './c-dato-cotizacion/c-dato-cotizacion.
 import { CCotizacionComponent } from './c-cotizacion/c-cotizacion.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
+import { AlmacenService } from '../../almacen/service/almacenServices';
 
 
 
@@ -47,6 +48,6 @@ import { TagModule } from 'primeng/tag';
     SelectButtonModule,
     TagModule 
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, OrdencompraService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, OrdencompraService, AlmacenService]
 })
 export class OrdenCompraServicioModule { }

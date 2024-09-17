@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { CItemOrdenesComponent } from './items-ordenes/c-items-ordenes.component';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CBusquedaProductoComponent } from './busqueda-producto/c-busqueda-producto.component';
+import { ProyectosService } from '../compras/proyectos-ganados/service/proyectos.service';
 
 
 @NgModule({
@@ -31,6 +32,6 @@ import { CBusquedaProductoComponent } from './busqueda-producto/c-busqueda-produ
     CheckboxModule
     
   ],
-  providers : [OrdencompraService, ComprasService]
+  providers : [OrdencompraService, ComprasService, ProyectosService]
 })
 export class AlmacenModule { }

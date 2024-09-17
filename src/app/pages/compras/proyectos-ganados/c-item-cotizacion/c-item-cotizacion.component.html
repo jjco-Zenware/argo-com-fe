@@ -2,91 +2,107 @@
 
     <form [formGroup]="frmDatosItem">
             <div class="flex grid mt-1">
-                <div class="sm:col-12 lg:col-3 md:col-12">
+                <!-- <div class="sm:col-12 lg:col-3 md:col-12">
                     <label class="block text-900 font-semibold">Producto</label>
                     <p-dropdown [options]="lstTipoProducto" formControlName="idtipoprod" optionLabel="nomtipoprod"
                         optionValue="idtipoprod" placeholder="Seleccionar Producto" appendTo="body" (onChange)="verControles($event.value)" ></p-dropdown>
+                </div> -->
+                <div class="sm:col-12 lg:col-4 md:col-12">
+                    <label class="font-semibold">Código</label>
+                    <div class="p-inputgroup">
+                        <input pInputText type="text" formControlName="codproducto" class="p-inputtext-sm" placeholder="Ingresar Código..."/>
+                        <button type="button" pButton icon="pi pi-search" styleClass="p-button-warn" (click)="buscarProducto()"></button>
+                    </div>                    
+                </div> 
+                <div class="sm:col-12 lg:col-2 md:col-12 mt-3 gap-2"> 
+                    <button type="button" pButton icon="pi pi-search" styleClass="p-button-warn" class="h-2.5rem font-semibold p-button-outlined" (click)="getBusquedaAvanzada([])"
+                        pTooltip="Busqueda Avanzada de Producto" tooltipPosition="bottom"></button>
+                    <button type="button" pButton icon="pi pi-plus" styleClass="p-button-warn" class="h-2.5rem ml-2 font-bold p-button-outlined text-green-600" (click)="altaRapida()"
+                    pTooltip="Alta Rapida de Producto" tooltipPosition="bottom"></button>
                 </div>
-                <div class="col-12 sm:col-12 lg:col-2 md:col-12">
+                <div class="col-12 sm:col-12 lg:col-5 md:col-12"> 
+
+                </div>
+                <div class="col-12 sm:col-12 lg:col-3 md:col-12">
                     <div class="flex">
                         <label class="block text-900 font-semibold">Marca</label>
-                        <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Marca"
-                            tooltipPosition="right" (click)="NuevaMarca();"></i>
+                        <!-- <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Marca"
+                            tooltipPosition="right" (click)="NuevaMarca();"></i> -->
                     </div>
                     <p-dropdown [options]="lstMarcas" formControlName="idmarca" optionLabel="nommarca"
-                        optionValue="idmarca" placeholder="Seleccionar Marca" appendTo="body"></p-dropdown>
+                        optionValue="idmarca" placeholder="Seleccionar Marca" class="p-inputtext-sm" appendTo="body" [readonly]=true></p-dropdown>
                 </div>
-                <div class="sm:col-12 lg:col-7 md:col-12">
+                <div class="sm:col-12 lg:col-9 md:col-12">
                     <label class="font-semibold">Descripción</label>
                     <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="1"
-                        style="resize: none" class="w-full"></textarea>
+                        style="resize: none" class="w-full" class="p-inputtext-sm" [readonly]=true></textarea>
                 </div>                      
             </div>
             <div class="flex grid mb-2">                 
                 <div class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Cantidad</label>
-                    <p-inputNumber (onInput)="calcularBCQ($event)" formControlName="cantidad"></p-inputNumber>
+                    <p-inputNumber (onInput)="calcularBCQ($event)" formControlName="cantidad" class="p-inputtext-sm"></p-inputNumber>
                 </div>
                 <div class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Uni. Medida</label>
                     <span>
                         <p-dropdown [options]="lstUnidades" formControlName="idunidad" optionLabel="valoritem" placeholder="Seleccionar..."
-                        optionValue="iditem" appendTo="body" ></p-dropdown>
+                        optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
                     </span>
                 </div>
                 <div class="sm:col-12 lg:col-2 md:col-12 ">
                     <label class="font-semibold">P. Unitario</label>
-                    <p-inputNumber (onInput)="calcularBCPu($event)" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
+                    <p-inputNumber (onInput)="calcularBCPu($event)" class="p-inputtext-sm" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
                 </div>
                 <div class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Total</label>
-                    <p-inputNumber class="surface-100 font-bold" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
+                    <p-inputNumber class="surface-100 font-bold" class="p-inputtext-sm" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
                 </div>                
             </div>
             <div class="flex grid">
                 <div *ngIf="verporSerie" class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">N° Serie</label>
-                    <input pInputText type="text" formControlName="serialnumber"/>
+                    <input pInputText type="text" formControlName="serialnumber" class="p-inputtext-sm"/>
                 </div>
                 <div *ngIf="verSku" class="sm:col-12 lg:col-2 md:col-12 ">
                     <label class="font-semibold">SKU</label>
-                    <input pInputText type="text" formControlName="sku"/>
+                    <input pInputText type="text" formControlName="sku" class="p-inputtext-sm"/>
                 </div>   
                 <div *ngIf="verCondic" class="sm:col-12 lg:col-8 md:col-12 ">
                     <label class="font-semibold">Condiciones de Pago</label>
                     <textarea id="ref1" type="text" formControlName="ref1" pInputTextarea [rows]="2"
-                        style="resize: none" class="w-full"></textarea>
+                        style="resize: none" class="w-full" class="p-inputtext-sm"></textarea>
                 </div>              
                 <div *ngIf="verporLicContrato"class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">N° Contrato</label>
-                    <input pInputText type="text" formControlName="nrocontrato"/>
+                    <input pInputText type="text" formControlName="nrocontrato" class="p-inputtext-sm"/>
                 </div>
                 <div *ngIf="verporLic" class="sm:col-12 lg:col-3 md:col-12 ">
                     <label class="font-semibold">Fecha Inicio</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" formControlName="fecini"
-                        [readonlyInput]="true" appendTo="body">
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
                     </p-calendar>
                 </div>
                 <div *ngIf="verporLic" class="sm:col-12 lg:col-3 md:col-12 ">
                     <label class="font-semibold">Fecha Fin</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" formControlName="fecfin"
-                        [readonlyInput]="true" appendTo="body"></p-calendar>
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
                 </div>
             </div>
             <div class="flex grid mt-1">
                 <div class="col-12 -mt-4 -mb-5">
                     <p-divider ></p-divider>
                 </div>
-                <div class="col-12 sm:col-12 lg:col-3 md:col-12">
+                <div class="sm:col-12 lg:col-3 md:col-12">
                     <div class="flex">
                         <label class="block text-900 font-semibold">Tag</label>
                         <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Tag"
                         tooltipPosition="right" (click)="NuevoTag();"></i>
                     </div>
-                    <p-dropdown [options]="lstTag" optionLabel="valoritem" 
+                    <p-dropdown [options]="lstTag" optionLabel="valoritem" class="p-inputtext-sm"
                         optionValue="iditem" placeholder="Seleccionar Tag" appendTo="body" (onChange)="addTag($event.value)"></p-dropdown>
                 </div>
-                <div class="col-12 sm:col-12 lg:col-6 md:col-12">
+                <div class="sm:col-12 lg:col-9 md:col-12">
                     <!-- <div class="flex">
                         <label class="block text-900 font-semibold">Lista Tag</label>
                     </div> -->
@@ -148,7 +164,7 @@
             <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
                 <div class="mb-3 field">
                     <label class="font-semibold">Marca</label>
-                    <input pInputText type="text" formControlName="nommarca" id="nommarca"/>
+                    <input pInputText type="text" formControlName="nommarca" id="nommarca" class="p-inputtext-sm"/>
                 </div>
             </div>
             <div class="flex justify-content-end">
@@ -163,7 +179,7 @@
             <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
                 <div class="mb-3 field">
                     <label class="font-semibold">Descripción</label>
-                    <input pInputText type="text" formControlName="nomtag" id="nomtag"/>
+                    <input pInputText type="text" formControlName="nomtag" id="nomtag" class="p-inputtext-sm"/>
                 </div>
             </div>
             <div class="flex justify-content-end">

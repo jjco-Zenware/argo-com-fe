@@ -51,16 +51,16 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   
     ngOnInit(): void{
       this.getClientes();
-      this.cols = [
-        { field: 'razonsocial', header: 'Razón Social' },
-        { field: 'idtipodoc', header: 'Tipo Documento' },
-        { field: 'nomcomercial', header: 'Nombre Comercial' },
-        { field: 'nrodocumento', header: 'N° Documento' },
-        { field: 'nomtipopersona', header: 'Tipo Persona' },
-        { field: 'telefresumen', header: 'Telefono' },
-        { field: 'email', header: 'Email' },
-        { field: 'nomestado', header: 'Estado' },
-    ];
+    this.cols = [
+      { field: 'razonsocial', header: 'Razón Social' },
+      { field: 'nomcomercial', header: 'Nombre Comercial' },
+      { field: 'idtipodoc', header: 'Tipo Documento' },
+      { field: 'nrodocumento', header: 'N° Documento' },
+      { field: 'nomtipopersona', header: 'Tipo Persona' },
+      { field: 'telefresumen', header: 'Telefono' },
+      { field: 'email', header: 'Email' },
+      { field: 'nomestado', header: 'Estado' },
+  ];
       this.createFrm();
     }
   

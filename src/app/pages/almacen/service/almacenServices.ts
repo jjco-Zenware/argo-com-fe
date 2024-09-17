@@ -60,12 +60,32 @@ export class AlmacenService {
 
     buscarProducto(objeto: any) {
         const url = `${constantesApiWeb.buscarProducto}`;
-        console.log('buscarProducto url...', url)
         return this.http.post<any>(url, objeto)
     }
 
     almacenTraeruno(codigo: any) {
         const url = `${constantesApiWeb.almacenTraeruno}${codigo}`;
         return this.http.get<any>(url);
+    }
+
+    traerunoFamilia(codigo: any) {
+        const url = `${constantesApiWeb.traerunoFamilia}${codigo}`;
+        console.log('traerunoFamilia url...', url)
+        return this.http.get<any>(url);
+    }
+
+    traerunoSubFamilia(codigo: any) {
+        const url = `${constantesApiWeb.traerunoSubFamilia}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    prcFamilia(objeto: any) {
+        const url = `${constantesApiWeb.prcFamilia}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    prcSubFamilia(objeto: any) {
+        const url = `${constantesApiWeb.prcSubFamilia}`;
+        return this.http.post<any>(url, objeto)
     }
 }

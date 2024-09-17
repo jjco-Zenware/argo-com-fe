@@ -341,7 +341,7 @@ validarDatos():boolean{
    listaProyectoTipo(){
     this.proyectosService.tipoProyectoList().subscribe({
       next: (rpta: any) => {
-        this.lstOrigen = rpta;
+        this.lstOrigen = rpta.filter((x: { idtipoproyecto: any})=>x.idtipoproyecto !== 1 );
       console.info('listaProyectoTipo : ', this.lstOrigen);
       //this.itemsNvoPro = rpta;
 

@@ -42,11 +42,8 @@
                                     <input pInputText type="text" class="font-semibold" formControlName="idordencompra" class="p-inputtext-sm"/>
                                 </span>
                             </div>
-                            <!-- <div class="col-12 -mt-4 -mb-5">
-                                <p-divider ></p-divider>
-                            </div> -->
-                            <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 h-3rem -mt-3 mb-2">
-                                <span class="p-tag text-sm">Datos Cliente</span>
+                            <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 h-3rem -mt-3 -mb-2">
+                                <!-- <span class="p-tag text-sm">Datos Cliente</span> -->
                             </p-divider>                            
                             <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem">                            
                                 <label class="block text-900 font-semibold mb-1">Cliente <span class="text-red-500 font-bold"> * </span></label>                            
@@ -86,8 +83,8 @@
                                     <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
                                 </span>
                             </div>
-                            <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 h-3rem -mt-1 mb-2">
-                                <span class="p-tag text-sm">Condiciones</span>
+                            <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 h-3rem -mt-1 -mb-2">
+                                <!-- <span class="p-tag text-sm">Condiciones</span> -->
                             </p-divider>
                             <div class="sm:col-6 lg:col-4 md:col-3 h-4rem">
                                 <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
@@ -97,7 +94,7 @@
                                 </span>                                      
                             </div> 
                             <div class="sm:col-6 lg:col-4 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Terminos de Pago<span class="text-red-500 font-bold"> * </span></label>
+                                <label class="block text-900 font-semibold mb-1">Forma de Pago<span class="text-red-500 font-bold"> * </span></label>
                                 <span>
                                     <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
                                     optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>

@@ -65,7 +65,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
   activeIndex: number = 0;
   lstAlmacen: any;
   selectedItems: any;
-  _alm_idordencompra:number = 0;
+  //_alm_idordencompra:number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -156,7 +156,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
       fecentrega: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
       terminosdepago:[{ value: '', disabled: false }],
       idalmacen:[{ value: 0, disabled: false }],
-      alm_idordencompra:[{ value: this._alm_idordencompra, disabled: false }],
+      alm_idordencompra:[{ value: '', disabled: false }],
     });
   }
 
@@ -261,7 +261,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
           this.visibleDocument = false;
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-          this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
+          //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
           this.cargarMenu(rpta.ordencompra[0].acciones);
           this.mostrarBotones(rpta.ordencompra[0].estado);       
          
@@ -496,6 +496,9 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
             this.setSpinner(false);
             console.info('next getOcproveedor...: ', rpta);
             this.lstOrdenC = rpta;
+            if (this.ordenCompra.idordencompra > 0) {
+              this.registerFormRegistro.get('alm_idordencompra')?.setValue(this.ordenCompra.alm_idordencompra);
+            }
         },
         error: (err) => {
             this.setSpinner(false);
@@ -557,8 +560,8 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
     let _error = false;
     this.errorMensaje="";
     
-    this.registerFormRegistro.get('alm_idordencompra').setValue(this._alm_idordencompra);
-    console.log('this._alm_idordencompra...', this._alm_idordencompra);
+    //this.registerFormRegistro.get('alm_idordencompra').setValue(this._alm_idordencompra);
+    //console.log('this._alm_idordencompra...', this._alm_idordencompra);
     console.log('this.formValue...', this.registerFormRegistro.value);
 
       if (this.registerFormRegistro.value.idalmacen === null || this.registerFormRegistro.value.idalmacen === 0)
@@ -573,8 +576,8 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null || 
-        this._alm_idordencompra === 0 || this._alm_idordencompra === null))
+      if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null )) 
+        //this._alm_idordencompra === 0 || this._alm_idordencompra === null))
       {
           this.errorMensaje="Seleccionar Orden Compra...!";
           _error = true;
@@ -627,8 +630,8 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
     }
 
     getOCtraerItems(dato: any) {  
-      console.info('dato : ', dato);
-      this._alm_idordencompra = dato;
+      console.info('getOCtraerItems : ', dato);
+      //this._alm_idordencompra = dato;
       this.lstItemOC = []
       this.selectedItems=[];
       const objeto ={
@@ -638,7 +641,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
       const $personaProveedorlist = this.proyectosService.ordenCompraTraeruno(objeto).subscribe({
           next: (rpta: any) => {
               this.setSpinner(false);
-              console.info('getOCtraerItems : ', rpta);                
+              console.info('personaProveedorlist : ', rpta);                
 
               if (rpta.ordencompra[0].items !== undefined) {
 

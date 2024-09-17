@@ -81,8 +81,8 @@ export class CCatalogoComponent implements OnInit, OnDestroy{
       console.log('this.frmDatos...', this.frmDatos.value);
       const objeto = {
         ...this.frmDatos.value,
-        idfamilia: this.frmDatos.value.idfamilia === null ? 0 : this.frmDatos.value.idfamilia,
-        idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia
+        // idfamilia: this.frmDatos.value.idfamilia === null ? 0 : this.frmDatos.value.idfamilia,
+        // idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia
       }
       console.log('this.objeto...', objeto);
 
@@ -154,6 +154,11 @@ export class CCatalogoComponent implements OnInit, OnDestroy{
         const $listarFamilia = this.almacenService.listarFamilia().subscribe({
           next: (rpta: any) => {
             this.lstFamilia = rpta;
+            const objet = {
+              idfamilia: 0,
+              nomfamilia: 'TODOS'
+            }
+            this.lstFamilia.unshift(objet);
           },
           error: (err) => {
             console.info('error : ', err);
@@ -171,6 +176,11 @@ export class CCatalogoComponent implements OnInit, OnDestroy{
                 this.setSpinner(false);
                 console.info('next : ', rpta);
                 this.lstSubFamilia = rpta;
+                const objet = {
+                  idsubfamilia: 0,
+                  nomsubfamilia: 'TODOS'
+                }
+                this.lstSubFamilia.unshift(objet);
             },
             error: (err) => {
                 this.setSpinner(false);

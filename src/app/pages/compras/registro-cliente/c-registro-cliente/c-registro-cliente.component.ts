@@ -53,8 +53,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
       this.getClientes();
       this.cols = [
         { field: 'razonsocial', header: 'Razón Social' },
-        { field: 'idtipodoc', header: 'Tipo Documento' },
         { field: 'nomcomercial', header: 'Nombre Comercial' },
+        { field: 'idtipodoc', header: 'Tipo Documento' },
         { field: 'nrodocumento', header: 'N° Documento' },
         { field: 'nomtipopersona', header: 'Tipo Persona' },
         { field: 'telefresumen', header: 'Telefono' },

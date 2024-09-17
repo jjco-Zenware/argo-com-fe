@@ -21,6 +21,8 @@ import { CItemCotizacionComponent } from './c-item-cotizacion/c-item-cotizacion.
 import { CDatoCotizacionViewComponent } from './c-dato-cotizacion-view/c-dato-cotizacion-view.component';
 import { CDatoCotizacionViewProyecComponent } from './c-dato-cotizacion-view-proyec/c-dato-cotizacion-view-proyec.component';
 import { TableModule } from 'primeng/table';
+import { AlmacenService } from '../../almacen/service/almacenServices';
+import { CModalProductoComponent } from './modal-producto/c-modal-producto.component';
 
 
 
@@ -34,7 +36,8 @@ import { TableModule } from 'primeng/table';
     CDatoCotizacionComponent,
     CItemCotizacionComponent,
     CDatoCotizacionViewComponent,
-    CDatoCotizacionViewProyecComponent
+    CDatoCotizacionViewProyecComponent,
+    CModalProductoComponent
   ],
   imports: [
     CommonModule,
@@ -50,6 +53,6 @@ import { TableModule } from 'primeng/table';
   exports:[
     CCotizacionComponent
   ],
-  providers: [SharedAppService, ProyectosService, DynamicDialogRef, DynamicDialogConfig, DatePipe]
+  providers: [SharedAppService, ProyectosService, DynamicDialogRef, DynamicDialogConfig, DatePipe, AlmacenService]
 })
 export class ProyectosGanadosModule { }

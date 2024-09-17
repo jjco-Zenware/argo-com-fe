@@ -48,8 +48,8 @@
                             <div class="sm:col-6 lg:col-4 md:col-3 mt-1 h-4rem field">
                                 <label class="block text-900 font-semibold mb-1">Origen <span class="text-red-500 font-bold"> * </span></label>
                                 <span class="p-fluid mt-1">
-                                    <p-dropdown [options]="lstOrigen" formControlName="codtipodoc" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
-                                    optionValue="codproceso" (onChange)="getOrigen($event.value)" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                    <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
+                                    optionValue="idtipoproyecto" (onChange)="getOrigen($event.value)" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                                 </span>
                             </div>  
                             <div class=" sm:col-8 lg:col-7 md:col-12"></div>
@@ -85,8 +85,8 @@
                                     optionValue="idcontacto" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                                 </span>
                             </div>
-                            <div *ngIf="verReferencia" class="col-4 field h-4rem mt-3 -mb-2">
-                                <label class="block text-900 font-semibold mb-1">N° Referencia <span class="text-red-500 font-bold"> * </span></label>                        
+                            <div class="col-4 field h-4rem mt-3 -mb-2">
+                                <label class="block text-900 font-semibold mb-1">N° Referencia</label>                        
                                 <span class="p-fluid">
                                     <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
                                 </span>
@@ -149,16 +149,20 @@
                     </div>
                 </ng-template>
                 <div *ngIf="verItems" class="flex mt-3 ml-2 gap-2">
-                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
-                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Descargar Plantilla" icon="pi pi-cloud-download" (click)="descargarPlantilla()" label="Descargar" ></button>
-                    <button pButton class="font-semibold w-auto bg-green-400 h-2rem" pTooltip="Importar Plantilla" icon="pi pi-cloud-upload" label="Importar" (click)="importarPlantilla()"></button>
+                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" tooltipPosition="bottom" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
+                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Descargar Plantilla" tooltipPosition="bottom" icon="pi pi-cloud-download" (click)="descargarPlantilla()" label="Descargar" ></button>
+                    <button pButton class="font-semibold w-auto bg-green-400 h-2rem" pTooltip="Importar Plantilla" tooltipPosition="bottom" icon="pi pi-cloud-upload" label="Importar" (click)="importarPlantilla()"></button>
+                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem text-red-500" pTooltip="Limpiar Items" tooltipPosition="bottom" icon="pi pi-trash" label="Eliminar" (click)="deleteItem()"></button>
                 </div>
-                <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [scrollable]="true"  styleClass="p-datatable-sm">
+                <p-table [value]="lstItemOC"  class="ml-2" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                styleClass="p-datatable-sm">
+                <!-- [paginator]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[20,40,60]" currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" [rows]="10" -->
+
                     <ng-template pTemplate="header">
                         <tr class="text-sm">
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
                             <th class="surface-200">PRODUCTO</th>
+                            <th class="surface-200">CÓDIGO</th>
                             <th class="surface-200">DESCRIPCIÓN</th>
                             <th class="surface-200">MARCA</th>
                             <!-- <th class="surface-200">N° SERIE</th> -->
@@ -177,8 +181,9 @@
                         <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
                             <td>{{ product.nomtipoprod | uppercase}}</td>
-                            <td>{{ product.descripcion | uppercase}}</td>
-                            <!-- <td>{{(product.descripcion.length > 40 ) ? ((product.descripcion ).slice(0, 50) + '...') : product.descripcion }} </td> -->
+                            <td>{{ product.codproducto }}</td>
+                            <!-- <td>{{ product.descripcion | uppercase}}</td> -->
+                            <td>{{(product.descripcion.length > 60 ) ? ((product.descripcion ).slice(0, 60) + '...') : product.descripcion }} </td>
                             <td>{{ product.nommarca | uppercase}}</td>
                             <!-- <td>{{ product.serialnumber }}</td> -->
                             <td>{{ product.sku }}</td>
@@ -281,9 +286,7 @@
             </p-tabPanel>
                   
         </p-tabView> 
-    </div>
-
-    
+    </div>    
 
     <p-dialog [(visible)]="contactoVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '25vw'}" [breakpoints]="{'960px': '75vw'}">
         <p-header> <i class="pi pi-user" style="margin-right: 10px;"></i> Agregar Contacto </p-header>
@@ -324,15 +327,29 @@
             </form>
     </p-dialog>
 
-    <p-dialog [(visible)]="itemVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '25vw'}" [breakpoints]="{'960px': '75vw'}">
-        <p-header> <i class="pi pi-file" style="margin-right: 10px;"></i> Importar Items </p-header>
+    <p-dialog styleClass="testDialog" [(visible)]="itemVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '25vw'}" [breakpoints]="{'960px': '75vw'}">
+        <p-header> <i class="pi pi-file-excel" style="margin-right: 10px;"></i> Importar Items </p-header>
 
             <form >
                 <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
-                    <div class="mb-3 field">
+                    <!-- <div class="mb-3 field">
                         <label class="font-semibold">Producto</label>
                         <p-dropdown [options]="lstTipoProducto" [(ngModel)]="idtipoprod" optionLabel="nomtipoprod" [ngModelOptions]="{standalone: true}"
                             optionValue="idtipoprod" placeholder="Seleccionar Producto" appendTo="body" (onChange)="disabelImportar()" ></p-dropdown>
+                    </div> -->
+                    <div class="mb-3 field">
+                        <label class="font-semibold">Grupo</label>                            
+                        <span>
+                            <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..."  [(ngModel)]="idfamilia" class="p-inputtext-sm"
+                            optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body"  (onChange)="getSubFamilia($event.value)" [ngModelOptions]="{standalone: true}"></p-dropdown>            
+                        </span>
+                    </div>
+                    <div class="mb-3 field">
+                        <label class="font-semibold">Categoría</label>                            
+                        <span>
+                            <p-dropdown [options]="lstSubFamilia" placeholder="Seleccionar..."  [(ngModel)]="idsubfamilia" class="p-inputtext-sm"
+                            optionLabel="nomsubfamilia" optionValue="idsubfamilia" appendTo="body" [ngModelOptions]="{standalone: true}" (onChange)="disabelImportar()"></p-dropdown>            
+                        </span>
                     </div>
                     <div class="mb-3 field">
                         <label class="font-semibold">Marca</label>

@@ -54,7 +54,7 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void{
         this.createFrm();
-        this.getListarOrdenCompra();
+        this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID OC' },
           { field: 'nomtipoorden', header: 'TIPO ORDEN' },
@@ -103,7 +103,7 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
       })
     }
 
-    getListarOrdenCompra(){
+    getListar(){
       this.setSpinner(true);
       this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
       //console.log('this.frmDatos...', this.frmDatos.value);
@@ -112,11 +112,11 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
         idtipodocprc: 8
       }
 
-      const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
+      const $getListar = this.proyectosService.ordenCompraList(objeto)
         .subscribe({
           next: (rpta:any) => {
               this.setSpinner(false);
-              console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
+              console.log('rpta getListar', rpta.ordenescompra);
               this.lstOrdenCompra = rpta.ordenescompra
               this.lstOrdenCompraPen = this.lstOrdenCompra.filter((x: { estado: string; }) => x.estado === 'PRC');
               this.lstOrdenCompraApro = this.lstOrdenCompra.filter((x: { estado: string; }) => x.estado === 'EMI');
@@ -129,7 +129,7 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
             this.setSpinner(false);
           }
         });
-      this.$listSubcription.push($getListarOrdenCompra)
+      this.$listSubcription.push($getListar)
     }
 
     onVer(dato: any) {
@@ -158,13 +158,13 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
     getDetalle(dato:boolean){
       this.vistaLista = true;
       this.visDetalle = false;
-      this.getListarOrdenCompra();
+      this.getListar();
     }
 
     getBack() {
       this.vistaLista = true;
       this.visDetalle = false;
-      this.getListarOrdenCompra();
+      this.getListar();
     }
 
     onNuevo() {        
@@ -207,7 +207,7 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
       });
   
       ref.onClose.subscribe(() => {
-          this.getListarOrdenCompra();
+          this.getListar();
         });
     }
 

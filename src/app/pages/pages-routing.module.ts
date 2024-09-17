@@ -27,6 +27,11 @@ const routes: Routes = [
         loadChildren: () => import('./almacen/almacen.module').then(m => m.AlmacenModule),
         data: { breadcrumb: 'Almacén' }
       },
+      {
+        path: 'tesoreria',
+        loadChildren: () => import('./tesoreria/tesoreria.module').then(m => m.TesoreriaModule),
+        data: { breadcrumb: 'Tesoreria' }
+      },
     ]
   }
 ];

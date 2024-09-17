@@ -121,6 +121,11 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
         const $listarFamilia = this.almacenService.listarFamilia().subscribe({
           next: (rpta: any) => {
             this.lstFamilia = rpta;
+            const objet = {
+              idfamilia: 0,
+              nomfamilia: 'TODOS'
+            }
+            this.lstFamilia.unshift(objet);
           },
           error: (err) => {
             console.info('error : ', err);
@@ -138,6 +143,11 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
                 this.setSpinner(false);
                 console.info('next : ', rpta);
                 this.lstSubFamilia = rpta;
+                const objet = {
+                  idsubfamilia: 0,
+                  nomsubfamilia: 'TODOS'
+                }
+                this.lstSubFamilia.unshift(objet);
             },
             error: (err) => {
                 this.setSpinner(false);

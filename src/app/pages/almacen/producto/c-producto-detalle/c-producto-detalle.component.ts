@@ -87,17 +87,17 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
       codproducto: [{ value: '', disabled: true }],
       despro:[{ value: '', disabled: false }],
       desdet:[{ value: '', disabled: false }],
-      valorunit:[{ value: '', disabled: false }],
-      preciovenmax:[{ value: '', disabled: false }],
-      preciovenmin:[{ value: '', disabled: false }],
-      fecactivo: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      valorunit:[{ value: 0, disabled: false }],
+      preciovenmax:[{ value: 0, disabled: true }],
+      preciovenmin:[{ value: 0, disabled: true }],
+      fecactivo: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false}],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idfamilia:[{ value: 0, disabled: false }],
       idsubfamilia: [{ value: 0, disabled: false }],
       idmarca: [{ value: 0, disabled: false }],
       idunidad: [{ value: 0, disabled: false }],
-      stockmin: [{ value: '', disabled: false }],
-      stockmax: [{ value: '', disabled: false }],
+      stockmin: [{ value: 0, disabled: false }],
+      stockmax: [{ value: 0, disabled: false }],
       idmoneda: [{ value: '', disabled: false }],
     });
   }
@@ -297,13 +297,13 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
 
       if (!_error && (this.registerFormRegistro.value.idfamilia === 0 || this.registerFormRegistro.value.idfamilia === null))
       {
-          this.errorMensaje="Seleccionar Familia...!";
+          this.errorMensaje="Seleccionar Grupo...!";
           _error = true;
       }
 
       if (!_error && (this.registerFormRegistro.value.idsubfamilia === 0 || this.registerFormRegistro.value.idsubfamilia === null))
       {
-          this.errorMensaje="Seleccionar SubFamilia...!";
+          this.errorMensaje="Seleccionar Categoria...!";
           _error = true;
       }
 

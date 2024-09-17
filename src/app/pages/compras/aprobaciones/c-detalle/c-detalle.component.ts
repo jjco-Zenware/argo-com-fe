@@ -246,7 +246,7 @@ export class CDetalleComponent implements OnInit, OnDestroy{
               this.lstQuotes =  rpta.ordencompra[0].quotes; 
             }    
            
-            this.getOrigen(rpta.ordencompra[0].codtipodoc);               
+            this.getOrigen(rpta.ordencompra[0].idtipoproyecto);               
             this.visibleDocument = false;
             this.s_monto = rpta.ordencompra[0].s_monto;
           this.s_igv = rpta.ordencompra[0].s_igv;
@@ -274,26 +274,8 @@ export class CDetalleComponent implements OnInit, OnDestroy{
   }
 
   getOrigen(data:any){
-    switch (data) {
-      case 'OPO':
-        this.cargarProyectos(1);
-        this.verReferencia = false;
-        break;
-      case 'REQ':
-        this.cargarProyectos(2);
-        this.verReferencia = true;
-        break;
-      // case 'VED':
-      //   this.cargarProyectos(3);
-      //   break;
-      // case 'NOA':
-      //   this.registerFormRegistro.get('idproyecto').setValue(0);
-      //   break;
-    }    
-    //this.registerFormRegistro.get('sustentodoc').setValue('');  
-    
-    //this.verControles(data);
-
+    console.log('getOrigen', data);
+    this.cargarProyectos(data); 
   }
 
   getContactos(dato: any) {  

@@ -23,14 +23,14 @@
                 </span>
             </div>
             <div class="col-4 sm:col-6 lg:col-2 md:col-6 -mt-3 field">                            
-                <label class="font-semibold mb-1 text-blue-600">FAMILIA</label>                            
+                <label class="font-semibold mb-1 text-blue-600">GRUPO</label>                            
                 <span>
                     <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..."  formControlName="idfamilia" class="p-inputtext-sm"
                     optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body"  (onChange)="getSubFamilia($event.value)"></p-dropdown>            
                 </span>
             </div> 
             <div class="col-4 sm:col-6 lg:col-2 md:col-6 -mt-3 field">                            
-                <label class="font-semibold mb-1 text-blue-600">SUBFAMILIA</label>                            
+                <label class="font-semibold mb-1 text-blue-600">CATEGORIA</label>                            
                 <span>
                     <p-dropdown [options]="lstSubFamilia" placeholder="Seleccionar..."  formControlName="idsubfamilia" class="p-inputtext-sm"
                     optionLabel="nomsubfamilia" optionValue="idsubfamilia" appendTo="body" ></p-dropdown>            
@@ -63,8 +63,8 @@
                     </div>
                 </th>
                 <th rowspan="2" style="width: 300px;" class="surface-200">PRODUCTO</th>
-                <th rowspan="2" style="width: 300px;" class="surface-200">FAMILIA</th>
-                <th rowspan="2" style="width: 300px;" class="surface-200">SUBFAMILIA</th>
+                <th rowspan="2" style="width: 300px;" class="surface-200">GRUPO</th>
+                <th rowspan="2" style="width: 300px;" class="surface-200">CATEGORIA</th>
                 <th rowspan="2" style="width: 300px;" class="surface-200">MARCA</th>
                 <th colspan="5" class="surface-200">
                     <div [ngStyle]="{'width':'400px','text-align': 'center'}">
@@ -114,9 +114,6 @@
         </ng-template>
     </p-table>
 </div>
-
-
-
 
 <p-toast></p-toast>
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

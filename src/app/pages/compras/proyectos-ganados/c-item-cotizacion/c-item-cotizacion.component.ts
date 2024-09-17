@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Marca, Tag, TipoProducto } from '@interfaces';
+import { Marca, TipoProducto } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,9 @@ import { MessageService } from 'primeng/api';
 import { ProyectosService } from '../service/proyectos.service';
 import { ComprasService } from '../../Service/compraServices';
 import { DatePipe } from '@angular/common';
+import { AlmacenService } from 'src/app/pages/almacen/service/almacenServices';
+import { CBusquedaProductoComponent } from 'src/app/pages/almacen/busqueda-producto/c-busqueda-producto.component';
+import { CModalProductoComponent } from '../modal-producto/c-modal-producto.component';
 
 @Component({
   selector: 'app-c-item-cotizacion',
@@ -47,7 +50,8 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private proyectosService: ProyectosService,
     private comprasService: ComprasService,
-    public datepipe: DatePipe
+    public datepipe: DatePipe,
+    private almacenService: AlmacenService
   ) { }
 
   get formContacto() { return this.registerFormMarca.controls; }
@@ -115,6 +119,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       nomunidad: [{ value: '', disabled: false }],
       valor: [{ value: '', disabled: false }],
       ref1: [{ value: '', disabled: false }],
+      codproducto: [{ value: '', disabled: false }],
     })
   }
 
@@ -219,6 +224,13 @@ createFormTag() {
   }
 
   guardarItem() {
+
+    console.log('guardarItem...', this.frmDatosItem.value );
+
+    if (this.frmDatosItem.get('codproducto')?.value === '' || this.frmDatosItem.get('codproducto')?.value === null) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Descripción'});
+      return;
+    }
 
     if (this.frmDatosItem.get('descripcion')?.value == 0) {
       this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Descripción'});
@@ -444,5 +456,108 @@ createFormTag() {
       iditemdocumento: this.frmDatosItem.value.idordencompraitem
     }
     this.listaTag.unshift(objeto);
+  }
+
+  buscarProducto(){
+    const valor = this.frmDatosItem.get('codproducto')?.value;
+    console.log('buscarProducto...', valor);
+
+    if (valor === '' || valor === null || valor === undefined) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Ingresar Código Producto...'});
+      return;
+    }
+
+    this.traerUnoProducto(valor);
+  }
+
+  traerUnoProducto(codigo: any){   
+    const $traerUno = this.almacenService.traerProductoPorCodigo(codigo)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta.traerUnoProducto', rpta);  
+          if (rpta !== null) {
+            this.frmDatosItem.get('idprod')?.setValue(rpta.idprod);
+            this.frmDatosItem.get('nommarca')?.setValue(rpta.nommarca);
+            this.frmDatosItem.get('descripcion')?.setValue(rpta.despro); 
+            this.frmDatosItem.get('idmarca')?.setValue(rpta.idmarca); 
+            this.frmDatosItem.get('idtipoprod')?.setValue(rpta.idtipoprod); 
+            
+            this.verControles(rpta.idtipoprod);
+          }
+                  
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {        
+        }
+      });
+    this.$listSubcription.push($traerUno)
+  }
+
+  getBusquedaAvanzada(data: any) {
+    console.log('CBusquedaProductoComponent', data);
+    const refItem = this.dialogService.open(CBusquedaProductoComponent, {
+      data: data,
+      header: "Busqueda Avanzada por Productos",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '60%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      
+      console.log('onClose',rpta);
+      if (rpta !== undefined) {
+        this.frmDatosItem.get('idprod')?.setValue(rpta.data.idprod);
+        this.frmDatosItem.get('codproducto')?.setValue(rpta.data.codproducto); 
+        this.frmDatosItem.get('idmarca')?.setValue(rpta.data.idmarca);
+        this.frmDatosItem.get('descripcion')?.setValue(rpta.data.despro);
+        this.frmDatosItem.get('idtipoprod')?.setValue(rpta.data.idtipoprod);    
+
+        this.verControles(rpta.data.idtipoprod);
+        
+      }
+    });
+  }
+
+  altaRapida() {
+    const refItem = this.dialogService.open(CModalProductoComponent, {
+      //data: data,
+      header: "Alta Rapida de Producto",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '30%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      
+      console.log('onClose',rpta);
+      if (rpta !== undefined) {
+        console.log('altaRapida',rpta.objeto.codigo);
+        this.traerUno(rpta.objeto.codigo);        
+      }
+    });
+  }
+
+  traerUno(data:any){   
+    console.log('traerUno', data);
+    const $traerUno = this.almacenService.traerunoProducto(data)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta.traerUno', rpta.producto[0]);  
+          this.frmDatosItem.get('idprod')?.setValue(rpta.producto[0].idprod);
+            this.frmDatosItem.get('descripcion')?.setValue(rpta.producto[0].despro); 
+            this.frmDatosItem.get('idmarca')?.setValue(rpta.producto[0].idmarca);      
+            this.frmDatosItem.get('codproducto')?.setValue(rpta.producto[0].codproducto);  
+            this.frmDatosItem.get('idtipoprod')?.setValue(rpta.producto[0].idtipoprod); 
+            
+            this.verControles(rpta.producto[0].idtipoprod);
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {        
+        }
+      });
+    this.$listSubcription.push($traerUno)
   }
 }

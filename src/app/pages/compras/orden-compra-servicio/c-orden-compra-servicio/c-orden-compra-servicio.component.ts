@@ -81,24 +81,9 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
 
     createFrm(){
       this.frmDatos = this.fb.group({
-        fecini: [
-          {
-            value: this.utilitariosService.obtenerFechaInicioMes(),
-            disabled: false,
-          },
-        ],
-        fecfin: [
-          {
-            value: this.utilitariosService.obtenerFechaFinMes(),
-            disabled: false,
-          },
-        ],
-        idusuario: [
-          {
-            value: constantesLocalStorage.idusuario,
-            disabled: false,
-          },
-        ],
+        fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}],
+        fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],
+        idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
       })
     }
 

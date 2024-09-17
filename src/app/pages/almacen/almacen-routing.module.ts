@@ -61,6 +61,11 @@ const routes: Routes = [
     path: 'stock',
     loadChildren: () => import('./stock/stock.module').then(m => m.StockModule),
     data: { breadcrumb: 'Stock' }
+  },
+  {
+    path: 'grupo',
+    loadChildren: () => import('./grupo/grupo.module').then(m => m.GrupoModule),
+    data: { breadcrumb: 'Grupo' }
   }
 ];
 
