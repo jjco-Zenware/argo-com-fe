@@ -63,7 +63,11 @@
             <tr>
                 <td>{{rowIndex + 1}}</td>
                 <td>{{data.codproducto}}</td>
-                <td>{{data.despro}}</td>
+                <td>
+                    <div pTooltip="{{data.despro | uppercase}}">
+                        {{(data.despro.length > 40) ? ((data.despro).slice(0, 40) + '...' | uppercase) : data.despro | uppercase}}
+                    </div>  
+                </td>
                 <td>{{data.nomfamilia}}</td>
                 <td>{{data.nomsubfamilia}}</td>
                 <td>{{data.nommarca}}</td>

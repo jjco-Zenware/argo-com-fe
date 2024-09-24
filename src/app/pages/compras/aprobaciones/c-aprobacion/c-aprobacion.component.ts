@@ -103,13 +103,14 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
       })
     }
 
+    
     getListar(){
       this.setSpinner(true);
       this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
       //console.log('this.frmDatos...', this.frmDatos.value);
       const objeto = {
         ...this.frmDatos.value,
-        idtipodocprc: 8
+        idtipodocprc: 0
       }
 
       const $getListar = this.proyectosService.ordenCompraList(objeto)

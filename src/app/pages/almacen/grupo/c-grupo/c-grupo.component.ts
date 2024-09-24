@@ -149,7 +149,6 @@ export class CGrupoComponent implements OnInit, OnDestroy{
         }
 
         this.traerunoFamilia(codigo);
-        this.headerTitle="Editar Grupo";
         this.grupoVisible = true;
     }
 
@@ -165,11 +164,12 @@ export class CGrupoComponent implements OnInit, OnDestroy{
         this.frmDatos.get('nomsubfamilia')?.setValue('');
         this.frmDatos.get('idtipoprod')?.setValue(0);
 
-        this.headerTitle="Agregar Categoria";
+        this.headerTitle="Agregar Categoría";
         this.claseVisible = true;
     }
 
     editarClase(data:any){
+        this.headerTitle="";
         this.frmDatos.get('idsubfamilia')?.setValue(data.idsubfamilia);
         this.traerunoSubFamilia(data.idsubfamilia);        
         this.listarTipoProducto();
@@ -245,7 +245,7 @@ export class CGrupoComponent implements OnInit, OnDestroy{
             console.log('rpta', rpta);
             this.frmDatos.get('codfamilia')?.setValue(rpta[0].codfamilia);
             this.frmDatos.get('nomfamilia')?.setValue(rpta[0].nomfamilia);
-            this.headerTitle="EDITAR - " + rpta[0].nomfamilia;
+            this.headerTitle= rpta[0].nomfamilia;
 
             },
             error: (err) => {
@@ -265,7 +265,7 @@ export class CGrupoComponent implements OnInit, OnDestroy{
                 this.frmDatos.get('codsubfamilia')?.setValue(rpta[0].codsubfamilia);
                 this.frmDatos.get('nomsubfamilia')?.setValue(rpta[0].nomsubfamilia);
                 this.frmDatos.get('idtipoprod')?.setValue(rpta[0].idtipoprod);
-                this.headerTitle="EDITAR - " + rpta[0].nomsubfamilia;
+                this.headerTitle= rpta[0].nomsubfamilia;
             },
             error: (err) => {
             console.info('error : ', err);

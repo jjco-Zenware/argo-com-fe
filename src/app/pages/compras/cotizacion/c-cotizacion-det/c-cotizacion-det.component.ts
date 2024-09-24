@@ -696,7 +696,7 @@ export class CotizacionDetComponent implements OnInit, OnDestroy{
 
   vistaPreliminar(){
     this.setSpinner(true);
-    this.mensajeSpinner = 'Descargando Vista Preliminar...!';
+    this.mensajeSpinner = 'Descargando...!';
 
     const objeto = {
       idusuario : constantesLocalStorage.idusuario,
