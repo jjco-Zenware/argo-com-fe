@@ -180,7 +180,12 @@
                         <tr>
                             <td>{{rowIndex + 1}}</td>
                             <td>{{ product.nomtipoprod | uppercase}}</td>
-                            <td>{{ product.descripcion | uppercase}}</td>
+                            <!-- <td>{{ product.descripcion | uppercase}}</td> -->
+                            <td>
+                                <div pTooltip="{{product.descripcion | uppercase}}">
+                                    {{(product.descripcion.length > 70) ? ((product.descripcion).slice(0, 70) + '...' | uppercase) : product.descripcion | uppercase}}
+                                </div>  
+                            </td>
                             <td>{{ product.nomunidad }}</td>
                             <td>{{ product.preciocosto | number: '0.2'}}</td>
                             <td>{{ product.cantidad | number: '0.2'}}</td>

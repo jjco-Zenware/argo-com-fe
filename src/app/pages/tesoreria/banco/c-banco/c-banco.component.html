@@ -36,105 +36,90 @@
         </form> 
 
         <p-table #dt1 [value]="lstMovimientos" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-        [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
-
-        <ng-template pTemplate="header">
-            <tr class="text-sm">
-                <th style="width: 10px" class="surface-200" >
-                    <div class="flex justify-content-between align-items-center">
-                        N°
-                    </div>
-                </th>
-                <th [ngStyle]="{'width':'30px'}"  class="surface-200" >
-                    <div class="justify-content-between align-items-center">
-                        CÓDIGO 
-                    </div>
-                </th>
-                <th [ngStyle]="{'width':'100px'}" class="surface-200" >
-                    <div class="justify-content-between align-items-center">
-                        ALMACEN 
-                    </div>
-                </th>
-                <th [ngStyle]="{'width':'100px'}" class="surface-200" >
-                    <div class="justify-content-between align-items-center">
-                        PROVEEDOR 
-                    </div>
-                </th>
-                <!-- <th style="width: 100px;" class="surface-200" >
-                    <div class="justify-content-between align-items-center">
-                        N° ORDEN
-                    </div>
-                </th> -->
-                <th style="width: 30px" class="surface-200" >
-                    <div [ngStyle]="{'width':'30px','text-align':'center'}">
-                        ESTADO
-                    </div>
-                </th>
-                <th style="width: 50px;" class="surface-200" >
-                    <div class="flex justify-content-between align-items-center">
-                        ACCIONES
-                    </div>
-                </th>
-            </tr>
-            <tr >
-                <th></th>
-                <th *ngFor="let col of cols">
-                    <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
-                </th>
-            </tr>
-    
-        </ng-template>
-        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-            <tr class="text-sm">
-                <td [ngStyle]="{'width':'10px'}">
-                    {{rowIndex + 1}}
-                </td>
-                <td >
-                    <div [ngStyle]="{'width':'50px'}">
-                        {{data.idordencompra}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.nomalmacen | uppercase}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'100px'}">
-                        {{data.nomcomercial | uppercase}}
-                    </div>
-                </td>
-                <!-- <td>
-                    <div [ngStyle]="{'width':'60px'}">
-                        {{data.alm_idordencompra }}
-                    </div>
-                </td> -->
-                <td>                       
-                    <div [ngStyle]="{'width':'30px','text-align': 'center'}">
-                        <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
-                    </div>
-                </td>
-                <td>
-                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
-                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                        <button *ngIf="data.estado === 'REG' || data.estado === 'OBS'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
-                        
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-            <tr>
-                <td colspan="8">No se encontraron registros.</td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="loadingbody">
-            <tr>
-                <td colspan="8">Cargando datos. Espere por favor.</td>8
-            </tr>
-        </ng-template>
-    </p-table>
+            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
+            styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-gridlines">
+            <ng-template pTemplate="header">
+                <tr class="text-sm" >
+                    <th rowspan="2" style="width: 20px" class="surface-200" >
+                        <div class="flex justify-content-between align-items-center">
+                            N°
+                        </div>
+                    </th>
+                    <th rowspan="2" class="surface-200">CÓDIGO</th>
+                    <th rowspan="2" style="width: 300px;" class="surface-200">NOMBRE</th>
+                    <th rowspan="2" style="width: 100px;" class="surface-200">TIPO</th>
+                    <th rowspan="2" style="width: 300px;" class="surface-200">DOCUMENTO</th>
+                    <th rowspan="2" style="width: 100px;" class="surface-200">NRO</th>
+                    <th rowspan="2" style="width: 200px;" class="surface-200">CTA CTBLE</th>
+                    <th colspan="3" style="width: 300px;" class="surface-200">
+                        <div [ngStyle]="{'width':'300px','text-align': 'center'}" >
+                            CÓDIGOS
+                        </div>
+                    </th>
+                </tr>
+                <tr class="text-sm" >
+                    <th colspan="1" class="surface-200">
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            BCR
+                        </div>
+                    </th>
+                    <th colspan="1" class="surface-200">
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            SBS
+                        </div>
+                    </th>
+                    <th colspan="1" class="surface-200">
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            SUNAT
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-sale let-rowIndex="rowIndex"> 
+                <tr>
+                    <td>{{rowIndex + 1}}</td>
+                    <td>{{sale.idbanco}}</td>
+                    <td>{{sale.razonsocial}}</td>
+                    <td>{{sale.destipobanco}}</td>
+                    <td>{{sale.destipodoc}}</td>
+                    <td>{{sale.nrodoc}}</td>
+                    <td>{{sale.codctactble}}</td>
+                    <td>
+                        <div [ngStyle]="{'text-align': 'right'}">
+                            {{sale.codigobcr}}
+                        </div> 
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'text-align': 'right'}">
+                            {{sale.codbancosbs}}
+                        </div> 
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'text-align': 'right'}">
+                            {{sale.codbancosunat}}
+                        </div> 
+                    </td>
+                </tr>
+            </ng-template>
+            <!-- <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="3" class="text-right">Totals</td>
+                    <td>{{lastYearTotal | currency: 'USD'}}</td>
+                    <td>{{thisYearTotal | currency: 'USD'}}</td>
+                </tr>
+            </ng-template> -->
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="12">No se encontraron registros.</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="12">Cargando datos. Espere por favor.</td>
+                </tr>
+            </ng-template>
+        </p-table>
     </div>
 </ng-container>
 

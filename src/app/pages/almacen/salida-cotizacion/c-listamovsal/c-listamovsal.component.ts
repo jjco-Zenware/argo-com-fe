@@ -7,17 +7,13 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
-import { Menu } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
-import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
-
 
 @Component({
-  selector: 'app-c-ingreso-oc-req-interno',
-  templateUrl: './c-ingreso-oc-req-interno.component.html',
-  styleUrls: ['./c-ingreso-oc-req-interno.component.scss']
+  selector: 'app-c-listamovsal',
+  templateUrl: './c-listamovsal.component.html',
+  styleUrls: ['./c-listamovsal.component.scss']
 })
-export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
+export class CSalidaCotizacionComponent implements OnInit, OnDestroy{
 
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
@@ -30,10 +26,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
-    dataDet:any;
-    menuItems: MenuItem[] = [];
-    @ViewChild('menu') menu!: Menu;
-    ordenCompra: any;
+    dataDet: any;
 
     constructor(
         private fb: FormBuilder,
@@ -51,7 +44,6 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
           { field: 'nomtipoorden', header: 'OFICINA ' },
-          { field: 'codigonroorden', header: 'NOMBRE' },
           { field: 'nomcomercial', header: 'DIRECCIÓN' },
           { field: 'nomestado', header: 'ESTADO' }
           
@@ -97,7 +89,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
       console.log('this.frmDatos...', this.frmDatos.value);
       const objeto = {
         ...this.frmDatos.value,
-        idtipodocprc: 10
+        idtipodocprc: 14
       }
 
       const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
@@ -118,22 +110,24 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
       this.$listSubcription.push($getListarOrdenCompra)
     }
 
-    onVer(dato: any) {     
+    onVer(dato: any) {
+     
         this.tituloDetalle =  'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
-          idtipodocprc: 10
+          idtipodocprc: 14
         } 
         this.vistaLista = false;
     }
 
-    onEditar(dato: any) {      
+    onEditar(dato: any) {
+      
         this.tituloDetalle = 'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'E',
-          idtipodocprc: 10
+          idtipodocprc: 14
         }
         this.vistaLista = false;
     }
@@ -153,12 +147,12 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR INGRESO DE REQUERIMIENTO INTERNO";
+      this.tituloDetalle = "REGISTRAR SALIDA COTIZACIÓN";
       this.dataDet = {
         idcodigo: 0,
         paramReg:'N',
-        idtipodocprc: 10
-      } 
+        idtipodocprc: 14
+      }
       this.vistaLista = false;
     }
 
@@ -207,40 +201,4 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
         });
         FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
       }
-
-      toggleMenu(event: Event, data: any) {
-        if (data.acciones) {
-            this.cargarMenu(data.acciones);
-            this.ordenCompra = data;
-            this.menu.toggle(event);
-        }
-    }
-  
-      cargarMenu(data: any) {
-        this.menuItems = [];
-        data.forEach((item: any) => {
-            this.menuItems.push({
-                label: item.nomtrx,
-                icon: 'pi pi-cog',
-                command: () => this.onAccion(item)
-            })
-        });
-      }
-    
-      onAccion(item: any) {
-        this.ordenCompra.idtrx = item.idtrx;
-        console.log('onAccion', item);
-        const ref = this.dialogService.open(CModalExcAlmacenComponent, {
-            data: this.ordenCompra,
-            header: item.nomtrx ,
-            closeOnEscape: false,
-            styleClass: 'testDialog',
-            width: '40%'
-        });
-    
-        ref.onClose.subscribe(() => {
-            this.getListar();
-          });
-      }
 }
-

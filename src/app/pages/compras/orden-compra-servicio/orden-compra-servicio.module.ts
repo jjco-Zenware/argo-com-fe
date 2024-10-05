@@ -21,6 +21,7 @@ import { CCotizacionComponent } from './c-cotizacion/c-cotizacion.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
 import { AlmacenService } from '../../almacen/service/almacenServices';
+import { CModalExcAlmacenComponent } from './modal-exc-almacen/modal-exc-almacen.component';
 
 
 
@@ -33,7 +34,8 @@ import { AlmacenService } from '../../almacen/service/almacenServices';
     CContactoComponent,
     CModalExcTransacComponent,
     CCotizacionComponent,
-    CDatoCotizacionComponent
+    CDatoCotizacionComponent,
+    CModalExcAlmacenComponent
   ],
   imports: [
     CommonModule,

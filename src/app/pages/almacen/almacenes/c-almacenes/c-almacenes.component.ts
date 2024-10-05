@@ -27,17 +27,11 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
-    lstOficina = [
-      { nomoficina: 'TODOS', idofi: 0 },
-      { nomoficina: 'OFICINA 401', idofi: 1 },
-      { nomoficina: 'OFICINA 402', idofi: 2 },
-      { nomoficina: 'OFICINA 403', idofi: 3 }
-    ];
+    lstOficina: any;
     data:any;
 
     constructor(
         private fb: FormBuilder,
-        private utilitariosService: UtilitariosService,
         public dialogService: DialogService  ,
         private almacenService: AlmacenService,     
         private serviceSharedApp: SharedAppService,
@@ -47,6 +41,7 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void{
       this.createFrm();
+      this.listarOficinas();
         this.getListar();
     }
 
@@ -75,6 +70,30 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
 
     setSpinner(valor: boolean) {
       this.blockedDocument = valor;
+    }
+
+    listarOficinas(){
+      const objeto = {
+        idofi : 0
+      }
+
+      const $getListar = this.almacenService.ListarOficina(objeto)
+        .subscribe({
+          next: (rpta:any) => {              
+              this.lstOficina = rpta
+              const objet = {
+                idofi: 0,
+                nomofi: 'TODOS'
+              }
+              this.lstOficina.unshift(objet);
+          },
+          error:(err)=>{
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+          }
+        });
+      this.$listSubcription.push($getListar)
     }
 
     getListar(){

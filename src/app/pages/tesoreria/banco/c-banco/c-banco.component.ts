@@ -42,10 +42,12 @@ export class CBancoComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'ID ALMACÉN' },
-          { field: 'nomtipoorden', header: 'OFICINA ' },
-          { field: 'nomcomercial', header: 'DIRECCIÓN' },
-          { field: 'nomestado', header: 'ESTADO' }
+          { field: 'idordencompra', header: 'CÓDIGO' },
+          { field: 'nomtipoorden', header: 'NOMBRE ' },
+          { field: 'nomcomercial', header: 'TIPO' },
+          { field: 'nomestado', header: 'DOCUMENTO' },
+          { field: 'nomestado', header: 'NRO' },
+          { field: 'nomestado', header: 'CTA CTBLE' }
           
       ];
     }

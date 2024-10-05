@@ -12,8 +12,8 @@ import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/servic
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { AlmacenService } from '../../service/almacenServices';
-import { CModalExcTransacComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
 import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
+import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 
 @Component({
   selector: 'app-c-detallemovinter',
@@ -530,7 +530,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
 
   onAccion(item: any) {
     this.ordenCompra.idtrx = item.idtrx;
-    const ref = this.dialogService.open(CModalExcTransacComponent, {
+    const ref = this.dialogService.open(CModalExcAlmacenComponent, {
         data: this.ordenCompra,
         header: item.nomtrx,
         closeOnEscape: false,

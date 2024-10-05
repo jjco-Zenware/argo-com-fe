@@ -10,11 +10,11 @@ import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dy
 import { AlmacenService } from '../../service/almacenServices';
 
 @Component({
-  selector: 'app-c-almacenes-detalle',
-  templateUrl: './c-almacenes-detalle.component.html',
-  styleUrls: ['./c-almacenes-detalle.component.scss']
+  selector: 'app-c-oficina-detalle',
+  templateUrl: './c-oficina-detalle.component.html',
+  styleUrls: ['./c-oficina-detalle.component.scss']
 })
-export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
+export class COficinaDetalleComponent implements OnInit, OnDestroy{
   @Input() IA_data: any;
   $listSubcription: Subscription[] = [];
   registerFormRegistro!: FormGroup;
@@ -25,18 +25,15 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   verbtnGrabar: boolean = false;  
   onlyRead: boolean = false;
   errorMensaje: string = "";
-  idAlmacen: any;
+  idOficina: any;
   param:any;
-  lstOficina:any;
 
   constructor(
     private fb: FormBuilder,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
     private serviceSharedApp: SharedAppService,
-    private serviceUtilitario: UtilitariosService,
     public dialogService: DialogService,
-    private confirmationService: ConfirmationService,
     private almacenService: AlmacenService,
     public refDatoItem: DynamicDialogRef,
     public config: DynamicDialogConfig,
@@ -44,12 +41,11 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     console.log('this.config', this.config);
-    this.idAlmacen = this.config.data.idcodigo;
+    this.idOficina = this.config.data.idcodigo;
     this.param = this.config.data.paramReg;
     this.createFormRegistro(); 
-    this.listarOficinas();
     
-    if (this.idAlmacen > 0) {      
+    if (this.idOficina > 0) {      
       this.traerUno();
     }   
   }
@@ -59,10 +55,9 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   createFormRegistro() {
     //Agregar validaciones de formulario
     this.registerFormRegistro = this.formBuilder.group({
-      idalmacen: [{ value: 0, disabled: true }],
-      idofi: [{ value: 0, disabled: false }],
-      nomalmacen: [{ value: '', disabled: false }],
-      diralmacen: [{ value: '', disabled: false }],
+      idofi: [{ value: this.idOficina, disabled: false }],
+      nomofi: [{ value: '', disabled: false }],
+      dirofi: [{ value: '', disabled: false }],
       estado: [{ value: 'A', disabled: false }],
       codUsuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
     });
@@ -78,37 +73,11 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
     this.blockedDocument = valor;
   }
 
-  listarOficinas(){
-    const objeto = {
-      idofi : 0
-    }
-
-    const $getListar = this.almacenService.ListarOficina(objeto)
-      .subscribe({
-        next: (rpta:any) => {
-            
-            this.lstOficina = rpta
-            const objet = {
-              idofi: 0,
-              nomofi: 'TODOS'
-            }
-            this.lstOficina.unshift(objet);
-        },
-        error:(err)=>{
-            this.serviceSharedApp.messageToast()
-        },
-        complete:() => { 
-        }
-      });
-    this.$listSubcription.push($getListar)
-  }
-
-
   traerUno(){
     this.setSpinner(true);
     this.mensajeSpinner = 'Cargando...!';
 
-    const $cargarOrdenC = this.almacenService.almacenTraeruno(this.idAlmacen)
+    const $cargarOrdenC = this.almacenService.oficinaTraeruno(this.idOficina)
       .subscribe({
         next: (rpta:any) => {
           console.log('rpta', rpta);
@@ -141,15 +110,15 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
 
   
 
-    console.log('guardarOC...', this.registerFormRegistro.getRawValue());
+    console.log('guardarOficina...', this.registerFormRegistro.getRawValue());
     
-    this.almacenService.GrabarAlamcen(this.registerFormRegistro.getRawValue()).subscribe({
+    this.almacenService.grabarOficina(this.registerFormRegistro.getRawValue()).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
         if (rpta.procesoSwitch === 0){
           this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
-          if (this.idAlmacen === 0) {
-            this.idAlmacen = rpta.resultProceso;   
+          if (this.idOficina === 0) {
+            this.idOficina = rpta.resultProceso;   
 
           }
           this.cerrar();
@@ -181,23 +150,17 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   validarDatos():boolean{
     let _error = false;
     this.errorMensaje="";
-    console.log('this.formValue...', this.registerFormRegistro.value);
+    console.log('this.formValue...', this.registerFormRegistro.value);      
 
-      if (this.registerFormRegistro.value.idofi === 0)
+      if (!_error && (this.registerFormRegistro.value.nomofi === '' || this.registerFormRegistro.value.nomofi === null) )
       {
-          this.errorMensaje="Seleccionar Oficina...!";
+          this.errorMensaje="Ingresar Nombre de Oficina...!";
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.nomalmacen === '' || this.registerFormRegistro.value.nomalmacen === null) )
-      {
-          this.errorMensaje="Ingresar Nombre de Almacen...!";
-          _error = true;
-      }
-
-      if (!_error && (this.registerFormRegistro.value.diralmacen === '' || this.registerFormRegistro.value.diralmacen === null) )
+      if (!_error && (this.registerFormRegistro.value.dirofi === '' || this.registerFormRegistro.value.dirofi === null) )
         {
-            this.errorMensaje="Ingresar Dirección de Almacen...!";
+            this.errorMensaje="Ingresar Dirección de Oficina...!";
             _error = true;
         }
 

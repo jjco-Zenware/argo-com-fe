@@ -112,7 +112,7 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
 
     onVer(dato: any) {
      
-        this.tituloDetalle =  dato.nomalmacen;
+        this.tituloDetalle =  'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
@@ -123,7 +123,7 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
 
     onEditar(dato: any) {
       
-        this.tituloDetalle = dato.nomalmacen;
+        this.tituloDetalle = 'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'E',

@@ -120,4 +120,8 @@ export const constantesApiWeb = {
     
     prcFamilia: controllerAlmacen + '/familiaprc/',
     prcSubFamilia: controllerAlmacen + '/subfamiliaprc/',
+    
+    oficinaTraeruno: controllerAlmacen + '/traerUnooficina/',
+    grabarOficina: controllerAlmacen + '/oficinaprc/',
+    ListarOficina: controllerAlmacen + '/listaroficina/',
 }

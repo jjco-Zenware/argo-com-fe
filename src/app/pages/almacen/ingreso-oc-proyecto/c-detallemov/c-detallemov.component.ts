@@ -11,9 +11,9 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { ProyectosService } from '../../../compras/proyectos-ganados/service/proyectos.service';
 import { OrdencompraService } from '../../../compras/orden-compra-servicio/service/ordencompra.service';
 import { ComprasService } from '../../../compras/Service/compraServices';
-import { CModalExcTransacComponent } from '../../../compras/orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
 import { AlmacenService } from '../../service/almacenServices';
 import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
+import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 
 @Component({
   selector: 'app-c-detallemov',
@@ -528,7 +528,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
 
   onAccion(item: any) {
     this.ordenCompra.idtrx = item.idtrx;
-    const ref = this.dialogService.open(CModalExcTransacComponent, {
+    const ref = this.dialogService.open(CModalExcAlmacenComponent, {
         data: this.ordenCompra,
         header: item.nomtrx,
         closeOnEscape: false,

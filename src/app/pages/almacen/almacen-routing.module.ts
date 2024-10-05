@@ -66,6 +66,16 @@ const routes: Routes = [
     path: 'grupo',
     loadChildren: () => import('./grupo/grupo.module').then(m => m.GrupoModule),
     data: { breadcrumb: 'Grupo' }
+  },
+  {
+    path: 'salida-cotizacion',
+    loadChildren: () => import('./salida-cotizacion/salida-cotizacion.module').then(m => m.SalidaCotizacionModule),
+    data: { breadcrumb: 'Salida Cotización' }
+  },
+  {
+    path: 'oficina',
+    loadChildren: () => import('./oficina/oficina.module').then(m => m.OficinaModule),
+    data: { breadcrumb: 'Oficina' }
   }
 ];
 

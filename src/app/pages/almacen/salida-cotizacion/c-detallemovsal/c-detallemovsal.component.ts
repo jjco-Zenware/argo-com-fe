@@ -16,11 +16,11 @@ import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.compo
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 
 @Component({
-  selector: 'app-c-detallemovtras',
-  templateUrl: './c-detallemovtras.component.html',
-  styleUrls: ['./c-detallemovtras.component.scss']
+  selector: 'app-c-detallemovsal',
+  templateUrl: './c-detallemovsal.component.html',
+  styleUrls: ['./c-detallemovsal.component.scss']
 })
-export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
+export class CDetalleSalComponent implements OnInit, OnDestroy{
   @Input() IA_data: any;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
@@ -157,6 +157,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
       idalmacen:[{ value: 0, disabled: false }],
       alm_idordencompra:[{ value: 0, disabled: false }],
       idprod: [{ value: 0, disabled: false }],
+      idcliente: [{ value: '', disabled: false }],
     });
   }
 
@@ -401,7 +402,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
 
   listaProveedores() {
 
-    const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+    const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
       next: (rpta: any) => {
         this.lstProveedores = rpta;
         console.log('this.lstProveedores', this.lstProveedores);
@@ -437,7 +438,6 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
   getItem(data: any,index: number) {
     data.nroindex = index;
     data.idordencompra = this.idMovimiento;
-    data.origenreg = 'OC';
     console.log('CItemOrdenesComponent', data);
     const refItem = this.dialogService.open(CItemOrdenesComponent, {
       data: data,
@@ -450,7 +450,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
       
       console.log('onClose',rpta);
       if (rpta != undefined) {
-          const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex === index))
+          const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == index))
           if (_posAll != -1) {
             this.lstItemOC.splice(_posAll, 1)
           }
@@ -458,20 +458,19 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
         this.lstItemOC.push(rpta.objeto);
         console.log('this.lstItemOC',this.lstItemOC);
       }
-      //this.calcularTotales();
+      this.calcularTotales();
     });
   }
 
-  // calcularTotales() {
-  //   let totalpreventot = 0;    
-  //   for (let lstCotiza of this.lstItemOC) {
-  //       totalpreventot = totalpreventot + lstCotiza.preciocostototal;
-  //   }    
-  //   this.montoTotal = totalpreventot;
-  // }
+  calcularTotales() {
+    let totalpreventot = 0;    
+    for (let lstCotiza of this.lstItemOC) {
+        totalpreventot = totalpreventot + lstCotiza.preciocostototal;
+    }    
+    this.montoTotal = totalpreventot;
+  }
 
   eliminarItem(data: any) {
-    console.log('eliminarItem',data);
     this.confirmationService.confirm({
       key: 'confirm1',
       header: 'Confirmación',
@@ -488,7 +487,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
           this.lstItemOC.splice(_posAll, 1)
           }
       }
-      //this.calcularTotales();
+      this.calcularTotales();
       }
   });
   }

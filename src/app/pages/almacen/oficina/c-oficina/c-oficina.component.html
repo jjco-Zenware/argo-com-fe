@@ -7,29 +7,13 @@
                         pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                
                 <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">ALMACENES</span>
+                    <span class="text-base font-semibold">OFICINA</span>
                 </div>  
                        
             </div>
         </div>
 
-        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
-            <div class="p-fluid p-formgrid grid col-9 h-5rem -ml-6">
-                <div class="sm:col-6 lg:col-3 md:col-3 -mt-4 h-4rem field">
-                    <label class="text-blue-600 font-semibold mb-1">OFICINA</label>
-                    <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstOficina" formControlName="idofi" placeholder="Seleccionar Oficina" optionLabel="nomofi" 
-                        optionValue="idofi" class="p-inputtext-sm"></p-dropdown>
-                    </span>
-                </div> 
-                <div class="field col-12 md:col-2 -mt-4 gap-2">
-                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                        class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                </div>
-            </div>
-        </form> 
-
-        <p-table #dt1 [value]="lstAlmacen" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+        <p-table #dt1 [value]="lstOficina" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
             currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
 
@@ -40,19 +24,9 @@
                             N°
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'50px'}"  class="surface-200" >
-                        <div class="justify-content-between align-items-center">
-                            ID ALMACEN
-                        </div>
-                    </th>
                     <th [ngStyle]="{'width':'70px'}" class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             OFICINA 
-                        </div>
-                    </th>
-                    <th [ngStyle]="{'width':'70px'}" class="surface-200" >
-                        <div class="justify-content-between align-items-center">
-                            NOMBRE 
                         </div>
                     </th>
                     <th style="width: 150px;" class="surface-200" >
@@ -79,24 +53,14 @@
                     <td [ngStyle]="{'width':'10px'}">
                         {{rowIndex + 1}}
                     </td>
-                    <td >
-                        <div [ngStyle]="{'width':'50px'}">
-                            {{data.idalmacen}}
-                        </div>
-                    </td>
                     <td>
                         <div [ngStyle]="{'width':'70px'}">
-                            {{data.nomofi}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.nomalmacen | uppercase}}
+                            {{data.nomofi | uppercase}}
                         </div>
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'60px'}">
-                            {{data.diralmacen | uppercase}}
+                            {{data.dirofi | uppercase}}
                         </div>
                     </td>
                     <td>
@@ -135,7 +99,7 @@
                 </div>       
             </div>
         </div>
-        <app-c-almacenes-detalle [IA_data]="data"></app-c-almacenes-detalle>
+        <app-c-oficina-detalle [IA_data]="data"></app-c-oficina-detalle>
     </div>
 
 </ng-template>

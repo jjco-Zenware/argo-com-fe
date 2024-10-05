@@ -63,7 +63,7 @@
                     </th>
                     <th style="width: 100px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
-                            N° ORDEN
+                            DOCUMENTO
                         </div>
                     </th>
                     <th style="width: 30px" class="surface-200" >
@@ -107,7 +107,7 @@
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'60px'}">
-                            {{data.alm_idordencompra }}
+                            {{data.ord_documento }}
                         </div>
                     </td>
                     <td>                       
@@ -118,8 +118,10 @@
                     <td>
                         <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                             <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                            <button *ngIf="data.estado === 'REG' || data.estado === 'OBS'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
-                            
+                            <button *ngIf="data.estado === 'REG'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                            <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
+                                pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
+                            <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
                         </div>
                     </td>
                 </tr>

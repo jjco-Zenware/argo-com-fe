@@ -127,7 +127,11 @@
                 <tr>
                     <td>{{rowIndex + 1}}</td>
                     <td>{{sale.fechamov}}</td>
-                    <td>{{sale.descripcion}}</td>
+                    <td>
+                        <div pTooltip="{{sale.descripcion | uppercase}}">
+                            {{(sale.descripcion.length > 40) ? ((sale.descripcion).slice(0, 40) + '...' | uppercase) : sale.descripcion | uppercase}}
+                        </div>  
+                    </td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
                             {{sale.cantidad_entrada}}

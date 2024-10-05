@@ -88,4 +88,20 @@ export class AlmacenService {
         const url = `${constantesApiWeb.prcSubFamilia}`;
         return this.http.post<any>(url, objeto)
     }
+
+    oficinaTraeruno(codigo: any) {
+        const url = `${constantesApiWeb.oficinaTraeruno}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    grabarOficina(objeto: any) {
+        const url = `${constantesApiWeb.grabarOficina}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    ListarOficina(objeto: any) {
+        const url = `${constantesApiWeb.ListarOficina}`;
+        console.log('ListarOficina url...', url)
+        return this.http.post<any>(url, objeto)
+    }
 }
