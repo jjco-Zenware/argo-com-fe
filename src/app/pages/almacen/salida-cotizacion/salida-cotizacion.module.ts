@@ -13,6 +13,7 @@ import { TagModule } from 'primeng/tag';
 import { SalidaCotizacionRoutingModule } from './salida-cotizacion-routing.module';
 import { CDetalleSalComponent } from './c-detallemovsal/c-detallemovsal.component';
 import { CSalidaCotizacionComponent } from './c-listamovsal/c-listamovsal.component';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { CSalidaCotizacionComponent } from './c-listamovsal/c-listamovsal.compon
     FormsModule,
     ReactiveFormsModule,
     RegistroProveedorModule,
-    TagModule
+    TagModule,
+    SplitButtonModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })

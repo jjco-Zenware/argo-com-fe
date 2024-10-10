@@ -14,6 +14,7 @@ import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { AlmacenService } from '../../service/almacenServices';
 import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
+import { CItemCotizacionComponent } from 'src/app/pages/compras/proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
 
 @Component({
   selector: 'app-c-detallemovsal',
@@ -438,12 +439,12 @@ export class CDetalleMovSalComponent implements OnInit, OnDestroy{
     data.nroindex = index;
     data.idordencompra = this.idMovimiento;
     console.log('CItemOrdenesComponent', data);
-    const refItem = this.dialogService.open(CItemOrdenesComponent, {
+    const refItem = this.dialogService.open(CItemCotizacionComponent, {
       data: data,
       header: data.length == 0 ? "Agregar Producto" : "Editar Producto - " + data.idordencompraitem,
       closeOnEscape: false,
       styleClass: 'testDialog',
-      width: '40%'
+      width: '50%'
     });
     refItem.onClose.subscribe((rpta: any) => {
       

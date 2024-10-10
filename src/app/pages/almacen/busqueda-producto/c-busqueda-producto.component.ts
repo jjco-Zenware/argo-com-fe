@@ -99,7 +99,7 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
         }
         console.log('this.objeto...', objeto);
   
-        const $getListarOrdenCompra = this.almacenService.buscarProducto(objeto)
+        const $getListarOrdenCompra = this.almacenService.buscarProducto03(objeto)
           .subscribe({
             next: (rpta:any) => {
                 this.setSpinner(false);

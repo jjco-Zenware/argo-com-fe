@@ -104,4 +104,9 @@ export class AlmacenService {
         console.log('ListarOficina url...', url)
         return this.http.post<any>(url, objeto)
     }
+
+    buscarProducto03(objeto: any) {
+        const url = `${constantesApiWeb.buscarProducto03}`;
+        return this.http.post<any>(url, objeto)
+    }
 }

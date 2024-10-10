@@ -124,4 +124,5 @@ export const constantesApiWeb = {
     oficinaTraeruno: controllerAlmacen + '/traerUnooficina/',
     grabarOficina: controllerAlmacen + '/oficinaprc/',
     ListarOficina: controllerAlmacen + '/listaroficina/',
+    buscarProducto03: controllerAlmacen + '/buscarproducto03',
 }

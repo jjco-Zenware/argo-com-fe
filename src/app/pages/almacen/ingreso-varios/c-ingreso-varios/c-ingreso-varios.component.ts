@@ -7,6 +7,9 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import { MenuItem } from 'primeng/api';
+import { Menu } from 'primeng/menu';
+import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 
 @Component({
   selector: 'app-c-ingreso-varios',
@@ -27,6 +30,9 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
     dataDet: any;
+    menuItems: MenuItem[] = [];
+    @ViewChild('menu') menu!: Menu;
+    ordenCompra: any;
 
     constructor(
         private fb: FormBuilder,
@@ -200,5 +206,40 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
             type: EXCEL_TYPE
         });
         FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
+      }
+
+      toggleMenu(event: Event, data: any) {
+        if (data.acciones) {
+            this.cargarMenu(data.acciones);
+            this.ordenCompra = data;
+            this.menu.toggle(event);
+        }
+    }
+  
+      cargarMenu(data: any) {
+        this.menuItems = [];
+        data.forEach((item: any) => {
+            this.menuItems.push({
+                label: item.nomtrx,
+                icon: 'pi pi-cog',
+                command: () => this.onAccion(item)
+            })
+        });
+      }
+    
+      onAccion(item: any) {
+        this.ordenCompra.idtrx = item.idtrx;
+        console.log('onAccion', item);
+        const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+            data: this.ordenCompra,
+            header: item.nomtrx,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '40%'
+        });
+    
+        ref.onClose.subscribe(() => {
+            this.getListar();
+          });
       }
 }

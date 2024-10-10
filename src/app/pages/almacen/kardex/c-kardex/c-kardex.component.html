@@ -9,7 +9,14 @@
         </div>
 
         <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
-            <div class="p-fluid p-formgrid grid col-9 text-sm h-5rem -ml-6">
+            <div class="p-fluid p-formgrid grid col-10 text-sm h-5rem -ml-6">
+                <div class="col-4 sm:col-6 lg:col-3 md:col-6 -mt-4">                            
+                    <label class="text-blue-600 font-semibold mb-1">ALMACÉN </label>                            
+                    <span>
+                        <p-dropdown [options]="lstAlmacenCB" placeholder="Seleccionar Almacén"  formControlName="idalmacen" 
+                        optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" class="p-inputtext-sm"></p-dropdown>            
+                    </span>
+                </div>
                 <div class="sm:col-6 lg:col-3 md:col-3 -mt-4 h-4rem field">
                     <label class="text-blue-600 font-semibold mb-1">CÓDIGO</label>
                     <span class="p-input-icon-right">
@@ -33,6 +40,7 @@
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
                 </div>
+                
                 <div class="field col-12 md:col-2 -mt-5 gap-2">
                     <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                         class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
@@ -59,6 +67,7 @@
                         </div>
                     </th>
                     <th rowspan="2" style="width: 300px;" class="surface-200">DETALLE</th>
+                    <th rowspan="2" style="width: 200px;" class="surface-200"> ALMACÉN </th>
                     <th colspan="3" class="surface-200">
                         <div [ngStyle]="{'width':'150px','text-align': 'center'}" class="text-green-500">
                             ENTRADAS
@@ -131,7 +140,8 @@
                         <div pTooltip="{{sale.descripcion | uppercase}}">
                             {{(sale.descripcion.length > 40) ? ((sale.descripcion).slice(0, 40) + '...' | uppercase) : sale.descripcion | uppercase}}
                         </div>  
-                    </td>
+                    </td>                    
+                    <td>{{sale.nomalmacen}}</td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
                             {{sale.cantidad_entrada}}

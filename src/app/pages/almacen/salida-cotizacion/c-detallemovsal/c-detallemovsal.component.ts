@@ -183,7 +183,6 @@ export class CDetalleSalComponent implements OnInit, OnDestroy{
     console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
     switch (data) {
       case 'REG':
-      case 'OBS':
         this.verbtnGrabar = true;
         this.verbtnAcciones = true;
         this.onlyRead = false;
@@ -192,12 +191,6 @@ export class CDetalleSalComponent implements OnInit, OnDestroy{
         this.verbtnGrabar = true;
         this.verbtnAcciones = false;
         this.onlyRead = false;
-      break;
-      case 'PRC':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = true;
-        this.verItems = false;
-        this.onlyRead = true;
       break;
       case 'EMI':
         this.verbtnGrabar = false;
@@ -211,20 +204,6 @@ export class CDetalleSalComponent implements OnInit, OnDestroy{
         this.verItems = false;
         this.onlyRead = true;
       break;
-      case 'ELI':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = false;
-        this.verItems = false;
-        this.onlyRead = true;
-      break;
-      case 'REC':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = true;
-        this.onlyRead = true;
-      break;
-    
-      default:
-        break;
     }
 
     if (this.IA_data.paramReg === 'V') {
@@ -499,6 +478,9 @@ export class CDetalleSalComponent implements OnInit, OnDestroy{
             this.setSpinner(false);
             console.info('next : ', rpta);
             this.lstOrdenC = rpta;
+            if (this.ordenCompra.idordencompra > 0) {
+              this.registerFormRegistro.get('alm_idordencompra')?.setValue(this.ordenCompra.alm_idordencompra);
+            }
         },
         error: (err) => {
             this.setSpinner(false);

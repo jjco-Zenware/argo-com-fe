@@ -1,5 +1,5 @@
 <div class="p-fluid mt-1">
-    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+    <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
         <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardarOC()"></button>
         <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
     </div>
@@ -43,7 +43,7 @@
                         <div class="col-4 sm:col-6 lg:col-5 md:col-6 h-4rem">                            
                             <label class="block text-900 font-semibold mb-1">Cliente <span class="text-red-500 font-bold"> * </span></label>                            
                             <span>
-                                <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Cliente"  formControlName="idcliente" class="p-inputtext-sm"
+                                <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Cliente"  formControlName="idproveedor" class="p-inputtext-sm"
                                 optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead></p-dropdown>            
                             </span>
                         </div>   
@@ -85,7 +85,7 @@
                     <ng-template pTemplate="header">
                         <tr class="text-sm">
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th [ngStyle]="{'width':'50px'}" class="surface-200">
+                            <th *ngIf="verbtnGrabar" [ngStyle]="{'width':'50px'}" class="surface-200">
                                 <!-- <p-tableHeaderCheckbox style="width:15px; height:15px;"></p-tableHeaderCheckbox> -->
                             </th>
                             <th class="surface-200">CÓDIGO</th>
@@ -100,13 +100,13 @@
                             <!-- <th class="surface-200">P. UNI.</th> -->
                             <th class="surface-200">CANT.</th>
                             <!-- <th class="surface-200">TOTAL</th> -->
-                            <th class="surface-200">ACCIONES</th>
+                            <!-- <th class="surface-200">ACCIONES</th> -->
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
                         <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
-                            <td>
+                            <td *ngIf="verbtnGrabar">
                                 <input type="checkbox" [(ngModel)]="product.indcompleto" [ngModelOptions]="{standalone: true}" 
                                 style="width:15px; height:15px; cursor:pointer">
                             </td>
@@ -121,12 +121,12 @@
                             <!-- <td>{{ product.preciocosto | number: '0.2'}}</td> -->
                             <td>{{ product.cantidad }}</td>
                             <!-- <td>{{ product.preciocostototal | number: '0.2'}}</td> -->
-                            <td>
+                            <!-- <td>
                                 <div *ngIf="verItems">
                                     <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
                                     <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
                                 </div>
-                            </td>
+                            </td> -->
                         </tr>
                     </ng-template>
                     <!-- <ng-template pTemplate="footer">

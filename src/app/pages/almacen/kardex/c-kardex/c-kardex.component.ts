@@ -10,6 +10,7 @@ import * as FileSaver from 'file-saver';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CBusquedaProductoComponent } from '../../busqueda-producto/c-busqueda-producto.component';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import { AlmacenService } from '../../service/almacenServices';
 
 @Component({
   selector: 'app-c-kardex',
@@ -20,6 +21,7 @@ export class CKardexComponent implements OnInit, OnDestroy{
 
     $listSubcription: Subscription[] = [];
     lstAlmacen: any;
+    lstAlmacenCB: any;
     blockedDocument: boolean = false;
     mensajeSpinner: string = "";
     cols: any[] = [];
@@ -38,13 +40,14 @@ export class CKardexComponent implements OnInit, OnDestroy{
         private confirmationService: ConfirmationService,  
         private serviceSharedApp: SharedAppService,
         private messageService: MessageService,
-        
+        private almacenService: AlmacenService
       ){    
         
     }
 
     ngOnInit(): void{
         this.createFrm();
+        this.ListarAlamcen(); 
         //this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
@@ -70,7 +73,8 @@ export class CKardexComponent implements OnInit, OnDestroy{
           fechaini: [{value: this.utilitariosService.obtenerFechaInicioMes(), disabled: false }],
           fechafin: [{value: this.utilitariosService.obtenerFechaFinMes(), disabled: false}],     
           idusuario: [{value: constantesLocalStorage.idusuario, disabled: false}],
-          codproducto: [{value: '',disabled: false}]          
+          codproducto: [{value: '',disabled: false}],         
+          idalmacen: [{value: 0 ,disabled: false}]          
         })
       }
 
@@ -111,6 +115,31 @@ export class CKardexComponent implements OnInit, OnDestroy{
       this.$listSubcription.push($getListarOrdenCompra)
     }
 
+    ListarAlamcen(){
+      const objeto = {
+        idalmacen:0,
+        idofi: 0
+      }
+      const $getListar = this.almacenService.ListarAlamcen(objeto)
+        .subscribe({
+          next: (rpta:any) => {
+              console.log('rpta lstAlmacenCB', rpta);
+              
+              this.lstAlmacenCB = rpta
+              const objet = {
+                idalmacen: 0,
+                nomalmacen: 'TODOS'
+              }
+              this.lstAlmacenCB.unshift(objet);
+          },
+          error:(err)=>{
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+          }
+        });
+      this.$listSubcription.push($getListar)
+    }
 
     getExportarExcel(data :any) {
       this.lstExportar = [];
