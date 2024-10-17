@@ -50,7 +50,6 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
           { field: 'nomtipoorden', header: 'OFICINA ' },
-          { field: 'nomcomercial', header: 'DIRECCIÓN' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];

@@ -51,7 +51,6 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
         this.cols = [
           { field: 'nomtipoorden', header: 'OFICINA ' },
           { field: 'codigonroorden', header: 'NOMBRE' },
-          { field: 'nomcomercial', header: 'DIRECCIÓN' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];

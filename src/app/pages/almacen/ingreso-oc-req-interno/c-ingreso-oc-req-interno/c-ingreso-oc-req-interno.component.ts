@@ -8,7 +8,7 @@ import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { Menu } from 'primeng/menu';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 
 
@@ -41,6 +41,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
         public dialogService: DialogService  ,
         private proyectosService: ProyectosService,     
         private serviceSharedApp: SharedAppService,
+        private messageService: MessageService,
         
       ){          
     }
@@ -217,6 +218,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     }
   
       cargarMenu(data: any) {
+        console.log('onAccion', data);
         this.menuItems = [];
         data.forEach((item: any) => {
             this.menuItems.push({
@@ -228,6 +230,14 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
       }
     
       onAccion(item: any) {
+        console.log('onAccion', item);
+        // const objeto = this.lstItemOC.filter((x: { indcompleto: boolean; }) => x.indcompleto == false);
+        // console.log('onAccion', objeto);
+        // if (objeto.length > 0) {
+        //   this.messageService.add({severity: 'warn', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+        //       return;
+        // }
+
         this.ordenCompra.idtrx = item.idtrx;
         console.log('onAccion', item);
         const ref = this.dialogService.open(CModalExcAlmacenComponent, {

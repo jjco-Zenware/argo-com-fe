@@ -1,5 +1,5 @@
 <div class="p-fluid mt-1">
-    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+    <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
         <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardarOC()"></button>
         <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
     </div>
@@ -146,7 +146,49 @@
                     </div>
                 </ng-template>             
                 <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
-            </p-tabPanel>            
+            </p-tabPanel>  
+            
+            <p-tabPanel >
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-cog"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Transacciones 
+                        </span>
+                    </div>
+                </ng-template>    
+                <p-table [value]="lstTransacciones" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                [scrollable]="true"  styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr class="text-sm">
+                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
+                            <th [ngStyle]="{'width':'120px'}" class="surface-200">FECHA MOV</th>
+                            <th class="surface-200">TRANSACCIÓN</th>
+                            <th class="surface-200">DESCRIPCIÓN</th>
+                            <th class="surface-200">USUARIO</th>
+                            <th class="surface-200"></th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                        <tr class="text-sm">
+                            <td>{{rowIndex + 1}}</td>
+                            <td>
+                                <div [ngStyle]="{'width':'120px'}">
+                                    {{product.fechamov }}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'200px'}">
+                                    {{product.nomtrx | uppercase}}
+                                </div>
+                            </td>
+                            <td>{{ product.mensajetrx | uppercase}}</td>
+                            
+                            <td>{{ product.nomusuario | uppercase}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>                         
+            </p-tabPanel>
                   
         </p-tabView> 
     </div>

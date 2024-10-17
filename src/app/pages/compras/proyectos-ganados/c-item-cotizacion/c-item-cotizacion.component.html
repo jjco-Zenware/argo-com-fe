@@ -17,7 +17,7 @@
                 <div class="sm:col-12 lg:col-2 md:col-12 mt-3 gap-2"> 
                     <button type="button" pButton icon="pi pi-search" styleClass="p-button-warn" class="h-2.5rem font-semibold p-button-outlined" (click)="getBusquedaAvanzada([])"
                         pTooltip="Busqueda Avanzada de Producto" tooltipPosition="bottom"></button>
-                    <button type="button" pButton icon="pi pi-plus" styleClass="p-button-warn" class="h-2.5rem ml-2 font-bold p-button-outlined text-green-600" (click)="altaRapida()"
+                    <button *ngIf="verMovAlmacen" type="button" pButton icon="pi pi-plus" styleClass="p-button-warn" class="h-2.5rem ml-2 font-bold p-button-outlined text-green-600" (click)="altaRapida()"
                     pTooltip="Alta Rapida de Producto" tooltipPosition="bottom"></button>
                 </div>
                 <div class="col-12 sm:col-12 lg:col-5 md:col-12"> 
@@ -50,16 +50,16 @@
                         optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
                     </span>
                 </div>
-                <div class="sm:col-12 lg:col-2 md:col-12 ">
+                <div *ngIf="verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12 ">
                     <label class="font-semibold">P. Unitario</label>
                     <p-inputNumber (onInput)="calcularBCPu($event)" class="p-inputtext-sm" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
                 </div>
-                <div class="sm:col-12 lg:col-2 md:col-12">
+                <div *ngIf="verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Total</label>
                     <p-inputNumber class="surface-100 font-bold" class="p-inputtext-sm" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
                 </div>                
             </div>
-            <div class="flex grid">
+            <div *ngIf="verMovAlmacen" class="flex grid">
                 <div *ngIf="verporSerie" class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">N° Serie</label>
                     <input pInputText type="text" formControlName="serialnumber" class="p-inputtext-sm"/>

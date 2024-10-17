@@ -50,6 +50,7 @@ export class CDatoCotizacionViewComponent implements OnInit, OnDestroy {
     listaContacInicial: any = undefined;
     contacto: ContactoOrdenCompra = {idcontacto: 0, idcliente:0, nombrecontacto: '', cargo: '',image:'', telefono:'', idordencompra:0 };
     montoTotal: number = 0;
+    dataproyec:any;
 
     IdCliente: any;
 
@@ -124,7 +125,10 @@ export class CDatoCotizacionViewComponent implements OnInit, OnDestroy {
     this.asignadosContacto = this.param.data.contactos;
     this.listaContacInicial= this.param.data.contactos;
     this.lstCotizacionItem = this.param.data['items'] && this.param.data['items'].length > 0 ? this.param.data.items : [];
-
+    this.dataproyec ={
+      idCliente: this.idCotiza,
+      codtipoproc: 7
+    }
     this.calcularTotales() ;
   }
 

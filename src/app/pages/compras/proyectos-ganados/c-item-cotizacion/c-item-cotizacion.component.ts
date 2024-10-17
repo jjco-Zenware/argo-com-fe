@@ -39,6 +39,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   registerFormTag!: FormGroup;  
   verporLicContrato  : boolean = false;
   verCondic: boolean = false;
+  verMovAlmacen: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -74,6 +75,10 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
     // }    
     this.getRegistro();
     this.verControles(this.param.idtipoprod);
+
+    if (this.param.movalmacen === 'N') {
+      this.verMovAlmacen = false;
+    }
   }
 
   ngOnDestroy() {
@@ -138,6 +143,7 @@ createFormTag() {
 }
 
   getRegistro(){
+    console.log('getRegistro : ', this.param);
     this.frmDatosItem.patchValue(this.param);
     // if (this.param.idordencompra > 0) {
        this.listaTag = this.param.tags;
@@ -237,7 +243,7 @@ createFormTag() {
       return;
     }
 
-      if (this.frmDatosItem.get('preciocosto')?.value == 0) {
+      if (this.frmDatosItem.get('preciocosto')?.value === 0 && this.verMovAlmacen === true) {
         this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Precio Costo'});
         return;
       }
@@ -247,20 +253,40 @@ createFormTag() {
       return;
     }
 
-    if (this.frmDatosItem.get('idtipoprod')?.value  === 6 || this.frmDatosItem.get('idtipoprod')?.value  === 7) {
-      if (this.frmDatosItem.get('fecini')?.value === null) {
-        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Inicio'});
-        return;
-      }
-      if (this.frmDatosItem.get('fecfin')?.value === null) {
-        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Final'});
-        return;
-      }
-      const _fecini = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecini')?.value);
-      this.frmDatosItem.get('fecini')?.setValue(_fecini);
-      const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
-      this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
-    }   
+    if (this.verMovAlmacen === true) {
+      if (this.frmDatosItem.get('idtipoprod')?.value  === 6 || this.frmDatosItem.get('idtipoprod')?.value  === 7) {
+        if (this.frmDatosItem.get('fecini')?.value === null) {
+          this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Inicio'});
+          return;
+        }
+        if (this.frmDatosItem.get('fecfin')?.value === null) {
+          this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Final'});
+          return;
+        }
+          if (this.frmDatosItem.value.idordencompraitem === 0) {
+            console.log('cero',this.frmDatosItem.value);
+            const _fecini = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecini')?.value);
+            this.frmDatosItem.get('fecini')?.setValue(_fecini);
+            const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
+            this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
+          }
+  
+          if (this.frmDatosItem.value.fecini.length > 10) {
+            console.log('ini 10', this.frmDatosItem.value.fecini.length);
+            const _fecini = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecini')?.value);
+            this.frmDatosItem.get('fecini')?.setValue(_fecini);
+          }
+          if (this.frmDatosItem.value.fecfin.length > 10) {
+            console.log('fin 10', this.frmDatosItem.value.fecfin.length);
+            const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
+            this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
+          }
+       
+       
+      } 
+    }
+
+      
 
     const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
     this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
@@ -270,6 +296,8 @@ createFormTag() {
     
     const _nomunidad:string=this.lstUnidades.filter(x=>x.iditem == this.frmDatosItem.get('idunidad')?.value)[0].valoritem;
     this.frmDatosItem.get('nomunidad')?.setValue(_nomunidad)
+
+    console.log('guardarItem',this.frmDatosItem.value);
 
     this.cerrar({...this.frmDatosItem.getRawValue()})
   }

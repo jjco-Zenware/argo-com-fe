@@ -35,7 +35,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
   headerTitle: string = '';
   registerFormCliente: any = FormGroup;
   lstMonedas: Moneda[] = [];
-  lstItemOC: OrdenCompraItem[] = [];
+  lstItemOC: any[] = [];
   montoTotal: number = 0;
   lstOrdenC: any;
   lstOrigen: any;
@@ -66,6 +66,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
   activeIndex: number = 0;
   lstAlmacen: any;
   selectedProducts: any;
+  lstTransacciones: any[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -107,6 +108,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
       }  
       this.verAdjunto = true;     
       this.traerUnoOrdenC();
+      this.listarTransacciones();
     }else{
       this.dataAdjunto ={
         idCliente: 0,
@@ -281,6 +283,22 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($cargarOrdenC)
   }
 
+  listarTransacciones() {
+    const $lstTransacciones = this.proyectosService.listarTrasacciones(this.idMovimiento).subscribe({
+      next: (rpta: any) => {
+        console.log('lstTransacciones', rpta);
+        this.lstTransacciones = rpta;       
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+    });
+    this.$listSubcription.push($lstTransacciones);
+
+  }
+
   guardarOC(){
 
     if (this.validarDatos())
@@ -437,7 +455,8 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
 
   getItem(data: any,index: number) {
     data.nroindex = index;
-    data.idordencompra = this.idMovimiento;
+    data.idordencompra = this.idMovimiento;    
+    data.movalmacen = 'N';
     console.log('CItemOrdenesComponent', data);
     const refItem = this.dialogService.open(CItemCotizacionComponent, {
       data: data,
@@ -527,6 +546,12 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
   }
 
   onAccion(item: any) {
+    const objeto = this.lstItemOC.filter((x: { indcompleto: boolean; }) => x.indcompleto == false);
+    console.log('onAccion', objeto);
+    if (objeto.length > 0) {
+      this.messageService.add({severity: 'warn', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+          return;
+    }
     this.ordenCompra.idtrx = item.idtrx;
     const ref = this.dialogService.open(CModalExcAlmacenComponent, {
         data: this.ordenCompra,

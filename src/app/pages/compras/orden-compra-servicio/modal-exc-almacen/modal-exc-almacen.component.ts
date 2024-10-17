@@ -24,6 +24,8 @@ export class CModalExcAlmacenComponent {
     descripcion: string = "";
     btnIconAccion!: string;
     btnColor!: string;
+    blockedDocument: boolean = false;
+    mensajeSpinner: string = "Procesando...!";
 
 
 
@@ -37,9 +39,13 @@ export class CModalExcAlmacenComponent {
 
     ngOnInit(): void {
       this.ordencompra = this.config.data;
-      console.log('ordencompra', this.ordencompra);
+      //console.log('ordencompra', this.ordencompra);
       this._transaccion = this.config.data.acciones.filter((x: { idtrx: any; })=>x.idtrx === this.config.data.idtrx);
       this.cargarData();
+    }
+
+    setSpinner(valor: boolean) {
+      this.blockedDocument = valor;
     }
 
     cargarData(){
@@ -57,6 +63,8 @@ export class CModalExcAlmacenComponent {
           return;
       }
 
+      this.setSpinner(true);
+
       const objeto = {
           idtrx: codigo,
           idusuario: constantesLocalStorage.idusuario,
@@ -66,6 +74,7 @@ export class CModalExcAlmacenComponent {
 
       const $procesarTrx = this.ordencompraService.procesarTrx(objeto).subscribe({
           next: (rpta: any) => {
+            this.setSpinner(false);
               console.log('prcReunion', rpta);
               if (rpta.procesoSwitch === 0) {
                   console.log('entro procesoSwitch....');
@@ -79,10 +88,13 @@ export class CModalExcAlmacenComponent {
               });
           },
           error: (err) => {
+            this.setSpinner(false);
               console.error('error : ', err);
               this.serviceSharedApp.messageToast();
           },
-          complete: () => {},
+          complete: () => {
+            this.setSpinner(false);
+          },
       });
       this.$listSubcription.push($procesarTrx)
   }

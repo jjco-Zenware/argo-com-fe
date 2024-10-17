@@ -77,9 +77,9 @@
                         </span>
                     </div>
                 </ng-template>
-                <div *ngIf="verItems" class="flex mt-3 ml-2 gap-2">
+                <!-- <div *ngIf="verItems" class="flex mt-3 ml-2 gap-2">
                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
-                </div>
+                </div> -->
                 <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
                 [(selection)]="selectedItems" [scrollable]="true"  styleClass="p-datatable-sm">
                     <ng-template pTemplate="header">

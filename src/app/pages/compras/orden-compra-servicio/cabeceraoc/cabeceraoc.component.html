@@ -317,7 +317,7 @@
                     </div>
                     <div class="mb-3 field">
                         <label class="font-semibold">Celular</label>
-                        <p-inputMask mask="999 999 999" formControlName="telf1" ></p-inputMask>
+                        <input pInputText type="text" formControlName="telf1"/>
                         <p class="text-red-600" *ngIf="submitted && formContacto.telf1.errors">* Debe ingresar Celular</p>
                     </div>
                 </div>

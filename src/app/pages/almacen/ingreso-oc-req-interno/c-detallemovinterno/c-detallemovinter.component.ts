@@ -1,8 +1,8 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
-import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
+import { Cliente, Moneda } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
@@ -34,7 +34,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
   headerTitle: string = '';
   registerFormCliente: any = FormGroup;
   lstMonedas: Moneda[] = [];
-  lstItemOC: OrdenCompraItem[] = [];
+  lstItemOC: any[] = [];
   montoTotal: number = 0;
   lstOrdenC: any;
   lstOrigen: any;
@@ -66,6 +66,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
   lstAlmacen: any;
   selectedProducts: any;
   selectedItems: any;
+  lstTransacciones: any[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -107,6 +108,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       }  
       this.verAdjunto = true;     
       this.traerUnoOrdenC();
+      this.listarTransacciones();
     }else{
       this.dataAdjunto ={
         idCliente: 0,
@@ -278,6 +280,22 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
         }
       });
     this.$listSubcription.push($cargarOrdenC)
+  }
+
+  listarTransacciones() {
+    const $lstTransacciones = this.proyectosService.listarTrasacciones(this.idMovimiento).subscribe({
+      next: (rpta: any) => {
+        console.log('lstTransacciones', rpta);
+        this.lstTransacciones = rpta;       
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+    });
+    this.$listSubcription.push($lstTransacciones);
+
   }
 
   guardarOC(){
@@ -529,6 +547,14 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
   }
 
   onAccion(item: any) {
+
+    const objeto = this.lstItemOC.filter((x: { indcompleto: boolean; }) => x.indcompleto == false);
+    console.log('onAccion', objeto);
+    if (objeto.length > 0) {
+      this.messageService.add({severity: 'error', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+          return;
+    }
+
     this.ordenCompra.idtrx = item.idtrx;
     const ref = this.dialogService.open(CModalExcAlmacenComponent, {
         data: this.ordenCompra,

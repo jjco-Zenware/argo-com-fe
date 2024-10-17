@@ -157,6 +157,9 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
       idalmacen:[{ value: 0, disabled: false }],
       alm_idordencompra:[{ value: 0, disabled: false }],
       idprod: [{ value: 0, disabled: false }],
+      
+      idbanco:[{ value: '', disabled: true }],
+      nombanco:[{ value: '', disabled: false }],
     });
   }
 

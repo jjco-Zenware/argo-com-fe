@@ -13,6 +13,7 @@ import { CDetalleMovVariosComponent } from './c-detallemovvarios/c-detallemovvar
 import { AlmacenService } from '../service/almacenServices';
 import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 import { TagModule } from 'primeng/tag';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { TagModule } from 'primeng/tag';
     FormsModule,
     ReactiveFormsModule,
     RegistroProveedorModule,
-    TagModule
+    TagModule,
+    SplitButtonModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })

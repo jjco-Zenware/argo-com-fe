@@ -19,7 +19,9 @@ import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/servic
 export class CCuentaporPagarComponent implements OnInit, OnDestroy{
 
   $listSubcription: Subscription[] = [];
-  lstCatalogo: any;
+  lstCuentas: any;
+  lstPendientes: any;
+  lstAprobadas: any;
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   cols: any[] = [];
@@ -80,20 +82,20 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
   getListar(){
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-    console.log('this.frmDatos...', this.frmDatos.value);
+    //console.log('this.frmDatos...', this.frmDatos.value);
     const objeto = {
       ...this.frmDatos.value,
-      // idfamilia: this.frmDatos.value.idfamilia === null ? 0 : this.frmDatos.value.idfamilia,
-      // idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia
+      idtipodocprc: 0
     }
-    console.log('this.objeto...', objeto);
 
-    const $getListarOrdenCompra = this.tesoreriaService.buscarProducto(objeto)
+    const $getListar = this.proyectosService.ordenCompraList(objeto)
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
-            console.log('rpta getListarOrdenCompra', rpta);
-            this.lstCatalogo = rpta
+            console.log('rpta getListar', rpta.ordenescompra);
+            this.lstCuentas = rpta.ordenescompra
+            this.lstPendientes = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'PRC');
+            this.lstAprobadas = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'EMI');
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -103,7 +105,15 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
           this.setSpinner(false);
         }
       });
-    this.$listSubcription.push($getListarOrdenCompra)
+    this.$listSubcription.push($getListar)
+  }
+
+  selectHeaders(tabNumber: any) {
+    if (tabNumber.index === 0) {
+      this.lstExportExcel = this.lstPendientes;
+    }else{
+      this.lstExportExcel = this.lstAprobadas;
+    }
   }
 
 

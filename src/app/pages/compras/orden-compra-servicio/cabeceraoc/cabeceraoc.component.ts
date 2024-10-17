@@ -918,7 +918,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     this.registerFormContacto.patchValue({
       nombrecontacto: '',
       email: '',
-      telefono: '',
+      telf1: '',
       cargo: ''
     });
     this.contactoVisible = true;

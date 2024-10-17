@@ -65,6 +65,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
   activeIndex: number = 0;
   lstAlmacen: any;
   selectedItems: any;
+  lstTransacciones: any[]=[];
   //_alm_idordencompra:number = 0;
 
   constructor(
@@ -107,6 +108,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
       }  
       this.verAdjunto = true;     
       this.traerUnoOrdenC();
+      this.listarTransacciones();
     }else{
       this.dataAdjunto ={
         idCliente: 0,
@@ -276,6 +278,22 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
         }
       });
     this.$listSubcription.push($cargarOrdenC)
+  }
+
+  listarTransacciones() {
+    const $lstTransacciones = this.proyectosService.listarTrasacciones(this.idMovimiento).subscribe({
+      next: (rpta: any) => {
+        console.log('lstTransacciones', rpta);
+        this.lstTransacciones = rpta;       
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+    });
+    this.$listSubcription.push($lstTransacciones);
+
   }
 
   guardarOC(){
@@ -527,6 +545,14 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
   }
 
   onAccion(item: any) {
+
+    const objeto = this.lstItemOC.filter((x: { indcompleto: boolean; }) => x.indcompleto == false);
+    console.log('onAccion', objeto);
+    if (objeto.length > 0) {
+      this.messageService.add({severity: 'error', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+          return;
+    }
+
     this.ordenCompra.idtrx = item.idtrx;
     const ref = this.dialogService.open(CModalExcAlmacenComponent, {
         data: this.ordenCompra,

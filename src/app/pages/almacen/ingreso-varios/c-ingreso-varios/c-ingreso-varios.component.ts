@@ -50,7 +50,6 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
           { field: 'nomtipoorden', header: 'OFICINA ' },
-          { field: 'codigonroorden', header: 'NOMBRE' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
