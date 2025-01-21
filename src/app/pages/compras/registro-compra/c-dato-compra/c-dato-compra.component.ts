@@ -1276,7 +1276,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     let fin_ = Math.round(fin/(1000*60*60*24));
 
 
-    var diff = inicio - fin;
+    var diff = fin - inicio;
     console.log('nro dias', diff/(1000*60*60*24));
     console.log('changeFechaHasta diff', diff);
     let numerDiff = Math.round(diff/(1000*60*60*24));
