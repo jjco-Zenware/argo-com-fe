@@ -1,5 +1,5 @@
 
-<div class="card m-4">
+<div class="card m-4 gap-1">
     <div class="grid mt-2">
         <div class="flex justify-content-between col-12 -mt-3 gap-2">                                  
             <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
@@ -8,28 +8,28 @@
         </div>
     </div>
 
-    <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 -ml-3">
-        <div class="p-fluid p-formgrid grid col-12 text-sm h-5rem">
-            <div class="sm:col-4 lg:col-2 md:col-12 field -mt-3">
+    <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-12 text-sm -mt-2">
+       
+            <div class=" col-12 sm:col-4 lg:col-2 md:col-12 field -mt-3">
                 <label class="font-semibold mb-1 text-blue-600">CÓDIGO</label>                        
                 <span class="p-fluid">
                     <input pInputText type="text" formControlName="codproducto" class="p-inputtext-sm"/>
                 </span>
             </div> 
-            <div class="sm:col-6 lg:col-4 md:col-3 -mt-3 field">
+            <div class="col-12 sm:col-6 lg:col-4 md:col-3 -mt-3 field">
                 <label class="font-semibold mb-1 text-blue-600">DESCRIPCIÓN</label>                        
                 <span class="p-fluid">
                     <textarea type="text" pInputTextarea [rows]="1" formControlName="desproducto" style="resize: none" class="w-full p-inputtext-sm" ></textarea>
                 </span>
             </div>
-            <div class="col-4 sm:col-6 lg:col-2 md:col-6 -mt-3 field">                            
+            <div class="col-12 sm:col-6 lg:col-2 md:col-6 -mt-3 field">                            
                 <label class="font-semibold mb-1 text-blue-600">GRUPO</label>                            
                 <span>
                     <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..."  formControlName="idfamilia" class="p-inputtext-sm"
                     optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body"  (onChange)="getSubFamilia($event.value)"></p-dropdown>            
                 </span>
             </div> 
-            <div class="col-4 sm:col-6 lg:col-2 md:col-6 -mt-3 field">                            
+            <div class="col-12 sm:col-6 lg:col-2 md:col-6 -mt-3 field">                            
                 <label class="font-semibold mb-1 text-blue-600">CATEGORIA</label>                            
                 <span>
                     <p-dropdown [options]="lstSubFamilia" placeholder="Seleccionar..."  formControlName="idsubfamilia" class="p-inputtext-sm"
@@ -43,13 +43,12 @@
                 <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
                     class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
             </div>
-        </div>
     </form> 
 
     <p-table #dt1 [value]="lstCatalogo" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
         [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
         currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
-        styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-gridlines">
+        styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-gridlines -mt-5">
            <ng-template pTemplate="header">
             <tr class="text-sm" >
                 <th rowspan="2" style="width: 30px" class="surface-200" >

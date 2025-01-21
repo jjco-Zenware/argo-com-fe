@@ -32,6 +32,7 @@ export class CDatoClienteComponent implements  OnChanges, OnDestroy{
   dataLegal: any;
   dataAdjunto: any;
   terminopago: any;
+  lstRol:any[] = [];
 
   dropdownItemsTipPer = [
     { name: 'Jurídica', code: 'J' },
@@ -93,6 +94,7 @@ ngOnChanges(changes: SimpleChanges): void {
     this.cargarData();
     this.listaTipoDocumento();
     this.listaMonedas();
+    this.listarItemsTabla(); 
     
     this.dataLegal ={
       idCliente: this.idCliente,
@@ -302,14 +304,22 @@ guardar() {
   }
 }
 
+listarItemsTabla() {
+  this.comprasService.obtenerItemsTabla(115).subscribe({
+      next: (rpta: any) => {
+        console.info('listarItemsTabla : ', rpta);
+        let lista = rpta
+        //this.lstRol = rpta;
 
+        this.lstRol = lista.filter((x: { coditem: string; }) => x.coditem !== 'PRO');
+      },
+      error: (err) => {
+      console.info('error : ', err);
+      this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+  });
 
-
-
-
-
-
-
-
-
+  }
 }

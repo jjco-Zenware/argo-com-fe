@@ -2,18 +2,17 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
-import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
+import { TablaDetalle } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
-import { CModalExcTransacComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
 import { AlmacenService } from 'src/app/pages/almacen/service/almacenServices';
-import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
+import { TesoreriaService } from '../../service/tesoreriaServices';
 
 @Component({
   selector: 'app-c-banco-detalle',
@@ -24,47 +23,23 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
   @Input() IA_data: any;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
-  visibleDocument: boolean = true;
-  dataAdjunto: any;
   registerFormRegistro: any= FormGroup;
-  lstProyectos: any;
-  lstCliente: Cliente []=[];
-  lstProveedores: Cliente[] = [];
   submitted = false;
   headerTitle: string = '';
   registerFormCliente: any = FormGroup;
-  lstMonedas: Moneda[] = [];
-  lstItemOC: OrdenCompraItem[] = [];
-  montoTotal: number = 0;
-  lstOrdenC: any;
-  lstOrigen: any;
-  idMovimiento: number = 0;
+  idBanco: number = 0;
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
-  menuItems: MenuItem[] = [];
-  verbtnGrabar: boolean = false;
-  verbtnAcciones: boolean = false;
-  verItems: boolean = true;
-  ordenCompra: any;
-  verCotizacion: boolean = true;
-  lstTipo = [
-    { name: 'COMPRA', code: 'OC' },
-    { name: 'SERVICIO', code: 'OS' }
-  ];
-  lstTermino: any;
-  lstQuotes: any[]=[];
-  verAdjunto: boolean = false;
   ExcelData: any;
   verImportar: boolean = true;
   onlyRead: boolean = false;
-  verReferencia: boolean = false;
+  verbtnGrabar: boolean = false;
   errorMensaje: string = "";
-  s_monto:number = 0;
-  s_igv:number = 0;
-  s_monto_total:number = 0;
-  activeIndex: number = 0;
-  lstAlmacen: any;
-  selectedItems: any;
+  lstTipoBanco: TablaDetalle[] = [];
+
+  lstTipoDocumento = [
+    { name: 'RUC', code: 'RUC' }
+];
 
   constructor(
     private fb: FormBuilder,
@@ -75,46 +50,21 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
     private serviceUtilitario: UtilitariosService,
     public dialogService: DialogService,
     private confirmationService: ConfirmationService,
-    private ordencompraService: OrdencompraService,
+    private tesoreriaService: TesoreriaService,  
     private comprasService: ComprasService,    
-    private almacenService: AlmacenService, 
   ) { }
 
   ngOnInit(): void {
-    this.idMovimiento = this.IA_data.idcodigo;
+    this.idBanco = this.IA_data.idcodigo;
 
     this.createFrm();
     this.createFormRegistro();
-    this.ListarAlamcen();  
-    this.listaClientes();
-    this.listaProveedores();
-    this.listarItemsTabla(); 
+    this.listaTipoBanco(); 
     
-    if (this.idMovimiento > 0) {   
-      if (this.IA_data.paramReg === 'V') {
-        this.dataAdjunto ={
-          idCliente: this.idMovimiento,
-          codtipoproc: 7,
-          veracciones: 1
-        }
-      }  else{
-        this.dataAdjunto ={
-          idCliente: this.idMovimiento,
-          codtipoproc: 7,
-          veracciones: 0
-        }
-      }  
-      this.verAdjunto = true;     
-      this.traerUnoOrdenC();
-    }else{
-      this.dataAdjunto ={
-        idCliente: 0,
-        codtipoproc: 7,
-        veracciones: 0
-      }     
-      this.mostrarBotones('NVO');
-      this.servicioGenerico();
-    }   
+    if (this.idBanco > 0) {            
+      this.traerUno();
+    }
+    this.mostrarBotones();  
   }
 
   get formRegistro() { return this.registerFormRegistro.controls; }
@@ -122,44 +72,40 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
   createFormRegistro() {
     //Agregar validaciones de formulario
     this.registerFormRegistro = this.formBuilder.group({
-      idproyecto: [{ value: 0, disabled: false }],
-      idtipoproyecto: [{ value: 0, disabled: false }],
-      idtipodocprc: [{ value: this.IA_data.idtipodocprc, disabled: false }],
-      idoportunidad: [{ value: 0, disabled: false }],
-      sustentodoc: [{ value: '', disabled: false }],
-      idrequerimiento: [{ value: 0, disabled: false }],
-      observacion: [{ value: '', disabled: false }],
-      iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      idrolpersona: [{ value: 'AMB', disabled: false }],
+      tipopersona :  [{ value: 'J', disabled: false }],
+      tipoalta : [{ value: 'NOR', disabled: false }],
+      indnacionalidad: [{ value: '1', disabled: false }],
+      idpais: [{ value: '1', disabled: false }],
+      idtipodoc: [{ value: null, disabled: false }],
+      nrodocumento: [{ value: null, disabled: false }],
+      appaterno: [{ value: '', disabled: false }],
+      apmaterno: [{ value: '', disabled: false }],
+      apcasada: [{ value: '', disabled: false }],
+      nombres: [{ value: '', disabled: false }],
+      razonsocial: [{ value: null, disabled: false }, [Validators.required]],
+      nomcomercial: [{ value: null, disabled: false }],
+      direcresumen: [{ value: null, disabled: false }],
+      telefresumen: [{ value: null, disabled: false }],
+      email: [{ value: null, disabled: false }],
+      paginaweb: [{ value: null, disabled: false }],
+      facebook: [{ value: null, disabled: false }],
+      youtube: [{ value: null, disabled: false }],
+      indmigrado :  [{ value: false, disabled: false }],
+      indestado:  [{ value: '1', disabled: false }],
+      indvig :  [{ value: true, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
-      nrodocumentoadd:[{ value: '', disabled: false }],
-      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
-      idordencompra: [{ value: this.idMovimiento, disabled: true }],
-      condicionescomerciales: [{ value: '', disabled: false }],
-      idproveedor: [{ value: 0, disabled: false }],
-      idmoneda: [{ value: 1, disabled: false }],
-      labelnrodocumento: [{ value: '', disabled: true }],
-      idcontacto: [{ value: 0, disabled: false }],
-      codtipodoc: [{ value: 'OPO', disabled: false }],
-      tiempoentrega: [{ value: 0, disabled: false }],
-      codformapago: [{ value: 118, disabled: false }],
-      validezoferta: [{ value: 0, disabled: false }],
-      lugarentrega: [{ value: '', disabled: false }],
-      garantia: [{ value: 0, disabled: false }],
-      servicionombre: [{ value: '', disabled: false }],
-      ref01: [{ value: '', disabled: false }],
-      ref02: [{ value: '', disabled: false }],
-      ref03: [{ value: '', disabled: false }],
-      codtipoorden:[{ value: 'OC', disabled: false }],
-      codigonroorden:[{ value: '', disabled: true }],
-      nomproyecto:[{ value: '', disabled: false }],
-      fecentrega: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
-      terminosdepago:[{ value: '', disabled: false }],
-      idalmacen:[{ value: 0, disabled: false }],
-      alm_idordencompra:[{ value: 0, disabled: false }],
-      idprod: [{ value: 0, disabled: false }],
+      idpersona: [{ value: 0, disabled: false }],
+      tipoentidad: [{ value: 'P', disabled: false }, [Validators.required]],
       
-      idbanco:[{ value: '', disabled: true }],
-      nombanco:[{ value: '', disabled: false }],
+      idbanco:[{ value: 0, disabled: true }],
+      tipobanco: [{ value: null, disabled: false }, [Validators.required]],
+      idtipodoc_banco: [{ value: null, disabled: false }, [Validators.required]],
+      nrodoc: [{ value: '', disabled: false }, [Validators.required]],
+      codigobcr:[{ value: '', disabled: false }],
+      codbancosbs:[{ value: '', disabled: false }],
+      codbancosunat:[{ value: '', disabled: false }],
+      codctactble:[{ value: '', disabled: false }, [Validators.required]],
     });
   }
 
@@ -181,95 +127,52 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
     this.blockedDocument = valor;
   }
 
-  mostrarBotones(data:any){
-    console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
-    switch (data) {
-      case 'REG':
-      case 'OBS':
-        this.verbtnGrabar = true;
-        this.verbtnAcciones = true;
-        this.onlyRead = false;
-      break;
-      case 'NVO':
-        this.verbtnGrabar = true;
-        this.verbtnAcciones = false;
-        this.onlyRead = false;
-      break;
-      case 'PRC':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = true;
-        this.verItems = false;
-        this.onlyRead = true;
-      break;
-      case 'EMI':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = true;
-        this.verItems = false;
-        this.onlyRead = true;
-      break;
-      case 'ANU':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = false;
-        this.verItems = false;
-        this.onlyRead = true;
-      break;
-      case 'ELI':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = false;
-        this.verItems = false;
-        this.onlyRead = true;
-      break;
-      case 'REC':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = true;
-        this.onlyRead = true;
-      break;
-    
-      default:
-        break;
-    }
+  listaTipoBanco() {
+    let idtabla = 110;
+    const $listaTipo = this.comprasService.obtenerTipoDocumento(idtabla).subscribe({
+      next: (rpta: any) => {
+        this.lstTipoBanco = rpta;
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+    });
+    this.$listSubcription.push($listaTipo);
+  }
+
+  mostrarBotones(){
+    console.log('mostrarBotones', this.IA_data.paramReg);
+    // switch (data) {      
+    //   case 'NVO':
+    //     this.verbtnGrabar = true;
+    //     this.onlyRead = false;
+    //   break;
+    // }
 
     if (this.IA_data.paramReg === 'V') {
       console.log('entro', this.IA_data.paramReg);
-      this.verbtnGrabar = false;
-      this.verbtnAcciones = false;
-      this.verItems = false;
+      this.verbtnGrabar  = false;
       this.onlyRead = true;
+    }else{
+      this.verbtnGrabar = true;
+        this.onlyRead = false;
     }
     
   }
 
-  traerUnoOrdenC(){
+  traerUno(){
     this.setSpinner(true);
-    this.mensajeSpinner = 'Cargando...!';
-    const objeto ={
-      idordencompra: this.idMovimiento,
-      idusuario: constantesLocalStorage.idusuario
-    }
+    this.mensajeSpinner = 'Cargando...!';     
 
-    const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
+    const $cargarOrdenC = this.tesoreriaService.traerunoBanco(this.idBanco)
       .subscribe({
         next: (rpta:any) => {
-          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-            this.setSpinner(false);
-            this.ordenCompra = rpta.ordencompra[0]; 
-            this.getOcproveedor(rpta.ordencompra[0].idproveedor);     
-            if (rpta.ordencompra[0].items !== undefined) {
-              this.lstItemOC = rpta.ordencompra[0].items;
-            }  
-            if (rpta.ordencompra[0].quotes !== undefined) {
-              this.lstQuotes =  rpta.ordencompra[0].quotes; 
-            }    
-                         
-          this.visibleDocument = false;
-          // console.log('s_monto', rpta.ordencompra[0].s_monto);
-          // this.s_monto = rpta.ordencompra[0].s_monto;
-          // this.s_igv = rpta.ordencompra[0].s_igv;
-          // this.s_monto_total = rpta.ordencompra[0].s_monto_total; 
+          console.log('rpta.traerUno', rpta[0]);
+            this.setSpinner(false);   
 
-          this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-          this.cargarMenu(rpta.ordencompra[0].acciones);
-          this.mostrarBotones(rpta.ordencompra[0].estado);                
+          this.registerFormRegistro.patchValue(rpta[0]); 
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -283,76 +186,38 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($cargarOrdenC)
   }
 
-  guardarOC(){
+  guardar(){
 
     if (this.validarDatos())
       {
           this.setSpinner(false);
-          this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+          this.messageService.add({severity: 'warn', summary: 'Aviso', detail: this.errorMensaje });
           return;
       }
 
     this.setSpinner(true);
     this.mensajeSpinner = 'Guardando...!';
-    let fechaingreso;
-    let fecentrega;
-    fechaingreso = this.registerFormRegistro.value.fechaingreso;
-    fecentrega = this.registerFormRegistro.value.fecentrega;
-
-    if (this.idMovimiento > 0) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
-      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
-    }
-
-    for (let i = 0; i < this.lstItemOC.length; i++) {      
-      if (this.lstItemOC[i].cantidad.toString() === '') {
-        this.lstItemOC[i].cantidad = 0;
-      }    
-      if (this.lstItemOC[i].preciocosto.toString() === '') {
-        this.lstItemOC[i].preciocosto = 0;
-      }
-    }
-
+   
+    
     const objeto = {
       ...this.registerFormRegistro.getRawValue(),
-      items: this.lstItemOC,
-      fechaingreso,
-      fecentrega,
-      quotes: this.lstQuotes
+      nrodocumento: this.registerFormRegistro.value.nrodoc,
+      tipobanco: this.registerFormRegistro.value.tipobanco.toString(),
+      idtipodoc:  this.registerFormRegistro.value.idtipodoc_banco,
     }
 
     console.log('guardarOC...', objeto);
     
-    this.ordencompraService.ordenCompraprc(objeto).subscribe({
+    this.tesoreriaService.prcBanco(objeto).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
         if (rpta.procesoSwitch === 0){
           this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
-          if (this.idMovimiento === 0) {
-            this.idMovimiento = rpta.resultProceso;  
-            this.registerFormRegistro.get('idordencompra').setValue(rpta.resultProceso);
-            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);  
-
-            this.dataAdjunto ={
-              idCliente: this.idMovimiento,
-              codtipoproc: 7,
-              veracciones: 0
-            }   
-            this.verAdjunto = true; 
-
-            //preguntar si desea agregar adjuntos
-            this.confirmationService.confirm({
-              key: 'confirm1',
-              header: 'Confirmación',
-              message:  '¿Desea Agregar Adjuntos ',
-              accept: () => {
-                this.activeIndex = 2;
-              }
-          });
+          if (this.idBanco === 0) {
+            this.idBanco = rpta.resultProceso;  
+            this.registerFormRegistro.get('idbanco').setValue(rpta.resultProceso); 
           }
-          this.traerUnoOrdenC();
-         
-        this.visibleDocument = false;
+          this.traerUno();
         }else{
         this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
         }
@@ -370,314 +235,48 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
       },
   });
   }
-  servicioGenerico(){    
-    this.comprasService.obtenerItemsTabla(109).subscribe({
-      next: (rpta: any) => {
-        console.info('servicioGenerico : ', rpta);
-        let _terminosdepago = rpta.filter((x: { iditem: number; }) => x.iditem === 135);
-        this.registerFormRegistro.get('terminosdepago').setValue(_terminosdepago[0].valoritem);
-      },
-      error: (err) => {
-      console.info('error : ', err);
-      this.serviceSharedApp.messageToast()
-      },
-      complete: () => {
-      },
-  });
-  }
 
-  listarItemsTabla() {
-    this.comprasService.obtenerItemsTabla(104).subscribe({
-        next: (rpta: any) => {
-          console.info('listarItemsTabla : ', rpta);
-            this.lstTermino = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });
-  
-    }
-
-  listaProveedores() {
-
-    const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
-      next: (rpta: any) => {
-        this.lstProveedores = rpta;
-        console.log('this.lstProveedores', this.lstProveedores);
-      },
-      error: (err) => {
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => { },
-    });
-    this.$listSubcription.push($getClientes);
-
-  }
-
-  listaClientes() {
-    let tiporol ="CLI";
-    this.proyectosService.obtenerClientes(tiporol).subscribe({
-        next: (rpta: any) => {
-        this.lstCliente = rpta;
-        },
-        error: (err) => {
-        this.messageService.clear();
-        this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: mensajesQuestion.msgErrorGenerico,
-        });
-        },
-        complete: () => {
-        },
-    });
-  }  
-
-  getItem(data: any,index: number) {
-    data.nroindex = index;
-    data.idordencompra = this.idMovimiento;
-    console.log('CItemOrdenesComponent', data);
-    const refItem = this.dialogService.open(CItemOrdenesComponent, {
-      data: data,
-      header: data.length == 0 ? "Agregar Producto" : "Editar Producto - " + data.idordencompraitem,
-      closeOnEscape: false,
-      styleClass: 'testDialog',
-      width: '40%'
-    });
-    refItem.onClose.subscribe((rpta: any) => {
-      
-      console.log('onClose',rpta);
-      if (rpta != undefined) {
-          const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == index))
-          if (_posAll != -1) {
-            this.lstItemOC.splice(_posAll, 1)
-          }
-          console.log('getItem',rpta.objeto);
-        this.lstItemOC.push(rpta.objeto);
-        console.log('this.lstItemOC',this.lstItemOC);
-      }
-      this.calcularTotales();
-    });
-  }
-
-  calcularTotales() {
-    let totalpreventot = 0;    
-    for (let lstCotiza of this.lstItemOC) {
-        totalpreventot = totalpreventot + lstCotiza.preciocostototal;
-    }    
-    this.montoTotal = totalpreventot;
-  }
-
-  eliminarItem(data: any) {
-    this.confirmationService.confirm({
-      key: 'confirm1',
-      header: 'Confirmación',
-      message:  '¿Desea Eliminar Item ' + '<b>' + data.descripcion + '</b>' + '?' ,
-      accept: () => {
-        if (data.idordencompra > 0) {
-          const _posAll: number = this.lstItemOC.findIndex((x => x.idordencompraitem == data.idordencompraitem))
-          if (_posAll != -1) {
-          this.lstItemOC.splice(_posAll, 1)
-          }
-      }else{
-          const _posAll: number = this.lstItemOC.findIndex((x => x.idnvoitem == data.idnvoitem))
-          if (_posAll != -1) {
-          this.lstItemOC.splice(_posAll, 1)
-          }
-      }
-      this.calcularTotales();
-      }
-  });
-  }
-
-  getOcproveedor(dato: any) {  
-    this.lstOrdenC = []
-    const $personaProveedorlist = this.ordencompraService.ordencompraaprobadasprovlist(dato).subscribe({
-        next: (rpta: any) => {
-            this.setSpinner(false);
-            console.info('next : ', rpta);
-            this.lstOrdenC = rpta;
-        },
-        error: (err) => {
-            this.setSpinner(false);
-            console.info('error : ', err);
-            this.messageService.clear();
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: mensajesQuestion.msgErrorGenerico,
-            });
-        },
-        complete: () => {},
-    });
-    this.$listSubcription.push($personaProveedorlist);
-  }
-
-  cargarMenu(data: any) {
-    this.menuItems = [];
-    data.forEach((item: any) => {
-        this.menuItems.push({
-            label: item.nomtrx,
-            icon: 'pi pi-cog',
-            command: () => this.onAccion(item)
-        })
-    });
-  }
-
-  onAccion(item: any) {
-    this.ordenCompra.idtrx = item.idtrx;
-    const ref = this.dialogService.open(CModalExcTransacComponent, {
-        data: this.ordenCompra,
-        header: item.nomtrx,
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: '40%'
-    });
-    ref.onClose.subscribe(() => {
-        this.traerUnoOrdenC();
-      });
-  }
-
-  
-  getQuotes(dato: any){
-    let objeto = {
-      idcotiza: dato.idcotiza,
-      indseleccion: dato.indseleccion
-    }
-    if (dato.indseleccion) {
-      this.lstQuotes.push(objeto);
-    }else{
-      const _posAll: number = this.lstQuotes.findIndex(((x: { idcotiza: any; }) => x.idcotiza == dato.idcotiza))
-          if (_posAll != -1) {
-          this.lstQuotes.splice(_posAll, 1)
-        }
-    }    
-  } 
 
   validarDatos():boolean{
     let _error = false;
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-      if (this.registerFormRegistro.value.idalmacen === null || this.registerFormRegistro.value.idalmacen === 0)
+    if (this.registerFormRegistro.value.razonsocial === " " || this.registerFormRegistro.value.razonsocial === null)
       {
-          this.errorMensaje="Seleccionar Almacen...!";
+          this.errorMensaje="Ingresar Banco...!";
           _error = true;
       }
 
-      if (!_error && this.registerFormRegistro.value.idproveedor === null)
+    if (!_error && (this.registerFormRegistro.value.tipobanco === '' || this.registerFormRegistro.value.tipobanco === null))
       {
-          this.errorMensaje="Seleccionar Proveedor...!";
+          this.errorMensaje="Seleccionar Tipo de Banco...!";
           _error = true;
       }
 
-      // if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null))
-      // {
-      //     this.errorMensaje="Seleccionar Orden Compra...!";
-      //     _error = true;
-      // }
+    if (!_error && (this.registerFormRegistro.value.idtipodoc_banco === '' || this.registerFormRegistro.value.idtipodoc_banco === null))
+      {
+          this.errorMensaje="Seleccionar Tipo de Documento...!";
+          _error = true;
+      }
 
-      // if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
-      // {
-      //     this.errorMensaje="Ingresar N° de Referencia...!";
-      //     _error = true;
-      // }
+    if (!_error && (this.registerFormRegistro.value.nrodoc === '' || this.registerFormRegistro.value.nrodoc === null))
+      {
+          this.errorMensaje="Ingresar N° de Documento...!";
+          _error = true;
+      }  
 
-      // if (!_error && this.registerFormRegistro.value.idmoneda === null)
-      // {
-      //       this.errorMensaje="Seleccionar Moneda...!";
-      //       _error = true;
-      // }
+    if (!_error && (this.registerFormRegistro.value.codctactble === '' || this.registerFormRegistro.value.codctactble === null))
+      {
+          this.errorMensaje="Ingresar N° de Cuenta...!";
+          _error = true;
+      } 
 
-      // if (!_error && this.registerFormRegistro.value.codformapago === null)
-      // {
-      //       this.errorMensaje="Seleccionar Termino de Pago...!";
-      //       _error = true;
-      // }
-
-      // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
-      // {
-      //     this.errorMensaje="Ingresar Condiciones Comerciales...!";
-      //     _error = true;
-      // }
        return _error;
      }
      
-     ListarAlamcen(){
-      const objeto = {
-        idalmacen:0,
-        idofi: 0
-      }
-      const $getListar = this.almacenService.ListarAlamcen(objeto)
-        .subscribe({
-          next: (rpta:any) => {
-              console.log('rpta lstAlmacen', rpta);
-              this.lstAlmacen = rpta
-          },
-          error:(err)=>{
-              this.serviceSharedApp.messageToast()
-          },
-          complete:() => {
-          }
-        });
-      this.$listSubcription.push($getListar)
-    }
+   
 
-    getOCtraerItems(dato: any) {  
-      console.info('dato : ', dato);
-      //this._alm_idordencompra = dato;
-      this.lstItemOC = []
-      this.selectedItems=[];
-      const objeto ={
-        idordencompra: dato,
-        idusuario: constantesLocalStorage.idusuario
-      }
-      const $personaProveedorlist = this.proyectosService.ordenCompraTraeruno(objeto).subscribe({
-          next: (rpta: any) => {
-              this.setSpinner(false);
-              console.info('getOCtraerItems : ', rpta);                
-
-              if (rpta.ordencompra[0].items !== undefined) {
-
-                const data = rpta.ordencompra[0].items.map((item: any) => ({
-                  ...item,
-                  idordencompraitem: 0,    
-                  idordencompra: this.idMovimiento, 
-                  coditem: 1  ,
-                }))
-                this.lstItemOC = data;
-              }
-              console.info('lstItemOC : ', this.lstItemOC);  
-          },
-          error: (err) => {
-              this.setSpinner(false);
-              console.info('error : ', err);
-              this.messageService.clear();
-              this.messageService.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: mensajesQuestion.msgErrorGenerico,
-              });
-          },
-          complete: () => {},
-      });
-      this.$listSubcription.push($personaProveedorlist);
-    }
-
-    selectCheckbox(dato: any){
-      console.log('selectCheckbox...', dato);
-      console.log('selectCheckbox...', this.selectedItems);
-
-      const data = this.lstItemOC.map((item: any) => ({
-        ...item,
-        indcompleto: dato.checked === true ? true : false,
-      }))
-
-      this.lstItemOC = data;
-    }
+  
 
 }

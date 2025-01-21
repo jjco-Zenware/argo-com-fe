@@ -1,0 +1,123 @@
+<p-table #dt1 [value]="lstPagos" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+    [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+    currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
+    styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped m-2 p-2">
+    <ng-template pTemplate="header">
+        <tr class="text-sm">
+            <th style="width: 10px" class="bg-teal-50 border-1">
+                <div class="flex justify-content-between align-items-center">
+                    N°
+                </div>
+            </th>
+            <th style="width: 30px;" class="bg-teal-50 border-1" >
+                <div class="justify-content-between align-items-center">
+                    ID PAGO
+                </div>
+            </th>
+            <th style="width: 150px;" class="bg-teal-50 border-1" >
+                <div class="justify-content-between align-items-center">
+                    BANCO
+                </div>
+            </th>
+            <th style="width: 50px;" class="bg-teal-50 border-1" >
+                <div class="justify-content-between align-items-center">
+                    FECHA PAGO
+                </div>
+            </th>
+            <th style="width: 50px;" class="bg-teal-50 border-1" >
+                <div class="justify-content-between align-items-center">
+                    N° OPERACIÓN
+                </div>
+            </th>
+            <th style="width: 30px;" class="bg-teal-50 border-1" >
+                <div class="justify-content-between align-items-center">
+                    MONEDA
+                </div>
+            </th>
+            <th style="width: 70px;" class="bg-teal-50 border-1" >
+                <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                    MONTO
+                </div>
+            </th>
+            <th style="width: 30px;" class="bg-teal-50 border-1">
+                <div class="flex justify-content-between align-items-center">
+                    ACCIONES
+                </div>
+            </th>
+        </tr>
+        <!-- <tr >
+            <th></th>
+            <th *ngFor="let col of cols">
+                <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
+            </th>
+        </tr> -->
+
+    </ng-template>
+    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+        <tr class="text-sm">
+            <td [ngStyle]="{'width':'10px'}">
+                {{rowIndex + 1}}
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'30px'}">
+                    {{data.idpagodocprc}}
+                </div>
+            </td>
+            <td >
+                <div [ngStyle]="{'width':'50px'}">
+                    {{data.nombanco}}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'100px'}">
+                    {{data.fechapago}}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'100px'}">
+                    {{data.nrooperacion}}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'30px'}">
+                    {{data.simbmoneda }}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                    {{data.montopago | number: '0.2-2' }}
+                </div>
+            </td>
+            <td>
+                <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'30px'}">
+                    <button pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="bottom" pTooltip="Eliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onEliminar(data)"></button>
+                    <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="onEdit(data)"></button>
+                
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <tr>
+            <td colspan="6" class="text-right">Total: </td>
+            <td>
+                <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                    {{summontoTotal | number: '0.2-2' }}
+                </div>
+            </td>
+            
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="12">No se encontraron registros.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="12">Cargando datos. Espere por favor.</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

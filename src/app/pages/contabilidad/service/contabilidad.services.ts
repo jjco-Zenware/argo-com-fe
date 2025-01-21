@@ -1,0 +1,52 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { constantesApiWeb } from '@apiVariables';
+
+@Injectable()
+export class ContabilidadService {
+
+    constructor(private http: HttpClient) {   }
+
+    listarPlanContable() {
+        const url = `${constantesApiWeb.listarPlanContable}`;
+        return this.http.get<any>(url)
+    }
+
+    GrabarAlamcen(objeto: any) {
+        const url = `${constantesApiWeb.GrabarAlamcen}`;
+        return this.http.post<any>(url, objeto)
+    }
+    
+   
+
+    listarProducto() {
+        const url = `${constantesApiWeb.listarProducto}`;
+        return this.http.get<any>(url)
+    }
+
+    prcProducto(objeto: any) {
+        const url = `${constantesApiWeb.prcProducto}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    traerunoProducto(codigo: any) {
+        const url = `${constantesApiWeb.traerunoProducto}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    listarFamilia() {
+        const url = `${constantesApiWeb.listarFamilia}`;
+        return this.http.get<any>(url);
+    }
+
+    listarSubFamilia(codigo: any) {
+        const url = `${constantesApiWeb.listarSubFamilia}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+ 
+    
+   
+
+ 
+}

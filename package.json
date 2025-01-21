@@ -26,6 +26,7 @@
         "@canvasjs/charts": "^3.7.12",
         "@cloudinary/ng": "^2.0.2",
         "@cloudinary/url-gen": "^1.19.0",
+        "@fortawesome/free-solid-svg-icons": "^6.6.0",
         "@fullcalendar/angular": "^6.0.3",
         "@fullcalendar/core": "^6.0.3",
         "@fullcalendar/daygrid": "^6.0.3",

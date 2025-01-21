@@ -1,0 +1,172 @@
+<div >
+  
+    <form [formGroup]="registerFormRegistro" class="p-fluid grid lg:col-12 col-12  border-round surface-border p-2 m-2">                    
+        <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+            <label class="block text-900 font-semibold mb-1">Origen</label>
+            <span class="p-fluid mt-1">
+                <p-dropdown [options]="lstOrigen" formControlName="codtipodoc" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
+                optionValue="codproceso" (onChange)="getOrigen($event.value)" [readonly]=onlyRead class="p-inputtext-sm" inputStyleClass="font-semibold surface-300"></p-dropdown>
+            </span>
+        </div>  
+        <div class="sm:col-12 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+            <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm" style="height: 3rem;">
+                <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" readonly="true" ></p-calendar>
+            </span>
+        </div>
+        <div class=" sm:col-8 lg:col-3 md:col-12"></div>
+        <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+            <label class="block text-900 font-semibold mb-1">ID Registro</label>
+            <span class="p-fluid">
+                <input pInputText type="text" class="font-semibold surface-300 p-inputtext-sm" formControlName="idordencompra" readonly="true"/>
+            </span>
+        </div>                          
+        <p-divider class="sm:col-6 lg:col-12 md:col-6 col-12 -mt-2 -mb-4">                       
+        </p-divider>
+     
+        
+     
+                <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem ">
+                    <label class="block text-900 font-semibold mb-1">RUC <span class="text-red-500 font-bold"> * </span></label>       
+                    <span class="p-input-icon-right">
+                        <input pInputText type="text" formControlName="nrodocumento" [readonly]=onlyRead class="p-inputtext-sm" maxlength="11" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                    </span>       
+                </div>
+                <div class="col-4 sm:col-6 lg:col-8 md:col-6 col-6 h-4rem">    
+                    <div class="flex">
+                        <label class="block text-900 font-semibold mb-1">Cliente </label>     
+                    </div>                        
+                                          
+                    <span inputStyleClass="font-semibold surface-300">
+                        <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm surface-300"
+                        optionLabel="razonsocial" optionValue="idcliente" appendTo="body" readonly=true inputStyleClass="font-semibold surface-300"></p-dropdown>            
+                    </span>
+                </div>  
+                
+                
+                <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field mt-3">
+                    <label class="block text-900 font-semibold mb-1">Tipo Documento<span class="text-red-500 font-bold"> * </span></label>
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb" placeholder="Seleccionar Origen" optionLabel="valoritem" 
+                        optionValue="iditem" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div> 
+                <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field mt-3">
+                    <label class="block text-900 font-semibold mb-1">Serie<span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="nroserie_ctb" [readonly]=onlyRead class="p-inputtext-sm"/>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field mt-3">
+                    <label class="block text-900 font-semibold mb-1">N° Documento<span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="nrodocumento_ctb" [readonly]=onlyRead class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                    </span>
+                </div>                          
+                <div class="sm:col-6 lg:col-4 md:col-3 col-6 ">
+                    <label class="block text-900 font-semibold mb-1">Forma de Pago <span class="text-red-500 font-bold"> * </span></label>
+                    <span>
+                        <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
+                        optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div>                
+                <div class="col-6 sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field">
+                    <label class="block text-900 font-semibold">Fec. Emisión</label>
+                    <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm" style="height: 3.5rem;" >
+                        <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                        inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"></p-calendar>
+                    </span>
+                </div>  
+                <div class="col-6 sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field">
+                    <label class="block text-900 font-semibold">Fec. Vencimiento</label>
+                    <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
+                        <p-calendar formControlName="fecvencimiento" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                        inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" ></p-calendar>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field -mt-3">
+                    <label class="block text-900 font-semibold mb-1">N° Días</label>                        
+                    <span class="p-fluid">
+
+                        <input pInputText type="text" formControlName="nrodias" [readonly]=onlyRead class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field -mt-3">
+                    <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                        optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                    </span>                                      
+                </div> 
+                <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem -mt-3">
+                    <label class="block text-900 font-semibold mb-1">Tipo Cambio<span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid">
+                        <p-inputNumber class="mt-1" formControlName="tc" locale="es-PE" mode="decimal" [minFractionDigits]="4" name="tipocambio" 
+                        [min]="0" [max]="9" class="p-inputtext-sm" [readonly]=onlyRead></p-inputNumber>
+
+                      
+                    </span>
+                </div>
+                <div *ngIf="verProyecto" class="sm:col-8 lg:col-12 md:col-12 col-6 field h-4rem mt-1">
+                    <label class="block text-900 font-semibold mb-1">Centro Costos <span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Centro Costos" optionLabel="s_nomproyecto2" class="p-inputtext-sm"
+                        optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
+                    </span>
+                </div>                            
+              
+                <div class=" sm:col-8 lg:col-6 md:col-12"></div> 
+                <p-divider class="sm:col-6 lg:col-12 md:col-6 col-12 -mt-6 -mb-4">                       
+                </p-divider>
+                <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field -mt-3">
+                    <label class="block text-900 font-semibold mb-1">% Detracción</label>                        
+                    <span class="p-fluid">
+                        <p-inputNumber class="mt-1" formControlName="porc_detraccion" locale="es-PE" mode="decimal" [minFractionDigits]="0" name="porc_detraccion" 
+                        [min]="0" class="p-inputtext-sm" [readonly]=onlyRead></p-inputNumber>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field -mt-3">
+                    <label class="block text-900 font-semibold mb-1">Detracción</label>   
+       
+                  
+                        <p-inputNumber  mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm" 
+                        formControlName="s_monto_detraccion_mn_CTB" [readonly]=onlyRead inputStyleClass="text-right"></p-inputNumber>
+                    
+                </div>
+                <div class=" sm:col-8 lg:col-1 md:col-12"></div> 
+                <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field -mt-3">
+                    <label class="block text-900 font-semibold mb-1">Monto Neto Pago</label>   
+       
+                  
+                        <p-inputNumber  mode="decimal" [minFractionDigits]="2" inputStyleClass="font-semibold surface-300 text-right" class="p-inputtext-sm " 
+                        formControlName="monto_pen_pago" [readonly]="true"></p-inputNumber>
+                    
+                </div> 
+                <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                    <label class="block text-900 font-semibold mb-1">B.Imponible</label>
+                    <span class="p-fluid">
+                        <p-inputNumber  mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm" inputStyleClass="font-semibold surface-300 text-right"
+                        formControlName="s_monto_valor_venta_CTB" readonly="true"></p-inputNumber>
+                    </span>
+                </div> 
+                <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                    <label class="block text-900 font-semibold mb-1">IGV</label>
+                    <span class="p-fluid">
+                        <p-inputNumber  mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm" inputStyleClass="font-semibold surface-300 text-right"
+                        formControlName="s_monto_igv_CTB" readonly="true"></p-inputNumber>
+                    </span>
+                </div> 
+                <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                    <label class="block text-900 font-semibold mb-1">Total</label>
+                    <span class="p-fluid">
+                        <p-inputNumber  mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm" inputStyleClass="font-semibold surface-300 text-right"
+                        formControlName="s_monto_total_CTB" readonly="true"></p-inputNumber>
+                    </span>
+                </div>                                     
+    </form>
+
+</div>
+
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

@@ -5,6 +5,7 @@ import { CDashboardComponent } from './c-dashboard/c-dashboard.component';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChartModule } from 'primeng/chart';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    ChartModule
   ]
 })
 export class DashboardModule { }

@@ -9,16 +9,27 @@
                         <button type="button" pButton icon="pi pi-search" styleClass="p-button-warn" (click)="buscarProducto()"></button>
                     </div>                    
                 </div> 
-                <div class="sm:col-12 lg:col-7 md:col-12 ">
+                <div class="sm:col-12 lg:col-2 md:col-12 mt-3 gap-2"> 
+                    <button type="button" pButton icon="pi pi-search" styleClass="p-button-warn" class="h-2.5rem font-semibold p-button-outlined" (click)="getBusquedaAvanzada([])"
+                        pTooltip="Busqueda Avanzada de Producto" tooltipPosition="bottom"></button>
+                    <button type="button" pButton icon="pi pi-plus" styleClass="p-button-warn" class="h-2.5rem ml-2 font-bold p-button-outlined text-green-600" (click)="altaRapida()"
+                    pTooltip="Alta Rapida de Producto" tooltipPosition="bottom"></button>
+                </div>
+                <div *ngIf="verMarca" class="sm:col-12 lg:col-5 md:col-12">
                     <label class="font-semibold">Marca</label>
-                    <input pInputText type="text" formControlName="nommarca" class="p-inputtext-sm" [readonly]=true />
-                </div>               
+                    <input pInputText type="text" formControlName="nommarca" class="p-inputtext-sm surface-200" [readonly]=true />
+                </div>  
+                <div class="sm:col-12 lg:col-12 md:col-12">
+                    <label class="font-semibold">Producto</label>
+                    <textarea id="description" type="text" formControlName="despro" pInputTextarea [rows]="1"
+                        style="resize: none" class="w-full" class="p-inputtext-sm surface-200" [readonly]=true></textarea>
+                </div>              
             </div>
             <div class="flex grid">
                 <div class="sm:col-12 lg:col-12 md:col-12">
-                    <label class="font-semibold">Descripción</label>
-                    <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="1"
-                        style="resize: none" class="w-full" class="p-inputtext-sm" [readonly]=true></textarea>
+                    <label class="font-semibold">Detalle</label>
+                    <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="3"
+                        style="resize: none" class="w-full" class="p-inputtext-sm"></textarea>
                 </div> 
             </div>
             <div class="flex grid">    

@@ -33,6 +33,7 @@ export class CDatoProveedorComponent implements  OnChanges, OnDestroy{
   dataLegal: any;
   dataAdjunto: any;
   terminopago: any;
+  lstRol:any[] = [];
 
   dropdownItemsTipPer = [
     { name: 'Jurídica', code: 'J' },
@@ -94,6 +95,7 @@ ngOnChanges(changes: SimpleChanges): void {
     this.cargarData();
     this.listaTipoDocumento();
     this.listaMonedas();
+    this.listarItemsTabla(); 
     
     this.dataLegal ={
       idCliente: this.idCliente,
@@ -139,6 +141,7 @@ createFormCliente() {
   idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
   idpersona: [{ value: 0, disabled: false }],
   tipoentidad: [{ value: null, disabled: false }, [Validators.required]],
+  nroctadetraccion: [{ value: null, disabled: false }, [Validators.required]],
   });
 }
 
@@ -272,6 +275,7 @@ guardar() {
             this.setSpinner(false);
               console.log("rpta prcClientes : ", rpta);
               if (rpta.procesoSwitch === 0){
+
                   this.messageService.add({severity: 'success', detail: "Operación exitosa" });
                   this.visibleDocument = false;
                   //this.idCliente = rpta.resultProceso;
@@ -303,14 +307,23 @@ guardar() {
   }
 }
 
+listarItemsTabla() {
+  this.comprasService.obtenerItemsTabla(115).subscribe({
+      next: (rpta: any) => {
+        console.info('listarItemsTabla : ', rpta);
+        let lista = rpta
+        //this.lstRol = rpta;
 
+        this.lstRol = lista.filter((x: { coditem: string; }) => x.coditem !== 'CLI');
+          
+      },
+      error: (err) => {
+      console.info('error : ', err);
+      this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+  });
 
-
-
-
-
-
-
-
-
+  }
 }

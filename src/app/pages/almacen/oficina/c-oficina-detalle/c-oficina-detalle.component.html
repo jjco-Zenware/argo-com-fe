@@ -2,21 +2,21 @@
     
     <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border mt-2">                    
         <div class="p-fluid grid col-12 p-2 m-2">                            
-            <div class="sm:col-12 lg:col-3 md:col-12 h-4rem field">
+            <div class="sm:col-12 lg:col-3 md:col-12  field">
                 <label class="block text-900 font-semibold mb-1">Código </label>
                 <span class="p-fluid">
                     <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="idofi"/>
                 </span>
             </div>
-            <div class="sm:col-12 lg:col-9 md:col-12 h-4rem field"></div>
+            <div class="sm:col-12 lg:col-9 md:col-12"></div>
                          
-            <div class="sm:col-12 lg:col-12 md:col-12 mt-1">
+            <div class="sm:col-12 lg:col-12 md:col-12 ">
                 <label class="block text-900 font-semibold">Nombre <span class="text-red-500 font-bold"> * </span></label>                        
                 <span class="p-fluid">
                     <input pInputText type="text" formControlName="nomofi" [readonly]=onlyRead class="p-inputtext-sm"/>
                 </span>
             </div>
-            <div class="sm:col-12 lg:col-12 md:col-12 -mt-3">
+            <div class="sm:col-12 lg:col-12 md:col-12 ">
                 <label class="block text-900 font-semibold">Dirección <span class="text-red-500 font-bold"> * </span></label>                        
                 <span class="p-fluid">
                     <textarea type="text" pInputTextarea [rows]="2" formControlName="dirofi" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>

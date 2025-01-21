@@ -10,12 +10,16 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
 import { TagModule } from 'primeng/tag';
+import { CModalListPAgosComponent } from '../modallistpagos/c-modallistpagos.component';
+import { CModalRegPAgosComponent } from '../modalregpagos/c-modalregpagos.component';
 
 
 
 @NgModule({
   declarations: [
-    CCuentaporCobrarComponent
+    CCuentaporCobrarComponent,
+    CModalListPAgosComponent,
+    CModalRegPAgosComponent
   ],
   imports: [
     CommonModule,

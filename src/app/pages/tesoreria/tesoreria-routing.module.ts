@@ -26,7 +26,38 @@ const routes: Routes = [
     path: 'flujocaja',
     loadChildren: () => import('./flujocaja/flujocaja.module').then(m => m.FlujocajaModule),
     data: { breadcrumb: 'flujocaja' }
+  },
+  {
+    path: 'programacion',
+    loadChildren: () => import('./programacion/programacion.module').then(m => m.ProgramacionModule),
+    data: { breadcrumb: 'programacion' }
+  },
+  {
+    path: 'importacion',
+    loadChildren: () => import('./importacion/importacion.module').then(m => m.ImportacionModule),
+    data: { breadcrumb: 'importacion' }
+  },
+  {
+    path: 'conciliacion',
+    loadChildren: () => import('./conciliacion/conciliacion.module').then(m => m.ConciliacionModule),
+    data: { breadcrumb: 'conciliacion' }
+  },
+  {
+    path: 'movimientos',
+    loadChildren: () => import('./movimientos/movimientos.module').then(m => m.MovimientosModule),
+    data: { breadcrumb: 'movimientos' }
+  },
+  {
+    path: 'cuentabanco',
+    loadChildren: () => import('./cuentabanco/cuentabanco.module').then(m => m.CuentaBancoModule),
+    data: { breadcrumb: 'cuentabanco' }
+  },
+  {
+    path: 'centrocosto',
+    loadChildren: () => import('./centrocosto/centrocosto.module').then(m => m.CentroCostoModule),
+    data: { breadcrumb: 'cuentabanco' }
   }
+ 
 ];
 
 @NgModule({

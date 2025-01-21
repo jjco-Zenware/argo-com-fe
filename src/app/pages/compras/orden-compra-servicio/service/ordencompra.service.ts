@@ -95,9 +95,6 @@ export class OrdencompraService {
             observe: 'response',
             responseType: 'blob'
           })
-
-        // const url = `${constantesApiWeb.prcDocumento}`;
-        //     return  this.http.post<any>(url, objeto)
     }
 
     descargarPlantilla(id:any) {
@@ -127,4 +124,42 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.buscarporRUC}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    prcReporte(objeto:any) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=utf-8',
+          });
+
+          const url = `${constantesApiWeb.prcReporte}`;
+          return this.http.post(url,objeto, {
+            headers: headers,
+            observe: 'response',
+            responseType: 'blob'
+          })
+    }
+
+    prcClientes(objeto: any) {
+        console.log("prcClientes : ", objeto);
+        const url = `${constantesApiWeb.prcClientes}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    listarBanco() {
+        const url = `${constantesApiWeb.listarBanco}`;
+        return this.http.get<any>(url)
+    }
+
+    prcDocumentoDet(objeto:any) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=utf-8',
+          });
+
+          const url = `${constantesApiWeb.prcDocumentoDet}`;
+          return this.http.post(url,objeto, {
+            headers: headers,
+            observe: 'response',
+            responseType: 'blob'
+          })
+    }
+    
 }

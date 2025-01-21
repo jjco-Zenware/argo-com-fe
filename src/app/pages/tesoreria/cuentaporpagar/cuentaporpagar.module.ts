@@ -23,7 +23,8 @@ import { TagModule } from 'primeng/tag';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
-    CuentaporPagarRoutingModule
+    CuentaporPagarRoutingModule,
+    TagModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService]
 })

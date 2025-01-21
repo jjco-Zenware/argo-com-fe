@@ -234,11 +234,11 @@ export class CModalProductoComponent implements OnInit{
           _error = true;
       }  
       
-      if (!_error && (this.registerFormRegistro.value.idmoneda === 0 || this.registerFormRegistro.value.idmoneda === null))
-        {
-            this.errorMensaje="Seleccionar Moneda...!";
-            _error = true;
-        } 
+      // if (!_error && (this.registerFormRegistro.value.idmoneda === 0 || this.registerFormRegistro.value.idmoneda === null))
+      //   {
+      //       this.errorMensaje="Seleccionar Moneda...!";
+      //       _error = true;
+      //   } 
        return _error;
      }
      

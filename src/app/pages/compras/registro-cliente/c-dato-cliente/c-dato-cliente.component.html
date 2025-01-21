@@ -13,35 +13,41 @@
                 <div class="flex ">
                     <button pButton icon="pi pi-save" label="Grabar" (click)="guardar()" class="font-bold w-auto mb-3 p-button-primary h-2rem"></button>
                 </div>
-                <div class="p-fluid py-4 mb-3 card border-1 border-round surface-border">
+                <div class="col-12 lg:col-9 p-fluid py-4 mb-3 card border-1 border-round surface-border">
                    
                     <div class="flex -mt-2 h-6rem grid">
-                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                        <div class="col-6 field sm:col-6 lg:col-2 md:col-3">
                             <label class="font-semibold">Tipo Persona <span class="text-red-500 font-bold"> * </span></label>
                                 <p-dropdown [options]="dropdownItemsTipPer" formControlName="tipopersona" optionLabel="name" placeholder="Seleccionar..."
                                     optionValue="code" (onChange)="cambioTipoPer($event.value)" class="p-inputtext-sm"></p-dropdown>
                         </div>   
-                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                        <div class="col-6 field sm:col-6 lg:col-2 md:col-3">
                             <label class="font-semibold">Tipo Entidad <span class="text-red-500 font-bold"> * </span></label>
                             <p-dropdown [options]="lstEnti" formControlName="tipoentidad" optionLabel="name" placeholder="Seleccionar Entidad"
                                 optionValue="id" class="p-inputtext-sm"></p-dropdown>
                             <p class="p-error" *ngIf="submitted && formCliente.tipoentidad.errors" >Tipo Entidad es requerido.</p>
                         </div>
+                        <div class="col-6 field sm:col-6 lg:col-2 md:col-3">
+                            <label class="font-semibold">Tipo Rol <span class="text-red-500 font-bold"> * </span></label>
+                            <p-dropdown [options]="lstRol" formControlName="idrolpersona" optionLabel="valoritem" placeholder="Seleccionar Rol...!"
+                                optionValue="coditem" class="p-inputtext-sm"></p-dropdown>
+                            <p class="p-error" *ngIf="submitted && formCliente.idrolpersona.errors" >Tipo Rol es requerido.</p>
+                        </div>
                     </div>
                     <div class="flex -mt-2 h-6rem grid">                                
-                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                        <div class="col-4 field sm:col-6 lg:col-2 md:col-3">
                             <label class="font-semibold">Tipo Doc. <span class="text-red-500 font-bold"> * </span></label>
                             <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="name" placeholder="Seleccionar..."
                                 optionValue="code" (onChange)="cambioTipoDoc($event.value)" class="p-inputtext-sm"></p-dropdown>
                             <p class="p-error" *ngIf="submitted && formCliente.idtipodoc.errors" >Tipo Documento es requerido.</p>
                         </div>
-                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                        <div class="col-4 field sm:col-6 lg:col-2 md:col-3">
                             <label class="font-semibold">N° Documento <span class="text-red-500 font-bold"> * </span></label>
                             <input pInputText type="text" formControlName="nrodocumento" maxlength="11" class="p-inputtext-sm"
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
                                 <p class="p-error" *ngIf="submitted && formCliente.nrodocumento.errors">N° Documento es requerido.</p>
                         </div>
-                        <div class="col-2 field sm:col-6 lg:col-2 md:col-3">
+                        <div class="col-4 field sm:col-6 lg:col-2 md:col-3">
                             <label class="font-semibold">Nacionalidad <span class="text-red-500 font-bold"> * </span></label>
                             <p-dropdown [options]="dropdownItemsNac" formControlName="indnacionalidad" optionLabel="name" placeholder="Seleccionar Nacionalidad"
                                     optionValue="code" class="p-inputtext-sm"></p-dropdown>
@@ -51,19 +57,19 @@
                     </div>
                     <ng-container *ngIf="personaNatural ; else mostrarjuridico">
                         <div class="flex h-6rem grid" >
-                            <div class="col-3 field sm:col-6 lg:col-3 md:col-4">
+                            <div class="col-6 field sm:col-6 lg:col-3 md:col-4">
                                 <label for="start" class="font-semibold">Paterno <span class="text-red-500 font-bold"> * </span></label>
                                 <input pInputText type="text" formControlName="appaterno" class="p-inputtext-sm"/>
                                 <p class="p-error" *ngIf="submitted && formCliente.appaterno.errors">Paterno es requerido.</p>
                             </div>
-                            <div class="col-3 field sm:col-6 lg:col-3 md:col-4">
+                            <div class="col-6 field sm:col-6 lg:col-3 md:col-4">
                                 <label for="start" class="font-semibold">Materno <span class="text-red-500 font-bold"> * </span></label>
                                 <input pInputText type="text" formControlName="apmaterno" class="p-inputtext-sm"/>
                                 <p class="p-error" *ngIf="submitted && formCliente.apmaterno.errors">Materno es requerido.</p>
                             </div>
                         </div>
                         <div class="flex h-6rem grid" >
-                            <div class="col-6 field sm:col-6 lg:col-6 md:col-4">
+                            <div class="col-12 field sm:col-6 lg:col-6 md:col-4">
                                 <label for="start" class="font-semibold">Nombres <span class="text-red-500 font-bold"> * </span></label>
                                 <input pInputText type="text" formControlName="nombres" class="p-inputtext-sm"/>
                                 <p class="p-error" *ngIf="submitted && formCliente.nombres.errors">Nombres es requerido.</p>
@@ -73,14 +79,14 @@
         
                     <ng-template #mostrarjuridico>
                         <div class="flex h-6rem grid">                    
-                            <div class="col-6 field sm:col-6 lg:col-6 md:col-12">
+                            <div class="col-12 field sm:col-6 lg:col-6 md:col-12">
                                 <label for="start" class="font-semibold">Razón Social <span class="text-red-500 font-bold"> * </span></label>
                                 <input pInputText type="text" formControlName="razonsocial" class="p-inputtext-sm"/>
                                 <p class="p-error" *ngIf="submitted && formCliente.razonsocial.errors">Razón Social es requerido.</p>
                             </div>                           
                         </div>
                         <div class="flex h-6rem grid"> 
-                            <div class="col-6 field sm:col-6 lg:col-6 md:col-12">
+                            <div class="col-12 field sm:col-6 lg:col-6 md:col-12">
                                 <label for="start" class="font-semibold">Nombre Comercial</label>
                                 <input pInputText type="text" formControlName="nomcomercial" class="p-inputtext-sm"/>
                             </div>                           
@@ -96,7 +102,7 @@
                         </div>               
                     </div>
                     <div class="flex h-6rem grid">
-                        <div class="col-3 field sm:col-6 lg:col-3 md:col-4">
+                        <div class="col-6 field sm:col-6 lg:col-3 md:col-4">
                             <label for="start" class="font-semibold">Email <span class="text-red-500 font-bold"> * </span></label>
                             <input pInputText type="email" formControlName="email" class="p-inputtext-sm">
                             <div *ngIf="submitted && formCliente.email.errors" class="p-error">
@@ -104,18 +110,18 @@
                                 <div *ngIf="formCliente.email.errors.email">El correo electrónico no es válido</div>
                             </div>
                         </div>
-                        <div class="col-3 field sm:col-6 lg:col-3 md:col-4">
+                        <div class="col-6 field sm:col-6 lg:col-3 md:col-4">
                             <label for="start" class="font-semibold">Pagina Web</label>
                             <input pInputText type="text" formControlName="paginaweb" />
                         </div>
                     </div>
                   
                     <div class="flex h-6rem grid">    
-                        <div class="col-3 field sm:col-6 lg:col-2 md:col-4">
+                        <div class="col-6 field sm:col-6 lg:col-2 md:col-4">
                             <label for="start" class="font-semibold">Telefono</label>
                             <p-inputMask mask="999 999 999" formControlName="telefresumen" class="p-inputtext-sm"></p-inputMask>
                         </div>     
-                        <div class="col-3 field sm:col-6 lg:col-2 md:col-4">
+                        <div class="col-6 field sm:col-6 lg:col-2 md:col-4">
                             <label for="start" class="font-semibold">Movil</label>
                             <!-- <input pInputText type="text" formControlName="telefresumen" /> -->
                             <p-inputMask mask="999 999 999" formControlName="telefresumen" class="p-inputtext-sm"></p-inputMask>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
@@ -9,6 +9,8 @@ import * as FileSaver from 'file-saver';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TesoreriaService } from '../../service/tesoreriaServices';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import { CModalListPAgosComponent } from '../../modallistpagos/c-modallistpagos.component';
+import { CModalRegPAgosComponent } from '../../modalregpagos/c-modalregpagos.component';
 
 @Component({
   selector: 'app-c-cuentaporpagar',
@@ -25,11 +27,13 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   cols: any[] = [];
+  cols2: any[] = [];
   lstExportar: any[] = [];
   lstExportExcel: any[] = [];
   frmDatos!: FormGroup;
   lstMonedas: any;
   lstProveedor: any;
+  @Output() OB_back = new EventEmitter<boolean>();
 
   constructor(
       private fb: FormBuilder,
@@ -48,15 +52,30 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
   ngOnInit(): void{
       this.createFrm();
       this.listaMonedas();
-      this.listaCliente();
+      this.listaPersona();
       this.cols = [
-        { field: 'idordencompra', header: 'ID ALMACÉN' },
-        { field: 'nomtipoorden', header: 'OFICINA ' },
-        { field: 'codigonroorden', header: 'NOMBRE' },
-        { field: 'nomcomercial', header: 'DIRECCIÓN' },
-        { field: 'nomestado', header: 'ESTADO' }
-        
-    ];
+        { field: 'nrofactura', header: 'FACTURA' },
+        { field: 'nomcomercial', header: 'PROVEEDOR ' },
+        { field: 'descentrocosto', header: 'COSTO ' },
+        { field: 'fecemision', header: 'EMISION' },
+        { field: 'fecvencimiento', header: 'VENCIMIENTO' },
+        { field: 'nommoneda', header: 'MONEDA' },
+        { field: 's_monto_total', header: 'MONTO' },
+        { field: 's_monto_total', header: 'SALDO' },
+        { field: 'nomestado', header: 'ESTADO' }      
+      ];
+      this.cols2 = [
+        { field: 'nrofactura', header: 'FACTURA' },
+        { field: 'nomcomercial', header: 'PROVEEDOR ' },
+        { field: 'descentrocosto', header: 'COSTO ' },
+        { field: 'fecemision', header: 'EMISION' },
+        { field: 'fecvencimiento', header: 'VENCIMIENTO' },
+        { field: 'nommoneda', header: 'MONEDA' },
+        { field: 's_monto_total', header: 'MONTO' },
+        { field: 's_monto_total', header: 'SALDO' },
+        { field: 'nomestado', header: 'ESTADO' }     
+      ];
+    this.getListar();
   }
 
   createFrm(){
@@ -85,17 +104,17 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     //console.log('this.frmDatos...', this.frmDatos.value);
     const objeto = {
       ...this.frmDatos.value,
-      idtipodocprc: 0
+      idtipodocprc: 7
     }
 
     const $getListar = this.proyectosService.ordenCompraList(objeto)
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
-            console.log('rpta getListar', rpta.ordenescompra);
+            console.log('rpta getListar', rpta);
             this.lstCuentas = rpta.ordenescompra
-            this.lstPendientes = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'PRC');
-            this.lstAprobadas = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'EMI');
+            this.lstPendientes = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'EMI');
+            this.lstAprobadas = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'PAG');
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -114,52 +133,6 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     }else{
       this.lstExportExcel = this.lstAprobadas;
     }
-  }
-
-
-  getExportarExcel(data :any) {
-    this.lstExportar = [];
-    console.log(data.filteredValue);
-    if (data.filteredValue !== undefined) {
-      this.lstExportExcel = data.filteredValue;
-    }
-    console.log( 'this.lstExportar...',  this.lstExportar);
-
-    
-    for (let i = 0; i < this.lstExportExcel.length; i++) {       
-        const objeto = {
-            'N°': i + 1,
-            'TIPO': this.lstExportExcel[i].nomtipoorden,
-            'N° ORDEN': this.lstExportExcel[i].codigonroorden,
-            'N° RUC': this.lstExportExcel[i].nrodocumento,
-            'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
-            'COD PROYECTO' : this.lstExportExcel[i].codigoproyecto,
-            'NOM PROYECTO' : this.lstExportExcel[i].nomproyecto,
-            'MONEDA': this.lstExportExcel[i].nommoneda,
-            'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
-            'IGV': this.lstExportExcel[i].s_igv,
-            'TOTAL': this.lstExportExcel[i].s_monto_total,
-            'ESTADO' : this.lstExportExcel[i].nomestado
-            
-        }
-        this.lstExportar.push(objeto);
-    }
-
-    import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, 'Orden Compra');
-      });
-    }
-
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
   }  
   
   listaMonedas() {
@@ -178,7 +151,7 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
 
   }
 
-  listaCliente() {
+  listaPersona() {
 
     const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
       next: (rpta: any) => {
@@ -193,4 +166,38 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($getClientes);
 
   }
+
+  getBack(){
+    this.OB_back.emit(true);
+  }
+
+    onVer(data :any) {
+      const refItem = this.dialogService.open(CModalListPAgosComponent, {
+        data: data,
+        header: "Lista de Pagos / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
+        closeOnEscape: false,
+        styleClass: 'testDialog',
+        width: '40%'
+      });
+      refItem.onClose.subscribe((rpta: any) => {
+        this.getListar();         
+      });
+    }
+    
+    onPagar(data :any) {
+      const refItem = this.dialogService.open(CModalRegPAgosComponent, {
+            data: data,
+            header: "Registrar Pago / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '30%'
+          });
+          refItem.onClose.subscribe((rpta: any) => {
+            
+            console.log('onClose',rpta);
+            if (rpta != undefined) {
+              this.getListar()   ;
+            }
+          });
+    }
 }

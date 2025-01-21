@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -9,6 +9,8 @@ import * as FileSaver from 'file-saver';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TesoreriaService } from '../../service/tesoreriaServices';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import { CModalRegPAgosComponent } from '../../modalregpagos/c-modalregpagos.component';
+import { CModalListPAgosComponent } from '../../modallistpagos/c-modallistpagos.component';
 
 @Component({
   selector: 'app-c-cuentaporcobrar',
@@ -16,16 +18,16 @@ import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/servic
   styleUrls: ['./c-cuentaporcobrar.component.scss']
 })
 
-
-export class CCuentaporCobrarComponent implements OnInit, OnDestroy{
-
+export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
   $listSubcription: Subscription[] = [];
+
   lstCuentas: any;
   lstPendientes: any;
   lstAprobadas: any;
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   cols: any[] = [];
+  cols2: any[] = [];
   lstExportar: any[] = [];
   lstExportExcel: any[] = [];
   frmDatos!: FormGroup;
@@ -46,19 +48,35 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy{
       
   }
 
-  ngOnInit(): void{
-      this.createFrm();
-      this.listaMonedas();
-      this.listaCliente();
+  ngOnInit(): void{   
+    this.createFrm();
+    this.listaMonedas();
+    this.listaPersona();
       this.cols = [
-        { field: 'idordencompra', header: 'ID ALMACÉN' },
-        { field: 'nomtipoorden', header: 'OFICINA ' },
-        { field: 'codigonroorden', header: 'NOMBRE' },
-        { field: 'nomcomercial', header: 'DIRECCIÓN' },
-        { field: 'nomestado', header: 'ESTADO' }
-        
-    ];
+        { field: 'nrofactura', header: 'FACTURA' },
+        { field: 'nomcomercial', header: 'PROVEEDOR ' },
+        { field: 'descentrocosto', header: 'COSTO ' },
+        { field: 'fecemision', header: 'EMISION' },
+        { field: 'fecvencimiento', header: 'VENCIMIENTO' },
+        { field: 'nommoneda', header: 'MONEDA' },
+        { field: 's_monto_total', header: 'MONTO' },
+        { field: 's_monto_total', header: 'SALDO' },
+        { field: 'nomestado', header: 'ESTADO' }      
+      ];
+      this.cols2 = [
+        { field: 'nrofactura', header: 'FACTURA' },
+        { field: 'nomcomercial', header: 'PROVEEDOR ' },
+        { field: 'descentrocosto', header: 'COSTO ' },
+        { field: 'fecemision', header: 'EMISION' },
+        { field: 'fecvencimiento', header: 'VENCIMIENTO' },
+        { field: 'nommoneda', header: 'MONEDA' },
+        { field: 's_monto_total', header: 'MONTO' },
+        { field: 's_monto_total', header: 'SALDO' },
+        { field: 'nomestado', header: 'ESTADO' }     
+      ];
+    this.getListar();
   }
+
 
   createFrm(){
       this.frmDatos = this.fb.group({          
@@ -86,17 +104,17 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy{
     //console.log('this.frmDatos...', this.frmDatos.value);
     const objeto = {
       ...this.frmDatos.value,
-      idtipodocprc: 0
+      idtipodocprc: 6
     }
 
     const $getListar = this.proyectosService.ordenCompraList(objeto)
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
-            console.log('rpta getListar', rpta.ordenescompra);
+            console.log('rpta getListar', rpta);
             this.lstCuentas = rpta.ordenescompra
-            this.lstPendientes = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'PRC');
-            this.lstAprobadas = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'EMI');
+            this.lstPendientes = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'EMI');
+            this.lstAprobadas = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'PAG');
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -116,57 +134,10 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy{
       this.lstExportExcel = this.lstAprobadas;
     }
   }
-
-
-  getExportarExcel(data :any) {
-    this.lstExportar = [];
-    console.log(data.filteredValue);
-    if (data.filteredValue !== undefined) {
-      this.lstExportExcel = data.filteredValue;
-    }
-    console.log( 'this.lstExportar...',  this.lstExportar);
-
-    
-    for (let i = 0; i < this.lstExportExcel.length; i++) {       
-        const objeto = {
-            'N°': i + 1,
-            'TIPO': this.lstExportExcel[i].nomtipoorden,
-            'N° ORDEN': this.lstExportExcel[i].codigonroorden,
-            'N° RUC': this.lstExportExcel[i].nrodocumento,
-            'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
-            'COD PROYECTO' : this.lstExportExcel[i].codigoproyecto,
-            'NOM PROYECTO' : this.lstExportExcel[i].nomproyecto,
-            'MONEDA': this.lstExportExcel[i].nommoneda,
-            'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
-            'IGV': this.lstExportExcel[i].s_igv,
-            'TOTAL': this.lstExportExcel[i].s_monto_total,
-            'ESTADO' : this.lstExportExcel[i].nomestado
-            
-        }
-        this.lstExportar.push(objeto);
-    }
-
-    import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, 'Orden Compra');
-      });
-    }
-
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
-  }  
   
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
       next: (rpta: any) => {
-        console.log('listaMonedas', rpta);
         this.lstMonedas = rpta;       
       },
       error: (err) => {
@@ -179,12 +150,11 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy{
 
   }
 
-  listaCliente() {
+  listaPersona() {
 
     const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
       next: (rpta: any) => {
         this.lstCliente = rpta;
-        console.log('this.lstCliente', this.lstCliente);
       },
       error: (err) => {
         this.serviceSharedApp.messageToast()
@@ -193,5 +163,36 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy{
     });
     this.$listSubcription.push($getClientes);
 
+  }
+
+  onVer(data :any) {
+    const refItem = this.dialogService.open(CModalListPAgosComponent, {
+      data: data,
+      header: "Lista de Pagos / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '50%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {      
+      this.getListar(); 
+    });
+  }
+  
+  onPagar(data :any) {
+    data.idpagodocprc = 0;
+    const refItem = this.dialogService.open(CModalRegPAgosComponent, {
+          data: data,
+          header: "Registrar Pago / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '30%'
+        });
+        refItem.onClose.subscribe((rpta: any) => {
+          
+          console.log('onClose',rpta);
+          if (rpta != undefined) {
+            this.getListar();    
+          }
+        });
   }
 }

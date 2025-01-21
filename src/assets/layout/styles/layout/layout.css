@@ -623,7 +623,7 @@ p:last-child {
   height: calc(100% - 4rem);
   top: 4rem;
   left: 0;
-  width: 17rem;
+  width: 20rem;
   background: var(--menu-bg);
   box-shadow: 2px 0 4px -1px rgba(0, 0, 0, 0.2), 4px 0 5px 0 rgba(0, 0, 0, 0.14), 1px 0 10px 0 rgba(0, 0, 0, 0.12);
   display: flex;
@@ -691,12 +691,12 @@ p:last-child {
   color: var(--menuitem-text-color);
 }
 .layout-sidebar .layout-menu ul a .layout-submenu-toggler {
-  font-size: 75%;
+  font-size: 85%;
   margin-left: auto;
   transition: transform var(--transition-duration);
 }
 .layout-sidebar .layout-menu ul a.active-route {
-  font-weight: 700;
+  font-weight: 800;
 }
 .layout-sidebar .layout-menu ul a:hover {
   background-color: var(--menuitem-hover-bg);
@@ -737,7 +737,7 @@ p:last-child {
     align-items: center;
     justify-content: space-between;
     padding: 0 0.75rem;
-    height: 4rem;
+    height: 3rem;
     background-color: var(--topbar-start-bg);
     color: var(--topbar-item-text-color);
   }

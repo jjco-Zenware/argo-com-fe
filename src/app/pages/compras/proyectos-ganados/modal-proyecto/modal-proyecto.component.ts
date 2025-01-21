@@ -6,6 +6,7 @@ import { ProyectosService } from '../service/proyectos.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Subscription } from 'rxjs';
+import { TesoreriaService } from 'src/app/pages/tesoreria/service/tesoreriaServices';
 
 @Component({
   selector: 'app-modal-proyecto',
@@ -28,6 +29,7 @@ export class ModalProyectoComponent {
   blockedDocument: boolean = false;
     mensajeSpinner: string = "Cargando...!";
     lstOrigen: any;
+    lstCentroCosto:any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,7 +38,8 @@ export class ModalProyectoComponent {
     private proyectosService: ProyectosService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    public config: DynamicDialogConfig
+    public config: DynamicDialogConfig,
+    private tesoreriaService: TesoreriaService, 
 
 ) {}
 
@@ -50,6 +53,7 @@ ngOnInit(): void {
   this.listaProyectoTipo();
   this.listaClientes();
   this.createFormRegistro();
+  this.listarCentroCosto();
   //this.verControles();
   if (this.config.data.idproyecto > 0) {
     this.traerunoProyecto();
@@ -107,6 +111,7 @@ traerunoProyecto(){
         this.registerFormRegistro.get('idrequerimiento').setValue(rpta[0].idrequerimiento);
         this.registerFormRegistro.get('descripcion').setValue(rpta[0].descripcion);
         this.registerFormRegistro.get('idoportunidad').setValue(rpta[0].idoportunidad.toString());
+        this.registerFormRegistro.get('idcentrocosto').setValue(rpta[0].idcentrocosto);
 
         this.verControles(rpta[0].idtipoproyecto);
       },
@@ -139,6 +144,7 @@ traerunoProyecto(){
       descripcion: [{ value: '', disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       codtipodoc: [{ value: '', disabled: false }],
+      idcentrocosto: [{ value: 0, disabled: false }],
     });
 }
 
@@ -359,5 +365,32 @@ validarDatos():boolean{
       },
   });
   }
+
+  listarCentroCosto(){    
+    this.setSpinner(true);
+      this.mensajeSpinner = 'Cargando...!';
+
+    const $listarCentroCosto = this.tesoreriaService.listarCentroCosto()
+      .subscribe({
+        next: (rpta:any) => {
+            this.lstCentroCosto = rpta;
+            console.log('listarCentroCosto...', this.lstCentroCosto);
+            this.setSpinner(false);
+        },
+        error:(err)=>{
+          console.info('error : ', err);
+          this.messageService.clear();
+          this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico,
+          });
+        },
+        complete:() => {
+            this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($listarCentroCosto)
+  }  
 
 }

@@ -183,4 +183,14 @@ export class ComprasService {
         const url = `${constantesApiWeb.eliminarResolutor}`;
         return this.http.post<any>(url, objeto);
     }
+
+    listarCentroCosto() {
+        const url = `${constantesApiWeb.listarCentroCosto}`;
+        return this.http.get<any>(url)
+    }
+
+    recalcularRegistro(objeto: any) {
+        const url = `${constantesApiWeb.recalcularRegistro}`;
+        return this.http.post<any>(url, objeto);
+    }
 }

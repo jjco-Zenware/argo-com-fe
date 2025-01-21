@@ -1,0 +1,48 @@
+
+
+    <form [formGroup]="registerFormRegistro" class="p-fluid p-formgrid grid col-12 lg:col-12 text-sm p-0 border-1 surface-border border-round m-2">                      
+        <div class="sm:col-12 lg:col-3 md:col-12 col-12">
+            <label class="block text-base font-semibold mb-1">N° Programación</label>
+            <span class="p-fluid">
+                <input pInputText type="text" class="font-semibold" formControlName="idprogramacion" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class=" sm:col-8 lg:col-1 md:col-12"></div>
+        <div class="col-12 sm:col-12 lg:col-3 md:col-12 justify-content-end">
+            <label class="block text-base font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
+                <p-calendar formControlName="fecha" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+            </span>
+        </div>
+        <div class="sm:col-6 lg:col-5 md:col-3 col-12">
+            <label class="block text-base font-semibold">Origen <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid">
+                <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
+                optionValue="idtipoproyecto" (onChange)="getOrigen($event.value)" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+            </span>
+        </div>  
+        <div class="sm:col-12 md:col-12 col-12 field -mt-4">
+            <label class="block text-base font-semibold mb-1">Proyecto <span class="text-red-500 font-bold"> * </span></label>                        
+            <span class="p-fluid mt-1">
+                <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
+                optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
+            </span>
+        </div>
+        <div class="sm:col-6 lg:col-12 md:col-12 -mt-4 col-12">
+            <label class="block text-base font-semibold mb-1">Observación</label>                        
+            <span class="p-fluid mt-1">
+                <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full p-inputtext-sm" id="observacion" [readonly]=onlyRead></textarea>
+            </span>
+        </div>
+    </form>
+
+<div class="flex justify-content-end">
+    <button pButton icon="pi pi-save" label="Guardar" (click)="guardarProyecto()"
+    class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary mt-2"></button> 
+</div>
+
+
+
+
+

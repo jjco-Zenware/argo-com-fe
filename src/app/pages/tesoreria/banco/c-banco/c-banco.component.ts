@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
-import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import { TesoreriaService } from '../../service/tesoreriaServices';
 
 @Component({
   selector: 'app-c-banco',
@@ -18,7 +18,7 @@ export class CBancoComponent implements OnInit, OnDestroy{
     $listSubcription: Subscription[] = [];
     vistaLista: boolean = true;
     visDetalle: boolean = false;
-    lstMovimientos: any;
+    lstBancos: any;
     tituloDetalle!: string;
     blockedDocument: boolean = false;
     mensajeSpinner: string = "";
@@ -34,7 +34,7 @@ export class CBancoComponent implements OnInit, OnDestroy{
         public dialogService: DialogService  ,
         private proyectosService: ProyectosService,     
         private serviceSharedApp: SharedAppService,
-        
+        private tesoreriaService: TesoreriaService,            
       ){          
     }
 
@@ -42,12 +42,14 @@ export class CBancoComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'CÓDIGO' },
-          { field: 'nomtipoorden', header: 'NOMBRE ' },
-          { field: 'nomcomercial', header: 'TIPO' },
-          { field: 'nomestado', header: 'DOCUMENTO' },
-          { field: 'nomestado', header: 'NRO' },
-          { field: 'nomestado', header: 'CTA CTBLE' }
+          { field: 'razonsocial', header: 'NOMBRE ' },
+          { field: 'destipobanco', header: 'TIPO BANCO' },
+          { field: 'idtipodoc', header: 'TIPO DOC' },
+          { field: 'nrodoc', header: 'NRO DOC' },
+          { field: 'codctactble', header: 'CTA CTBLE' },
+          { field: 'codigobcr', header: 'BCR'},
+          { field: 'codbancosbs', header: 'SBS'},
+          { field: 'codbancosunat', header: 'SUNAT'}
           
       ];
     }
@@ -88,18 +90,13 @@ export class CBancoComponent implements OnInit, OnDestroy{
     getListar(){
       this.setSpinner(true);
       this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-      console.log('this.frmDatos...', this.frmDatos.value);
-      const objeto = {
-        ...this.frmDatos.value,
-        idtipodocprc: 4
-      }
-
-      const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
+      
+      const $getListarOrdenCompra = this.tesoreriaService.listarBanco()
         .subscribe({
           next: (rpta:any) => {
               this.setSpinner(false);
-              console.log('rpta getListarOrdenCompra', rpta.ordenescompra);
-              this.lstMovimientos = rpta.ordenescompra
+              console.log('getListar', rpta);
+              this.lstBancos = rpta;
           },
           error:(err)=>{
               this.setSpinner(false);
@@ -112,29 +109,23 @@ export class CBancoComponent implements OnInit, OnDestroy{
       this.$listSubcription.push($getListarOrdenCompra)
     }
 
-    onVer(dato: any) {
-     
-        this.tituloDetalle =  dato.nomalmacen;
-        this.dataDet = {
-          idcodigo: dato.idordencompra,
-          paramReg:'V',
-          idtipodocprc: 4
-        } 
-        this.vistaLista = false;
+    onVer(dato: any) {     
+      this.tituloDetalle =  dato.razonsocial;
+      this.dataDet = {
+        idcodigo: dato.idbanco,
+        paramReg:'V'
+      } 
+      this.vistaLista = false;
     }
 
     onEditar(dato: any) {
-      
-        this.tituloDetalle = dato.nomalmacen;
-        this.dataDet = {
-          idcodigo: dato.idordencompra,
-          paramReg:'E',
-          idtipodocprc: 4
-        }
-        this.vistaLista = false;
-    }
-
-  
+      this.tituloDetalle = dato.razonsocial;
+      this.dataDet = {
+        idcodigo: dato.idbanco,
+        paramReg:'E'
+      }
+      this.vistaLista = false;
+    } 
 
     getDetalle(dato:boolean){
       this.vistaLista = true;
@@ -152,55 +143,11 @@ export class CBancoComponent implements OnInit, OnDestroy{
       this.tituloDetalle = "REGISTRAR BANCO ";
       this.dataDet = {
         idcodigo: 0,
-        paramReg:'N',
-        idtipodocprc: 4
+        paramReg:'N'
       }
       this.vistaLista = false;
     }
 
 
-    getExportarExcel(data :any) {
-      this.lstExportar = [];
-      console.log(data.filteredValue);
-      if (data.filteredValue !== undefined) {
-        this.lstExportExcel = data.filteredValue;
-      }
-      console.log( 'this.lstExportar...',  this.lstExportar);
-
-      
-      for (let i = 0; i < this.lstExportExcel.length; i++) {       
-          const objeto = {
-              'N°': i + 1,
-              'TIPO': this.lstExportExcel[i].nomtipoorden,
-              'N° ORDEN': this.lstExportExcel[i].codigonroorden,
-              'N° RUC': this.lstExportExcel[i].nrodocumento,
-              'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
-              'COD PROYECTO' : this.lstExportExcel[i].codigoproyecto,
-              'NOM PROYECTO' : this.lstExportExcel[i].nomproyecto,
-              'MONEDA': this.lstExportExcel[i].nommoneda,
-              'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
-              'IGV': this.lstExportExcel[i].s_igv,
-              'TOTAL': this.lstExportExcel[i].s_monto_total,
-              'ESTADO' : this.lstExportExcel[i].nomestado
-              
-          }
-          this.lstExportar.push(objeto);
-      }
-  
-      import('xlsx').then((xlsx) => {
-        const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
-        const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, 'Orden Compra');
-        });
-      }
-  
-      saveAsExcelFile(buffer: any, fileName: string): void {
-        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-        let EXCEL_EXTENSION = '.xlsx';
-        const data: Blob = new Blob([buffer], {
-            type: EXCEL_TYPE
-        });
-        FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
-      }
+   
 }

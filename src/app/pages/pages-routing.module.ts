@@ -32,6 +32,11 @@ const routes: Routes = [
         loadChildren: () => import('./tesoreria/tesoreria.module').then(m => m.TesoreriaModule),
         data: { breadcrumb: 'Tesoreria' }
       },
+      {
+        path: 'contabilidad',
+        loadChildren: () => import('./contabilidad/contabilidad.module').then(m => m.ContabilidadModule),
+        data: { breadcrumb: 'Contabilidad' }
+      }
     ]
   }
 ];

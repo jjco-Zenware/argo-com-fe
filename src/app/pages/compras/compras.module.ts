@@ -6,12 +6,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { ComprasService } from './Service/compraServices';
+import { CModalTransacComponent } from './modal-trans-registro/modal-transac.component';
 
 //import { FieldsetModule } from 'primeng/fieldset';
 
 
 @NgModule({
   declarations: [
+    CModalTransacComponent
   ],
   imports: [
     CommonModule,
@@ -19,8 +21,7 @@ import { ComprasService } from './Service/compraServices';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
-    ComprasRoutingModule,
-    //FieldsetModule
+    ComprasRoutingModule
   ],
   providers: [ComprasService]
 })

@@ -11,6 +11,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AlmacenService } from '../service/almacenServices';
 import { GrupoRoutingModule } from './grupo-routing.module';
 import { CGrupoComponent } from './c-grupo/c-grupo.component';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,6 @@ import { CGrupoComponent } from './c-grupo/c-grupo.component';
     ReactiveFormsModule,
     ConfirmPopupModule 
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, ContabilidadService]
 })
 export class GrupoModule { }

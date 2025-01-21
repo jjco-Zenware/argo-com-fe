@@ -8,6 +8,7 @@ import { SharedAppService } from '@sharedAppService';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AlmacenService } from '../../service/almacenServices';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 
 @Component({
   selector: 'app-c-grupo',
@@ -31,6 +32,9 @@ export class CGrupoComponent implements OnInit, OnDestroy{
     lstTipoProductoTot: any[] = [];
     errorMensaje: string = "";
 
+    lstCtaCtble: any[] = [];
+    filteredCtaCtble!:  any[];
+
     constructor(
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
@@ -39,14 +43,16 @@ export class CGrupoComponent implements OnInit, OnDestroy{
         private serviceSharedApp: SharedAppService,
         private messageService: MessageService,
         private almacenService: AlmacenService, 
-        private proyectosService: ProyectosService,        
+        private proyectosService: ProyectosService,      
+                private contabilidadService: ContabilidadService,   
       ){    
         
     }
 
     ngOnInit(): void{
         this.createFrm();
-        this.listarFamilia() ;
+        this.listarFamilia();
+        this.listarPlanContable();
     }
 
     createFrm(){
@@ -58,6 +64,7 @@ export class CGrupoComponent implements OnInit, OnDestroy{
         codsubfamilia: [{value: '',disabled: false}],     
         nomfamilia: [{value: '',disabled: false}],
         nomsubfamilia: [{value: '',disabled: false}],    
+        codctactble: [{value: '',disabled: false}],    
         })
       }
 
@@ -163,6 +170,8 @@ export class CGrupoComponent implements OnInit, OnDestroy{
         this.frmDatos.get('codsubfamilia')?.setValue('');
         this.frmDatos.get('nomsubfamilia')?.setValue('');
         this.frmDatos.get('idtipoprod')?.setValue(0);
+        this.frmDatos.get('codctactble')?.setValue('');
+        this.filteredCtaCtble = [];
 
         this.headerTitle="Agregar Categoría";
         this.claseVisible = true;
@@ -265,6 +274,7 @@ export class CGrupoComponent implements OnInit, OnDestroy{
                 this.frmDatos.get('codsubfamilia')?.setValue(rpta[0].codsubfamilia);
                 this.frmDatos.get('nomsubfamilia')?.setValue(rpta[0].nomsubfamilia);
                 this.frmDatos.get('idtipoprod')?.setValue(rpta[0].idtipoprod);
+                this.frmDatos.get('codctactble')?.setValue(rpta[0].codctactble);
                 this.headerTitle= rpta[0].nomsubfamilia;
             },
             error: (err) => {
@@ -315,11 +325,55 @@ export class CGrupoComponent implements OnInit, OnDestroy{
         }
 
         if (!_error && (this.frmDatos.value.idtipoprod === null || this.frmDatos.value.idtipoprod === 0) )
-            {
-                this.errorMensaje="Seleccionar Tipo Producto...!";
-                _error = true;
-            }
+        {
+            this.errorMensaje="Seleccionar Tipo Producto...!";
+            _error = true;
+        }
+        
+        if (!_error && (this.frmDatos.value.codctactble === null || this.frmDatos.value.codctactble === '' || this.frmDatos.value.codctactble === 0 ) )
+        {
+            this.errorMensaje="Seleccionar Cuenta Contable...!";
+            _error = true;
+        }
 
         return _error;
+    }
+
+    filterCtaCtble(event: any) {
+        let filtered: any[] = [];
+        let query = event.query;
+    
+        for (let i = 0; i < (this.lstCtaCtble as any[]).length; i++) {
+            let codigo = (this.lstCtaCtble as any[])[i];
+            if ( codigo.s_desctactble && codigo.s_desctactble.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(codigo);
+            }
+        }
+        console.log('filtered', filtered);
+        this.filteredCtaCtble = filtered;
+    }
+
+    listarPlanContable(){          
+        const $listarPlanContable = this.contabilidadService.listarPlanContable()
+        .subscribe({
+            next: (rpta:any) => {
+                this.setSpinner(false);
+                console.log('getListar', rpta);
+                this.lstCtaCtble = rpta;
+            },
+            error:(err)=>{
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast()
+            },
+            complete:() => {
+            this.setSpinner(false);
+            }
+        });
+        this.$listSubcription.push($listarPlanContable)
+    }
+
+    selectCuenta(data : any){
+        console.log('selectCuenta', data.codctactble);
+        this.frmDatos.value.codctactble = data.codctactble;
     }
 }

@@ -14,14 +14,17 @@ import { OrdencompraService } from '../orden-compra-servicio/service/ordencompra
 import { FieldsetModule } from 'primeng/fieldset';
 import { AlmacenModule } from '../../almacen/almacen.module';
 import { AlmacenService } from '../../almacen/service/almacenServices';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { TagModule } from 'primeng/tag';
 import { RegistroProveedorModule } from '../registro-proveedor/registro-proveedor.module';
+import { CModalPersonaComponent } from './modalPersona/c-modalpersona.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { LibroDiarioModule } from '../../contabilidad/librodiario/librodiario.module';
 
 @NgModule({
   declarations: [
     CRegistroCompraComponent,
-    DatoCompraComponent
+    DatoCompraComponent,
+    CModalPersonaComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +37,8 @@ import { RegistroProveedorModule } from '../registro-proveedor/registro-proveedo
     AlmacenModule,
     InputNumberModule ,
     TagModule,
-    RegistroProveedorModule
+    RegistroProveedorModule,
+    LibroDiarioModule,
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService]
 })

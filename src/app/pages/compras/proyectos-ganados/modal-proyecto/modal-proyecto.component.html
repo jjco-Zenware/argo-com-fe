@@ -24,11 +24,12 @@
                 <label class="block text-900 font-semibold mb-1">Oportunidad CRM</label>
             </div>
             <span class="p-fluid">
-                <p-dropdown [options]="lstOportunidad" formControlName="idoportunidad" placeholder="Seleccionar Oportunidad" optionLabel="title"
+                <p-dropdown [options]="lstOportunidad" formControlName="idoportunidad" placeholder="Seleccionar Oportunidad..." optionLabel="title"
                   optionValue="id" appendTo="body" autoWidth="false" class="p-inputtext-sm"></p-dropdown>
             </span>
             <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.idoportunidad.errors">* Debe Seleccionar Oportunidad</p> -->
         </div>
+        
         <div *ngIf="!verOpor" class="col-12 field h-6rem">
             <div class="flex">
                 <label class="block text-900 font-semibold mb-1">Nombre </label>
@@ -38,6 +39,15 @@
                 <!-- <input pInputText type="text" formControlName="nomproyecto" /> -->
             </span>
             <!-- <p class="text-red-600" *ngIf="submitted && formRegistro.nomproyecto.errors">* Debe Ingresar Nombre</p> -->
+        </div>
+        <div class="col-12 field h-4rem -mt-3">
+            <div class="flex">
+                <label class="block text-900 font-semibold mb-1">Centro Costo </label>
+            </div>
+            <span class="p-fluid">
+                <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Seleccionar Centro Costo..." optionLabel="descentrocosto"
+                  optionValue="idcentrocosto" appendTo="body" autoWidth="false" class="p-inputtext-sm"></p-dropdown>
+            </span>
         </div>
         <!-- <div *ngIf="verInter" class="col-12 field">
             <div class="flex">

@@ -1,0 +1,50 @@
+<div class="p-fluid mt-1">
+    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardarCentroCosto()"></button>
+    </div>
+    <div class="card p-2"  >
+        <p-tabView >
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-building"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Datos de Centro Costo
+                        </span>
+                    </div>
+                </ng-template>
+                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border">
+                    <div class="p-fluid grid  col-12  lg:col-6 md:col-12 sm:col-12 p-2 m-2">                       
+                        
+                        
+                        <div class="col-12 lg:col-3 md:col-12 field -mt-4">
+                            <label class="block text-900 font-semibold mb-1"> Id</label>
+                            <span class="p-fluid">
+                                <input pInputText type="text" class="w-full p-inputtext-sm" formControlName="idcentrocosto"/>
+                            </span>
+                        </div>
+                        <div class="col-12 lg:col-6 md:col-12 field -mt-4">
+                            <label class="block text-900 font-semibold mb-1">Código</label>
+                            <span class="p-fluid">
+                                <input pInputText type="text" class="w-full p-inputtext-sm" formControlName="codcentrocosto"/>
+                            </span>
+                        </div> 
+                        <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-2">
+                            <label class="block text-900 font-semibold">Descripción</label>                        
+                            <span class="p-fluid">
+                                <textarea type="text" pInputTextarea [rows]="3" formControlName="descentrocosto" style="resize: none" class="w-full" 
+                                   class="p-inputtext-sm"></textarea>
+                            </span>
+                        </div>   
+
+                    </div>
+                </form>
+            </p-tabPanel>   
+        </p-tabView> 
+    </div>
+    
+
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-toast></p-toast>

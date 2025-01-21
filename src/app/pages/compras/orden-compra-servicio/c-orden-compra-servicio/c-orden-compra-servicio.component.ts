@@ -212,12 +212,11 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
 
     getExportarExcel(data :any) {
       this.lstExportar = [];
-      console.log(data.filteredValue);
       if (data.filteredValue !== undefined) {
         this.lstExportExcel = data.filteredValue;
+      }else{
+        this.lstExportExcel = data._value
       }
-      console.log( 'this.lstExportar...',  this.lstExportar);
-
       
       for (let i = 0; i < this.lstExportExcel.length; i++) {       
           const objeto = {

@@ -23,6 +23,7 @@ import { CDatoCotizacionViewProyecComponent } from './c-dato-cotizacion-view-pro
 import { TableModule } from 'primeng/table';
 import { AlmacenService } from '../../almacen/service/almacenServices';
 import { CModalProductoComponent } from './modal-producto/c-modal-producto.component';
+import { TesoreriaService } from '../../tesoreria/service/tesoreriaServices';
 
 
 
@@ -53,6 +54,6 @@ import { CModalProductoComponent } from './modal-producto/c-modal-producto.compo
   exports:[
     CCotizacionComponent
   ],
-  providers: [SharedAppService, ProyectosService, DynamicDialogRef, DynamicDialogConfig, DatePipe, AlmacenService]
+  providers: [SharedAppService, ProyectosService, DynamicDialogRef, DynamicDialogConfig, DatePipe, AlmacenService, TesoreriaService]
 })
 export class ProyectosGanadosModule { }

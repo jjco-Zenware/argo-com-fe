@@ -291,4 +291,20 @@ export class UtilitariosService {
       return  new Date(Date.parse(fecha)).toLocaleDateString('es-PE', dateOpt);
   }
 
+  obtenerFechaInicioMesPeriodo(fecha: Date): Date {
+    return new Date(
+      fecha.getFullYear(),
+      fecha.getMonth(),
+      1
+    );
+  }
+
+  obtenerFechaFinMesPeriodo(fecha: Date): Date {
+    return new Date(
+      fecha.getFullYear(),
+      fecha.getMonth() + 1,
+      0
+    );
+  }
+
 }

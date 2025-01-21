@@ -166,27 +166,21 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
 
     getExportarExcel(data :any) {
       this.lstExportar = [];
-      console.log(data.filteredValue);
       if (data.filteredValue !== undefined) {
         this.lstExportExcel = data.filteredValue;
+      }else{
+        this.lstExportExcel = data._value
       }
-      console.log( 'this.lstExportar...',  this.lstExportar);
 
       
       for (let i = 0; i < this.lstExportExcel.length; i++) {       
           const objeto = {
               'N°': i + 1,
-              'TIPO': this.lstExportExcel[i].nomtipoorden,
-              'N° ORDEN': this.lstExportExcel[i].codigonroorden,
-              'N° RUC': this.lstExportExcel[i].nrodocumento,
+              'CÓDIGO': this.lstExportExcel[i].idordencompra,
+              'ALMACÉN': this.lstExportExcel[i].nomalmacen,
               'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
-              'COD PROYECTO' : this.lstExportExcel[i].codigoproyecto,
-              'NOM PROYECTO' : this.lstExportExcel[i].nomproyecto,
-              'MONEDA': this.lstExportExcel[i].nommoneda,
-              'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
-              'IGV': this.lstExportExcel[i].s_igv,
-              'TOTAL': this.lstExportExcel[i].s_monto_total,
-              'ESTADO' : this.lstExportExcel[i].nomestado
+              'DOCUMENTO': this.lstExportExcel[i].ord_documento,
+              'ESTADO' : this.lstExportExcel[i].nomestado,
               
           }
           this.lstExportar.push(objeto);
@@ -196,7 +190,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
         const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
         const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, 'Orden Compra');
+        this.saveAsExcelFile(excelBuffer, 'Ingreso de Requerimiento');
         });
       }
   

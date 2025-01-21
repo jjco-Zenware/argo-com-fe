@@ -20,8 +20,7 @@
                     <button *ngIf="verMovAlmacen" type="button" pButton icon="pi pi-plus" styleClass="p-button-warn" class="h-2.5rem ml-2 font-bold p-button-outlined text-green-600" (click)="altaRapida()"
                     pTooltip="Alta Rapida de Producto" tooltipPosition="bottom"></button>
                 </div>
-                <div class="col-12 sm:col-12 lg:col-5 md:col-12"> 
-
+                <div class="col-12 sm:col-12 lg:col-5 md:col-12">                     
                 </div>
                 <div class="col-12 sm:col-12 lg:col-3 md:col-12">
                     <div class="flex">
@@ -31,11 +30,15 @@
                     </div>
                     <p-dropdown [options]="lstMarcas" formControlName="idmarca" optionLabel="nommarca"
                         optionValue="idmarca" placeholder="Seleccionar Marca" class="p-inputtext-sm" appendTo="body" [readonly]=true></p-dropdown>
-                </div>
-                <div class="sm:col-12 lg:col-9 md:col-12">
-                    <label class="font-semibold">Descripción</label>
-                    <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="1"
-                        style="resize: none" class="w-full" class="p-inputtext-sm" [readonly]=true></textarea>
+                </div><div class="sm:col-12 lg:col-9 md:col-12">
+                    <label class="font-semibold">Producto</label>
+                    <textarea id="despro" type="text" formControlName="despro" pInputTextarea [rows]="1"
+                        style="resize: none" class="w-full" class="p-inputtext-sm surface-200" [readonly]=true></textarea>
+                </div> 
+                <div class="sm:col-12 lg:col-12 md:col-12 -mt-3">
+                    <label class="font-semibold">Descripción Item</label>
+                    <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="4"
+                        style="resize: none" class="w-full" class="p-inputtext-sm" ></textarea>
                 </div>                      
             </div>
             <div class="flex grid mb-2">                 

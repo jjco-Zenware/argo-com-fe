@@ -17,119 +17,106 @@
                     </div>
                 </ng-template>
 
-                <form [formGroup]="registerFormRegistro" >
-                    
-                    <div class="p-fluid grid col-8 border-1 border-round surface-border m-2"> 
-                            
-                            <!-- <div class="col-6 sm:col-6 lg:col-3 md:col-3 h-4rem field">
-                                <label class="block text-900 font-semibold mb-1">Orden <span class="text-red-500 font-bold"> * </span></label>
-                                <span class="p-fluid ">
-                                    <p-dropdown [options]="lstTipo" formControlName="codtipoorden" placeholder="Seleccionar Tipo" optionLabel="name" 
-                                    optionValue="code" [readonly]=onlyRead></p-dropdown>
-                                </span>
-                            </div> -->
-                            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field -mt-3">
-                                <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
-                                <span class="p-input-icon-left w-auto p-fluid -mt-1"  >
-                                    <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                                    inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
-                                </span>
-                            </div>
-                            <div class=" sm:col-8 lg:col-6 md:col-12"></div>
-                            <div class="sm:col-12 lg:col-3 md:col-12 h-4rem field -mt-3">
-                                <label class="block text-900 font-semibold ">N° Cotización</label>
-                                <span class="p-fluid">
-                                    <input pInputText type="text" class="font-semibold" formControlName="idordencompra" class="p-inputtext-sm"/>
-                                </span>
-                            </div>
-                            <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 h-3rem -mt-3 -mb-2">
-                                <!-- <span class="p-tag text-sm">Datos Cliente</span> -->
-                            </p-divider>                            
-                            <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem">                            
-                                <label class="block text-900 font-semibold mb-1">Cliente <span class="text-red-500 font-bold"> * </span></label>                            
-                                <span>
-                                    <p-dropdown [options]="lstCliente" placeholder="Seleccionar Cliente"  formControlName="idcliente" class="p-inputtext-sm"
-                                    optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [readonly]=onlyRead></p-dropdown>            
-                                </span>
-                            </div>                         
-                            <div class="sm:col-6 lg:col-8 md:col-3 h-4rem">
-                                <div class="flex">
-                                    <label class="block text-900 font-semibold mb-1">Contacto <span class="text-red-500 font-bold"> * </span></label>
-                                    <i *ngIf="verItems" class="pi pi-user-plus cursor-pointer" style="margin-left: 10px;" pTooltip="Alta rapida Contacto"
-                                    tooltipPosition="right" (click)="AgregarContacto();" ></i>
-                                </div>                            
-                                <span>
-                                    <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
-                                    optionValue="idcontacto" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                                </span>
-                            </div>
-                            <div class="col-4 sm:col-6 lg:col-4 md:col-6 h-4rem mt-2">                            
-                                <label class="block text-900 font-semibold mb-1">Ruc</label>                            
-                                <span>
-                                    <input pInputText type="text" class="font-semibold" formControlName="nrodocumento" class="p-inputtext-sm" readonly="true"/>
-                                </span>
-                            </div>                         
-                            <div class="sm:col-6 lg:col-8 md:col-3 h-4rem mt-2">
-                                <div class="flex">
-                                    <label class="block text-900 font-semibold mb-1">Dirección</label>
-                                </div>                            
-                                <span>
-                                    <input pInputText type="text" class="font-semibold" formControlName="direcresumen" class="p-inputtext-sm" readonly="true"/>
-                                </span>
-                            </div>
-                            <div *ngIf="verReferencia" class="col-4 field h-4rem mt-3 -mb-2">
-                                <label class="block text-900 font-semibold mb-1">N° Referencia <span class="text-red-500 font-bold"> * </span></label>                        
-                                <span class="p-fluid">
-                                    <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
-                                </span>
-                            </div>
-                            <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 h-3rem -mt-1 -mb-2">
-                                <!-- <span class="p-tag text-sm">Condiciones</span> -->
-                            </p-divider>
-                            <div class="sm:col-6 lg:col-4 md:col-3 h-4rem">
-                                <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
-                                <span class="p-fluid mt-1">
-                                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                                </span>                                      
-                            </div> 
-                            <div class="sm:col-6 lg:col-4 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Forma de Pago<span class="text-red-500 font-bold"> * </span></label>
-                                <span>
-                                    <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
-                                    optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                                </span>
-                            </div> 
+                <form [formGroup]="registerFormRegistro" class="p-fluid grid col-12 lg:col-8 border-1 border-round surface-border m-2">
+                    <div class="col-4 sm:col-12 lg:col-3 md:col-12 justify-content-end -mt-3">
+                        <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-input-icon-left w-auto p-fluid -mt-1"  >
+                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                        </span>
+                    </div>
+                    <div class="col-4 sm:col-8 lg:col-6 md:col-12"></div>
+                    <div class="col-4 sm:col-12 lg:col-3 md:col-12 -mt-3">
+                        <label class="block text-900 font-semibold ">N° Cotización</label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="font-semibold" formControlName="idordencompra" class="p-inputtext-sm"/>
+                        </span>
+                    </div>
+                    <p-divider align="left" class="col-12 sm:col-12 lg:col-12 md:col-12 -mt-5">
+                        <!-- <span class="p-tag text-sm">Datos Cliente</span> -->
+                    </p-divider>                            
+                    <div class="col-4 sm:col-6 lg:col-4 md:col-6 -mt-5">                            
+                        <label class="block text-900 font-semibold mb-1">Cliente <span class="text-red-500 font-bold"> * </span></label>                            
+                        <span>
+                            <p-dropdown [options]="lstCliente" placeholder="Seleccionar Cliente"  formControlName="idcliente" class="p-inputtext-sm"
+                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [readonly]=onlyRead></p-dropdown>            
+                        </span>
+                    </div>                         
+                    <div class="col-8 sm:col-6 lg:col-8 md:col-3 -mt-5">
+                        <div class="flex">
+                            <label class="block text-900 font-semibold mb-1">Contacto <span class="text-red-500 font-bold"> * </span></label>
+                            <i *ngIf="verItems" class="pi pi-user-plus cursor-pointer" style="margin-left: 10px;" pTooltip="Alta rapida Contacto"
+                            tooltipPosition="right" (click)="AgregarContacto();" ></i>
+                        </div>                            
+                        <span>
+                            <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
+                            optionValue="idcontacto" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div>
+                    <div class="col-4 sm:col-6 lg:col-4 md:col-6 -mt-3">                            
+                        <label class="block text-900 font-semibold mb-1">Ruc</label>                            
+                        <span>
+                            <input pInputText type="text" class="font-semibold" formControlName="nrodocumento" class="p-inputtext-sm" readonly="true"/>
+                        </span>
+                    </div>                         
+                    <div class="col-8 sm:col-6 lg:col-8 md:col-3 -mt-3">
+                        <label class="block text-900 font-semibold mb-1">Dirección</label>                           
+                        <span>
+                            <input pInputText type="text" class="font-semibold" formControlName="direcresumen" class="p-inputtext-sm" readonly="true"/>
+                        </span>
+                    </div>
+                    <div *ngIf="verReferencia" class="col-4 field h-4rem mt-3 -mb-2">
+                        <label class="block text-900 font-semibold mb-1">N° Referencia <span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid">
+                            <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
+                        </span>
+                    </div>
+                    <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-4">
+                        <!-- <span class="p-tag text-sm">Condiciones</span> -->
+                    </p-divider>
+                    <div class="sm:col-6 lg:col-4 md:col-3 col-6 -mt-4">
+                        <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>                                      
+                    </div> 
+                    <div class="sm:col-6 lg:col-4 md:col-3 col-6 -mt-4">
+                        <label class="block text-900 font-semibold mb-1">Forma de Pago<span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
+                            optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div> 
 
-                            <div class="sm:col-6 lg:col-2 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Plazo (días) </label>
-                                <span>
-                                    <p-inputNumber formControlName="tiempoentrega" locale="es-PE" [min]="0" [readonly]=onlyRead class="p-inputtext-sm"></p-inputNumber>
-                                </span>
-                            </div> 
+                    <div class="sm:col-6 lg:col-2 md:col-3 col-6 -mt-4">
+                        <label class="block text-900 font-semibold mb-1">Plazo (días) </label>
+                        <span>
+                            <p-inputNumber formControlName="tiempoentrega" locale="es-PE" [min]="0" [readonly]=onlyRead class="p-inputtext-sm"></p-inputNumber>
+                        </span>
+                    </div> 
 
-                            <div class="sm:col-6 lg:col-2 md:col-3 h-4rem ">
-                                <label class="block text-900 font-semibold mb-1">Validez (días)</label>
-                                <span>
-                                    <p-inputNumber formControlName="validezoferta" locale="es-PE" [min]="0" [readonly]=onlyRead class="p-inputtext-sm"></p-inputNumber>
-                                </span>
-                            </div>                                  
+                    <div class="sm:col-6 lg:col-2 md:col-3 col-6 -mt-4">
+                        <label class="block text-900 font-semibold mb-1">Validez (días)</label>
+                        <span>
+                            <p-inputNumber formControlName="validezoferta" locale="es-PE" [min]="0" [readonly]=onlyRead class="p-inputtext-sm"></p-inputNumber>
+                        </span>
+                    </div>                                  
 
-                            <div class="sm:col-6 lg:col-12 md:col-3 mt-3">                        
-                                <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
-                                <span class="p-fluid">
-                                    <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="6"
-                                    style="resize: none" class="w-full mt-1 p-inputtext-sm" [readonly]=onlyRead ></textarea>                       
-                                </span>
-                            </div>                   
-                            <div class="sm:col-6 lg:col-12 md:col-3 -mt-4">
-                                <label class="block text-900 font-semibold">Observación</label>                        
-                                <span class="p-fluid">
-                                    <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
-                                    class="w-full p-inputtext-sm" id="observacion" [readonly]=onlyRead></textarea>
-                                </span>
-                            </div>
-                    </div>                
+                    <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-4">                        
+                        <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid">
+                            <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="6"
+                            style="resize: none" class="w-full mt-1 p-inputtext-sm" [readonly]=onlyRead ></textarea>                       
+                        </span>
+                    </div>                   
+                    <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-4">
+                        <label class="block text-900 font-semibold">Observación</label>                        
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
+                            class="w-full p-inputtext-sm" id="observacion" [readonly]=onlyRead></textarea>
+                        </span>
+                    </div>    
                 </form>
             </p-tabPanel>             
 

@@ -13,6 +13,7 @@ import { ComprasService } from '../../Service/compraServices';
 import * as  XLSX  from 'xlsx';
 import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
 import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
+import { CModalPersonaComponent } from '../modalPersona/c-modalpersona.component';
 
 @Component({
   selector: 'app-c-dato-compra',
@@ -24,18 +25,17 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
   visibleDocument: boolean = true;
+  visibleAsiento: boolean = true;
   dataAdjunto: any;
-  registerFormRegistro: any= FormGroup;
-  // verOpor: boolean = false;
-  // verInter: boolean = false;
-  // verVent: boolean = false;
-  // verOtro: boolean = false;
+  dataAsiento: any;
+  registerFormRegistro!: FormGroup;  
+  registerFormCuota!: FormGroup;
   idtipoproyecto: any;
   lstProyectos: any;
   lstCliente: Cliente []=[];
   lstProveedores: Cliente[] = [];
   annio: Date = new Date;
-  submitted = false;
+  //submitted = false;
   headerTitle: string = '';
   registerFormCliente: any = FormGroup;
   registerFormContacto: any= FormGroup;
@@ -73,10 +73,31 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   verImportar: boolean = true;
   onlyRead: boolean = false;
   //verReferencia: boolean = false;
-  verProyecto: boolean = false;
+  verProyecto: boolean = true;
   lstUnidades:any;
   errorMensaje: string = "";
   lstComprobante:any;
+  listaCuotas:any[]=[];
+  lstAsientos:any[]=[];
+  // listaCuotas = [
+  //   { nrocuota: '1', feccuota: '', mtocuota: 1500 }
+  // ];
+  lstCuotas = [
+    { name: '1', code: 1 },
+    { name: '2', code: 2 },
+    { name: '3', code: 3 },
+    { name: '4', code: 4 },
+    { name: '5', code: 5 }
+  ];
+
+  Cuotas:any;
+  cuotaVisible?: boolean;
+  minimaFechaDesde!: Date;
+  maximaFechaDesde: Date = this.serviceUtilitario.obtenerFechaFinMesTotal();
+  minimaFechaHasta!: Date;
+  maximaFechaHasta: Date = this.serviceUtilitario.obtenerFechaFinMesTotal();
+  lstCentroCosto: any;
+  nrocuotas!:number;
 
   constructor(
     private fb: FormBuilder,
@@ -97,6 +118,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.createFrm();
     this.createFormRegistro();
     this.createFormContacto();
+    //this.createFormRegistroInf();
+
     this.listaProyectoTipo();
     this.listaClientes();
     this.listaProveedores();
@@ -104,6 +127,13 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.listarItemsTabla(); 
     this.listarItemsTablaUnidad() ;
     this.listarItemsTablaComprobante() ;
+    this.listarCentroCosto();
+
+    this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
+    this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
+
+    this.registerFormRegistro.get('fecemision')?.setValue(this.serviceUtilitario.obtenerFechaActual());
+    this.registerFormRegistro.get('fecvencimiento')?.setValue(this.serviceUtilitario.obtenerFechaActual());
     
     if (this.idOrdenC > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -123,19 +153,22 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       this.traerUno();
     }else{
       //this.verControles('NOA');
-      this.cargarProyectos(1); 
+      //this.cargarProyectos(4); 
       this.dataAdjunto ={
         idCliente: 0,
         codtipoproc: 8,
         veracciones: 0
       }     
       this.mostrarBotones('NVO');
-      this.servicioGenerico();
-    }   
-  }
+      this.getOrigen('OPO');
+      
 
-  get formRegistro() { return this.registerFormRegistro.controls; }
-  get formContacto() { return this.registerFormContacto.controls; }
+    //   const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), 30);
+    // this.registerFormRegistro.get('fecvencimiento')?.setValue(newDate);
+      //this.servicioGenerico();
+    }   
+    
+  }
 
   createFormContacto() {
     //Agregar validaciones de formulario
@@ -158,7 +191,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       idoportunidad: [{ value: 0, disabled: false }],
       sustentodoc: [{ value: '', disabled: false }],
       idrequerimiento: [{ value: 0, disabled: false }],
-      observacion: [{ value: '', disabled: false }],
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd:[{ value: '', disabled: false }],
@@ -167,11 +199,10 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: '', disabled: false }],
       idmoneda: [{ value: 0, disabled: false }],
-      //idorigen: [{ value: this.IA_data, disabled: false }],
       idcontacto: [{ value: 0, disabled: false }],
-      codtipodoc: [{ value: 'OTR', disabled: false }],
+      codtipodoc: [{ value: 'OPO', disabled: false }],
       tiempoentrega: [{ value: 0, disabled: false }],
-      codformapago: [{ value: 0, disabled: false }],
+      codformapago: [{ value: 118, disabled: false }],
       validezoferta: [{ value: 0, disabled: false }],
       lugarentrega: [{ value: '', disabled: false }],
       garantia: [{ value: 0, disabled: false }],
@@ -189,7 +220,27 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       nroserie_ctb:[{ value: '', disabled: false }],
       nrodocumento_ctb:[{ value: '', disabled: false }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      nrocuotas:[{ value: '', disabled: false }],
+      porc_detraccion:[{ value: null, disabled: false }],
+      s_monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
+      s_monto_detraccion_CTB:[{ value: 0, disabled: false }],
+      s_monto_valor_venta_CTB:[{ value: 0, disabled: false }],
+      s_monto_igv_CTB:[{ value: 0, disabled: false }],
+      s_monto_total_CTB:[{ value: 0, disabled: false }],
+      montoTotal:[{ value: 0, disabled: false }],
+      nrocontrato_ctb:[{ value: null, disabled: false }],
+      nroexpediente_ctb:[{ value: null, disabled: false }],
+      codunidadejecutora_ctb:[{ value: null, disabled: false }],
+      nroprocesoseleccion_ctb:[{ value: null, disabled: false }],
+      observacion: [{ value: '', disabled: false }],
+      nrodias:[{ value: 0, disabled: false }],
+      idordencompra_origen_ctb:[{ value: 0, disabled: false }],
+      monto_pen_pago:[{ value: 0, disabled: false }],
+      idcentrocosto:[{ value: 0, disabled: false }],
+      s_monto_neto_CTB:[{ value: 0, disabled: false }],
     });
+
+    
   }
 
   ngOnDestroy() {
@@ -213,8 +264,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   mostrarBotones(data:any){
     console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
     switch (data) {
-      case 'REG':
-      case 'OBS':
+      case 'PEN':
         this.verbtnGrabar = true;
         this.verbtnPreliminar= true;
         this.verbtnOrden = false;
@@ -227,22 +277,14 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.verbtnOrden = false;
         this.verbtnAcciones = false;
         this.onlyRead = false;
-      break;
-      case 'PRC':
-        this.verbtnGrabar = false;
+      break;      
+      case 'EMT':
+        this.verbtnGrabar = true;
         this.verbtnPreliminar= true;
-        this.verbtnOrden = false;
-        this.verbtnAcciones = true;
-        this.verItems = false;
-        this.onlyRead = true;
-      break;
-      case 'EMI':
-        this.verbtnGrabar = false;
-        this.verbtnPreliminar= false;
         this.verbtnOrden = true;
         this.verbtnAcciones = true;
-        this.verItems = false;
-        this.onlyRead = true;
+        this.verItems = true;
+        this.onlyRead = false;
       break;
       case 'ANU':
         this.verbtnGrabar = false;
@@ -250,7 +292,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.verbtnOrden = true;
         this.verbtnAcciones = false;
         this.verItems = false;
-        this.onlyRead = true;
+        this.onlyRead = false;
       break;
       case 'ELI':
         this.verbtnGrabar = false;
@@ -258,9 +300,9 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.verbtnOrden = false;
         this.verbtnAcciones = false;
         this.verItems = false;
-        this.onlyRead = true;
+        this.onlyRead = false;
       break;
-      case 'REC':
+      case 'PAG':
         this.verbtnGrabar = false;
         this.verbtnPreliminar= true;
         this.verbtnOrden = false;
@@ -296,7 +338,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (rpta:any) => {
           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-            this.setSpinner(false);
             this.ordenCompra = rpta.ordencompra[0];     
             //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
             if (rpta.ordencompra[0].items !== undefined) {
@@ -304,16 +345,27 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             }  
             if (rpta.ordencompra[0].quotes !== undefined) {
               this.lstQuotes =  rpta.ordencompra[0].quotes; 
-            }    
-                         
-          this.visibleDocument = false;
+            } 
+            if (rpta.ordencompra[0].cuotas !== undefined) {
+              this.listaCuotas =  rpta.ordencompra[0].cuotas; 
+            }   
+
+            this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
+          this.visibleDocument = false; 
+          this.visibleAsiento = false;
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-          this.registerFormRegistro.get('tipodoc_ctb').setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
+          this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
           //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
-          //this.cargarMenu(rpta.ordencompra[0].acciones);
-          this.mostrarBotones(rpta.ordencompra[0].estado);       
-         
+          this.montoTotal = rpta.ordencompra[0].s_monto_total;
+          this.mostrarBotones(rpta.ordencompra[0].estado); 
+          this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);     
+          this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
+          this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
+          this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
+          this.nrocuotas = rpta.ordencompra[0].nrocuotas
+          
+          this.setSpinner(false);
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -336,13 +388,35 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           return;
       }
 
+      if (this.listaCuotas.length > 0) {
+        for (let i = 0; i < this.listaCuotas.length; i++) {
+          this.listaCuotas[i].nrocuota = i + 1;
+          if (this.listaCuotas[i].monto === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'El monto de la cuota debe ser mayor que cero...' });
+          return;
+          }
+        }
+      }
+
     this.setSpinner(true);
     this.mensajeSpinner = 'Guardando...!';
     let fechaingreso;
+    let fecemision;
+    let fecvencimiento;
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
+    fecemision = this.registerFormRegistro.value.fecemision;
+    fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
 
     if (this.idOrdenC > 0) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));      
+      if (fechaingreso.toString().length === 10) {
+        fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
+      }
+      if (fecemision.toString().length === 10) {
+        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
+      } 
+      if (fecvencimiento.toString().length === 10) {
+        fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));    
+      }         
     }
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
@@ -358,7 +432,11 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
       fechaingreso,
-      tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString()
+      fecemision,
+      fecvencimiento,
+      tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
+      cuotas: this.listaCuotas,
+      nrocuotas: this.nrocuotas 
     }
 
     console.log('guardarOC...', objeto);
@@ -368,20 +446,40 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.setSpinner(false);
         if (rpta.procesoSwitch === 0){
           this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+          
           if (this.idOrdenC === 0) {
             this.idOrdenC = rpta.resultProceso;  
-            this.registerFormRegistro.get('idordencompra').setValue(rpta.resultProceso);
-            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);            
+            this.registerFormRegistro.get('idordencompra')?.setValue(rpta.resultProceso);
+            this.registerFormRegistro.get('codigonroorden')?.setValue(rpta.resultProceso);            
            
             this.dataAdjunto ={
               idCliente: this.idOrdenC,
               codtipoproc: 8,
               veracciones: 0
             }   
-            this.verAdjunto = true;   
+            this.verAdjunto = true;  
+
+            //agregar una cuota por defecto
+            this.traerUno2();             
+            
+            //preguntar si desea emitir el documento con una cuota
+            this.confirmationService.confirm({
+              key: 'confirm1',
+              header: 'Confirmación',
+              message:  '¿Desea Emitir el Documento con una Cuota...?' ,
+              accept: () => {
+                this.guardarOC();
+                this.procesarTRX();
+                }
+            });
+
+          }else{
+            this.traerUno();
           }
+          
          
         this.visibleDocument = false;
+        this.visibleAsiento = false;
         }else{
         this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
         }
@@ -400,6 +498,92 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   });
   }
 
+  traerUno2(){
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Cargando...!';
+    const objeto ={
+      idordencompra: this.idOrdenC,
+      idusuario: constantesLocalStorage.idusuario
+    }
+
+    const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+            this.ordenCompra = rpta.ordencompra[0];     
+            //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
+            if (rpta.ordencompra[0].items !== undefined) {
+              this.lstItemOC = rpta.ordencompra[0].items;
+            }  
+            if (rpta.ordencompra[0].quotes !== undefined) {
+              this.lstQuotes =  rpta.ordencompra[0].quotes; 
+            } 
+            if (rpta.ordencompra[0].cuotas !== undefined) {
+              this.listaCuotas =  rpta.ordencompra[0].cuotas; 
+            }   
+
+            this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
+          this.visibleDocument = false; 
+          this.visibleAsiento = false;
+
+          this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
+          //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
+          this.montoTotal = rpta.ordencompra[0].s_monto_total;
+          this.mostrarBotones(rpta.ordencompra[0].estado); 
+          this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);     
+          this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
+          this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
+          this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
+          this.nrocuotas = rpta.ordencompra[0].nrocuotas
+          //agregar cuotas
+          this.prcCuota2(1);
+          
+          this.setSpinner(false);
+        },
+        error:(err)=>{
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+          this.setSpinner(false);
+          
+        }
+      });
+    this.$listSubcription.push($cargarOrdenC)
+  }
+
+  procesarTRX() { 
+    const objeto = {
+        idtrx: 134,
+        idusuario: constantesLocalStorage.idusuario,
+        descripcion: 'ok',
+        iddocumentoprc: this.idOrdenC,
+    }
+
+    const $procesarTrx = this.ordencompraService.procesarTrx(objeto).subscribe({
+        next: (rpta: any) => {
+            console.log('prcReunion', rpta);
+            if (rpta.procesoSwitch === 0) {
+                console.log('entro procesoSwitch....');
+                this.onlyRead = true;
+            }
+
+            this.serviceSharedApp.messageToast({
+                severity: rpta.procesoSwitch === "0" ? 'success' : 'info',
+                summary: rpta.procesoSwitch === "0" ? 'Exito' : 'Validación...!',
+                detail: rpta.mensaje
+            });
+        },
+        error: (err) => {
+            console.error('error : ', err);
+            this.serviceSharedApp.messageToast();
+        },
+        complete: () => {},
+    });
+    this.$listSubcription.push($procesarTrx)
+}
+
   servicioGenerico(){
     //this.registerFormRegistro.get('condicionescomerciales').setValue(''); 
     
@@ -407,7 +591,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       next: (rpta: any) => {
 
         let _condicionescomerciales = rpta.filter((x: { iditem: number; }) => x.iditem === 135);
-        this.registerFormRegistro.get('condicionescomerciales').setValue(_condicionescomerciales[0].valoritem);
+        //this.registerFormRegistro.get('condicionescomerciales').setValue(_condicionescomerciales[0].valoritem);
       },
       error: (err) => {
       console.info('error : ', err);
@@ -419,7 +603,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   }
 
   listarItemsTabla() {
-    this.comprasService.obtenerItemsTabla(104).subscribe({
+    this.comprasService.obtenerItemsTabla(114).subscribe({
         next: (rpta: any) => {
           console.info('listarItemsTabla : ', rpta);
             this.lstTermino = rpta;
@@ -525,6 +709,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   }
    
   getOrigen(data:any){
+    console.log('getOrigen...', data);
+    this.registerFormRegistro.get('idcentrocosto')?.setValue('');
     switch (data) {
       case 'OPO':
         this.cargarProyectos(1);
@@ -532,14 +718,14 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.verProyecto = true;
         break;
       case 'REQ':
-        this.cargarProyectos(2);
+        this.cargarProyectos(4);
         //this.verReferencia = true;
         this.verProyecto = true;
         break;        
       case 'OTR':
-        //this.cargarProyectos(2);
+        this.cargarProyectos(4);
         //this.verReferencia = false;
-        this.verProyecto = false;
+        this.verProyecto = true;
         break;
       // case 'VED':
       //   this.cargarProyectos(3);
@@ -554,6 +740,28 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
 
   }
 
+  NuevoPersona(){
+    const objet = {
+      idrolpersona:'CLI'
+          }
+    const refItem = this.dialogService.open(CModalPersonaComponent, {
+      data: objet,
+      header: "Agregar Proveedor",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      
+      console.log('onClose',rpta);
+      if (rpta != undefined) {
+        this.listaProveedores();
+        this.registerFormRegistro.get('nrodocumento')?.setValue(parseInt(rpta.objeto.nrodocumento));
+        this.registerFormRegistro.get('idproveedor')?.setValue(parseInt(rpta.objeto.idpersona));          
+      }
+    });
+  }
+
   getItem(data: any,index: number) {
     data.nroindex = index;
     data.idordencompra = this.idOrdenC;
@@ -561,7 +769,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     console.log('CItemOrdenesComponent', data);
     const refItem = this.dialogService.open(CItemOrdenesComponent, {
       data: data,
-      header: data.length == 0 ? "Agregar Producto" : "Editar Producto - " + data.idordencompraitem,
+      header: data.length == 0 ? "Agregar Detalle" : "Editar Detalle - " + data.idordencompraitem,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '40%'
@@ -582,14 +790,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     });
   }
 
-  // calcularTotales() {
-  //   let totalpreventot = 0;    
-  //   for (let lstCotiza of this.lstItemOC) {
-  //       totalpreventot = totalpreventot + lstCotiza.preciocostototal;
-  //   }    
-  //   this.montoTotal = totalpreventot;
-  // }
-
   eliminarItem(data: any) {
     this.confirmationService.confirm({
       key: 'confirm1',
@@ -607,35 +807,9 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           this.lstItemOC.splice(_posAll, 1)
           }
       }
-      //this.calcularTotales();
+      this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
       }
   });
-  }
-
-  getContactos(dato: any) {  
-
-    const _nrodoc:string=this.lstProveedores.filter(x=>x.idcliente === dato)[0].nrodocumento.toString();
-    this.registerFormRegistro.get('nrodocumento')?.setValue(_nrodoc)
-
-    const $personaProveedorlist = this.comprasService.ListaContactos(dato).subscribe({
-        next: (rpta: any) => {
-            this.setSpinner(false);
-            console.info('next : ', rpta);
-            this.lstContacto = rpta;
-        },
-        error: (err) => {
-            this.setSpinner(false);
-            console.info('error : ', err);
-            this.messageService.clear();
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: mensajesQuestion.msgErrorGenerico,
-            });
-        },
-        complete: () => {},
-    });
-    this.$listSubcription.push($personaProveedorlist);
   }
 
   ReadExcel(event: any, fubauto: any){
@@ -713,6 +887,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.ordencompraService.portipoProyectoList(dato).subscribe({
       next: (rpta: any) => {
       this.lstProyectos = rpta;
+      console.log('cargarProyectos...',this.lstProyectos);
+      this.changeProyecto(this.registerFormRegistro.value.idproyecto)
 
           },
 
@@ -727,10 +903,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       complete: () => {
       },
   });
-  }
-
-
- 
+  } 
 
   vistaPreliminar(){
     this.setSpinner(true);
@@ -739,16 +912,17 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     const objeto = {
       idusuario : constantesLocalStorage.idusuario,
       iddocumentoprc: this.idOrdenC,
-      codtipoprc: 8
+      codtipoprc: 7,
+      idplantilla: 0
     }
 
-    const $cargarOrdenC = this.ordencompraService.prcDocumento(objeto).subscribe({
+    const $cargarOrdenC = this.ordencompraService.prcDocumentoDet(objeto).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);      
         
         const mediaType = 'application/pdf';
           const blob = new Blob([rpta.body], { type: mediaType });
-          const filename = this.idOrdenC + '-OC';
+          const filename = 'DET_FACT_COMPRA_' + this.registerFormRegistro.value.nrofactura;
   
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
@@ -778,79 +952,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       },
     });
     this.$listSubcription.push($cargarOrdenC)
-  }
-
-  // getQuotes(dato: any){
-  //   let objeto = {
-  //     idcotiza: dato.idcotiza,
-  //     indseleccion: dato.indseleccion
-  //   }
-  //   if (dato.indseleccion) {
-  //     this.lstQuotes.push(objeto);
-  //   }else{
-  //     const _posAll: number = this.lstQuotes.findIndex(((x: { idcotiza: any; }) => x.idcotiza == dato.idcotiza))
-  //         if (_posAll != -1) {
-  //         this.lstQuotes.splice(_posAll, 1)
-  //       }
-  //   }    
-  // }
-
-  AgregarContacto(){
-    if (this.registerFormRegistro.get('idproveedor').value === null) {
-      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Debe Seleccionar un Proveedor...' });
-
-      return;
-    }
-    this.submitted = false;
-    this.registerFormContacto.patchValue({
-      nombrecontacto: '',
-      email: '',
-      telefono: '',
-      cargo: ''
-    });
-    this.contactoVisible = true;
-  }
-
-  guardarContacto(){
-    console.log('guardarContacto', this.registerFormContacto.value);
-    this.submitted = true;
-        // deténgase aquí si el formulario no es válido
-        if (this.registerFormContacto.invalid) {
-            return;
-        }
-        //Verdadero si todos los campos están llenos
-        if(this.submitted)
-        {
-          const objeto = {
-            ...this.registerFormContacto.getRawValue(),
-            idcontacto: 0,
-            idpersona: this.registerFormRegistro.get('idproveedor').value ,
-        }
-        console.log('objeto', objeto);
-
-        this.ordencompraService.altaContacto(objeto)
-            .subscribe({
-            next: (rpta:any) => {
-                console.log("rpta updateContacto : ", rpta);
-                if (rpta.procesoSwitch === 0){
-                  this.contactoVisible = false;
-                    this.messageService.add({severity: 'success', detail: "Operación exitosa" }); 
-                    this.getContactos(this.registerFormRegistro.get('idproveedor').value);                     
-                    }
-            },
-            error:(err)=>{
-                console.error('error : ',err)
-                this.messageService.clear();
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: mensajesQuestion.msgErrorGenerico
-                })
-            },
-            complete:() => {}
-            });
-
-        }
   }
 
   importarPlantilla(){
@@ -908,7 +1009,13 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-    if (this.registerFormRegistro.value.nrodocumento === null ||this.registerFormRegistro.value.nrodocumento ==='' )
+    if (this.registerFormRegistro.value.idproyecto === '' || this.registerFormRegistro.value.idproyecto === null)
+      {
+          this.errorMensaje="Seleccionar Centro de Costos...!";
+          _error = true;
+      }
+
+    if (!_error && (this.registerFormRegistro.value.nrodocumento === null ||this.registerFormRegistro.value.nrodocumento ==='' ))
     {
         this.errorMensaje="Ingresar RUC...!";
         _error = true;
@@ -938,24 +1045,53 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
+      if (!_error && (this.registerFormRegistro.value.codformapago === '' || this.registerFormRegistro.value.codformapago === null))
+        {
+            this.errorMensaje="Ingresar Forma de Pago...!";
+            _error = true;
+        }
+
+        if (!_error && (this.registerFormRegistro.value.porc_detraccion === '' || this.registerFormRegistro.value.porc_detraccion === null))
+          {
+              this.errorMensaje="Ingresar % Detracción...!";
+              _error = true;
+          }
+
     if (!_error && this.registerFormRegistro.value.idmoneda === null)
     {
           this.errorMensaje="Seleccionar Moneda...!";
           _error = true;
     }
 
-    if (!_error && (this.registerFormRegistro.value.tc === null || this.registerFormRegistro.value.tc === ''))
-    {
-          this.errorMensaje="Ingresar Tipo Cambio...!";
-          _error = true;
-    }
+    if (!_error && (this.registerFormRegistro.value.tc === null || this.registerFormRegistro.value.tc === ''|| this.registerFormRegistro.value.tc === 0))
+      {
+            this.errorMensaje="Ingresar Tipo Cambio...!";
+            _error = true;
+      }
 
-    // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
-    // {
-    //     this.errorMensaje="Ingresar Condiciones Comerciales...!";
-    //     _error = true;
-    // }
-      return _error;
+   
+
+      if (!_error && (this.registerFormRegistro.value.porc_detraccion === null 
+        || this.registerFormRegistro.value.porc_detraccion === ''
+        || this.registerFormRegistro.value.porc_detraccion === 0))
+        {
+              this.errorMensaje="Ingresar Porcentaje Detracción...!";
+              _error = true;
+        }
+
+      if (this.idOrdenC > 0) {
+        let total = this.listaCuotas.map(({monto}) => monto).reduce((acc, value) => acc + value, 0);
+        console.log('total', total);
+        console.log('monto_pen_pago', this.registerFormRegistro.value.monto_pen_pago);
+        if (total > this.registerFormRegistro.value.monto_pen_pago) {
+          
+              this.errorMensaje="El Monto de cuotas no debe exceder el Monto Neto Pago...!";
+                  _error = true;
+        }
+      }
+    
+
+    return _error;
     }
 
   getBusquedaRUC(){
@@ -983,6 +1119,10 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       next: (rpta: any) => {
         this.setSpinner(false);
         console.log('rpta...', rpta); 
+        if(rpta.length === 0){
+          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Proveedor no encontrado...' });
+          return;
+        }
         this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
       },
       error: (err) => {
@@ -1013,4 +1153,251 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         },
     });    
   }
+
+  prcCuota(data:number)  {
+    console.log('prcCuota...', data);
+    if (this.registerFormRegistro.value.monto_pen_pago === 0) {
+      this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Aún no existe Monto de Pago para agregar cuotas'});
+      //this.registerFormRegistro.get('nrocuotas')?.setValue('');
+      this.nrocuotas = 0;
+          return;
+    }
+    this.nrocuotas = data;
+    this.listaCuotas=[];
+  const _monto = this.registerFormRegistro.value.monto_pen_pago/data;
+  console.log('_monto...', _monto);
+  let tot_dia = 30
+   for(let i = 0; i < data; i++) {
+    console.log('index...', i);
+    if (i === 0) {
+      tot_dia = this.registerFormRegistro.value.nrodias
+    }
+    
+    const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), tot_dia );
+      
+    const objet = {
+      fechacuota: newDate,
+      monto: _monto,
+      idcuotadoc:0
+    }
+    tot_dia = tot_dia + 30;
+    this.listaCuotas.push(objet);
+   }
+
+   
+
+    // 
+    // let _monto = 0;
+
+    // let total = this.listaCuotas.map(({monto}) => monto).reduce((acc, value) => acc + value, 0);
+    // console.log('total', total);
+    // if (total > this.registerFormRegistro.value.monto_pen_pago) {
+    //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'El Monto de cuotas no debe exceder el Monto Neto Pago'});
+    //       return;
+    // }
+
+    // if (this.listaCuotas.length === 0) {
+    //   _monto = this.registerFormRegistro.value.monto_pen_pago
+    // }else{
+    //   _monto = this.registerFormRegistro.value.monto_pen_pago - total
+    // }
+
+    // const objet = {
+    //   fechacuota: newDate,
+    //   monto: _monto,
+    //   idcuotadoc:0
+    // }
+    // this.listaCuotas.push(objet);
+  }
+
+  prcCuota2(data:number)  {    
+    this.nrocuotas = data;
+    this.listaCuotas=[];
+    const _monto = this.registerFormRegistro.value.monto_pen_pago/data;
+    console.log('_monto...', _monto);
+    let tot_dia = this.registerFormRegistro.value.nrodias
+
+    const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), tot_dia );
+    const objet = {
+      fechacuota: newDate,
+      monto: _monto,
+      idcuotadoc:0
+    }  
+    this.listaCuotas.push(objet);
+  }
+  
+
+  eliminarCuota(data:any, index :number)  {
+    console.log('index', index);
+    this.listaCuotas.splice(index, 1)
+  }
+
+  editarRegistro(data: any) {
+    this.mensajeSpinner = "Actualizando...";
+    console.log('editarRegistro...', data);  
+  }
+
+  changeFechaDesde(event: Date) {
+    console.log('this.registerFormRegistro.value.fecvencimiento', new Date(this.registerFormRegistro.value.fecvencimiento));
+    console.log('this.registerFormRegistro.value.fecemision', this.registerFormRegistro.value.fecemision);
+
+    this.minimaFechaHasta = event;
+    let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
+    let vencimiento = new Date(this.registerFormRegistro.get('fecvencimiento')?.value);
+    console.log('emision', emision);
+    console.log('vencimiento', vencimiento);
+    let inicio = emision.getTime();
+    let fin = vencimiento.getTime();
+    // console.log('inicio', inicio);
+    // console.log('fin', fin);
+    var diff = fin - inicio;
+    console.log('nro dias', diff/(1000*60*60*24));
+    console.log('changeFechaDesde diff', diff);
+    let numerDiff = diff/(1000*60*60*24);
+    this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
+    //console.log('diff/(1000*60*60*24)', diff/(1000*60*60*24));
+  }
+
+  changeFechaHasta(event: Date) {
+    // console.log('this.registerFormRegistro.value.fecvencimiento', this.registerFormRegistro.value.fecvencimiento.getTime());
+    // console.log('this.registerFormRegistro.value.fecemision', this.registerFormRegistro.value.fecemision.getTime());
+    this.maximaFechaDesde = event;
+    let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
+    let vencimiento = new Date(this.registerFormRegistro.get('fecvencimiento')?.value);
+    console.log('emision', emision, 'vencimiento', vencimiento);
+    let inicio = emision.getTime();
+    let fin = vencimiento.getTime();
+    console.log('inicio', inicio/(1000*60*60*24));
+    console.log('fin', fin/(1000*60*60*24));
+    // console.log('inicio', inicio);
+    // console.log('fin', fin);
+
+    let inicio_ = Math.round(inicio/(1000*60*60*24));
+    let fin_ = Math.round(fin/(1000*60*60*24));
+
+
+    var diff = inicio - fin;
+    console.log('nro dias', diff/(1000*60*60*24));
+    console.log('changeFechaHasta diff', diff);
+    let numerDiff = Math.round(diff/(1000*60*60*24));
+    this.registerFormRegistro.get('nrodias')?.setValue(numerDiff);
+    //console.log('diff/(1000*60*60*24)', diff/(1000*60*60*24));
+  }
+
+  addDays(date: Date, days: number): Date {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+
+  addDiasFec(){
+    let fecha = this.addDays(this.registerFormRegistro.value.fecemision, parseInt(this.registerFormRegistro.value.nrodias));
+    this.registerFormRegistro.get('fecvencimiento')?.setValue( fecha );
+  }
+
+
+  setearDias(ven:any, emi:any){
+    let  vencimiento = new Date(this.serviceUtilitario.formatFecha(ven));
+    let  emision = new Date(this.serviceUtilitario.formatFecha(emi));
+    let diff= 0;
+    
+    if (emision.getTime() > vencimiento.getTime()) {
+      diff = emision.getTime() - vencimiento.getTime()
+    }else{
+      diff = vencimiento.getTime() - emision.getTime()
+    }
+
+    console.log('nro dias', diff/(1000*60*60*24));
+    console.log('changeFechaHasta diff', diff);
+    let numerDiff = diff/(1000*60*60*24);
+    this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
+
+    //this.registerFormRegistro.get('nrodias')?.setValue( diff/(1000*60*60*24) );
+  }
+
+  listarCentroCosto(){    
+    this.setSpinner(true);
+      this.mensajeSpinner = 'Cargando...!';
+
+    const $getListarOrdenCompra = this.comprasService.listarCentroCosto()
+      .subscribe({
+        next: (rpta:any) => {
+            this.lstCentroCosto = rpta;
+            console.log('listarCentroCosto...', this.lstCentroCosto);
+            this.setSpinner(false);
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+            this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($getListarOrdenCompra)
+  }
+
+  changeProyecto(value:any){
+    console.log('changeProyecto...', value);
+    console.log('this.lstProyectos...', this.lstProyectos);
+    let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
+    console.log('_codcentrocosto...', _codcentrocosto);
+    this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
+  }
+  
+  recalcularRegistro(dato:any){
+    
+
+    console.log('recalcularRegistro...', dato);
+    if (this.idOrdenC > 0) {
+      this.setSpinner(true);
+    this.mensajeSpinner = 'Recalculando...!';
+      let subtotal = this.lstItemOC.map(({preciocostototal}) => preciocostototal).reduce((acc, value) => acc + value, 0);
+
+      const objeto = {
+        subtotal: subtotal,
+        porc_detraccion : dato,
+        tc : this.registerFormRegistro.get('tc')?.value,
+        idmoneda : this.registerFormRegistro.get('idmoneda')?.value,
+        nrocuotas : this.registerFormRegistro.get('nrocuotas')?.value,
+        nrodias : this.registerFormRegistro.get('nrodias')?.value,
+      }
+      const $recalcularRegistro = this.comprasService.recalcularRegistro(objeto)
+      .subscribe({
+        next: (rpta:any) => {
+            console.log('recalcularRegistro...', rpta);
+            this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(rpta[0].s_monto_valor_venta_CTB);
+            this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(rpta[0].s_monto_igv_CTB);
+            this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(rpta[0].s_monto_total_CTB);
+            this.registerFormRegistro.get('s_monto_detraccion_mn_CTB')?.setValue(rpta[0].s_monto_detraccion_mn_CTB);
+            this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta[0].s_monto_neto_CTB);
+
+            this.listaCuotas=[];
+
+            const lista = rpta[0].cuotas
+            
+            for(let i = 0; i < lista; i++) {                  
+              const objet = {
+                fechacuota: new Date(lista[i].fechacuota),
+                monto: lista[i].monto,
+                idcuotadoc:0
+              }
+              this.listaCuotas.push(objet);
+            }
+
+            this.listaCuotas =  rpta[0].cuotas; 
+            this.setSpinner(false);
+        },
+        error:(err)=>{
+          this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+            this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($recalcularRegistro)
+    }
+  }
+
 }

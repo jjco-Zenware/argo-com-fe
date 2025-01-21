@@ -59,4 +59,70 @@ export class TesoreriaService {
         const url = `${constantesApiWeb.almacenTraeruno}${codigo}`;
         return this.http.get<any>(url);
     }
+
+    prcBanco(objeto: any) {
+        const url = `${constantesApiWeb.prcBanco}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    listarBanco() {
+        const url = `${constantesApiWeb.listarBanco}`;
+        return this.http.get<any>(url)
+    }
+
+    traerunoBanco(codigo: any) {
+        const url = `${constantesApiWeb.traerunoBanco}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    prcProgramacion(objeto: any) {
+        const url = `${constantesApiWeb.prcProgramacion}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    listarProgramacion(objeto: any) {
+        const url = `${constantesApiWeb.listarProgramacion}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    prcProgramacionDet(objeto: any) {
+        const url = `${constantesApiWeb.prcProgramacionDet}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    traerunoprcProgramacion(codigo: any) {
+        const url = `${constantesApiWeb.traerunoprcProgramacion}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    listarCentroCosto() {
+        const url = `${constantesApiWeb.listarCentroCosto}`;
+        return this.http.get<any>(url)
+    }
+
+    prcCentroCosto(objeto: any) {
+        const url = `${constantesApiWeb.prcCentroCosto}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    eliminarCentroCosto(codigo: any) {
+        const url = `${constantesApiWeb.eliminarCentroCosto}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    prcPagoDocumento(objeto: any) {
+        console.log("prcPagoDocumento : ", objeto);
+        const url = `${constantesApiWeb.prcPagoDocumento}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    listPagoDocumento(codigo: any) {
+        const url = `${constantesApiWeb.listPagoDocumento}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    traerunoPagoDocumento(codigo: any) {
+        const url = `${constantesApiWeb.traerunoPagoDocumento}${codigo}`;
+        return this.http.get<any>(url);
+    }
 }

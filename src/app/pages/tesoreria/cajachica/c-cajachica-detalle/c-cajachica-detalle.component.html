@@ -1,0 +1,83 @@
+<div class="p-fluid mt-1">
+    <div *ngIf="verbtnGrabar"  class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardar()"></button>
+    </div>
+    <div class="card p-2"  >
+        <p-tabView >
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-building"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Datos Generales
+                        </span>
+                    </div>
+                </ng-template>
+                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border" >                    
+                    <div class="p-fluid grid  col-12  lg:col-6 md:col-12 sm:col-12 p-2 m-2">                            
+                        <div class="col-12 lg:col-4 md:col-12">
+                            <label class="block text-900 font-semibold mb-1">Código </label>
+                            <span >
+                                <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="idcaja"/>
+                            </span>
+                        </div>    
+                        <div class="col-12 lg:col-8 md:col-12">
+                            <label class="block text-900 font-semibold mb-1">Persona<span class="text-red-500 font-bold"> * </span></label>
+                            <span >
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="nomusuario"/>
+                            </span>
+                        </div>                      
+
+                        
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">                            
+                            <label class="block text-900 font-semibold mb-1">Tipo Doc<span class="text-red-500 font-bold"> * </span></label>                            
+                            <span>
+                                <p-dropdown [options]="lstTipoDocumento" placeholder="Seleccionar..."  formControlName="tipodoc" 
+                                optionLabel="name" optionValue="code" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                            </span>
+                        </div> 
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">
+                            <label class="block text-900 font-semibold mb-1">N° Documento <span class="text-red-500 font-bold"> * </span></label>
+                            <span >
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="nrodoc" maxlength="11"
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                            </span>
+                        </div>  
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">
+                            <label class="block text-900 font-semibold mb-1">Proveedor<span class="text-red-500 font-bold"> * </span></label>
+                            <span >
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="razonsocial" />
+                            </span>
+                        </div> 
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">
+                            <label class="block text-900 font-semibold mb-1">Monto</label>
+                            <span >
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="monto" [readonly]=onlyRead/>
+                            </span>
+                        </div>  
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">
+                            <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                                optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            </span>                                      
+                        </div> 
+                        <div class="col-12 lg:col-12 md:col-12 -mt-3">
+                            <label class="block text-900 font-semibold mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
+                            <span >
+                                <textarea type="text" pInputTextarea [rows]="3" formControlName="motivo" style="resize: none" class="w-full" id="observacion"
+                                [readonly]=onlyRead class="p-inputtext-sm"></textarea>
+                            </span>
+                        </div> 
+                        
+                    </div>                
+                </form>
+            </p-tabPanel>   
+        </p-tabView> 
+    </div>
+   
+
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-toast></p-toast>

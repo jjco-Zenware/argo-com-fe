@@ -1,20 +1,19 @@
 <div class="p-fluid mt-1">
-    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
-        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardarOC()"></button>
-        <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
+    <div *ngIf="verbtnGrabar"  class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardar()"></button>
     </div>
-    <div class="card p-2">
-        <p-tabView [(activeIndex)]="activeIndex">
+    <div class="card p-2"  >
+        <p-tabView >
             <p-tabPanel>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-building"></i>
                         <span class="font-bold white-space-nowrap m-0">
-                            Datos
+                            Datos Generales
                         </span>
                     </div>
                 </ng-template>
-                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border">                    
+                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border" >                    
                     <div class="p-fluid grid  col-12  lg:col-6 md:col-12 sm:col-12 p-2 m-2">                            
                         <div class="col-12 lg:col-4 md:col-12">
                             <label class="block text-900 font-semibold mb-1">Código </label>
@@ -23,91 +22,62 @@
                             </span>
                         </div>    
                         <div class="col-12 lg:col-8 md:col-12">
-                            <label class="block text-900 font-semibold mb-1">Banco </label>
+                            <label class="block text-900 font-semibold mb-1">Banco<span class="text-red-500 font-bold"> * </span></label>
                             <span >
-                                <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="nombanco"/>
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="razonsocial"/>
                             </span>
                         </div>                      
 
-                        <div class="col-12 lg:col-4 md:col-12 ">                            
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">                            
                             <label class="block text-900 font-semibold mb-1">Tipo Banco<span class="text-red-500 font-bold"> * </span></label>                            
                             <span>
-                                <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
-                                optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                                <p-dropdown [options]="lstTipoBanco" placeholder="Seleccionar..."  formControlName="tipobanco" 
+                                optionLabel="valoritem" optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
                             </span>
                         </div> 
-                        <div class="col-12 lg:col-4 md:col-12">                            
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">                            
                             <label class="block text-900 font-semibold mb-1">Tipo Doc<span class="text-red-500 font-bold"> * </span></label>                            
                             <span>
-                                <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
-                                optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                                <p-dropdown [options]="lstTipoDocumento" placeholder="Seleccionar..."  formControlName="idtipodoc_banco" 
+                                optionLabel="name" optionValue="code" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
                             </span>
                         </div> 
-                        <div class="col-12 lg:col-4 md:col-12">
-                            <label class="block text-900 font-semibold mb-1">N° Documento </label>
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">
+                            <label class="block text-900 font-semibold mb-1">N° Documento <span class="text-red-500 font-bold"> * </span></label>
                             <span >
-                                <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="nombanco"/>
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="nrodoc" maxlength="11"
+                                oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
                             </span>
-                        </div>   
-                        <div class="col-12 lg:col-4 md:col-12 ">
+                        </div>  
+                        <div class="col-12 lg:col-6 md:col-12 -mt-3">
+                            <label class="block text-900 font-semibold mb-1">Cuenta Contable <span class="text-red-500 font-bold"> * </span></label>
+                            <span >
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="codctactble" [readonly]=onlyRead/>
+                            </span>
+                        </div> 
+                        <div class="col-12 lg:col-6 md:col-12"></div> 
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">
                             <label class="block text-900 font-semibold mb-1">Código BCR </label>
                             <span >
-                                <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="nombanco"/>
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="codigobcr" [readonly]=onlyRead/>
                             </span>
                         </div>  
-                        <div class="col-12 lg:col-4 md:col-12 ">
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">
                             <label class="block text-900 font-semibold mb-1">Código SUNAT </label>
                             <span >
-                                <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="nombanco"/>
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="codbancosunat" [readonly]=onlyRead/>
                             </span>
                         </div>  
-                        <div class="col-12 lg:col-4 md:col-12 ">
+                        <div class="col-12 lg:col-4 md:col-12 -mt-3">
                             <label class="block text-900 font-semibold mb-1">Código SBS </label>
                             <span >
-                                <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="nombanco"/>
+                                <input pInputText type="text" class="p-inputtext-sm" formControlName="codbancosbs" [readonly]=onlyRead/>
                             </span>
                         </div>  
+                        
                     </div>                
                 </form>
-            </p-tabPanel>             
-
-            <p-tabPanel>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-list"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Cuenta Contable
-                        </span>
-                    </div>
-                </ng-template>
-                <div *ngIf="verItems" class="flex mt-3 ml-2 gap-2">
-                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
-                </div>
-                <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [(selection)]="selectedItems" [scrollable]="true"  styleClass="p-datatable-sm">
-                    <ng-template pTemplate="header">
-                        <tr class="text-sm">
-                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th class="surface-200">CÓDIGO</th>
-                            <th class="surface-200">DESCRIPCIÓN</th>
-                            <th class="surface-200">ACCIONES</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                        <tr class="text-sm">
-                            <td>{{rowIndex + 1}}</td>
-                            <td>{{ product.codproducto }}</td>
-                            <td>{{ product.descripcion | uppercase}}</td>
-                            <td>
-                                <div *ngIf="verItems">
-                                    <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
-                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-table>                
-            </p-tabPanel>                  
+            </p-tabPanel>   
         </p-tabView> 
     </div>
    
@@ -115,3 +85,4 @@
 </div>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-toast></p-toast>

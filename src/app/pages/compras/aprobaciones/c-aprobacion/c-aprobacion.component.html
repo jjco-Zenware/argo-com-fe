@@ -2,39 +2,38 @@
     <div class="card m-4">
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">                                   
-                <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                <div class="mb-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center gap-2">
+                    <i class="fa-solid fa-check text-xl"></i>
                     <span class="text-base font-semibold">APROBACIONES</span>
                 </div>           
             </div>
         </div>
 
-        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
-            <div class="p-fluid p-formgrid grid col-9 text-sm -ml-6">
-                <div class="col-12 md:col-6 sm:col-4 lg:col-2 -mt-4">
-                    <label class="font-semibold text-blue-600">FECHA INICIO</label>
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-9 text-sm p-0">
+                <div class="col-5 md:col-6 sm:col-4 lg:col-2 ">
+                    <label class="font-semibold text-blue-600 text-base">Desde</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
                     </p-calendar>
                 </div>
-                <div class="col-12 md:col-6 sm:col-4 lg:col-2 -mt-4">
-                    <label class="font-semibold text-blue-600">FECHA FIN</label>
+                <div class="col-5 md:col-6 sm:col-4 lg:col-2">
+                    <label class="font-semibold text-blue-600 text-base">Hasta</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
                 </div>
-                <div class="col-12 field col-12 md:col-2 -mt-3 gap-2">
+                <div class="col-2 field md:col-2 gap-2 mt-2">
                     <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                        class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
+                        class="font-semibold mt-2 justify-content-center h-2.6rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
                     <button pButton type="button" (click)="getExportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom" 
                         class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
                 </div>
-            </div>
         </form>       
 
         <p-tabView (onChange)="selectHeaders($event);">
             <p-tabPanel>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
-                        <i class="pi pi-cog"></i>
+                        <i class="fa-brands fa-readme text-xl"></i>
                         <span class="font-bold white-space-nowrap m-0">
                             Pendientes 
                         </span>
@@ -209,7 +208,7 @@
             <p-tabPanel>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
-                        <i class="pi pi-check"></i>
+                        <i class="fa-solid fa-check text-xl"></i>
                         <span class="font-bold white-space-nowrap m-0">
                             Aprobadas 
                         </span>
@@ -396,7 +395,7 @@
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar a Bandeja" tooltipPosition="left" (click)="getBack()" ></button>                    
                 </div>
-                <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                <div class="mb-1  surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">{{tituloDetalle}}</span>
                 </div>       
             </div>

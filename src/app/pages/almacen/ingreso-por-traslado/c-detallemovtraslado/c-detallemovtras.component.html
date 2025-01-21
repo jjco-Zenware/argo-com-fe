@@ -14,47 +14,45 @@
                         </span>
                     </div>
                 </ng-template>
-                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border">                    
-                    <div class="p-fluid grid col-6 p-2 m-2">                            
-                        <div class="sm:col-12 lg:col-2 md:col-12 h-4rem field">
-                            <label class="block text-900 font-semibold mb-1">N° </label>
-                            <span class="p-fluid">
-                                <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="labelnrodocumento"/>
-                            </span>
-                        </div>
-                        <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field">
-                            <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
-                            <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
-                                <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                                inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
-                            </span>
-                        </div>
-                        <div class=" sm:col-8 lg:col-8 md:col-12"></div>                           
+                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">                                              
+                    <div class="sm:col-12 lg:col-2 md:col-12 col-6 field">
+                        <label class="block text-900 font-semibold mb-1">N° </label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="labelnrodocumento"/>
+                        </span>
+                    </div>
+                    <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end col-6 field">
+                        <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
+                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                        </span>
+                    </div>
+                    <div class=" sm:col-8 lg:col-8 md:col-12 -mt-4"></div>                           
 
-                        <div class="sm:col-6 lg:col-5 md:col-6 h-4rem -mt-5">                            
-                            <label class="block text-900 font-semibold mb-1">Almacen Destino<span class="text-red-500 font-bold"> * </span></label>                            
-                            <span>
-                                <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
-                                optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
-                            </span>
-                        </div> 
+                    <div class="sm:col-6 lg:col-5 md:col-6 col-6 -mt-5">                            
+                        <label class="block text-900 font-semibold mb-1">Almacen Destino<span class="text-red-500 font-bold"> * </span></label>                            
+                        <span>
+                            <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
+                            optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div> 
 
-                        <div class="sm:col-6 lg:col-5 md:col-6 h-4rem -mt-5">                            
-                            <label class="block text-900 font-semibold mb-1">Almacen Origen<span class="text-red-500 font-bold"> * </span></label>                            
-                            <span>
-                                <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
-                                optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
-                            </span>
-                        </div>                      
-                           
-                        <div class="sm:col-6 lg:col-10 md:col-3 mt-2">
-                            <label class="block text-900 font-semibold">Observación</label>                        
-                            <span class="p-fluid">
-                                <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
-                                class="p-inputtext-sm w-full" id="observacion" [readonly]=onlyRead></textarea>
-                            </span>
-                        </div>
-                    </div>                
+                    <div class="sm:col-6 lg:col-5 md:col-6 col-6 -mt-5">                            
+                        <label class="block text-900 font-semibold mb-1">Almacen Origen<span class="text-red-500 font-bold"> * </span></label>                            
+                        <span>
+                            <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
+                            optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div>                      
+                        
+                    <div class="sm:col-6 lg:col-10 md:col-3 col-12 -mt-3">
+                        <label class="block text-900 font-semibold">Observación</label>                        
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
+                            class="p-inputtext-sm w-full" id="observacion" [readonly]=onlyRead></textarea>
+                        </span>
+                    </div>           
                 </form>
             </p-tabPanel>             
 

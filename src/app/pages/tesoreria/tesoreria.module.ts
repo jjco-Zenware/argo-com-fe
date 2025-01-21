@@ -9,6 +9,9 @@ import { ProyectosService } from '../compras/proyectos-ganados/service/proyectos
 import { AlmacenService } from '../almacen/service/almacenServices';
 import { OrdencompraService } from '../compras/orden-compra-servicio/service/ordencompra.service';
 import { ComprasService } from '../compras/Service/compraServices';
+import { ToastModule } from 'primeng/toast';
+import { SharedAppService } from '@sharedAppService';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 
 @NgModule({
@@ -21,8 +24,9 @@ import { ComprasService } from '../compras/Service/compraServices';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
-    TesoreriaRoutingModule
-  ],
-  providers : [OrdencompraService, ComprasService,ProyectosService, AlmacenService]
+    TesoreriaRoutingModule,
+    ToastModule
+  ],  
+  providers : [OrdencompraService, ComprasService,ProyectosService, AlmacenService, SharedAppService, DynamicDialogRef, DynamicDialogConfig]
 })
 export class TesoreriaModule { }

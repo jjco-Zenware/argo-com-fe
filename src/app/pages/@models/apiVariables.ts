@@ -12,6 +12,8 @@ const controllerArchivo: string = webApi+'Archivo';
 const controllerPerfil: string = webApi+'Perfil';
 const controllerAlmacen: string = webApi+'Almacen';
 const controllerProducto: string = webApi+'Producto';
+const controllerTesoreria: string = webApi+'Tesoreria';
+const controllerContabilidad: string = webApi+'Contabilidad';
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -81,7 +83,7 @@ export const constantesApiWeb = {
 
     procesarTrx: controllerMain + '/prctrxdoc',
     prcDocumento: controllerMain + '/prcdocumentordlc',
-    //prcDocumento: controllerMain + '/prcdocumento',
+    //prcDocumento: controllerMain + '/fichardlc',
     listarFlujo: controllerComercial + '/trackflujolist',
     grabarRegla: controllerComercial + '/reglaflujoprc/',
     listarReglaFlujo: controllerComercial + '/reglaflujolist',
@@ -125,4 +127,28 @@ export const constantesApiWeb = {
     grabarOficina: controllerAlmacen + '/oficinaprc/',
     ListarOficina: controllerAlmacen + '/listaroficina/',
     buscarProducto03: controllerAlmacen + '/buscarproducto03',
+    
+    prcBanco: controllerTesoreria + '/bancoprc/',
+    listarBanco: controllerTesoreria + '/bancolist/',
+    traerunoBanco: controllerTesoreria + '/bancotraeruno/',
+
+    prcProgramacion: controllerTesoreria + '/programacionprc/',
+    listarProgramacion: controllerTesoreria + '/programacionlist/',
+    traerunoprcProgramacion: controllerTesoreria + '/programaciontraeruno/',
+
+    prcProgramacionDet: controllerTesoreria + '/programaciondetalleprc/',
+
+    prcCentroCosto: controllerTesoreria + '/centrocostoprc/',
+    listarCentroCosto: controllerTesoreria + '/centrocostolist/',
+    eliminarCentroCosto: controllerTesoreria + '/centrocostoeliminar/',
+    prcReporte: controllerComercial + '/reporteRdlc',
+    
+    prcPagoDocumento: controllerTesoreria + '/pagodocumentoprc/',
+    listPagoDocumento: controllerTesoreria + '/pagodocumentolist/',
+    traerunoPagoDocumento: controllerTesoreria + '/pagodocumentotraeruno/',
+
+    listarPlanContable: controllerContabilidad + '/listarPlanContable',
+    prcDocumentoDet: controllerMain + '/prcdetdocumentordlc',
+
+    recalcularRegistro: controllerTesoreria + '/obtenercalculodetraccion/',
 }

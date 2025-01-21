@@ -6,7 +6,7 @@
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
                         pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                 
-                <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                <div class="mb-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">PROYECTOS</span>
                 </div>           
             </div>
@@ -24,23 +24,21 @@
             </div>
         </div> -->
 
-        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
-            <div class="p-fluid p-formgrid grid col-9 text-sm h-5rem -ml-6">
-                <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
-                    <label class="font-semibold text-blue-600">FECHA INICIO</label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fechaini"
-                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
-                    </p-calendar>
-                </div>
-                <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
-                    <label class="font-semibold text-blue-600">FECHA FIN</label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
-                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
-                </div>
-                <div class="field col-12 md:col-2 -mt-4 gap-2">
-                    <button pButton type="button" (click)="cargarLista()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                        class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                </div>
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-9 col-12 text-sm p-0">            
+            <div class="md:col-6 sm:col-4 lg:col-2 col-4">
+                <label class="font-semibold text-blue-600 text-base">Desde </label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fechaini"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
+                </p-calendar>
+            </div>
+            <div class="md:col-6 sm:col-4 lg:col-2 col-4">
+                <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
+            </div>
+            <div class="field col-3 md:col-2 gap-2">
+                <button pButton type="button" (click)="cargarLista()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
             </div>
         </form> 
 
@@ -58,7 +56,7 @@
                             N°
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'70px'}"  class="surface-200" >
+                    <th [ngStyle]="{'width':'100px'}"  class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             TIPO
                         </div>
@@ -68,9 +66,14 @@
                             CÓDIGO
                         </div>
                     </th>
-                    <th style="width: 350px;" class="surface-200" >
+                    <th style="width: 200px;" class="surface-200" >
                         <div class="justify-content-between align-items-center">
                             PROYECTO
+                        </div>
+                    </th>
+                    <th style="width: 150px;" class="surface-200" >
+                        <div class="justify-content-between align-items-center">
+                            CENTRO COSTO
                         </div>
                     </th>
                     <!-- <th style="width: 250px;" class="surface-200" >
@@ -134,13 +137,18 @@
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'70px'}" class="text-primary">
+                        <div [ngStyle]="{'width':'100px'}" class="text-primary">
                             {{data.codigoproyecto}}
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'250px'}">
+                        <div [ngStyle]="{'width':'200px'}">
                             {{data.nomproyecto | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'150px'}">
+                            {{data.descentrocosto | uppercase}}
                         </div>
                     </td>
                     <!-- <td>

@@ -1,5 +1,5 @@
 <div class="flex">
-    <div class="field col-2 -ml-3">
+    <div class="field col-6 lg:col-2 -ml-3">
         <label class="font-semibold text-blue-600">Terminos de Pago</label>
         <p-dropdown [options]="lstTermino" [ngModel]="idestado" optionLabel="valoritem" placeholder="Seleccionar..." class="p-inputtext-sm"
                 optionValue="iditem" appendTo="body" [ngModelOptions]="{standalone: true}" (onChange)="saveTerminoPago($event.value)" ></p-dropdown>

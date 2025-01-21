@@ -11,117 +11,102 @@
     </div>
     
 
-    <form [formGroup]="registerFormRegistro" >
-                    
-        <div class="p-fluid grid col-7 card border-1 border-round surface-border m-2"> 
-                
-                <div class="col-6 sm:col-6 lg:col-3 md:col-3 h-3rem field -mt-3">
-                    <label class="block text-900 font-bold mb-1">Orden</label>
-                    <span class="p-fluid ">
-                        <p-dropdown [options]="lstTipo" formControlName="codtipoorden" placeholder="Seleccionar Tipo" optionLabel="name" 
-                        optionValue="code" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                    </span>
-                </div>
-                <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-3rem field -mt-3">
-                    <label class="block text-900 font-bold">Fecha </label>
-                    <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
-                        <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                        inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" [inputStyle]="{'height':'2rem'}" ></p-calendar>
-                    </span>
-                </div>
-                <div class=" sm:col-8 lg:col-3 md:col-12"></div>
-                <div class="sm:col-12 lg:col-3 md:col-12 h-3rem field -mt-3">
-                    <label class="block text-900 font-bold mb-1">N° OC</label>
-                    <span class="p-fluid">
-                        <input pInputText type="text" class="font-semibold" formControlName="codigonroorden" [readonly]=onlyRead class="p-inputtext-sm"/>
-                    </span>
-                </div>
-                <div class="col-12 -mt-2 -mb-6">
-                    <p-divider ></p-divider>
-                </div>
-                <!-- <div class="sm:col-6 lg:col-3 md:col-3 mt-1 h-3rem field">
-                    <label class="block text-900 font-bold mb-1">Origen </label>
-                    <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstOrigen" formControlName="codtipodoc" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
-                        optionValue="codproceso" (onChange)="getOrigen($event.value)"></p-dropdown>
-                    </span>
-                </div>   -->
-                <div class=" sm:col-8 lg:col-12 md:col-12"></div>
-                <div class="col-12 field h-4rem -mt-4">
-                    <label class="block text-900 font-bold mb-1">Proyecto </label>                        
-                    <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
-                        optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
-                    </span>
-                </div>
-                <div class="col-5 sm:col-6 lg:col-5 md:col-6 h-3rem -mt-2">                            
-                    <label class="block text-900 font-bold mb-1">Proveedor </label>                            
-                    <span>
-                        <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
-                        optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [readonly]=onlyRead></p-dropdown>            
-                    </span>
-                </div>                         
-                <div class="col-7 sm:col-6 lg:col-7 md:col-3 h-3rem -mt-2">
-                    <div class="flex">
-                        <label class="block text-900 font-bold mb-1">Contacto </label>
-                    </div>                            
-                    <span>
-                        <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
-                        optionValue="idcontacto" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                    </span>
-                </div>
-                <div *ngIf="verReferencia" class="col-4 field h-4rem mt-5 -mb-2">
-                    <label class="block text-900 font-semibold mb-1">N° Referencia</label>                        
-                    <span class="p-fluid">
-                        <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
-                    </span>
-                </div>
-                <div class="col-12 mt-2 -mb-5">
-                    <p-divider ></p-divider>
-                </div>
-                <div class="sm:col-6 lg:col-4 md:col-3 h-3rem">
-                    <label class="block text-900 font-bold mb-1">Moneda </label>  
-                    <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                        optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                    </span>                                      
-                </div> 
-                <div class="sm:col-6 lg:col-4 md:col-3 h-4rem ">
-                    <label class="block text-900 font-semibold mb-1">Forma de Pago <span class="text-red-500 font-bold"> * </span></label>
-                    <span>
-                        <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
-                        optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                    </span>
-                </div> 
-                <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end h-4rem field">
-                    <label class="block text-900 font-semibold">Fecha Entrega<span class="text-red-500 font-bold"> * </span></label>
-                    <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;">
-                        <p-calendar formControlName="fecentrega" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                        inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body"></p-calendar>
-                    </span>
-                </div>
-                <div class="sm:col-6 lg:col-12 md:col-3 mt-1">                        
-                    <label class="block text-900 font-semibold mb-1">Terminos para el Pago de Factura <span class="text-red-500 font-bold"> * </span></label>                        
-                    <span class="p-fluid">
-                        <textarea type="text" formControlName="terminosdepago" pInputTextarea [rows]="2"
-                        style="resize: none" class="w-full mt-1" [readonly]=onlyRead class="p-inputtext-sm"></textarea>                       
-                    </span>
-                </div>  
-                <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">                        
-                    <label class="block text-900 font-semibold mb-1">Condiciones Comerciales <span class="text-red-500 font-bold"> * </span></label>                        
-                    <span class="p-fluid">
-                        <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="5"
-                        style="resize: none" class="w-full mt-1" [readonly]=onlyRead class="p-inputtext-sm"></textarea>                       
-                    </span>
-                </div>                   
-                <div class="sm:col-6 lg:col-12 md:col-3 -mt-4">
-                    <label class="block text-900 font-semibold">Observación</label>                        
-                    <span class="p-fluid">
-                        <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion" 
-                        [readonly]=onlyRead class="p-inputtext-sm"></textarea>
-                    </span>
-                </div>
-        </div>                
+    <form [formGroup]="registerFormRegistro" class=" p-formgrid grid lg:col-7 col-12 card border-1 border-round surface-border m-2 p-0">      
+        <div class="col-4 sm:col-6 lg:col-3 md:col-3 ">
+            <label class="block text-900 font-bold mb-1">Orden</label>
+            <span class="p-fluid ">
+                <p-dropdown [options]="lstTipo" formControlName="codtipoorden" placeholder="Seleccionar Tipo" optionLabel="name" 
+                optionValue="code" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+            </span>
+        </div>
+        <div class="col-4 sm:col-12 lg:col-3 md:col-12 justify-content-end">
+            <label class="block text-900 font-bold mb-1">Fecha </label>
+            <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
+                <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" [inputStyle]="{'height':'2rem'}" ></p-calendar>
+            </span>
+        </div>
+        <div class=" sm:col-8 lg:col-3 md:col-12"></div>
+        <div class=" col-4 sm:col-12 lg:col-3 md:col-12">
+            <label class="block text-900 font-bold mb-1">N° OC</label>
+            <span class="p-fluid">
+                <input pInputText type="text" class="font-semibold" formControlName="codigonroorden" [readonly]=onlyRead class="p-inputtext-sm"/>
+            </span>
+        </div>
+
+
+        <div class="col-12 -mt-5">
+            <label class="block text-900 font-bold mb-1">Proyecto </label>                        
+            <span class="p-fluid mt-1">
+                <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
+                optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
+            </span>
+        </div>
+        <div class="col-5 sm:col-6 lg:col-5 md:col-6 -mt-4">                            
+            <label class="block text-900 font-bold mb-1">Proveedor </label>                            
+            <span>
+                <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+                optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [readonly]=onlyRead></p-dropdown>            
+            </span>
+        </div>                         
+        <div class="col-7 sm:col-6 lg:col-7 md:col-3 -mt-4">
+            <div class="flex">
+                <label class="block text-900 font-bold mb-1">Contacto </label>
+            </div>                            
+            <span>
+                <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
+                optionValue="idcontacto" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+            </span>
+        </div>
+        <div *ngIf="verReferencia" class="col-4 field h-4rem mt-5 -mb-2">
+            <label class="block text-900 font-semibold mb-1">N° Referencia</label>                        
+            <span class="p-fluid">
+                <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
+            </span>
+        </div>
+        
+        <div class="sm:col-6 lg:col-4 md:col-3 col-6 -mt-3">
+            <label class="block text-900 font-bold ">Moneda </label>  
+            <span class="p-fluid mt-1">
+                <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+            </span>                                      
+        </div> 
+        <div class="sm:col-6 lg:col-4 md:col-3 col-6 -mt-3">
+            <label class="block text-900 font-semibold ">Forma de Pago </label>
+            <span>
+                <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
+                optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+            </span>
+        </div> 
+        <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end -mt-3">
+            <label class="block text-900 font-semibold">Fecha Entrega</label>
+            <span class="p-input-icon-left w-auto p-fluid " style="height: 3rem;">
+                <p-calendar formControlName="fecentrega" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body"></p-calendar>
+            </span>
+        </div>
+        <div class="sm:col-6 lg:col-12 md:col-3 mt-1 col-12 -mt-4">                        
+            <label class="block text-900 font-semibold mb-1">Terminos para el Pago de Factura</label>                        
+            <span class="p-fluid">
+                <textarea type="text" formControlName="terminosdepago" pInputTextarea [rows]="4"
+                style="resize: none" class="w-full mt-1" [readonly]=onlyRead class="p-inputtext-sm"></textarea>                       
+            </span>
+        </div>  
+        <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-4">                        
+            <label class="block text-900 font-semibold mb-1">Condiciones Comerciales </label>                        
+            <span class="p-fluid">
+                <textarea id="description" type="text" formControlName="condicionescomerciales" pInputTextarea [rows]="4"
+                style="resize: none" class="w-full mt-1" [readonly]=onlyRead class="p-inputtext-sm"></textarea>                       
+            </span>
+        </div>                   
+        <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-4">
+            <label class="block text-900 font-semibold">Observación</label>                        
+            <span class="p-fluid">
+                <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion" 
+                [readonly]=onlyRead class="p-inputtext-sm"></textarea>
+            </span>
+        </div>                   
     </form>
 
     <div class="p-2">
@@ -131,7 +116,7 @@
     </div>
     
 
-    <div class="p-fluid grid col-12 border-1 border-round surface-border p-2 m-2 w-full card w-full">
+    <div class=" w-full">
         <p-table [value]="lstItemOC" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
         [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
         currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
@@ -195,7 +180,7 @@
     </div>
     
 
-    <div class="p-fluid grid col-12 border-1 border-round surface-border p-2 m-2 card w-full"> 
+    <div class="card w-full"> 
         <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
     </div>
     

@@ -125,6 +125,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       valor: [{ value: '', disabled: false }],
       ref1: [{ value: '', disabled: false }],
       codproducto: [{ value: '', disabled: false }],
+      despro: [{ value: '', disabled: false }],
     })
   }
 
@@ -148,6 +149,11 @@ createFormTag() {
     // if (this.param.idordencompra > 0) {
        this.listaTag = this.param.tags;
     // }
+
+    if (this.param.idtipoprod != undefined) {      
+    this.traerUnonomproducto(this.param.idprod);
+    }
+    //this.frmDatosItem.get('despro')?.setValue(this.param.descripcion); 
   }
 
   listarItemsTabla() {
@@ -506,6 +512,7 @@ createFormTag() {
           if (rpta !== null) {
             this.frmDatosItem.get('idprod')?.setValue(rpta.idprod);
             this.frmDatosItem.get('nommarca')?.setValue(rpta.nommarca);
+            this.frmDatosItem.get('despro')?.setValue(rpta.despro); 
             this.frmDatosItem.get('descripcion')?.setValue(rpta.despro); 
             this.frmDatosItem.get('idmarca')?.setValue(rpta.idmarca); 
             this.frmDatosItem.get('idtipoprod')?.setValue(rpta.idtipoprod); 
@@ -539,6 +546,7 @@ createFormTag() {
         this.frmDatosItem.get('idprod')?.setValue(rpta.data.idprod);
         this.frmDatosItem.get('codproducto')?.setValue(rpta.data.codproducto); 
         this.frmDatosItem.get('idmarca')?.setValue(rpta.data.idmarca);
+        this.frmDatosItem.get('despro')?.setValue(rpta.data.despro);
         this.frmDatosItem.get('descripcion')?.setValue(rpta.data.despro);
         this.frmDatosItem.get('idtipoprod')?.setValue(rpta.data.idtipoprod);    
 
@@ -574,9 +582,29 @@ createFormTag() {
           console.log('rpta.traerUno', rpta.producto[0]);  
           this.frmDatosItem.get('idprod')?.setValue(rpta.producto[0].idprod);
             this.frmDatosItem.get('descripcion')?.setValue(rpta.producto[0].despro); 
+            this.frmDatosItem.get('despro')?.setValue(rpta.producto[0].despro); 
             this.frmDatosItem.get('idmarca')?.setValue(rpta.producto[0].idmarca);      
             this.frmDatosItem.get('codproducto')?.setValue(rpta.producto[0].codproducto);  
             this.frmDatosItem.get('idtipoprod')?.setValue(rpta.producto[0].idtipoprod); 
+            
+            this.verControles(rpta.producto[0].idtipoprod);
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {        
+        }
+      });
+    this.$listSubcription.push($traerUno)
+  }
+  
+  traerUnonomproducto(data:any){   
+    console.log('traerUno', data);
+    const $traerUno = this.almacenService.traerunoProducto(data)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta.traerUno', rpta.producto[0]);  
+            this.frmDatosItem.get('despro')?.setValue(rpta.producto[0].despro); 
             
             this.verControles(rpta.producto[0].idtipoprod);
         },

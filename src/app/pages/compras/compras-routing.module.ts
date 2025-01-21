@@ -41,6 +41,21 @@ const routes: Routes = [
     path: 'registro-cliente',
     loadChildren: () => import('./registro-cliente/registro-cliente.module').then(m => m.RegistroClienteModule),
     data: { breadcrumb: 'Registros de Clientes' }
+  },
+  {
+    path: 'registro-venta',
+    loadChildren: () => import('./registro-venta/registro-venta.module').then(m => m.RegistroVentaModule),
+    data: { breadcrumb: 'Registros de Ventas' }
+  },
+  {
+    path: 'reporte-compra',
+    loadChildren: () => import('./reporte-compra/reporte-compra.module').then(m => m.ReporteCompraModule),
+    data: { breadcrumb: 'Reporte de Compras' }
+  },
+  {
+    path: 'reporte-venta',
+    loadChildren: () => import('./reporte-venta/reporte-venta.module').then(m => m.ReporteVentaModule),
+    data: { breadcrumb: 'Reporte de Ventas' }
   }
 ];
 

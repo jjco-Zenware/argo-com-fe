@@ -37,70 +37,84 @@
             </div>
         </form>  -->
 
-        <p-table #dt1 [value]="lstMovimientos" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+        <p-table #dt1 [value]="lstBancos" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
             currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
-            styleClass="p-datatable-sm card border-1 border-round surface-border ">
+            styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
             <ng-template pTemplate="header">
-                <tr class="text-sm" >
-                    <th rowspan="2" style="width: 20px" class="surface-200" >
+                <tr class="text-sm h-1rem">
+                    <th rowspan="2" style="width: 20px" class="bg-teal-50 border-1" >
                         <div class="flex justify-content-between align-items-center">
                             N°
                         </div>
                     </th>
-                    <th rowspan="2" class="surface-200">CÓDIGO</th>
-                    <th rowspan="2" style="width: 300px;" class="surface-200">NOMBRE</th>
-                    <th rowspan="2" style="width: 100px;" class="surface-200">TIPO</th>
-                    <th rowspan="2" style="width: 300px;" class="surface-200">DOCUMENTO</th>
-                    <th rowspan="2" style="width: 100px;" class="surface-200">NRO</th>
-                    <th rowspan="2" style="width: 200px;" class="surface-200">CTA CTBLE</th>
-                    <th colspan="3" style="width: 300px;" class="surface-200">
+                    <!-- <th rowspan="2" style="width: 100px;" class="bg-teal-50 border-1">CÓDIGO</th> -->
+                    <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">NOMBRE</th>
+                    <th rowspan="2" style="width: 100px;" class="bg-teal-50 border-1">TIPO BANCO</th>
+                    <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">TIPO DOC.</th>
+                    <th rowspan="2" style="width: 100px;" class="bg-teal-50 border-1">NRO DOC.</th>
+                    <th colspan="3" style="width: 300px;" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'width':'300px','text-align': 'center'}" >
                             CÓDIGOS
                         </div>
                     </th>
+                    <th rowspan="2" style="width: 200px;" class="bg-teal-50 border-1">CTA CTBLE</th>
+                    <th rowspan="2" style="width: 100px;" class="bg-teal-50 border-1">ACCIÓN</th>
                 </tr>
                 <tr class="text-sm" >
-                    <th colspan="1" class="surface-200">
+                    <th colspan="1" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'text-align': 'center'}">
                             BCR
                         </div>
                     </th>
-                    <th colspan="1" class="surface-200">
+                    <th colspan="1" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'text-align': 'center'}">
                             SBS
                         </div>
                     </th>
-                    <th colspan="1" class="surface-200">
+                    <th colspan="1" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'text-align': 'center'}">
                             SUNAT
                         </div>
                     </th>
                 </tr>
+                <tr >
+                    <th></th>
+                    <th *ngFor="let col of cols">
+                        <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>
+                        
+                    </th>
+                </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-sale let-rowIndex="rowIndex"> 
-                <tr>
+            <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex"> 
+                <tr class="text-sm">
                     <td>{{rowIndex + 1}}</td>
-                    <td>{{sale.idbanco}}</td>
-                    <td>{{sale.razonsocial}}</td>
-                    <td>{{sale.destipobanco}}</td>
-                    <td>{{sale.destipodoc}}</td>
-                    <td>{{sale.nrodoc}}</td>
-                    <td>{{sale.codctactble}}</td>
+                    <!-- <td>{{dato.idbanco}}</td> -->
+                    <td>{{dato.razonsocial}}</td>
+                    <td>{{dato.destipobanco}}</td>
+                    <td>{{dato.idtipodoc}}</td>
+                    <td>{{dato.nrodoc}}</td>
                     <td>
-                        <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.codigobcr}}
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            {{dato.codigobcr}}
                         </div> 
                     </td>
                     <td>
-                        <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.codbancosbs}}
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            {{dato.codbancosbs}}
                         </div> 
                     </td>
                     <td>
-                        <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.codbancosunat}}
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            {{dato.codbancosunat}}
                         </div> 
+                    </td>
+                    <td>{{dato.codctactble}}</td>
+                    <td>
+                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
+                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Banco" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(dato)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar Banco" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(dato)"></button>
+                        </div>
                     </td>
                 </tr>
             </ng-template>

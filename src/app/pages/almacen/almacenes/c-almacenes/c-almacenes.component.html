@@ -13,19 +13,17 @@
             </div>
         </div>
 
-        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
-            <div class="p-fluid p-formgrid grid col-9 h-5rem -ml-6">
-                <div class="sm:col-6 lg:col-3 md:col-3 -mt-4 h-4rem field">
-                    <label class="text-blue-600 font-semibold mb-1">OFICINA</label>
-                    <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstOficina" formControlName="idofi" placeholder="Seleccionar Oficina" optionLabel="nomofi" 
-                        optionValue="idofi" class="p-inputtext-sm"></p-dropdown>
-                    </span>
-                </div> 
-                <div class="field col-12 md:col-2 -mt-4 gap-2">
-                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                        class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                </div>
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-12 lg:col-9">
+            <div class="col-6 sm:col-6 lg:col-3 md:col-3 -mt-4 h-4rem field">
+                <label class="text-blue-600 font-semibold mb-1 text-base">Oficina</label>
+                <span class="p-fluid mt-1">
+                    <p-dropdown [options]="lstOficina" formControlName="idofi" placeholder="Seleccionar Oficina" optionLabel="nomofi" 
+                    optionValue="idofi" class="p-inputtext-sm"></p-dropdown>
+                </span>
+            </div> 
+            <div class="field col-3 md:col-2 -mt-4">
+                <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                    class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
             </div>
         </form> 
 

@@ -358,8 +358,12 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     fecentrega = this.registerFormRegistro.value.fecentrega;
 
     if (this.idOrdenC > 0) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
-      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
+      if (fechaingreso.toString().length === 10) {
+        fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
+      }
+      if (fecentrega.toString().length === 10) {
+        fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));
+      }   
     }
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
@@ -858,6 +862,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     const $cargarOrdenC = this.ordencompraService.prcDocumento(objeto).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);      
+
+        console.log('vistaPreliminar', rpta);
         
         const mediaType = 'application/pdf';
           const blob = new Blob([rpta.body], { type: mediaType });

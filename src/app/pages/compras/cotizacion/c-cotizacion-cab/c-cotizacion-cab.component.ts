@@ -32,6 +32,7 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
     ordenCompra: any;
     cols: any[] = [];
     lstExportar: any[] = [];
+    lstExportExcel: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -199,33 +200,36 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
         });
     }
 
-    getExportarExcel() {
+    getExportarExcel(data :any) {
 
       this.lstExportar = [];
-      // for (let i = 0; i < this.lstOrdenCompra.length; i++) {       
-      //     const objeto = {
-      //         'N°': i + 1,
-      //         'TIPO': this.lstOrdenCompra[i].nomtipoorden,
-      //         'N° ORDEN': this.lstOrdenCompra[i].codigonroorden,
-      //         'PROVEEDOR': this.lstOrdenCompra[i].nomcomercial,
-      //         'N° RUC': this.lstOrdenCompra[i].nrodocumento,
-      //         'MONEDA': this.lstOrdenCompra[i].nommoneda,
-      //         'BASE IMPONIBLE': 0,
-      //         'IGV': 0,
-      //         'TOTAL': this.lstOrdenCompra[i].s_monto,
-      //         'COD PROYECTO' : this.lstOrdenCompra[i].codigoproyecto,
-      //         'NOM PROYECTO' : this.lstOrdenCompra[i].nomproyecto,
-      //         'ESTADO' : this.lstOrdenCompra[i].nomestado
-              
-      //     }
-      //     this.lstExportar.push(objeto);
-      // }
+      if (data.filteredValue !== undefined) {
+        this.lstExportExcel = data.filteredValue;
+      }else{
+        this.lstExportExcel = data._value
+      }
+      
+      for (let i = 0; i < this.lstExportExcel.length; i++) {       
+        const objeto = {
+            'N°': i + 1,
+            'ID COTZ': this.lstExportExcel[i].idordencompra,
+            'N° COTIZACIÓN': this.lstExportExcel[i].codigonroorden,
+            'CLIENTE': this.lstExportExcel[i].nomcomercial,
+            'MONEDA': this.lstExportExcel[i].nommoneda,
+            'SUBTOTAL': this.lstExportExcel[i].s_monto,
+            'IGV': this.lstExportExcel[i].s_igv,
+            'TOTAL': this.lstExportExcel[i].s_monto_total,
+            'ESTADO' : this.lstExportExcel[i].nomestado
+            
+        }
+        this.lstExportar.push(objeto);
+      }
   
       import('xlsx').then((xlsx) => {
         const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
         const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, 'Orden Compra');
+        this.saveAsExcelFile(excelBuffer, 'Cotización');
         });
       }
   
@@ -239,12 +243,6 @@ export class CCotizacionComponent implements OnInit, OnDestroy{
       }
 
       onEditar(dato: any) {
-        // let codigo;
-        // if (dato.estado === 'EMI' || dato.estado === 'ANU') {
-        //   codigo = dato.codigonroorden;
-        // }else{
-        //   codigo = dato.idordencompra;
-        // }
           this.tituloDetalle = "COTIZACIÓN N° " + dato.idordencompra;
           this.dataOC = {
             idordencompra: dato.idordencompra,

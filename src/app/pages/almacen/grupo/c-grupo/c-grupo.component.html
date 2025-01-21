@@ -8,42 +8,29 @@
         </div>
     </div>
 
-    <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
-        <div class="p-fluid p-formgrid grid col-9 text-sm h-5rem -ml-6">
-            <div class="sm:col-6 lg:col-4 md:col-3 -mt-4 h-4rem field">
+    <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-12 text-sm -mt-2">
+            <div class="sm:col-6 lg:col-3 md:col-3 col-9 -mt-4 field h-4rem">
                 <label class="text-blue-600 font-semibold mb-1">GRUPOS</label>                
                 <span class="p-fluid mt-1">
                     <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..."  formControlName="idfamilia" class="p-inputtext-sm"
                     optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body"  (onChange)="getSubFamilia($event.value)"></p-dropdown> 
                 </span>
             </div> 
-            <!-- <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
-                <label class="font-semibold text-blue-600">FECHA INICIO</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
-                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
-                </p-calendar>
-            </div>
-            <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
-                <label class="font-semibold text-blue-600">FECHA FIN</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
-                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
-            </div> -->
-            <div class="field col-12 md:col-2 -mt-4 gap-2">
+            <div class="field col-3 md:col-2 -mt-4 gap-2 h-4rem">
                 <button pButton type="button" pTooltip="Editar Grupo Seleccionado...!" tooltipPosition="bottom" (click)="editarGrupo()"
                     class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto p-button-outlined" icon="pi pi-pencil"></button>
                 <button pButton type="button" pTooltip="Agregar Grupo...!" tooltipPosition="bottom" (click)="agregarGrupo()"
                     class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto ml-2" icon="pi pi-plus"></button>
             </div>
-        </div>
     </form> 
 
     <p-table #dt1 [value]="lstSubFamilia" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
         [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
         currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
-        styleClass="p-datatable-sm card border-1 border-round surface-border col-8">
+        styleClass="p-datatable-sm card border-1 border-round surface-border lg:col-8 col-12">
         <ng-template pTemplate="caption">
             <button pButton type="button" pTooltip="Agregar Categoria...!" tooltipPosition="bottom" label="Agregar" (click)="agregarClase()"
-                class="font-semibold justify-content-center w-auto h-auto p-button-outlined" icon="pi pi-plus"></button>
+                class="font-semibold justify-content-center w-auto h-auto p-button-outlined -mt-2 mb-2" icon="pi pi-plus"></button>
             
         </ng-template>
            <ng-template pTemplate="header">
@@ -56,6 +43,7 @@
                 <th style="width: 100px;" class="surface-200">CÓDIGO</th>
                 <th style="width: 200px;" class="surface-200">CATEGORÍA</th>
                 <th style="width: 150px;" class="surface-200">TIPO PRODUCTO</th>
+                <th style="width: 150px;" class="surface-200">CTA CONTABLE </th>
                 <th style="width: 20px;" class="surface-200">ACCIONES</th>
             </tr>
             
@@ -68,6 +56,7 @@
                 <td>{{data.codsubfamilia}}</td>
                 <td>{{data.nomsubfamilia}}</td>
                 <td>{{data.nomtipoprod}}</td>
+                <td>{{data.codctactble}}</td>
                 <td>
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                         <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar Categoria" 
@@ -114,22 +103,30 @@
         <form [formGroup]="frmDatos" (ngSubmit)="prcClase()">
             <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
                 <div class="mb-3 field">
-                    <label class="font-semibold">CÓDIGO</label>
+                    <label class="font-semibold">CÓDIGO<span class="text-red-500 font-bold"> * </span></label>
                     <input pInputText type="text" formControlName="codsubfamilia" class="p-inputtext-sm"/>
                 </div>
                 <div class="mb-3 field">
-                    <label class="font-semibold">DESCRIPCIÓN</label>
+                    <label class="font-semibold">DESCRIPCIÓN<span class="text-red-500 font-bold"> * </span></label>
                     <input pInputText type="text" formControlName="nomsubfamilia" class="p-inputtext-sm"/>
                 </div>
                 <div class="mb-3 field">
-                    <label class="font-semibold">TIPO PRODUCTO</label>
+                    <label class="font-semibold">TIPO PRODUCTO<span class="text-red-500 font-bold"> * </span></label>
                     <p-dropdown [options]="lstTipoProducto" formControlName="idtipoprod" optionLabel="nomtipoprod"
                         optionValue="idtipoprod" placeholder="Seleccionar Producto" appendTo="body"></p-dropdown>
+                </div>
+                <div class="mb-3 field">
+                    <label class="font-semibold">CUENTA CONTABLE<span class="text-red-500 font-bold"> * </span></label>
+                    <span class="p-fluid">
+                        <p-autoComplete formControlName="codctactble" [dropdown]="true" [suggestions]="filteredCtaCtble" (completeMethod)="filterCtaCtble($event)" 
+                        field="s_desctactble" appendTo="body" (onSelect)="selectCuenta($event)" ></p-autoComplete>
+                    </span> 
                 </div>
             </div>
             <div class="flex justify-content-end">
                 <button pButton icon="pi pi-save" label="Grabar" type="submit" class="p-button-primary w-auto"></button>
             </div>
+            
         </form>
 </p-dialog>
 
