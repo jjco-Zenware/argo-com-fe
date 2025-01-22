@@ -1255,7 +1255,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     console.log('changeFechaDesde diff', diff);
     let numerDiff = diff/(1000*60*60*24);
     this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
-    //console.log('diff/(1000*60*60*24)', diff/(1000*60*60*24));
   }
 
   changeFechaHasta(event: Date) {
@@ -1267,21 +1266,13 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     console.log('emision', emision, 'vencimiento', vencimiento);
     let inicio = emision.getTime();
     let fin = vencimiento.getTime();
-    console.log('inicio', inicio/(1000*60*60*24));
-    console.log('fin', fin/(1000*60*60*24));
     // console.log('inicio', inicio);
     // console.log('fin', fin);
-
-    let inicio_ = Math.round(inicio/(1000*60*60*24));
-    let fin_ = Math.round(fin/(1000*60*60*24));
-
-
     var diff = fin - inicio;
     console.log('nro dias', diff/(1000*60*60*24));
-    console.log('changeFechaHasta diff', diff);
-    let numerDiff = Math.round(diff/(1000*60*60*24));
-    this.registerFormRegistro.get('nrodias')?.setValue(numerDiff);
-    //console.log('diff/(1000*60*60*24)', diff/(1000*60*60*24));
+    console.log('changeFechaDesde diff', diff);
+    let numerDiff = diff/(1000*60*60*24);
+    this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
   }
 
   addDays(date: Date, days: number): Date {

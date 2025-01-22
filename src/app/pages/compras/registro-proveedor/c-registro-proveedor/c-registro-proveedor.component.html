@@ -7,18 +7,9 @@
                         pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo(0)" ></button>
                 </div>                 
                 <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">PROVEEDORES</span>
+                    <span class="text-base font-semibold">REGISTRO DE PROVEEDORES</span>
                 </div>           
             </div>
-            <!-- <div class="flex justify-content-between col-12 -mt-3">
-                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
-                    <span class="text-base font-semibold">PROVEEDORES</span>
-                </div>
-                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
-                        pTooltip="Nuevo Proveedor" tooltipPosition="left" (click)="onNuevo(0)" ></button>
-                </div>
-            </div> -->
         </div>
         
         <p-table #dt1 [value]="listaClientes" [rows]="10" [rowHover]="true" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
@@ -115,14 +106,8 @@
                     {{data.email | uppercase}}
                 </td>
                 <td>
-                    <!-- <div [ngClass]="{'text-green-500': data.indestado, 'text-red-500': !data.indestado}">
-                        {{data.nomestado}}
-                    </div> -->
                     {{data.nomestado}}
                 </td>
-                <!-- <td>
-                    <i class="pi" [ngClass]="{ 'text-green-500 pi-thumbs-up': data.indvig, 'text-red-500 pi-thumbs-down': !data.indvig }"></i>
-                </td> -->
                 <td style="text-align: start;">
                     <button pButton pRipple type="button" icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="left" class="p-button-rounded p-button-text mr-2 -mt-2" (click)="EditarCliente(data)">
                     </button>

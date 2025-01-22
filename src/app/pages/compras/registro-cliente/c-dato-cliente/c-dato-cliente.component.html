@@ -101,7 +101,25 @@
                             <p class="p-error" *ngIf="submitted && formCliente.direcresumen.errors">Dirección es requerido.</p>
                         </div>               
                     </div>
+                    <div class="flex h-6rem grid">    
+                        <div class="field col-4 sm:col-6 lg:col-2 md:col-4">
+                            <label for="start" class="font-semibold">Cta Detracción <span class="text-red-500 font-bold"> * </span></label>
+                            <input pInputText type="text" formControlName="nroctadetraccion" class="p-inputtext-sm"/>
+                            <p class="p-error" *ngIf="submitted && formCliente.nroctadetraccion.errors">Detracción es requerido.</p>
+                        </div> 
+                        <div class="col-4 field sm:col-6 lg:col-2 md:col-4">
+                            <label for="start" class="font-semibold">Telefono</label>
+                            <p-inputMask mask="999 999 999" formControlName="telefresumen" class="p-inputtext-sm"></p-inputMask>
+                        </div>     
+                        <div class="col-4 field sm:col-6 lg:col-2 md:col-4">
+                            <label for="start" class="font-semibold">Movil</label>
+                            <!-- <input pInputText type="text" formControlName="telefresumen" /> -->
+                            <p-inputMask mask="999 999 999" formControlName="telefresumen" class="p-inputtext-sm"></p-inputMask>
+
+                        </div>                      
+                    </div>
                     <div class="flex h-6rem grid">
+                        
                         <div class="col-6 field sm:col-6 lg:col-3 md:col-4">
                             <label for="start" class="font-semibold">Email <span class="text-red-500 font-bold"> * </span></label>
                             <input pInputText type="email" formControlName="email" class="p-inputtext-sm">
@@ -112,27 +130,8 @@
                         </div>
                         <div class="col-6 field sm:col-6 lg:col-3 md:col-4">
                             <label for="start" class="font-semibold">Pagina Web</label>
-                            <input pInputText type="text" formControlName="paginaweb" />
+                            <input pInputText type="text" formControlName="paginaweb" class="p-inputtext-sm"/>
                         </div>
-                    </div>
-                  
-                    <div class="flex h-6rem grid">    
-                        <div class="col-6 field sm:col-6 lg:col-2 md:col-4">
-                            <label for="start" class="font-semibold">Telefono</label>
-                            <p-inputMask mask="999 999 999" formControlName="telefresumen" class="p-inputtext-sm"></p-inputMask>
-                        </div>     
-                        <div class="col-6 field sm:col-6 lg:col-2 md:col-4">
-                            <label for="start" class="font-semibold">Movil</label>
-                            <!-- <input pInputText type="text" formControlName="telefresumen" /> -->
-                            <p-inputMask mask="999 999 999" formControlName="telefresumen" class="p-inputtext-sm"></p-inputMask>
-
-                        </div>        
-                        <!-- <div class="col-2 field sm:col-6 lg:col-2 md:col-4">
-                            <label class="font-semibold">Sector</label>
-                            <p-dropdown [options]="dropdownItemsSector" formControlName="idtipodoc" optionLabel="name" placeholder="Seleccionar..."
-                                optionValue="code" (onChange)="cambioTipoDoc($event.value)"></p-dropdown>
-                            <p class="p-error" *ngIf="submitted && formCliente.idtipodoc.errors" >Tipo Documento es requerido.</p>
-                        </div>                 -->
                     </div>
                     
                 </div>

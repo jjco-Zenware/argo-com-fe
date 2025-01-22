@@ -129,7 +129,7 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
         this.lstProveedores = rpta;
         const objet = {
           idcliente: 0,
-          razonsocial: 'TODOS'
+          nomcomercial: 'TODOS'
         }
         this.lstProveedores.unshift(objet);
         console.log('this.lstProveedores', this.lstProveedores);

@@ -140,6 +140,7 @@ createFormCliente() {
   idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
   idpersona: [{ value: 0, disabled: false }],
   tipoentidad: [{ value: null, disabled: false }, [Validators.required]],
+  nroctadetraccion: [{ value: null, disabled: false }, [Validators.required]],
   });
 }
 
