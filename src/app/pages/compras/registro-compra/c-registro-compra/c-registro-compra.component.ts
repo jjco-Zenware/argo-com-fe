@@ -120,6 +120,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
       });
     this.$listSubcription.push($getListarOrdenCompra)
   }
+  
 
   listaProveedores() {
 
