@@ -76,6 +76,8 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
               disabled: false,
             },
           ],
+          idproveedor: [{value: 0,disabled: false}],
+        idmoneda: [{value: 0,disabled: false}],
         })
       }
 

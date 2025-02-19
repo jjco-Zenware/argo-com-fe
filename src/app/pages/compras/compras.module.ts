@@ -14,6 +14,7 @@ import { CModalTransacComponent } from './modal-trans-registro/modal-transac.com
 @NgModule({
   declarations: [
     CModalTransacComponent
+    
   ],
   imports: [
     CommonModule,

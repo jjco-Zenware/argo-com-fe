@@ -173,4 +173,9 @@ export class ProyectosService {
         const url = `${constantesApiWeb.prcItem}`;
         return  this.http.post<any>(url, objeto)
     }
+
+    listarUsuarios(objeto:any) {
+        const url = `${constantesApiWeb.listarUsuario}`;
+        return  this.http.post<any>(url, objeto)
+    }
 }

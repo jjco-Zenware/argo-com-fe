@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { constantesApiWeb } from '@apiVariables';
 import { globalVariable } from '@constantes';
-import { I_RespuestaProceso } from '@interfaces';
+import { Cliente, I_RespuestaProceso } from '@interfaces';
 
 @Injectable()
 export class ComprasService {
@@ -25,6 +25,7 @@ export class ComprasService {
     }
 
     prcClientes(objeto: any) {
+        console.log('prcClientes...', objeto);
         const url = `${constantesApiWeb.prcClientes}`;
         return this.http.post<any>(url, objeto)
     }
@@ -192,5 +193,24 @@ export class ComprasService {
     recalcularRegistro(objeto: any) {
         const url = `${constantesApiWeb.recalcularRegistro}`;
         return this.http.post<any>(url, objeto);
+    }
+
+    prcPersona(objeto: Cliente) {
+        console.log('prcPersona...', objeto);
+        const url = `${constantesApiWeb.prcPersona}`;
+        return this.http.post<Cliente>(url, objeto)
+    }
+
+    descargarInformeEmpleado(objeto:any) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=utf-8',
+          });
+
+          const url = `${constantesApiWeb.descargarInformeEmpleado}`;
+          return this.http.post(url,objeto, {
+            headers: headers,
+            observe: 'response',
+            responseType: 'blob'
+          })
     }
 }

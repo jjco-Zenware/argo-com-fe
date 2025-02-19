@@ -1,0 +1,54 @@
+<div class="p-fluid col-12 mt-2">
+    <form [formGroup]="registerForm" class="p-fluid grid lg:col-12 col-12 border-round surface-border border-1 -p-2">
+        <div class="col-12 h-4rem field sm:col-6 lg:col-4 md:col-4">
+            <label class="block text-900 font-semibold mb-1">Nombres <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="text" formControlName="nombres" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class="col-6 h-4rem field sm:col-6 lg:col-4 md:col-4">
+            <label class="block text-900 font-semibold mb-1">Paterno <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="text" formControlName="appaterno" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class="col-6 h-4rem field sm:col-6 lg:col-4 md:col-4">
+            <label class="block text-900 font-semibold mb-1">Materno <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="text" formControlName="apmaterno" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class="sm:col-12 lg:col-4 md:col-12 col-6 justify-content-end h-4rem field">
+            <label class="block text-900 font-semibold">Fec. Nac.<span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm" style="height: 3rem;">
+                <p-calendar formControlName="fechanacimiento" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" class="p-inputtext-sm" ></p-calendar>
+            </span>
+        </div> 
+        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+            <label class="block text-900 font-semibold mb-1">Tipo Doc. <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <p-dropdown [options]="lstTipoDocPer" formControlName="idtipodoc" optionLabel="valoritem" placeholder="Seleccionar..."
+                    optionValue="coditem" class="p-inputtext-sm" appendTo="body"></p-dropdown>
+            </span>
+        </div>
+        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+            <label class="block text-900 font-semibold mb-1">N° Doc. <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="text" formControlName="nrodocumento" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+            <label class="block text-900 font-semibold mb-1">Tipo Vincu. <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <p-dropdown [options]="lstTipoVin" formControlName="codtipovinculado" optionLabel="valoritem" placeholder="Seleccionar..."
+                    optionValue="iditem" class="p-inputtext-sm" appendTo="body"></p-dropdown>
+            </span>
+        </div>
+    </form>
+    <div class="flex justify-content-end">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto" (click)="guardar()"></button>
+    </div>
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

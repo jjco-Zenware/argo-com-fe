@@ -3,8 +3,8 @@
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
-                        pTooltip="Nueva Orden" tooltipPosition="left" (click)="onNuevo()" ></button>
+                    <button pButton class="font-semibold p-button-outlined justify-content-center text-orange-500" icon="pi pi-file" label="Nuevo"
+                        pTooltip="Nuevo" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                
                 <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">OFICINA</span>
@@ -18,23 +18,23 @@
             currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
 
             <ng-template pTemplate="header">
-                <tr class="text-sm">
-                    <th style="width: 10px" class="surface-200" >
+                <tr class="text-sm h-3rem">
+                    <th style="width: 10px" class="bg-teal-50 border-1" >
                         <div class="flex justify-content-between align-items-center">
                             N°
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'70px'}" class="surface-200" >
+                    <th [ngStyle]="{'width':'70px'}" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             OFICINA 
                         </div>
                     </th>
-                    <th style="width: 150px;" class="surface-200" >
+                    <th style="width: 150px;" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             DIRECCIÓN
                         </div>
                     </th>
-                    <th style="width: 80px;" class="surface-200" >
+                    <th style="width: 80px;" class="bg-teal-50 border-1" >
                         <div class="flex justify-content-between align-items-center">
                             ACCIONES
                         </div>

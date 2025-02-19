@@ -1,0 +1,19 @@
+
+<div class="p-fluid  py-0  col-12 mt-2">
+    <form [formGroup]="registerFormPropuesta" >
+        <div class="flex grid mt-1">
+            
+           
+            <div class="sm:col-6 lg:col-12 md:col-3 col-12 mt-2 ">
+                <label class="block text-900 font-semibold">Comentario</label>                        
+                <span class="p-fluid mb-1">
+                    <textarea type="text" pInputTextarea [rows]="3" formControlName="comentario" style="resize: none" class="w-full" id="observacion"
+                        [readonly]=onlyRead class="p-inputtext-sm"></textarea>
+                </span>            
+            </div>
+        </div>
+    </form>
+    <div class="flex justify-content-end">
+        <button pButton icon="pi pi-save" label="Seleccionar" class="p-button-primary w-auto" (click)="guardarCliente()"></button>
+    </div>
+</div>

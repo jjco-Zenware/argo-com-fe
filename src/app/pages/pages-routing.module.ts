@@ -36,6 +36,11 @@ const routes: Routes = [
         path: 'contabilidad',
         loadChildren: () => import('./contabilidad/contabilidad.module').then(m => m.ContabilidadModule),
         data: { breadcrumb: 'Contabilidad' }
+      },
+      {
+        path: 'administracion',
+        loadChildren: () => import('./administracion/administracion.module').then(m => m.AdministracionModule),
+        data: { breadcrumb: 'Administracion' }
       }
     ]
   }

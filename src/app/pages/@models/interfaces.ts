@@ -288,7 +288,7 @@ export interface Cliente {
     tipopersona?: string;
     tipoalta?: string;
     indnacionalidad?: string;
-    idpais?: string;
+    idpais?: number;
     idtipodoc?: string;
     nrodocumento: string;
     appaterno?: string;
@@ -312,6 +312,8 @@ export interface Cliente {
     iduseract?: number;
     idpersona?: number;
     nomtipopersona?: string;
+    nroctadetraccion?: number;
+    tipoentidad?: string;
 }
 
 export interface KanbanCard {
@@ -495,3 +497,44 @@ export interface Tag{
     valor: string;
     iditemdocumento: string;
 }
+
+export interface I_PersonaENT {
+    idrolpersona: string
+    tipopersona: string
+    tipoalta: string
+    indnacionalidad: string
+    idpais: string
+    idtipodoc: string
+    nrodocumento: string
+    appaterno: string
+    apmaterno: string
+    apcasada: any
+    nombres: string
+    razonsocial: any
+    nomcomercial: any
+    direcresumen: string
+    telefresumen: string
+    email: string
+    paginaweb: any
+    facebook: any
+    youtube: any
+    indmigrado: boolean
+    indestado: string
+    indvig: boolean
+    idusuario: number
+    idpersona: number
+    tipoentidad: string
+    nroctadetraccion: number
+    adm_genero: string
+    adm_contaco_emergenci: any
+    adm_nrotelef_emergencia: any
+    adm_fechanacimiento: string
+    adm_estadocivil: number
+    fechainicio: any
+    fechafin: any
+    idtipotrabajo: any
+    idtipocontrato: any
+    idcargo: any
+    adm_email: string
+  }
+  

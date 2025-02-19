@@ -21,18 +21,18 @@ import { CModalListPAgosComponent } from '../../modallistpagos/c-modallistpagos.
 export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
   $listSubcription: Subscription[] = [];
 
-  lstCuentas: any;
-  lstPendientes: any;
-  lstAprobadas: any;
+  lstPorCobrar: any;
+  //lstPendientes: any;
+  //lstAprobadas: any;
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   cols: any[] = [];
-  cols2: any[] = [];
+  //cols2: any[] = [];
   lstExportar: any[] = [];
   lstExportExcel: any[] = [];
   frmDatos!: FormGroup;
   lstMonedas: any;
-  lstCliente: any;
+  lstProveedores: any[] = [];
 
   constructor(
       private fb: FormBuilder,
@@ -50,30 +50,25 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void{   
     this.createFrm();
+    this.listaClientes();
     this.listaMonedas();
-    this.listaPersona();
-      this.cols = [
-        { field: 'nrofactura', header: 'FACTURA' },
-        { field: 'nomcomercial', header: 'PROVEEDOR ' },
-        { field: 'descentrocosto', header: 'COSTO ' },
-        { field: 'fecemision', header: 'EMISION' },
-        { field: 'fecvencimiento', header: 'VENCIMIENTO' },
-        { field: 'nommoneda', header: 'MONEDA' },
-        { field: 's_monto_total', header: 'MONTO' },
-        { field: 's_monto_total', header: 'SALDO' },
-        { field: 'nomestado', header: 'ESTADO' }      
-      ];
-      this.cols2 = [
-        { field: 'nrofactura', header: 'FACTURA' },
-        { field: 'nomcomercial', header: 'PROVEEDOR ' },
-        { field: 'descentrocosto', header: 'COSTO ' },
-        { field: 'fecemision', header: 'EMISION' },
-        { field: 'fecvencimiento', header: 'VENCIMIENTO' },
-        { field: 'nommoneda', header: 'MONEDA' },
-        { field: 's_monto_total', header: 'MONTO' },
-        { field: 's_monto_total', header: 'SALDO' },
-        { field: 'nomestado', header: 'ESTADO' }     
-      ];
+    this.cols = [
+      { field: 'nrofactura', header: 'FACTURA' },
+      { field: 'nomcomercial', header: 'PROVEEDOR ' },
+      { field: 'descentrocosto', header: 'COSTO ' },
+      { field: 'fecemision', header: 'EMISION' },
+      { field: 'fecvencimiento', header: 'VENCIMIENTO' },
+      { field: 'nommoneda', header: 'MONEDA' },
+      { field: 's_monto_total', header: 'MONTO' },
+      { field: 's_monto_total', header: 'SALDO' },
+      { field: 'descentrocosto', header: 'COSTO ' },
+      { field: 'fecemision', header: 'EMISION' },
+      { field: 'fecvencimiento', header: 'VENCIMIENTO' },
+      { field: 'nommoneda', header: 'MONEDA' },
+      { field: 's_monto_total', header: 'MONTO' },
+      { field: 's_monto_total', header: 'SALDO' },
+      { field: 'nomestado', header: 'ESTADO' }      
+    ];
     this.getListar();
   }
 
@@ -84,7 +79,8 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
         fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
         idcliente: [{ value: 0, disabled: false }],
-        idmoneda: [{ value: 0, disabled: false }],
+        idproveedor: [{value: 0,disabled: false}],
+        idmoneda: [{value: 0,disabled: false}],
       })
     }
 
@@ -111,10 +107,12 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
-            console.log('rpta getListar', rpta);
-            this.lstCuentas = rpta.ordenescompra
-            this.lstPendientes = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'EMI');
-            this.lstAprobadas = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'PAG');
+
+            let lista = rpta.ordenescompra;
+            if (lista.length > 0) {
+              this.lstPorCobrar = lista.filter((x: { estado: string; }) => x.estado === 'EMI' || x.estado === 'EMT');
+            }
+            console.log('rpta lstPorCobrar', this.lstPorCobrar);
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -127,18 +125,23 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($getListar)
   }
 
-  selectHeaders(tabNumber: any) {
-    if (tabNumber.index === 0) {
-      this.lstExportExcel = this.lstPendientes;
-    }else{
-      this.lstExportExcel = this.lstAprobadas;
-    }
-  }
+  // selectHeaders(tabNumber: any) {
+  //   if (tabNumber.index === 0) {
+  //     this.lstExportExcel = this.lstPendientes;
+  //   }else{
+  //     this.lstExportExcel = this.lstAprobadas;
+  //   }
+  // }
   
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
       next: (rpta: any) => {
-        this.lstMonedas = rpta;       
+        this.lstMonedas = rpta;  
+        const objet = {
+          idmoneda: 0,
+          desmoneda: 'TODOS'
+        }     
+        this.lstMonedas.unshift(objet);
       },
       error: (err) => {
         this.serviceSharedApp.messageToast()
@@ -150,11 +153,17 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
 
   }
 
-  listaPersona() {
+  listaClientes() {
 
     const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
       next: (rpta: any) => {
-        this.lstCliente = rpta;
+        this.lstProveedores = rpta;
+        const objet = {
+          idcliente: 0,
+          nomcomercial: 'TODOS'
+        }
+        this.lstProveedores.unshift(objet);
+        console.log('this.lstProveedores', this.lstProveedores);
       },
       error: (err) => {
         this.serviceSharedApp.messageToast()
@@ -166,14 +175,14 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
   }
 
   onVer(data :any) {
-    const refItem = this.dialogService.open(CModalListPAgosComponent, {
+    const refItemx = this.dialogService.open(CModalListPAgosComponent, {
       data: data,
-      header: "Lista de Pagos / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
+      header: "Lista de Cobros / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '50%'
     });
-    refItem.onClose.subscribe((rpta: any) => {      
+    refItemx.onClose.subscribe((rpta: any) => {      
       this.getListar(); 
     });
   }
@@ -182,7 +191,7 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
     data.idpagodocprc = 0;
     const refItem = this.dialogService.open(CModalRegPAgosComponent, {
           data: data,
-          header: "Registrar Pago / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
+          header: "Registrar Cobro / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
           closeOnEscape: false,
           styleClass: 'testDialog',
           width: '30%'
@@ -195,4 +204,13 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
           }
         });
   }
+
+  getSeverity(data:number) {
+    console.log()
+    if (data > 0) {
+      return 'success';
+    }else{
+      return 'danger';
+    }
+}
 }

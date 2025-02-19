@@ -46,18 +46,21 @@ export class CAdjuntosComponent {
 
       ngOnInit(): void { 
         console.log('this.IA_codigo...', this.IA_data);
-        //console.log('codigop ver...',this.config.data);
+        console.log('codigop ver...',this.config.data);
         if (this.IA_data !== undefined) {
           this.idCliente = this.IA_data.idCliente;
-          this._codtipoproc = this.IA_data.codtipoproc;                  
+          this._codtipoproc = this.IA_data.codtipoproc; 
+          
+          if (this.IA_data.veracciones === 1) {
+            this.verAcciones = false;
+          }
+          
         }  else{
           this.idCliente = this.config.data.idCliente;
           this._codtipoproc = this.config.data.codtipoproc;
         }      
 
-        if (this.IA_data.veracciones === 1) {
-          this.verAcciones = false;
-        }
+        
         
         this.getListaArchivos();
         this.getValueDescrip();
@@ -71,6 +74,7 @@ getListaArchivos() {
       codtipoproc: this._codtipoproc , 
       idnroproceso: this.idCliente, 
     }
+    console.log('this.getListaArchivos...', objeto);
   
   const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
     .subscribe({

@@ -1,0 +1,236 @@
+<div class="-mt-1">      
+    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button pButton icon="pi pi-save" label="Grabar" (click)="guardar()" class="p-button-primary w-auto h-2rem"></button>
+    </div> 
+    <div class="card p-2">
+        <p-tabView>
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-user"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Datos Personales
+                        </span>
+                    </div>
+                </ng-template>
+                <form [formGroup]="registerFormCliente" class="p-fluid grid lg:col-7 col-12 border-round surface-border -p-2">
+                    <div class="col-12 h-4rem field sm:col-12 lg:col-11 md:col-12 flex">
+                        <div class="col-12 h-4rem field sm:col-6 lg:col-4 md:col-4">
+                            <label class="block text-900 font-semibold mb-1">Nombres <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <input pInputText type="text" formControlName="nombres" class="p-inputtext-sm"/>
+                            </span>
+                        </div>
+                        <div class="col-6 h-4rem field sm:col-6 lg:col-4 md:col-4">
+                            <label class="block text-900 font-semibold mb-1">Paterno <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <input pInputText type="text" formControlName="appaterno" class="p-inputtext-sm"/>
+                            </span>
+                        </div>
+                        <div class="col-6 h-4rem field sm:col-6 lg:col-4 md:col-4">
+                            <label class="block text-900 font-semibold mb-1">Materno <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <input pInputText type="text" formControlName="apmaterno" class="p-inputtext-sm"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-12 h-4rem field sm:col-12 lg:col-11 md:col-12 flex">
+                        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+                            <label class="block text-900 font-semibold mb-1">Nacionalidad <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstNacionalidad" formControlName="indnacionalidad" optionLabel="valoritem" placeholder="Seleccionar...!"
+                                optionValue="coditem" class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div> 
+                        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+                            <label class="block text-900 font-semibold mb-1">Tipo Doc. <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstTipoDocPer" formControlName="idtipodoc" optionLabel="valoritem" placeholder="Seleccionar..."
+                                    optionValue="coditem" (onChange)="cambioTipoDoc($event.value)" class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+                            <label class="block text-900 font-semibold mb-1">N° Documento <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <input pInputText type="text" formControlName="nrodocumento" class="p-inputtext-sm"/>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-12 h-4rem field sm:col-12 lg:col-11 md:col-12 flex">
+                        <div class="sm:col-12 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+                            <label class="block text-900 font-semibold">Fecha Nacimiento<span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm" style="height: 3rem;">
+                                <p-calendar formControlName="adm_fechanacimiento" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                                inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" class="p-inputtext-sm" ></p-calendar>
+                            </span>
+                        </div>    
+                        <div class="h-4rem field sm:col-6 lg:col-3 md:col-3">
+                            <label class="block text-900 font-semibold mb-1">Estado Civil <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstEstadoCivil" formControlName="adm_estadocivil" optionLabel="valoritem" placeholder="Seleccionar..."
+                                optionValue="coditem" class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div> 
+                        <div class="h-4rem field sm:col-6 lg:col-3 md:col-3">
+                            <label class="block text-900 font-semibold mb-1">Sexo<span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstSexo" formControlName="adm_genero" optionLabel="valoritem" placeholder="Seleccionar..."
+                                    optionValue="coditem" class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="h-4rem field sm:col-6 lg:col-3 md:col-3">
+                            <label class="block text-900 font-semibold mb-1">N° Celular <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-inputMask mask="999 999 999" formControlName="telefresumen" class="p-inputtext-sm"></p-inputMask>
+                            </span>
+                        </div>  
+                    </div>
+                    <div class="h-4rem field sm:col-6 lg:col-12 md:col-3 flex">
+                        <div class="h-4rem field sm:col-12 lg:col-11 md:col-12">
+                            <label class="block text-900 font-semibold mb-1">Dirección</label>
+                            <span class="p-fluid mt-1">
+                                <input pInputText type="text" formControlName="direcresumen" class="p-inputtext-sm"/>
+                            </span>
+                        </div> 
+                    </div>
+                        
+                    <div class="h-4rem field sm:col-6 lg:col-11 md:col-3 flex">
+                        <div class="h-4rem field sm:col-12 lg:col-6 md:col-12">
+                            <label class="block text-900 font-semibold mb-1">Correo Empresa</label>
+                            <span class="p-fluid mt-1">
+                                <input pInputText type="text" formControlName="email" class="p-inputtext-sm"/>
+                            </span>
+                        </div> 
+                        <div class="h-4rem field sm:col-12 lg:col-6 md:col-12">
+                            <label class="block text-900 font-semibold mb-1">Correo Personal</label>
+                            <span class="p-fluid mt-1">
+                                <input pInputText type="text" formControlName="adm_email" class="p-inputtext-sm"/>
+                            </span>
+                        </div> 
+                    </div>
+                    <p-divider align="left" class="sm:col-6 lg:col-11 md:col-6 col-12 h-3rem">
+                        <i class="pi pi-phone text-blue-600"></i>
+                        <span class="text-blue-600 text-900 font-semibold ml-2">Contacto Emergencia </span>
+                    </p-divider> 
+                    <div class="col-12 h-4rem field sm:col-12 lg:col-11 md:col-12 flex">                        
+                        <div class="col-6 h-4rem field sm:col-6 lg:col-7 md:col-4">
+                            <label class="block text-900 font-semibold mb-1">Nombres/Apellidos</label>
+                            <span class="p-fluid mt-1">
+                                <input pInputText type="text" formControlName="adm_contacto_emergencia" class="p-inputtext-sm"/>
+                            </span>
+                        </div>              
+                        <div class="h-4rem field sm:col-6 lg:col-5 md:col-3">
+                            <label class="block text-900 font-semibold mb-1">N° Celular</label>
+                            <span class="p-fluid mt-1">
+                                <p-inputMask mask="999 999 999" formControlName="adm_nrotelef_emergencia" class="p-inputtext-sm"></p-inputMask>
+                            </span>
+                        </div>
+                    </div>
+                                     
+                       
+    
+                </form>
+            </p-tabPanel>
+    
+            <p-tabPanel [disabled]=visibleDocument>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-building"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Datos Laborales
+                        </span>
+                    </div>
+                </ng-template>      
+                <div class="flex mt-3 ml-2 gap-2">
+                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Dato Laboral" icon="pi pi-plus" label="Agregar" (click)="agregarLaboral([])"></button>
+                </div>
+                <p-table [value]="listaDatosLaboral" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                        [scrollable]="true"  styleClass="p-datatable-sm ">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                                    <th class="bg-teal-50 border-1">CARGO</th>
+                                    <th class="bg-teal-50 border-1">FEC. INICIO</th>
+                                    <th class="bg-teal-50 border-1">FEC. FIN</th>
+                                    <th class="bg-teal-50 border-1">TIP. TRABAJADOR.</th>
+                                    <th class="bg-teal-50 border-1">TIP. CONTRATO.</th>
+                                    <th class="bg-teal-50 border-1">ESTADO</th>
+                                    <th class="bg-teal-50 border-1">ACCIONES</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                                <tr>
+                                    <td>{{rowIndex + 1}}</td>
+                                    <td>{{ product.cargo}}</td>
+                                    <td>{{ product.fecinilaboral | date: 'dd/MM/yyyy'}}</td>  
+                                    <td>{{ product.fecfinlaboral | date: 'dd/MM/yyyy'}}</td>   
+                                    <td>{{ product.destipotrabajador}}</td>             
+                                    <td>{{ product.destipocontrato}}</td>              
+                                    <td>{{ product.nomestadolaboral}}</td>   
+                                    <td>
+                                        <div *ngIf="product.estado != 3">
+                                            <button  pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left" (click)="agregarLaboral(product)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" (click)="eliminarLaboral(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>  
+            </p-tabPanel>
+    
+            <p-tabPanel [disabled]=visibleDocument>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-users"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Vinculados
+                        </span>
+                    </div>
+                </ng-template>   
+                <div class="flex mt-3 ml-2 gap-2">
+                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Vinculado" icon="pi pi-user-plus" label="Agregar" (click)="agregarVinculado([])"></button>
+                </div>
+                <p-table [value]="listaVinculados" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                [scrollable]="true"  styleClass="p-datatable-sm ">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                            <th class="bg-teal-50 border-1">NOMBRES</th>
+                            <th class="bg-teal-50 border-1">PATERNO</th>
+                            <th class="bg-teal-50 border-1">MATERNO</th>
+                            <th class="bg-teal-50 border-1">FEC. NACIMIENTO</th>
+                            <th class="bg-teal-50 border-1">TIP. VINCULADO</th>
+                            <th class="bg-teal-50 border-1">TIP. DOC.</th>
+                            <th class="bg-teal-50 border-1">NRO. DOC.</th>
+                            <th class="bg-teal-50 border-1">ACCIONES</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                        <tr>
+                            <td>{{rowIndex + 1}}</td>
+                            <td>{{ product.nombres}}</td>
+                            <td>{{ product.appaterno}}</td>  
+                            <td>{{ product.apmaterno}}</td>              
+                            <td>{{ product.fechanacimiento | date: 'dd/MM/yyyy'}}</td> 
+                            <td>{{ product.destipovinculado}}</td>                     
+                            <td>{{ product.idtipodoc}}</td>                    
+                            <td>{{ product.nrodocumento}}</td>
+                            <td>
+                                <div >
+                                    <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left" (click)="agregarVinculado(product)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" (click)="eliminarVinculado(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>      
+            </p-tabPanel>
+    
+    
+        </p-tabView> 
+    </div>
+       
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-toast></p-toast>

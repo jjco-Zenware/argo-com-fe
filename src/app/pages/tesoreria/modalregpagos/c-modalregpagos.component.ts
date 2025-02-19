@@ -23,6 +23,7 @@ export class CModalRegPAgosComponent implements OnInit, OnDestroy {
     errorMensaje: string = "";
     blockedDocument: boolean = false;
     mensajeSpinner: string = "";
+    valueMoneda: number=0;
  
   constructor(
     private fb: FormBuilder,
@@ -40,6 +41,7 @@ export class CModalRegPAgosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.param = this.config.data;
     console.log('this.param...', this.param);
+    this.valueMoneda = this.param.idmoneda;
     this.createForm();
     this.listaBanco();
     this.listaMonedas();  
@@ -201,7 +203,7 @@ traeruno(){
 
     if (!_error && (this.registerForm.value.monto === null || this.registerForm.value.monto === '' || this.registerForm.value.monto === 0))
     {
-        this.errorMensaje="Ingresar Monto a Pagar...!";
+        this.errorMensaje="Ingresar Monto...!";
         _error = true;
     }
 
@@ -221,7 +223,38 @@ traeruno(){
     }
 
     onValueChange(event:any){
-      console.log('onValueChange...', event);
+      if (this.registerForm.value.idmoneda !== this.valueMoneda) {
+        if (this.valueMoneda === 1) {
+          this.registerForm.get('montopago')?.setValue(this.registerForm.value.tc * event);
+        }else{
+          this.registerForm.get('montopago')?.setValue(event / this.registerForm.value.tc );
+        }        
+      }else{
+        this.registerForm.get('montopago')?.setValue(event);
+      }
+    }
+
+    changeMoneda(event:any){
+      console.log('changeMoneda...', event);
+      if (this.registerForm.value.idmoneda !== this.valueMoneda) {
+        if (this.valueMoneda === 1) {
+          this.registerForm.get('montopago')?.setValue(Math.round(this.registerForm.value.monto * this.registerForm.value.tc));
+        }else{
+          this.registerForm.get('montopago')?.setValue(Math.round(this.registerForm.value.monto / this.registerForm.value.tc));
+        }        
+      }else{
+        this.registerForm.get('montopago')?.setValue(this.registerForm.value.monto);
+      }
+    }
+
+    onValueChangeTc(event:any){
+      if (this.registerForm.value.idmoneda !== this.valueMoneda) {
+        if (this.valueMoneda === 1) {
+          this.registerForm.get('montopago')?.setValue(Math.round(this.registerForm.value.monto * event));
+        }else{
+          this.registerForm.get('montopago')?.setValue(Math.round(this.registerForm.value.monto / event));
+        }        
+      }
     }
  
 }

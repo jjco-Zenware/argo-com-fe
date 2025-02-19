@@ -14,6 +14,7 @@ const controllerAlmacen: string = webApi+'Almacen';
 const controllerProducto: string = webApi+'Producto';
 const controllerTesoreria: string = webApi+'Tesoreria';
 const controllerContabilidad: string = webApi+'Contabilidad';
+const controllerAdministracion: string = webApi+'Administracion';
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -149,6 +150,20 @@ export const constantesApiWeb = {
 
     listarPlanContable: controllerContabilidad + '/listarPlanContable',
     prcDocumentoDet: controllerMain + '/prcdetdocumentordlc',
+    prcDocumentoDet2: controllerMain + '/prcdetdocumentordlc2',
 
     recalcularRegistro: controllerTesoreria + '/obtenercalculodetraccion/',
+    listarUsuario: controllerUsuario + '/listarUsuario02',
+
+    postordocumentoseleccionacotiza: controllerComercial + '/postordocumentoseleccionacotiza',
+    prcPersona: controllerMain + '/personaprc',
+    descargarInformeEmpleado: controllerMain + '/descargarinfoempleado',
+    
+    listavinculados: controllerAdministracion + '/VinculadoList/',
+    listadatoslaborales: controllerAdministracion + '/LaboralPerList/',
+    delVinculado: controllerAdministracion + '/vinculadodel/',
+    delDatosLaborales: controllerAdministracion + '/LaboralDel/',
+    prcVinculado: controllerAdministracion + '/VinculadoPrc',
+    prcDatosLaborales: controllerAdministracion + '/LaboralPrc',
+    listaEstadoLab: controllerAdministracion + '/estadoLaboral/',
 }

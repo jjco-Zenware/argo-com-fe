@@ -56,6 +56,11 @@ const routes: Routes = [
     path: 'reporte-venta',
     loadChildren: () => import('./reporte-venta/reporte-venta.module').then(m => m.ReporteVentaModule),
     data: { breadcrumb: 'Reporte de Ventas' }
+  },
+  {
+    path: 'requerimiento',
+    loadChildren: () => import('./requerimiento/requerimiento.module').then(m => m.RequerimientoModule),
+    data: { breadcrumb: 'requerimiento' }
   }
 ];
 

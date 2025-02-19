@@ -161,5 +161,22 @@ export class OrdencompraService {
             responseType: 'blob'
           })
     }
+
+    postordocumentoseleccionacotiza(objeto:any) {
+        const url = `${constantesApiWeb.postordocumentoseleccionacotiza}`;
+            return  this.http.post<any>(url, objeto)
+    }
     
+    prcDocumentoDet2(objeto:any) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=utf-8',
+          });
+
+          const url = `${constantesApiWeb.prcDocumentoDet2}`;
+          return this.http.post(url,objeto, {
+            headers: headers,
+            observe: 'response',
+            responseType: 'blob'
+          })
+    }
 }

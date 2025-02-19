@@ -35,14 +35,14 @@
             <label class="block text-900 font-semibold mb-1">Moneda</label>  
             <span class="p-fluid mt-1">
                 <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar..." optionLabel="desmoneda" 
-                optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeMoneda($event.value)"></p-dropdown>
             </span>                                      
         </div> 
         <div class="sm:col-6 lg:col-2 md:col-3 col-6 h-4rem">
             <label class="block text-900 font-semibold mb-1">TC<span class="text-red-500 font-bold"> * </span></label>                        
             <span class="p-fluid">
                 <p-inputNumber class="mt-1" formControlName="tc" locale="es-PE" mode="decimal" [minFractionDigits]="4" name="tipocambio" 
-                [min]="0" [max]="9" class="p-inputtext-sm" [readonly]=onlyRead></p-inputNumber>
+                [min]="0" [max]="9" class="p-inputtext-sm" [readonly]=onlyRead (onInput)="onValueChangeTc($event.value)"></p-inputNumber>
             </span>
         </div> 
         <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
@@ -56,7 +56,7 @@
             <span class="p-fluid">
                 <!-- <input pInputText type="text" formControlName="monto" [readonly]=onlyRead class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/> -->
                 <p-inputNumber class="mt-1" formControlName="monto" locale="es-PE" mode="decimal" [minFractionDigits]="2" 
-                [min]="0" class="p-inputtext-sm" [readonly]=onlyRead (onChange)="onValueChange($event)"></p-inputNumber>
+                [min]="0" class="p-inputtext-sm" [readonly]=onlyRead (onInput)="onValueChange($event.value)"></p-inputNumber>
             </span>
         </div>    
         <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field ">

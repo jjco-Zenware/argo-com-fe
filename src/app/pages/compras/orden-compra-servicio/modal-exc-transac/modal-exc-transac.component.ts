@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';import { KanbanCard } from '@interfaces';
-import { constantesLocalStorage } from '@constantes';
+import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { OrdencompraService } from '../service/ordencompra.service';
 
@@ -24,8 +24,8 @@ export class CModalExcTransacComponent {
     descripcion: string = "";
     btnIconAccion!: string;
     btnColor!: string;
-
-
+    blockedDocument: boolean = false;
+    mensajeSpinner: string = "";
 
   constructor(
     public ref: DynamicDialogRef,
@@ -50,12 +50,19 @@ export class CModalExcTransacComponent {
       this.btnColor = this._transaccion[0].clasebtn;    
     }
 
+    setSpinner(valor: boolean) {
+      this.blockedDocument = valor;
+    }
+
     procesarTRX(codigo: number) {
       if (this.validarDatos()) {
           console.log("errorMensaje : ", this.errorMensaje);
           this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: this.errorMensaje });
           return;
       }
+
+      this.setSpinner(true);
+      this.mensajeSpinner = mensajesSpinner.msjProcesando
 
       const objeto = {
           idtrx: codigo,
@@ -67,6 +74,7 @@ export class CModalExcTransacComponent {
       const $procesarTrx = this.ordencompraService.procesarTrx(objeto).subscribe({
           next: (rpta: any) => {
               console.log('prcReunion', rpta);
+              this.setSpinner(false);
               if (rpta.procesoSwitch === 0) {
                   console.log('entro procesoSwitch....');
                   this.cerrar(objeto)
@@ -79,6 +87,7 @@ export class CModalExcTransacComponent {
               });
           },
           error: (err) => {
+            this.setSpinner(false);
               console.error('error : ', err);
               this.serviceSharedApp.messageToast();
           },

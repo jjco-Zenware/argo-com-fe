@@ -1,0 +1,42 @@
+
+<div class="p-fluid  py-0  col-12 mt-2">
+    <form [formGroup]="registerFormPropuesta" >
+        <div class="flex grid mt-1">
+            
+            <div class="col-4 sm:col-6 lg:col-6 md:col-6 col-6 h-4rem">    
+                <div class="flex">
+                    <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>  
+                </div>               
+                <span inputStyleClass="font-semibold surface-300">
+                    <p-dropdown [options]="lstProveedores" placeholder="Proveedor..."  formControlName="idpersona" class="p-inputtext-sm"
+                    optionLabel="nomcomercial" optionValue="idcliente" appendTo="body"  styleClass="font-semibold surface-300" readonly=true ></p-dropdown>            
+                </span>
+            </div> 
+        
+            <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem ">
+                <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                <span class="p-fluid mt-1">
+                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                </span>                                      
+            </div>  
+            <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem">
+                <label class="block text-900 font-semibold mb-1">Monto <span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid">
+                    <p-inputNumber class="mt-1" formControlName="monto" locale="es-PE" mode="decimal" [minFractionDigits]="2" name="tipocambio" 
+                    [min]="0" class="p-inputtext-sm" [readonly]=onlyRead></p-inputNumber>
+                </span>
+            </div>
+            <div class="sm:col-6 lg:col-12 md:col-3 col-12 mt-2 ">
+                <label class="block text-900 font-semibold">Comentario <span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid mb-1">
+                    <textarea type="text" pInputTextarea [rows]="3" formControlName="comentario" style="resize: none" class="w-full" id="observacion"
+                        [readonly]=onlyRead class="p-inputtext-sm"></textarea>
+                </span>            
+            </div>
+        </div>
+    </form>
+    <div class="flex justify-content-end">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto" (click)="guardarCliente()"></button>
+    </div>
+</div>

@@ -84,6 +84,8 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}],
         fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
+        idproveedor: [{value: 0,disabled: false}],
+        idmoneda: [{value: 0,disabled: false}],
       })
     }
 

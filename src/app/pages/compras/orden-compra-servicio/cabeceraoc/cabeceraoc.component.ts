@@ -191,7 +191,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       codtipoorden:[{ value: 'OC', disabled: false }],
       codigonroorden:[{ value: '', disabled: true }],
       nomproyecto:[{ value: '', disabled: false }],
-      fecentrega: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      fecentrega: [{value: null ,disabled: false,}],
       terminosdepago:[{ value: '', disabled: false }],
     });
   }
@@ -724,7 +724,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
          item.nomunidad = _nomunidad,
          item.descripcion = item.Descripcion === undefined ? '': item.Descripcion,
          item.codproveedor = item.CodProveedor === undefined ? '': item.CodProveedor,
-         item.cantidad = item.Cantidad === undefined ? '' : item.Cantidad,
+         item.cantidad = item.Cantidad === undefined ? '' : parseInt(item.Cantidad),
          item.preciocosto = item.PrecioUnitario === undefined ? '': item.PrecioUnitario,
          item.preciocostototal = item.Total === undefined ? '' : item.Total,
          item.codproducto = item.CodProducto === undefined ? null : item.CodProducto,
@@ -1108,11 +1108,11 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
             _error = true;
       }
 
-      // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
-      // {
-      //     this.errorMensaje="Ingresar Condiciones Comerciales...!";
-      //     _error = true;
-      // }
+      if (!_error && (this.registerFormRegistro.value.fecentrega === " " || this.registerFormRegistro.value.fecentrega === null))
+      {
+          this.errorMensaje="Ingresar Fecha de Entrega...!";
+          _error = true;
+      }
        return _error;
      }
 

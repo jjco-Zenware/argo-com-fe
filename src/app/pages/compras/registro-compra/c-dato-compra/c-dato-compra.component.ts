@@ -265,6 +265,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
     switch (data) {
       case 'PEN':
+        case 'REG':
         this.verbtnGrabar = true;
         this.verbtnPreliminar= true;
         this.verbtnOrden = false;

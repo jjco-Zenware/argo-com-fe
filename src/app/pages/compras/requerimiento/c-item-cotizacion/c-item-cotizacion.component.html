@@ -1,0 +1,40 @@
+<div class="p-fluid py-0 col-12 mt-2">
+
+    <form [formGroup]="frmDatosItem">
+        <div class="flex grid mt-1">
+            <div class="col-12 sm:col-12 lg:col-9 md:col-12">
+                <label class="text-blue-600 font-semibold">Tipo Producto</label>
+                <p-dropdown [options]="lstTipoProducto" formControlName="idtipoprod" optionLabel="nomtipoprod"
+                    optionValue="idtipoprod" placeholder="Seleccionar Producto" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+            </div>   
+            <!-- <div class="sm:col-6 lg:col-9 md:col-3 col-9 ">
+                <label class="text-blue-600 font-semibold mb-1">Grupo</label>                
+                <span class="p-fluid mt-1">
+                    <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..."  formControlName="idfamilia" class="p-inputtext-sm"
+                    optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body" ></p-dropdown> 
+                </span>
+            </div>   -->
+            <div class="col-3 sm:col-12 lg:col-3 md:col-12">
+                <label class="text-blue-600 font-semibold">Cantidad</label>
+                <p-inputNumber formControlName="cantidad" class="p-inputtext-sm"></p-inputNumber>
+            </div>  
+            <div class="col-12 sm:col-12 lg:col-12 md:col-12">
+                <label class="text-blue-600 font-semibold">Descripción</label>
+                <textarea id="description" type="text" formControlName="descripcion" pInputTextarea [rows]="3"
+                    style="resize: none" class="w-full mt-1 p-inputtext-sm"></textarea>
+            </div>
+        </div>
+        
+    </form>
+
+    <div class="flex justify-content-end flex-wrap p-dialog-footer">
+        <div class="flex">
+            <button pButton icon="pi pi-check" label="Agregar" (click)="guardarItem()"
+                class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary -mt-2"></button>
+        </div>
+    </div>
+</div>
+
+
+
+

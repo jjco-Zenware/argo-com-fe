@@ -27,12 +27,12 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   cols: any[] = [];
-  cols2: any[] = [];
   lstExportar: any[] = [];
   lstExportExcel: any[] = [];
   frmDatos!: FormGroup;
   lstMonedas: any;
-  lstProveedor: any;
+  lstProveedores: any[] = [];
+  
   @Output() OB_back = new EventEmitter<boolean>();
 
   constructor(
@@ -52,7 +52,8 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
   ngOnInit(): void{
       this.createFrm();
       this.listaMonedas();
-      this.listaPersona();
+      this.listaProveedores();
+      this.listaProveedores();
       this.cols = [
         { field: 'nrofactura', header: 'FACTURA' },
         { field: 'nomcomercial', header: 'PROVEEDOR ' },
@@ -62,18 +63,16 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
         { field: 'nommoneda', header: 'MONEDA' },
         { field: 's_monto_total', header: 'MONTO' },
         { field: 's_monto_total', header: 'SALDO' },
-        { field: 'nomestado', header: 'ESTADO' }      
-      ];
-      this.cols2 = [
-        { field: 'nrofactura', header: 'FACTURA' },
-        { field: 'nomcomercial', header: 'PROVEEDOR ' },
-        { field: 'descentrocosto', header: 'COSTO ' },
-        { field: 'fecemision', header: 'EMISION' },
+        { field: 'nomestado', header: 'ESTADO' }      ,
         { field: 'fecvencimiento', header: 'VENCIMIENTO' },
         { field: 'nommoneda', header: 'MONEDA' },
         { field: 's_monto_total', header: 'MONTO' },
         { field: 's_monto_total', header: 'SALDO' },
-        { field: 'nomestado', header: 'ESTADO' }     
+        { field: 'nomestado', header: 'ESTADO' } ,
+        { field: 's_monto_total', header: 'SALDO' },
+        { field: 'nomestado', header: 'ESTADO' }  ,
+        { field: 's_monto_total', header: 'SALDO' },
+        { field: 'nomestado', header: 'ESTADO' } 
       ];
     this.getListar();
   }
@@ -83,8 +82,8 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
         fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}],
         fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
-        idproveedor: [{ value: '', disabled: false }],
-        idmoneda: [{ value: 0, disabled: false }],
+        idproveedor: [{ value: 0, disabled: false }],
+        idmoneda: [{value: 0,disabled: false}],
       })
     }
 
@@ -111,10 +110,14 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
-            console.log('rpta getListar', rpta);
-            this.lstCuentas = rpta.ordenescompra
-            this.lstPendientes = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'EMI');
-            this.lstAprobadas = this.lstCuentas.filter((x: { estado: string; }) => x.estado === 'PAG');
+            //this.lstCuentas= rpta.ordenescompra;
+
+             let lista = rpta.ordenescompra;
+             
+            if (lista.length > 0) {
+              this.lstCuentas = lista.filter((x: { estado: string; }) => x.estado === 'EMI' || x.estado === 'EMT');
+            }
+            console.log('rpta getListar', this.lstCuentas);
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -138,8 +141,13 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
       next: (rpta: any) => {
-        console.log('listaMonedas', rpta);
+        //console.log('listaMonedas', rpta);
         this.lstMonedas = rpta;       
+        const objet = {
+          idmoneda: 0,
+          desmoneda: 'TODOS'
+        }
+        this.lstMonedas.unshift(objet);
       },
       error: (err) => {
         this.serviceSharedApp.messageToast()
@@ -150,13 +158,19 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($listaMonedas);
 
   }
+  
 
-  listaPersona() {
+  listaProveedores() {
 
     const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
       next: (rpta: any) => {
-        this.lstProveedor = rpta;
-        console.log('this.lstProveedor', this.lstProveedor);
+        this.lstProveedores = rpta;
+        const objet = {
+          idcliente: 0,
+          nomcomercial: 'TODOS'
+        }
+        this.lstProveedores.unshift(objet);
+        //console.log('this.lstProveedores', this.lstProveedores);
       },
       error: (err) => {
         this.serviceSharedApp.messageToast()
@@ -200,4 +214,13 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
             }
           });
     }
+
+    getSeverity(data:number) {
+      console.log()
+      if (data > 0) {
+        return 'success';
+      }else{
+        return 'danger';
+      }
+  }
 }
