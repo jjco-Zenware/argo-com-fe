@@ -1,15 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ProyectosService } from '../../proyectos-ganados/service/proyectos.service';
 import { SharedAppService } from '@sharedAppService';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcTransacComponent } from '../modal-exc-transac/modal-exc-transac.component';
 import * as FileSaver from 'file-saver';
+import { OrdencompraService } from '../service/ordencompra.service';
 
 @Component({
   selector: 'app-c-orden-compra-servicio',
@@ -46,6 +47,8 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         public dialogService: DialogService  ,
         private proyectosService: ProyectosService,     
         private serviceSharedApp: SharedAppService,
+        private ordencompraService: OrdencompraService,
+        private messageService: MessageService,
         
       ){          
     }
@@ -254,5 +257,75 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
             type: EXCEL_TYPE
         });
         FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
+      }
+
+      onVerDetalle(data: any) {
+          console.log('onVerDetalle...', data);
+          console.log('data.items...', data.items);
+          if (data.items != undefined ){
+            if (data.items.length === 0) {
+              this.messageService.add({ severity: 'info', summary: 'Validación...', detail: "Debe Agregar Items...!" });
+              return;
+            }
+          }else{
+            this.messageService.add({ severity: 'info', summary: 'Validación...', detail: "Debe Agregar Items...!" });
+              return;
+          }
+
+          
+              // const refItem = this.dialogService.open(CDetalleFacturaComponent, {
+              //   data: data,
+              //   header: "Detalle de la Factura N° " + data.nrofactura,
+              //   closeOnEscape: false,
+              //   styleClass: 'testDialog',
+              //   width: '50%'
+              // });  
+              
+              this.setSpinner(true);
+            this.mensajeSpinner = 'Descargando Detalle...!';
+        
+            const objeto = {
+              idusuario : constantesLocalStorage.idusuario,
+              iddocumentoprc: data.idordencompra,
+              codtipoprc: 8,
+              idplantilla: 0
+            }
+        
+            const $cargarOrdenC = this.ordencompraService.prcDocumento(objeto).subscribe({
+              next: (rpta: any) => {
+                this.setSpinner(false);      
+                
+                const mediaType = 'application/pdf';
+                  const blob = new Blob([rpta.body], { type: mediaType });
+                  const filename = 'DET_FACT_COMPRA_' + data.nrofactura;
+          
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = filename;
+                  document.body.appendChild(a);
+                  a.target = '_blank';
+                  a.click();
+        
+                  window.open(url);
+        
+                  setTimeout(() => {
+                      document.body.removeChild(a);
+                      window.URL.revokeObjectURL(url);
+                  }, 100);
+              },
+                  error: (err) => {
+                    this.setSpinner(false);
+                  this.messageService.clear();
+                  this.messageService.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: mensajesQuestion.msgErrorGenerico,
+                  });
+              },
+                  complete: () => {
+              },
+            });
+            this.$listSubcription.push($cargarOrdenC)
       }
 }

@@ -44,6 +44,8 @@ export class CUsuarioDetalleComponent implements OnInit, OnDestroy{
   lstDatosLaboral: any[] = [];
   listaVinculados: any[] = [];
   listaDatosLaboral: any[] = [];
+  verAdjunto: boolean = false;
+  dataAdjunto: any;
 
 constructor(
   private messageService: MessageService,
@@ -62,6 +64,13 @@ ngOnInit(): void {
   console.log('this.IA_data', this.IA_data);
       if (this.IA_data !== 0) {
         this.idCliente = this.IA_data.idcliente;
+           
+        this.dataAdjunto ={
+          idCliente: this.idCliente,
+          codtipoproc: 8,
+          veracciones: 0
+        }   
+        this.verAdjunto = true;  
       }
 
     this.createFormCliente();

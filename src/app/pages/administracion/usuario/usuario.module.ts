@@ -12,6 +12,7 @@ import { CUsuarioDetalleComponent } from './c-usuario-detalle/c-usuario-detalle.
 import { TagModule } from 'primeng/tag';
 import { CModalVinculadoComponent } from './modal-vinculado/c-modalvinculado.component';
 import { CModalLaboralComponent } from './modal-laboral/c-modallaboral.component';
+import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { CModalLaboralComponent } from './modal-laboral/c-modallaboral.component
     FormsModule,
     ReactiveFormsModule,
     UsuarioRoutingModule,
-    TagModule
+    TagModule,
+    RegistroProveedorModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AdministracionService ]
 })

@@ -849,9 +849,16 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     });
   }
 
+
   vistaPreliminar(){
+
+    if (this.lstItemOC.length === 0) {
+      this.messageService.add({ severity: 'info', summary: 'Validación...', detail: "Debe Agregar Items...!" });
+      return;
+    }
+
     this.setSpinner(true);
-    this.mensajeSpinner = 'Descargando...!';
+    this.mensajeSpinner = 'Descargando...!';  
 
     const objeto = {
       idusuario : constantesLocalStorage.idusuario,
