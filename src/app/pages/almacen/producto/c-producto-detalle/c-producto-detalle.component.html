@@ -38,13 +38,13 @@
                     <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-2 field">
                         <label class="font-semibold mb-1">Nombre <span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
-                            <textarea type="text" pInputTextarea [rows]="1" formControlName="despro" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                            <textarea type="text" pInputTextarea [rows]="2" formControlName="despro" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
                         </span>
                     </div>
                     <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-5 field">
                         <label class="font-semibold mb-1">Descripción Detallada </label>                        
                         <span class="p-fluid">
-                            <textarea type="text" pInputTextarea [rows]="2" formControlName="desdet" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                            <textarea type="text" pInputTextarea [rows]="3" formControlName="desdet" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
                         </span>
                     </div>
                     <div class="sm:col-12 lg:col-4 md:col-6 col-6 h-4rem mb-3 -mt-5 field">                            
@@ -77,17 +77,18 @@
                             optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div> 
-                    <div class="sm:col-12 lg:col-4 md:col-6 col-6 h-4rem field">
+                    <!-- <div class="sm:col-12 lg:col-4 md:col-6 col-6 h-4rem field">
                         <label class="font-semibold">Moneda <span class="text-red-500 font-bold"> * </span></label>  
                         <span >
                             <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
                             optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                         </span>                                      
-                    </div> 
+                    </div>  -->
                     <div class="sm:col-6 lg:col-3 md:col-6 col-6 field">
                         <label class="font-semibold">Costo U.</label>
                         <p-inputNumber formControlName="valorunit" mode="decimal" locale="en-US" [minFractionDigits]="2" class="p-inputtext-sm"></p-inputNumber>
                     </div>
+                    <div class="sm:col-12 lg:col-4 md:col-6"></div>
                     <!-- <div class=" sm:col-8 lg:col-2 md:col-12 "></div>
                     <p-divider align="left" class="sm:col-6 lg:col-12 md:col-6 col-12 -mt-8">
                         

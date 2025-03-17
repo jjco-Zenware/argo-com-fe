@@ -8,7 +8,18 @@
             </div>
         </div>
 
-        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-10 text-sm col-12">
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-9 text-sm ">
+            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
+                <label class="font-semibold text-blue-600">DESDE</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fechaini"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
+                </p-calendar>
+            </div>
+            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
+                <label class="font-semibold text-blue-600">HASTA</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
+            </div> 
             <div class="col-6 sm:col-6 lg:col-3 md:col-6 -mt-4">                            
                 <label class="text-blue-600 font-semibold mb-1">ALMACÉN </label>                            
                 <span>
@@ -22,22 +33,34 @@
                     <i class="pi pi-search cursor-pointer" pTooltip="Busqueda Avanzada de Producto" tooltipPosition="bottom" (click)="getBusquedaAvanzada([])"></i>
                     <input type="text" pInputText formControlName="codproducto" class="p-inputtext-sm" placeholder="Ingresar Código Producto"/>
                 </span>
-            </div> 
-            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
-                <label class="font-semibold text-blue-600">FECHA INICIO</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fechaini"
-                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
-                </p-calendar>
-            </div>
-            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
-                <label class="font-semibold text-blue-600">FECHA FIN</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
-                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
-            </div>                
+            </div>                            
             <div class="field col-12 md:col-2 -mt-5 gap-2">
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                     class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
             </div>
+            <div class="sm:col-6 lg:col-2 md:col-3 -mt-5 field">
+                <label class="text-blue-600 font-semibold mb-1">ORIGEN </label>
+                <span class="p-fluid mt-1">
+                    <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
+                    optionValue="idtipoproyecto" (onChange)="getOrigen($event.value)"  class="p-inputtext-sm"></p-dropdown>
+                </span>
+            </div> 
+            <div class="sm:col-6 lg:col-5 md:col-3  field -mt-5">
+                <label class="text-blue-600 font-semibold mb-1">PROYECTO </label>                        
+                <span class="p-fluid mt-1">
+                    <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
+                    optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="getOcproveedor($event.value)" ></p-dropdown>
+                </span>
+            </div>
+            <div class="sm:col-6 lg:col-3 md:col-3 col-12 -mt-5">
+                <div class="flex">
+                    <label class="text-blue-600 font-semibold mb-1">ORDEN COMPRA</label>
+                </div>                            
+                <span>
+                    <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
+                    optionValue="alm_idordencompra" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
+                </span>
+            </div> 
         </form> 
 
         <p-table #dt1 [value]="lstAlmacen" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
@@ -49,6 +72,11 @@
                     <th rowspan="2" style="width: 20px" class="bg-teal-50 border-1" >
                         <div class="flex justify-content-between align-items-center">
                             N°
+                        </div>
+                    </th>
+                    <th rowspan="2" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'width':'100px','text-align': 'center'}">
+                            N° ORDEN
                         </div>
                     </th>
                     <th rowspan="2" class="bg-teal-50 border-1">
@@ -125,12 +153,14 @@
             <ng-template pTemplate="body" let-sale let-rowIndex="rowIndex"> 
                 <tr>
                     <td>{{rowIndex + 1}}</td>
+                    <td>{{sale.nroordencompra_origen}}</td>
                     <td>{{sale.fechamov}}</td>
-                    <td>
+                    <td>{{sale.descripcion | uppercase}}</td>
+                    <!-- <td>
                         <div pTooltip="{{sale.descripcion | uppercase}}">
-                            {{(sale.descripcion.length > 40) ? ((sale.descripcion).slice(0, 40) + '...' | uppercase) : sale.descripcion | uppercase}}
+                            {{(sale.descripcion.length > 70) ? ((sale.descripcion).slice(0, 70) + '...' | uppercase) : sale.descripcion | uppercase}}
                         </div>  
-                    </td>                    
+                    </td>                     -->
                     <td>{{sale.nomalmacen}}</td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">

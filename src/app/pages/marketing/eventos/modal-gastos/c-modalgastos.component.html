@@ -1,0 +1,52 @@
+
+<div class="p-fluid  py-0  col-12 mt-2">
+    <form [formGroup]="registerFormGasto" >
+        <div class="flex grid mt-1">
+            
+            <div class="col-4 sm:col-12 lg:col-4 md:col-12 justify-content-end h-4rem">
+                <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
+                <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
+                    <p-calendar formControlName="fecgasto" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" 
+                    inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                </span>
+            </div> 
+            <div class="col-4 sm:col-12 lg:col-2 md:col-12 justify-content-end h-4rem"></div>
+            <div class="sm:col-6 lg:col-6 md:col-3 col-6 h-4rem field">
+                <label class="block text-900 font-semibold mb-1">N° Documento<span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid">
+                    <input pInputText type="text" formControlName="tipnrodocum" class="p-inputtext-sm"/>
+                </span>
+            </div>
+            <!-- <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem">
+                <label class="block text-900 font-semibold mb-1">Tip/N° Documento <span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid">
+                    <input class="mt-1" formControlName="tipnrodocum" name="tipnrodocum" class="p-inputtext-sm"/>
+                </span>
+            </div> -->
+            <div class="sm:col-6 lg:col-6 md:col-3 col-6 h-4rem">
+                <label class="block text-900 font-semibold mb-1">Monto <span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid">
+                    <p-inputNumber class="mt-1" formControlName="mtogasto" locale="es-PE" mode="decimal" [minFractionDigits]="2" name="tipocambio" 
+                    [min]="0" class="p-inputtext-sm" ></p-inputNumber>
+                </span>
+            </div>
+            <div class="sm:col-6 lg:col-6 md:col-3 col-6 h-4rem ">
+                <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                <span class="p-fluid mt-1">
+                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                    optionValue="idmoneda" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
+                </span>                                      
+            </div>  
+            <div class="sm:col-6 lg:col-12 md:col-3 col-12 mt-3">
+                <label class="block text-900 font-semibold">Descripción <span class="text-red-500 font-bold"> * </span></label>                        
+                <span class="p-fluid mb-1">
+                    <textarea type="text" pInputTextarea [rows]="3" formControlName="descripcion" style="resize: none" class="w-full" id="observacion"
+                        class="p-inputtext-sm"></textarea>
+                </span>            
+            </div>
+        </div>
+    </form>
+    <div class="flex justify-content-end">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto" (click)="guardar()"></button>
+    </div>
+</div>

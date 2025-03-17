@@ -1,7 +1,7 @@
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -11,6 +11,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { CBusquedaProductoComponent } from '../../busqueda-producto/c-busqueda-producto.component';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { AlmacenService } from '../../service/almacenServices';
+import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 
 @Component({
   selector: 'app-c-kardex',
@@ -31,6 +32,9 @@ export class CKardexComponent implements OnInit, OnDestroy{
     lstProducto:any;
     tituloKardex: string = 'KARDEX';
     idprod: any;
+    lstOrigen: any;
+    lstProyectos: any;
+    lstOrdenC: any;
 
     constructor(
         private fb: FormBuilder,
@@ -40,7 +44,8 @@ export class CKardexComponent implements OnInit, OnDestroy{
         private confirmationService: ConfirmationService,  
         private serviceSharedApp: SharedAppService,
         private messageService: MessageService,
-        private almacenService: AlmacenService
+        private almacenService: AlmacenService,
+        private ordencompraService: OrdencompraService,
       ){    
         
     }
@@ -48,6 +53,7 @@ export class CKardexComponent implements OnInit, OnDestroy{
     ngOnInit(): void{
         this.createFrm();
         this.ListarAlamcen(); 
+        this.listaProyectoTipo();
         //this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
@@ -74,7 +80,10 @@ export class CKardexComponent implements OnInit, OnDestroy{
           fechafin: [{value: this.utilitariosService.obtenerFechaFinMes(), disabled: false}],     
           idusuario: [{value: constantesLocalStorage.idusuario, disabled: false}],
           codproducto: [{value: '',disabled: false}],         
-          idalmacen: [{value: 0 ,disabled: false}]          
+          idalmacen: [{value: 0 ,disabled: false}]  ,
+          idtipoproyecto : [{value: 0 ,disabled: false}]  ,   
+          idproyecto : [{value: 0 ,disabled: false}]  ,   
+          alm_idordencompra : [{value: 0 ,disabled: false}]  ,   
         })
       }
 
@@ -226,6 +235,83 @@ export class CKardexComponent implements OnInit, OnDestroy{
         // }
       });
     }
+
+    listaProyectoTipo(){
+          this.ordencompraService.tipoProyectoList().subscribe({
+            next: (rpta: any) => {
+            this.lstOrigen = rpta;
+            const objet = {
+              idtipoproyecto: 0,
+              nomtipoproyecto: 'TODOS'
+            }
+            this.lstOrigen.unshift(objet);
+            },
+            error: (err) => {
+            this.messageService.clear();
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: mensajesQuestion.msgErrorGenerico,
+            });
+            },
+            complete: () => {
+            },
+        });
+        }
     
+        getOrigen(data:any){
+          console.log('getOrigen', data);
+          this.cargarProyectos(data);   
+      
+        }
+
+        cargarProyectos(dato:any){
+          console.log('cargarProyectos', dato);
+          this.ordencompraService.portipoProyectoList(dato).subscribe({
+            next: (rpta: any) => {
+            this.lstProyectos = rpta;
+            console.log('lstProyectos',rpta);
+      
+           
+      
+            },
+      
+            error: (err) => {
+            this.messageService.clear();
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: mensajesQuestion.msgErrorGenerico,
+                });
+            },
+            complete: () => {
+            },
+        });
+        }
+
+        getOcproveedor(dato: any) {  
+          this.lstOrdenC = []
+          const $personaProveedorlist = this.ordencompraService.ordencompraaprobadasprovlist(dato).subscribe({
+              next: (rpta: any) => {
+                  this.setSpinner(false);
+                  this.lstOrdenC = rpta;
+                  // if (this.ordenCompra.idordencompra > 0) {
+                  //   this.registerFormRegistro.get('alm_idordencompra')?.setValue(this.ordenCompra.alm_idordencompra);
+                  // }
+              },
+              error: (err) => {
+                  this.setSpinner(false);
+                  console.info('error : ', err);
+                  this.messageService.clear();
+                  this.messageService.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: mensajesQuestion.msgErrorGenerico,
+                  });
+              },
+              complete: () => {},
+          });
+          this.$listSubcription.push($personaProveedorlist);
+        }
 }
 

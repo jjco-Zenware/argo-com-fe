@@ -8,9 +8,10 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
+import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 
 
 @Component({
@@ -35,6 +36,8 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     menuItems: MenuItem[] = [];
     @ViewChild('menu') menu!: Menu;
     ordenCompra: any;
+    lstProveedores: any[] = [];
+    listadoArchivos: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -42,6 +45,8 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
         public dialogService: DialogService  ,   
         private serviceSharedApp: SharedAppService,
         private proyectosService: ProyectosService,
+        private messageService: MessageService,
+        private comprasService: ComprasService, 
       ){          
     }
 
@@ -50,12 +55,15 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
         this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'CÓDIGO' },
-          { field: 'nomalmacen', header: 'ALMACÉN ' },
+          { field: 'nroordencompra_origen', header: 'nroordencompra_origen' },
+          { field: 'fechaingreso', header: 'FECHA ' },
           { field: 'nomcomercial', header: 'PROVEEDOR' },
           { field: 'alm_idordencompra', header: 'N° ORDEN' },
+          { field: 'nomalmacen', header: 'ALMACÉN ' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
+      this.listaProveedores();
     }
 
     createFrm(){
@@ -121,7 +129,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     }
 
     onVer(dato: any) {     
-        this.tituloDetalle =  'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase(); 
+        this.tituloDetalle =  'N° - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase(); 
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
@@ -131,7 +139,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     }
 
     onEditar(dato: any) {      
-        this.tituloDetalle = 'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase(); 
+        this.tituloDetalle = 'N° - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase(); 
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'N',
@@ -222,19 +230,85 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     }
     
     onAccion(item: any) {
-    this.ordenCompra.idtrx = item.idtrx;
-    console.log('onAccion', item);
-    const ref = this.dialogService.open(CModalExcAlmacenComponent, {
-        data: this.ordenCompra,
-        header: item.nomtrx,
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: '40%'
-    });
+      this.getListaArchivos(item);
+        console.log('onAccion', item);
+    // this.ordenCompra.idtrx = item.idtrx;
+    // console.log('onAccion', item);
+    // const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+    //     data: this.ordenCompra,
+    //     header: item.nomtrx,
+    //     closeOnEscape: false,
+    //     styleClass: 'testDialog',
+    //     width: '40%'
+    // });
   
-    ref.onClose.subscribe(() => {
-        this.getListar();
+    // ref.onClose.subscribe(() => {
+    //     this.getListar();
+    //   });
+    }
+
+    getListaArchivos(valor:any) {
+    
+      const objeto = {
+        idoportunidad: 0,
+        codtipoproc: 7 , 
+        idnroproceso: this.ordenCompra.idordencompra, 
+      }
+      console.log('this.objeto ...', objeto );
+    
+    const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          this.listadoArchivos = rpta;
+          console.log('this.listadoArchivos ...', this.listadoArchivos );
+
+          if (this.listadoArchivos.length === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+                return;
+          }else{
+            this.ordenCompra.idtrx = valor.idtrx;
+      console.log('onAccion', valor);
+      const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+          data: this.ordenCompra,
+          header: valor.nomtrx ,
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '40%'
       });
+  
+      ref.onClose.subscribe(() => {
+          this.getListar();
+        });
+          }
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => { }
+      });
+    this.$listSubcription.push($listarArchivos)
+    }
+
+
+    listaProveedores() {
+
+      const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+        next: (rpta: any) => {
+          this.lstProveedores = rpta;
+          const objet = {
+            idcliente: 0,
+            nomcomercial: 'TODOS'
+          }
+          this.lstProveedores.unshift(objet);
+          console.log('this.lstProveedores', this.lstProveedores);
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { },
+      });
+      this.$listSubcription.push($getClientes);
+  
     }
 }
 

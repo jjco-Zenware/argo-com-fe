@@ -213,4 +213,10 @@ export class ComprasService {
             responseType: 'blob'
           })
     }
+
+    personaTraerUno(objeto: any) {
+        console.log('prcPersona...', objeto);
+        const url = `${constantesApiWeb.personaTraerUno}`;
+        return this.http.post<Cliente>(url, objeto)
+    }
 }

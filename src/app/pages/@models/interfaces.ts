@@ -537,4 +537,107 @@ export interface I_PersonaENT {
     idcargo: any
     adm_email: string
   }
+
+  export interface eventoList {
+    map?: any;
+    //listId: number;
+    listId: string;
+    title?: string;
+    cards?: eventoCard[];
+    nroorden: number;
+    indvig?: boolean;
+    bgcolor: string;
+    bgicon: string;
+    creaOportunidad?: number;
+}
   
+
+export interface eventoCard {
+    idevento: number;
+    title?: string;
+    description?: string;
+    fecinicio?: string;
+    fecfinal: string;
+    completed?: boolean;
+    progress?: number;
+    idcliente?:number;
+    // assignees?: Assignees[];
+    // comments?: Comments[];
+    // contactos?: Contacto[];
+    priority?: object;
+    attachments?: number;
+    //taskList: TaskList;
+    monto: number;
+    idlista?: number;
+    razonsocial?: string;
+    simbmoneda?: string;
+    idmoneda?:number;
+    nroasignados?: number;
+    nrocontactos?: number;
+    nrotareas?: number;
+    nroadjuntos?: number;
+    nomlista?: string;
+    idpreventa?:number;
+    //acciones?: Acciones[]|undefined;
+    bgcolor?: string;
+    bgicon?: string;
+    tipocambio: number;
+    nomcreador?: string;
+    tipoproducto?: undefined;
+    nommoneda?: string;
+    indestado_qu?: boolean;
+    indestado_bc?: boolean;
+    nomestado_qu?: string;
+    nomestado_bc?: string;
+    montodolar?: number;
+    nomcomercial?: string;
+    nompreventa?: string;
+    nomproveedor?: string;
+    idproveedor?:number;
+    idmarca?:number;
+    //regoportunidadesext?: RegOportunidadExt[];
+    idtrx?: number;
+    //preventas?: Assignees[];
+    idnotifica?: number;
+    horainicio?: string;
+    horafinal?: string;
+    diainicio?: string;
+    diafinal?: string;
+    dueDate?: string;
+    lugar?: string;
+}
+
+export interface Tasks {
+    idtarea: number;
+    sidtarea: string;
+    text: string;
+    completed: boolean;
+    fechafin: string;
+    asignados: TareaAsignado[];
+    asignados_str?: string;
+    nroorden: number;
+    fechaini: string;
+}
+
+export interface TareaAsignado {
+    idasignado: number;
+    name: string;
+    image: string;
+    idtarea: number;
+}
+
+export interface Assignees {
+    idasignado: number;
+    name: string;
+    image: string;
+    cargo?: string;
+    email?: string;
+    nrocelular?: string;
+}
+
+export interface TaskList {
+    id?: number;
+    title: string;
+    tasks: Tasks[];
+}
+

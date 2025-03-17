@@ -45,11 +45,10 @@ export class CProductoComponent implements OnInit, OnDestroy{
         this.cols = [
           { field: 'idprod', header: 'ID' },
           { field: 'codproducto', header: 'CÓDIGO' },
-          { field: 'despro', header: 'PRODUCTO ' },
+          { field: 'despro', header: 'DESCRIPCIÓN ' },
           { field: 'nomfamilia', header: 'GRUPO' },
           { field: 'nomsubfamilia', header: 'CATEGORIA' },
           { field: 'nommarca', header: 'MARCA' },
-          { field: 'desmoneda', header: 'MONEDA' },
           { field: 'nomunidad', header: 'UNIDAD' }
           
       ];

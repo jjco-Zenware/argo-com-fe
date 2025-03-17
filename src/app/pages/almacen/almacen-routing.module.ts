@@ -76,6 +76,16 @@ const routes: Routes = [
     path: 'oficina',
     loadChildren: () => import('./oficina/oficina.module').then(m => m.OficinaModule),
     data: { breadcrumb: 'Oficina' }
+  },
+  {
+    path: 'salida-oc-proyecto',
+    loadChildren: () => import('./salida-oc-proyecto/salida-oc-proyecto.module').then(m => m.SalidaOcProyectoModule),
+    data: { breadcrumb: 'salida-oc-proyecto' }
+  },
+  {
+    path: 'salida-oc-req-interno',
+    loadChildren: () => import('./salida-oc-req-interno/salida-oc-req-interno.module').then(m => m.SalidaOcReqModule),
+    data: { breadcrumb: 'salida-oc-re-interno' }
   }
 ];
 

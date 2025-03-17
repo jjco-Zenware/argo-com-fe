@@ -59,6 +59,9 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
   lstPostores: any[] = [];
   selectedPro: any[] = [];
   lstUsuarios: any[] = [];  
+  onlyReadLugar: boolean = true;
+  lstClientes: any[] = []; 
+  verPdfMail: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -82,6 +85,7 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
     this.listaMonedas();
     this.listaUsuarios();
     this.servicioGenerico();
+    this.listaProveedores();
     
     if (this.idOrdenC > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -171,6 +175,7 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
       fecentrega: [{value: '' ,disabled: false,}],
       idusersolicita:[{ value: null, disabled: false }],
       terminosdepago:[{ value: '', disabled: false }],
+      idpersona:[{ value: 0, disabled: false }],
     });    
   }
 
@@ -273,6 +278,7 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
 
           this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
           this.visibleDocument = false; 
+          this.verPdfMail = true;
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
           //this.montoTotal = rpta.ordencompra[0].s_monto_total;
@@ -714,7 +720,7 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
   
   }
 
-  EnviarMail(){
+  EnviarMail(data:any){
     
   }
 
@@ -878,5 +884,69 @@ servicioGenerico(){
     },
 });
 }
+
+listaProveedores() {
+  const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
+    next: (rpta: any) => {
+      this.lstClientes = rpta;
+      console.log('this.lstClientes...' , this.lstClientes );
+    },
+    error: (err) => {
+      this.serviceSharedApp.messageToast()
+    },
+    complete: () => { },
+  });
+  this.$listSubcription.push($getClientes);
+}
+getDireccion(data:any){
+
+  const direccion = this.lstClientes.filter(x =>x.idcliente === data)[0].direcresumen;
+  this.registerFormRegistro.get('lugarentrega')?.setValue(direccion);
+}
+
+// async download(data: any) {
+//   console.log('download...', data);
+ 
+//       this.confirmationService.confirm({
+//           key: 'confirm1',
+//           header: 'Confirmación',
+//           message: '¿Estás seguro de Descargar el Adjunto?...',
+//           accept: () => {
+//               const objeto = {
+//                 idoportunidad: data.iditempostor,
+//                 urlasset: ""
+//                 }
+//                 const $downloadArchivo = this.comprasService.downloadArchivo(objeto)
+//                 .subscribe({
+//                     next: (rpta: any) => {
+//                     console.log("download archivo : ", rpta);
+            
+//                     const mediaType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+//                     const blob = new Blob([rpta.body], { type: mediaType });
+//                     const filename = data.nomasset;
+            
+//                     const url = window.URL.createObjectURL(blob);
+//                     const a = document.createElement('a');
+//                     a.href = url;
+//                     a.download = filename;
+//                     document.body.appendChild(a);
+//                     a.target = '_blank';
+//                     a.click();
+            
+//                     setTimeout(() => {
+//                         document.body.removeChild(a);
+//                         window.URL.revokeObjectURL(url);
+//                     }, 100);
+//                     },
+//                     error: (err) => {
+//                     this.serviceSharedApp.messageToast();
+//                     },
+//                     complete: () => { }
+//                 });
+//                 this.$listSubcription.push($downloadArchivo)
+//               }
+//           });
+      
+// }
 
 }

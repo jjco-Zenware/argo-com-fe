@@ -139,14 +139,14 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
       this.traerUno();
     }else{
       //this.verControles('NOA');
-      this.cargarProyectos(4); 
+      this.cargarProyectos(1); 
       this.dataAdjunto ={
         idCliente: 0,
         codtipoproc: 8,
         veracciones: 0
       }     
       this.mostrarBotones('NVO');
-      this.getOrigen('OPO');
+      //this.getOrigen('OPO');
     //   const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), 30);
     // this.registerFormRegistro.get('fecvencimiento').setValue(newDate);
     }   
@@ -199,7 +199,7 @@ createFormRegistro() {
     nomproyecto:[{ value: '', disabled: false }],
     nrodocumento:[{ value: '', disabled: false }],
     fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-    tc:[{ value: '', disabled: false }],
+    tc:[{ value: 0, disabled: false }],
     tipodoc_ctb:[{ value: '', disabled: false }],
     nroserie_ctb:[{ value: '', disabled: false }],
     nrodocumento_ctb:[{ value: '', disabled: false }],
@@ -222,6 +222,7 @@ createFormRegistro() {
     monto_pen_pago:[{ value: 0, disabled: false }],
     idcentrocosto:[{ value: 0, disabled: false }],
     s_monto_neto_CTB:[{ value: 0, disabled: false }],
+    direccion:[{ value: null, disabled: false }],
   });
 
   
@@ -351,6 +352,8 @@ createFormRegistro() {
           this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
           this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
           this.nrocuotas = rpta.ordencompra[0].nrocuotas 
+          this.changeMoneda(rpta.ordencompra[0].idmoneda );
+          this.getBusquedaRUC();
           this.setSpinner(false);       
          },
          error:(err)=>{
@@ -1023,11 +1026,11 @@ createFormRegistro() {
             _error = true;
         }
 
-        if (!_error && (this.registerFormRegistro.value.porc_detraccion === '' || this.registerFormRegistro.value.porc_detraccion === null))
-          {
-              this.errorMensaje="Ingresar % Detracción...!";
-              _error = true;
-          }
+        // if (!_error && (this.registerFormRegistro.value.porc_detraccion === '' || this.registerFormRegistro.value.porc_detraccion === null))
+        //   {
+        //       this.errorMensaje="Ingresar % Detracción...!";
+        //       _error = true;
+        //   }
 
     if (!_error && this.registerFormRegistro.value.idmoneda === null)
     {
@@ -1035,11 +1038,14 @@ createFormRegistro() {
           _error = true;
     }
 
-    if (!_error && (this.registerFormRegistro.value.tc === null || this.registerFormRegistro.value.tc === ''|| this.registerFormRegistro.value.tc === 0))
-      {
-            this.errorMensaje="Ingresar Tipo Cambio...!";
-            _error = true;
-      }
+    if (this.registerFormRegistro.value.idmoneda !== 1) {
+      if (!_error && (this.registerFormRegistro.value.tc === null || this.registerFormRegistro.value.tc === ''|| this.registerFormRegistro.value.tc === 0))
+        {
+              this.errorMensaje="Ingresar Tipo Cambio...!";
+              _error = true;
+        }
+    }
+    
 
       if (!_error && (this.registerFormRegistro.value.porc_detraccion === null 
         || this.registerFormRegistro.value.porc_detraccion === ''
@@ -1094,6 +1100,7 @@ createFormRegistro() {
           return;
         }
         this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
+        this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);
       },
       error: (err) => {
         this.setSpinner(false);
@@ -1135,18 +1142,29 @@ createFormRegistro() {
     this.nrocuotas = data;
     this.listaCuotas=[];
   const _monto = this.registerFormRegistro.value.monto_pen_pago/data;
+
+  const _fecha =new Date(this.serviceUtilitario.formatFecha(this.registerFormRegistro.value.fecemision));
+  console.log('_fecha...', _fecha);
   console.log('_monto...', _monto);
-  let tot_dia = 30
+  let tot_dia = this.registerFormRegistro.value.nrodias/data;
+  console.log('tot_dia...', tot_dia);
+
+  //let dia_tot = 0;
+
    for(let i = 0; i < data; i++) {
     console.log('index...', i);
+    console.log('tot_dia...', tot_dia);
+
+    let dias = (tot_dia * i) + tot_dia
     
-    const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), tot_dia );
+    const newDate = this.addDays(_fecha, dias );
     const objet = {
       fechacuota: newDate,
       monto: _monto,
       idcuotadoc:0
     }
-    tot_dia = tot_dia + 30;
+    
+    //tot_dia = tot_dia + tot_dia;    
     this.listaCuotas.push(objet);
    }
 
@@ -1291,8 +1309,7 @@ createFormRegistro() {
 
   }
 
-  recalcularRegistro(dato:any){
-    
+  recalcularRegistro(dato:any){    
 
     console.log('recalcularRegistro...', dato);
     if (this.idOrdenC > 0) {
@@ -1344,6 +1361,16 @@ createFormRegistro() {
       });
     this.$listSubcription.push($recalcularRegistro)
     }
+  }
+
+  changeMoneda(value:any){
+    console.log('changeProyecto...', value);
+    if (value === 1) {
+      this.registerFormRegistro.get('tc').disable()
+    }else{
+      this.registerFormRegistro.get('tc').enable();
+    }
+    
   }
  
 }

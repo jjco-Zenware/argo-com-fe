@@ -15,6 +15,8 @@ const controllerProducto: string = webApi+'Producto';
 const controllerTesoreria: string = webApi+'Tesoreria';
 const controllerContabilidad: string = webApi+'Contabilidad';
 const controllerAdministracion: string = webApi+'Administracion';
+const controllerMarketing: string = webApi +'Marketing'
+const controllerEventos: string = webApi +'Evento'
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -166,4 +168,14 @@ export const constantesApiWeb = {
     prcVinculado: controllerAdministracion + '/VinculadoPrc',
     prcDatosLaborales: controllerAdministracion + '/LaboralPrc',
     listaEstadoLab: controllerAdministracion + '/estadoLaboral/',
+    kanbanListaUsuarios: controllerCRM + '/usuariolist',
+    prcFondosTrimestrales: controllerMarketing + '/fondosPrc',
+    listarFondosTrimestrales: controllerMarketing + '/listarfondos',
+    prcEventos: controllerEventos + '/eventoprc',
+    listEventos: controllerEventos + '/eventolist',
+    procesarTrxEvento: controllerEventos + '/prctrxevento',
+
+    
+    ordenCompraTraerunoSubproceso: controllerComercial + '/ordencompratrearunosubproceso',
+    personaTraerUno: controllerMain + '/personatraeruno',
 }

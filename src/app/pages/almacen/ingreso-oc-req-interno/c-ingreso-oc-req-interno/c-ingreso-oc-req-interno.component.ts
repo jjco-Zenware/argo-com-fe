@@ -10,6 +10,7 @@ import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/servic
 import { Menu } from 'primeng/menu';
 import { MenuItem, MessageService } from 'primeng/api';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
+import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 
 
 @Component({
@@ -34,6 +35,8 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     menuItems: MenuItem[] = [];
     @ViewChild('menu') menu!: Menu;
     ordenCompra: any;
+    listadoArchivos: any[] = [];
+    lstProveedores: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -42,6 +45,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
         private proyectosService: ProyectosService,     
         private serviceSharedApp: SharedAppService,
         private messageService: MessageService,
+            private comprasService: ComprasService,    
         
       ){          
     }
@@ -51,12 +55,14 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
         this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
+          { field: 'fechaingreso', header: 'FECHA ' },
           { field: 'nomtipoorden', header: 'OFICINA ' },
           { field: 'codigonroorden', header: 'NOMBRE' },
           { field: 'nomcomercial', header: 'DIRECCIÓN' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
+      this.listaProveedores();
     }
 
     createFrm(){
@@ -122,7 +128,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     }
 
     onVer(dato: any) {     
-        this.tituloDetalle =  'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
+        this.tituloDetalle =  'N° - '+ dato.idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
@@ -132,7 +138,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     }
 
     onEditar(dato: any) {      
-        this.tituloDetalle = 'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
+        this.tituloDetalle = 'N° - '+ dato.idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'E',
@@ -206,6 +212,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
       }
 
       toggleMenu(event: Event, data: any) {
+        
         if (data.acciones) {
             this.cargarMenu(data.acciones);
             this.ordenCompra = data;
@@ -226,19 +233,48 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
       }
     
       onAccion(item: any) {
+        this.getListaArchivos(item);
         console.log('onAccion', item);
-        // const objeto = this.lstItemOC.filter((x: { indcompleto: boolean; }) => x.indcompleto == false);
-        // console.log('onAccion', objeto);
-        // if (objeto.length > 0) {
-        //   this.messageService.add({severity: 'warn', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
-        //       return;
-        // }
 
-        this.ordenCompra.idtrx = item.idtrx;
-        console.log('onAccion', item);
+        // this.ordenCompra.idtrx = item.idtrx;
+        // console.log('onAccion', item);
+        // const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+        //     data: this.ordenCompra,
+        //     header: item.nomtrx ,
+        //     closeOnEscape: false,
+        //     styleClass: 'testDialog',
+        //     width: '40%'
+        // });
+    
+        // ref.onClose.subscribe(() => {
+        //     this.getListar();
+        //   });
+      }
+
+      getListaArchivos(valor:any) {
+    
+        const objeto = {
+          idoportunidad: 0,
+          codtipoproc: 7 , 
+          idnroproceso: this.ordenCompra.idordencompra, 
+        }
+        console.log('this.objeto ...', objeto );
+      
+      const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
+        .subscribe({
+          next: (rpta: any) => {
+            this.listadoArchivos = rpta;
+            console.log('this.listadoArchivos ...', this.listadoArchivos );
+
+            if (this.listadoArchivos.length === 0) {
+              this.messageService.add({severity: 'error', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+                  return;
+            }else{
+              this.ordenCompra.idtrx = valor.idtrx;
+        console.log('onAccion', valor);
         const ref = this.dialogService.open(CModalExcAlmacenComponent, {
             data: this.ordenCompra,
-            header: item.nomtrx ,
+            header: valor.nomtrx ,
             closeOnEscape: false,
             styleClass: 'testDialog',
             width: '40%'
@@ -247,6 +283,35 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
         ref.onClose.subscribe(() => {
             this.getListar();
           });
+            }
+          },
+          error: (err) => {
+            this.serviceSharedApp.messageToast();
+          },
+          complete: () => { }
+        });
+      this.$listSubcription.push($listarArchivos)
+      }
+
+      listaProveedores() {
+
+        const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+          next: (rpta: any) => {
+            this.lstProveedores = rpta;
+            const objet = {
+              idcliente: 0,
+              nomcomercial: 'TODOS'
+            }
+            this.lstProveedores.unshift(objet);
+            console.log('this.lstProveedores', this.lstProveedores);
+          },
+          error: (err) => {
+            this.serviceSharedApp.messageToast()
+          },
+          complete: () => { },
+        });
+        this.$listSubcription.push($getClientes);
+    
       }
 }
 

@@ -193,6 +193,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       nomproyecto:[{ value: '', disabled: false }],
       fecentrega: [{value: null ,disabled: false,}],
       terminosdepago:[{ value: '', disabled: false }],
+      estadoentrada:[{ value: 'PEN', disabled: false }],
+      estadosalida:[{ value: 'PEN', disabled: false }],
     });
   }
 
@@ -556,15 +558,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
    
   getOrigen(data:any){
     console.log('getOrigen', data);
-    this.cargarProyectos(data);
-    // switch (data) {
-    //   case 'OPO':
-    //     this.cargarProyectos(1);
-    //     break;
-    //   case 'REQ':
-    //     this.cargarProyectos(2);
-    //     break;
-    // }    
+    this.cargarProyectos(data);   
 
   }
 
@@ -631,6 +625,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
             this.setSpinner(false);
             console.info('next : ', rpta);
             this.lstContacto = rpta;
+            this.traerFormaPagoProveedor(dato);
         },
         error: (err) => {
             this.setSpinner(false);
@@ -874,7 +869,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         
         const mediaType = 'application/pdf';
           const blob = new Blob([rpta.body], { type: mediaType });
-          const filename = this.idOrdenC + '-OC';
+          const filename = this.ordenCompra.codigonroorden;
   
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
@@ -1194,6 +1189,28 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         accept: () => {
           this.lstItemOC = [];
         }
+    });
+    }
+
+    traerFormaPagoProveedor(dato:any){
+      const objeto = {
+        idpersona: dato
+      }
+      this.comprasService.personaTraerUno(objeto).subscribe({
+        next: (rpta: any) => {
+          console.log('personaTraerUno', rpta);
+          this.registerFormRegistro.get('codformapago').setValue(rpta[0].terminopago);
+        },
+        error: (err) => {
+        this.messageService.clear();
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: mensajesQuestion.msgErrorGenerico,
+        });
+        },
+        complete: () => {
+        },
     });
     }
 }

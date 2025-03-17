@@ -27,6 +27,9 @@ export class CStockComponent implements OnInit, OnDestroy{
     frmDatos!: FormGroup;
     lstCatalogo:any;
     tituloKardex: string = 'STOCK';
+    lstProducto:any;
+    lstFamilia:any;
+    lstSubFamilia:any;
 
     constructor(
         private fb: FormBuilder,
@@ -43,6 +46,7 @@ export class CStockComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void{
         this.createFrm();
+        this.listarFamilia();
         //this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
@@ -68,7 +72,9 @@ export class CStockComponent implements OnInit, OnDestroy{
           fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(), disabled: false }],
           fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(), disabled: false}],     
           idusuario: [{value: constantesLocalStorage.idusuario, disabled: false}],
-          codproducto: [{value: '',disabled: false}]          
+          codproducto: [{value: '',disabled: false}],
+          idfamilia: [{value: '',disabled: false}],
+          idsubfamilia: [{value: '',disabled: false}]          
         })
       }
 
@@ -155,4 +161,45 @@ export class CStockComponent implements OnInit, OnDestroy{
       });
     }
     
+     listarFamilia() {
+            const $listarFamilia = this.almacenService.listarFamilia().subscribe({
+              next: (rpta: any) => {
+                this.lstFamilia = rpta;
+                const objet = {
+                  idfamilia: 0,
+                  nomfamilia: 'TODOS'
+                }
+                this.lstFamilia.unshift(objet);
+              },
+              error: (err) => {
+                console.info('error : ', err);
+                this.serviceSharedApp.messageToast()
+              },
+              complete: () => {
+              },
+            });
+            this.$listSubcription.push($listarFamilia);
+          }
+      
+          getSubFamilia(dato: any) {  
+            const $getSubFamilia = this.almacenService.listarSubFamilia(dato).subscribe({
+                next: (rpta: any) => {
+                    this.setSpinner(false);
+                    console.info('next : ', rpta);
+                    this.lstSubFamilia = rpta;
+                    const objet = {
+                      idsubfamilia: 0,
+                      nomsubfamilia: 'TODOS'
+                    }
+                    this.lstSubFamilia.unshift(objet);
+                },
+                error: (err) => {
+                    this.setSpinner(false);
+                    console.info('error : ', err);
+                    this.serviceSharedApp.messageToast()
+                },
+                complete: () => {},
+            });
+            this.$listSubcription.push($getSubFamilia);
+          }
 }

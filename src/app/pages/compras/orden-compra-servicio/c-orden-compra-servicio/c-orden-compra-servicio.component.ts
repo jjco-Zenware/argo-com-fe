@@ -40,6 +40,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     cols: any[] = [];
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
+    lstProveedores: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -58,6 +59,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         this.getListarOrdenCompra();
         this.cols = [
           { field: 'idordencompra', header: 'ID OC' },
+          { field: 'fechaingreso', header: 'FECHA INGRESO' },
           { field: 'nomtipoorden', header: 'TIPO ORDEN' },
           { field: 'codigonroorden', header: 'N ORDEN' },
           { field: 'nomcomercial', header: 'PROVEEDOR' },
@@ -67,9 +69,12 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
           { field: 's_monto', header: 'SUBTOTAL' },
           { field: 's_monto', header: 'IGV' },
           { field: 's_monto', header: 'TOTAL' },
+          // { field: 'nomestado', header: 'ESTADO' },
+          // { field: 'nomestado', header: 'ESTADO' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
+      this.listaProveedores();
     }
 
     ngOnDestroy(): void {
@@ -297,7 +302,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
                 
                 const mediaType = 'application/pdf';
                   const blob = new Blob([rpta.body], { type: mediaType });
-                  const filename = 'DET_FACT_COMPRA_' + data.nrofactura;
+                  const filename = data.codigonroorden;
           
                   const url = window.URL.createObjectURL(blob);
                   const a = document.createElement('a');
@@ -327,5 +332,26 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
               },
             });
             this.$listSubcription.push($cargarOrdenC)
+      }
+
+      listaProveedores() {
+
+        const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+          next: (rpta: any) => {
+            this.lstProveedores = rpta;
+            const objet = {
+              idcliente: 0,
+              nomcomercial: 'TODOS'
+            }
+            this.lstProveedores.unshift(objet);
+            console.log('this.lstProveedores', this.lstProveedores);
+          },
+          error: (err) => {
+            this.serviceSharedApp.messageToast()
+          },
+          complete: () => { },
+        });
+        this.$listSubcription.push($getClientes);
+    
       }
 }

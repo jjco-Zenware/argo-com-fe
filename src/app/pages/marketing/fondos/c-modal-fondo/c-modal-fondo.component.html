@@ -1,0 +1,70 @@
+<form [formGroup]="registerForm" class="p-fluid p-formgrid grid col-12 text-sm p-2 m-2">   
+
+    <div class="col-4 sm:col-12 lg:col-4 md:col-12 justify-content-end">
+        <label class="block text-900 font-semibold">Fecha Desde<span class="text-red-500 font-bold"> * </span></label>
+        <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
+            <p-calendar formControlName="fecactivoini" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+        </span>
+    </div>
+    <div class="col-4 sm:col-12 lg:col-4 md:col-12 justify-content-end">
+        <label class="block text-900 font-semibold">Fecha Hasta<span class="text-red-500 font-bold"> * </span></label>
+        <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
+            <p-calendar formControlName="fecactivofin" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+        </span>
+    </div>
+    <div class="col-4 sm:col-6 lg:col-3 md:col-3">
+        <label class="block text-900 font-semibold mb-1">Trimestre <span class="text-red-500 font-bold"> * </span></label>
+        <span class="p-fluid ">
+            <p-dropdown [options]="lstQ" formControlName="idq" placeholder="Seleccionar...!" optionLabel="desQ" 
+            optionValue="id" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+        </span>
+    </div>
+            
+    <div class="col-4 sm:col-6 lg:col-8 md:col-6 -mt-4">                            
+        <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
+        <span>
+            <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [readonly]=onlyRead></p-dropdown>            
+        </span>
+    </div>                         
+    <div class="sm:col-6 lg:col-8 md:col-3 col-8 -mt-4">
+        <div class="flex">
+            <label class="block text-900 font-semibold mb-1">Contacto <span class="text-red-500 font-bold"> * </span></label>
+        </div>                            
+        <span>
+            <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
+            optionValue="idcontacto" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+        </span>
+    </div>   
+    <div class=" sm:col-8 lg:col-4 md:col-12"></div>
+          
+    <div class="sm:col-6 lg:col-4 md:col-3 col-6 -mt-3">
+        <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+        <span class="p-fluid mt-1">
+            <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar...!" optionLabel="desmoneda" 
+            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+        </span>                                      
+    </div>      
+    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field -mt-3">
+        <label class="block text-900 font-semibold mb-1">Monto<span class="text-red-500 font-bold"> * </span></label>       
+        <p-inputNumber  mode="decimal" [minFractionDigits]="2" inputStyleClass="font-semibold text-right" class="p-inputtext-sm " 
+        formControlName="monto" [readonly]=onlyRead></p-inputNumber>
+    </div>              
+    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field -mt-3">
+        <label class="block text-900 font-semibold mb-1">Saldo</label>       
+        <p-inputNumber  mode="decimal" [minFractionDigits]="2" inputStyleClass="font-semibold text-right" class="p-inputtext-sm " 
+        formControlName="saldomonto" ></p-inputNumber>
+    </div> 
+    <div class="sm:col-6 lg:col-12 md:col-3 -mt-3 col-12">
+        <label class="block text-900 font-semibold">Descripción</label>                        
+        <span class="p-fluid">
+            <textarea type="text" pInputTextarea [rows]="3" formControlName="descripcion" style="resize: none" class="w-full p-inputtext-sm" id="observacion" [readonly]=onlyRead></textarea>
+        </span>
+    </div>
+                 
+</form>
+<div class="flex justify-content-end">
+    <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto" (click)="guardar()"></button>
+</div>

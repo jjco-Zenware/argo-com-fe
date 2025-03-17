@@ -3,7 +3,7 @@
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center text-orange-500" icon="pi pi-file" label="Nuevo"
+                    <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-file" label="Nuevo"
                         pTooltip="Nueva" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                 
                 <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
@@ -25,6 +25,13 @@
                 <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                     [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
             </div>
+            <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-4">                            
+                <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
+                <span>
+                    <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor..."  formControlName="idproveedor" class="p-inputtext-sm"
+                    optionLabel="nomcomercial" optionValue="idcliente" appendTo="body"></p-dropdown>            
+                </span>
+            </div> 
             <div class="field col-6 md:col-2 -mt-4 gap-2">
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                     class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
@@ -39,30 +46,40 @@
             styleClass="p-datatable-sm card border-1 border-round surface-border -mt-3">
 
             <ng-template pTemplate="header">
-                <tr class="text-sm h-3rem">
+                <tr class="text-sm ">
                     <th style="width: 10px" class="bg-teal-50 border-1" >
                         <div class="flex justify-content-between align-items-center">
                             N° <br>
                         </div>
                     </th>
+                    <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            ID DOC 
+                        </div>
+                    </th>
                     <th [ngStyle]="{'width':'30px'}"  class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
-                            CÓDIGO 
+                            OC 
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
+                    <th [ngStyle]="{'width':'30px'}" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
-                            ALMACEN 
+                            FECHA 
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
+                    <th [ngStyle]="{'width':'80px'}" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             PROVEEDOR 
                         </div>
                     </th>
-                    <th style="width: 100px;" class="bg-teal-50 border-1" >
+                    <th style="width: 110px;" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             DOCUMENTO
+                        </div>
+                    </th>
+                    <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            ALMACEN 
                         </div>
                     </th>
                     <th style="width: 30px" class="bg-teal-50 border-1" >
@@ -70,7 +87,7 @@
                             ESTADO
                         </div>
                     </th>
-                    <th style="width: 50px;" class="bg-teal-50 border-1" >
+                    <th style="width: 60px;" class="bg-teal-50 border-1" >
                         <div class="flex justify-content-between align-items-center">
                             ACCIONES
                         </div>
@@ -90,13 +107,18 @@
                         {{rowIndex + 1}}
                     </td>
                     <td >
-                        <div [ngStyle]="{'width':'50px'}">
+                        <div [ngStyle]="{'width':'20px'}">
                             {{data.idordencompra}}
                         </div>
                     </td>
+                    <td >
+                        <div [ngStyle]="{'width':'30px'}">
+                            {{data.nroordencompra_origen}}
+                        </div>
+                    </td>
                     <td>
-                        <div [ngStyle]="{'width':'70px'}">
-                            {{data.nomalmacen | uppercase}}
+                        <div [ngStyle]="{'width':'30px'}">
+                            {{data.fechaingreso}}
                         </div>
                     </td>
                     <td>
@@ -105,8 +127,13 @@
                         </div>
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'60px'}">
+                        <div [ngStyle]="{'width':'90px'}">
                             {{data.ord_documento }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'70px'}">
+                            {{data.nomalmacen | uppercase}}
                         </div>
                     </td>
                     <td>                       
@@ -115,7 +142,7 @@
                         </div>
                     </td>
                     <td>
-                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
+                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'60px'}">
                             <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
                             <button *ngIf="data.estado === 'REG' " pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                             <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
@@ -145,7 +172,7 @@
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 h-2rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center text-red-500" icon="pi pi-backward" label="Regresar"
+                    <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar" tooltipPosition="left" (click)="getBack()"></button>                    
                 </div>
                 <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">

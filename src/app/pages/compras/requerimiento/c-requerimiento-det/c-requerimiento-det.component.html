@@ -27,14 +27,14 @@
                         </span>
                     </div>  
                     <div class="sm:col-12 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
-                        <label class="block text-900 font-semibold">Fecha Requerimiento<span class="text-red-500 font-bold"> * </span></label>
+                        <label class="block text-900 font-semibold">Fecha Solicitud<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm" style="height: 3rem;">
                             <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
                             inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" ></p-calendar>
                         </span>
                     </div>
                     <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 font-semibold mb-1">ID Requerimiento</label>
+                        <label class="block text-900 font-semibold mb-1">ID Solicitud</label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="font-semibold surface-300 p-inputtext-sm" formControlName="idordencompra" readonly="true"/>
                         </span>
@@ -45,7 +45,22 @@
                             <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto..." optionLabel="s_nomproyecto" class="p-inputtext-sm"
                             optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
                         </span>
-                    </div>    
+                    </div>  
+                    <div class="sm:col-8 lg:col-6 md:col-12 col-6 field h-4rem -mt-1">
+                        <label class="block text-900 font-semibold mb-1">Centro Costos</label>                        
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Centro Costos..." optionLabel="descentrocosto" 
+                            class="p-inputtext-sm " styleClass="surface-100" [dropdownIcon]="'none'"
+                            optionValue="idcentrocosto" appendTo="body" autoWidth="false" readonly="true"></p-dropdown>
+                        </span>
+                    </div> 
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field -mt-1">
+                        <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                        </span>                                      
+                    </div>      
                     <div class=" sm:col-8 lg:col-3 md:col-12"></div>    
                     <div class="sm:col-6 lg:col-9 md:col-3 col-12 -mt-1">
                         <label class="block text-900 font-semibold">Titulo <span class="text-red-500 font-bold"> * </span></label>                        
@@ -54,53 +69,39 @@
                                 [readonly]=onlyRead class="p-inputtext-sm"></textarea>
                         </span>
                     </div>                   
-                                            
-                    <div class="sm:col-8 lg:col-6 md:col-12 col-6 field h-4rem -mt-4">
-                        <label class="block text-900 font-semibold mb-1">Centro Costos</label>                        
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Centro Costos..." optionLabel="descentrocosto" 
-                            class="p-inputtext-sm " styleClass="font-semibold surface-300" [dropdownIcon]="'none'"
-                            optionValue="idcentrocosto" appendTo="body" autoWidth="false" readonly="true"></p-dropdown>
-                        </span>
-                    </div>   
-                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field -mt-4">
-                        <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
-                        </span>                                      
-                    </div>                         
-                    <div class=" sm:col-8 lg:col-3 md:col-12"></div> 
-                    <div class="sm:col-6 lg:col-6 md:col-3 col-6 h-4rem field">
+                    <div class=" sm:col-8 lg:col-3 md:col-12"></div>                      
+                    <div class="sm:col-6 lg:col-6 md:col-3 col-6 h-4rem field -mt-4">
                         <label class="block text-900 font-semibold mb-1">Solicitante<span class="text-red-500 font-bold"> * </span></label>  
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstUsuarios" formControlName="idusersolicita" placeholder="Seleccionar Solicitante" optionLabel="nomUsuario" 
                             optionValue="codigoUsuario" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
                         </span>                                      
                     </div> 
-                    <!-- <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 font-semibold mb-1">Área</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" class="font-semibold surface-300 p-inputtext-sm" formControlName="nomareasol" readonly="true"/>
-                        </span>
-                    </div>   -->
-                    <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end field ">
+                    <div class="col-6 sm:col-12 lg:col-3 md:col-12 field -mt-4">
                         <label class="block text-900 font-semibold">Fecha Entrega<span class="text-red-500 font-bold"> * </span></label>
-                        <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;">
+                        <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3rem;">
                             <p-calendar formControlName="fecentrega" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
                             inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"></p-calendar>
                         </span>
                     </div>
                     <div class=" sm:col-8 lg:col-3 md:col-12"></div>
-                    <div class="sm:col-6 lg:col-9 md:col-3 col-12 -mt-6">
+                    <div class="sm:col-6 lg:col-6 md:col-6 h-4rem field -mt-6">                            
+                        <label class="block text-900 font-semibold mb-1">Cliente Final <span class="text-red-500 font-bold"> * </span></label>                            
+                        <span>
+                            <p-dropdown [options]="lstClientes" placeholder="Seleccionar...!"  formControlName="idproveedor" class="p-inputtext-sm"
+                            optionLabel="nomcomercial" optionValue="idcliente" appendTo="body" (onChange)="getDireccion($event.value)" ></p-dropdown>            
+                        </span>
+                    </div> 
+                    <div class=" sm:col-8 lg:col-6 md:col-12"></div>
+                    <div class="sm:col-6 lg:col-9 md:col-3 col-12 -mt-1">
                         <label class="block text-900 font-semibold mb-1">Lugar de Entrega</label>                        
                         <span class="p-fluid mb-1">
                             <textarea type="text" pInputTextarea [rows]="2" formControlName="lugarentrega" style="resize: none" class="w-full" id="observacion"
-                                [readonly]=onlyRead class="p-inputtext-sm"></textarea>
+                                 class="p-inputtext-sm"></textarea>
                         </span>
                     </div> 
                     <div class="sm:col-6 lg:col-9 md:col-3 col-12 -mt-4">
-                        <label class="block text-900 font-semibold mb-1">Descripción</label>                        
+                        <label class="block text-900 font-semibold mb-1">Observación</label>                        
                         <span class="p-fluid mb-1">
                             <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion"
                                 [readonly]=onlyRead class="p-inputtext-sm"></textarea>
@@ -125,91 +126,96 @@
                             <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar Items" (click)="getItem([],0)"></button>
                         </div>
                         <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                        [scrollable]="true"  styleClass="p-datatable-sm ">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
-                                    <th class="bg-teal-50 border-1">TIPO PRODUCTO</th>
-                                    <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
-                                    <th class="bg-teal-50 border-1">CANT.</th>
-                                    <th class="bg-teal-50 border-1">ACCIONES</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                                <tr>
-                                    <td>{{rowIndex + 1}}</td>
-                                    <td>{{ product.nomtipoprod}}</td>
-                                    <!-- <td>{{ product.descripcion | uppercase}}</td> -->
-                                    <td>
-                                        <div pTooltip="{{product.descripcion | uppercase}}">
-                                            {{(product.descripcion.length > 70) ? ((product.descripcion).slice(0, 70) + '...' | uppercase) : product.descripcion | uppercase}}
-                                        </div>  
-                                    </td>
-                                    <td>{{ product.cantidad | number: '0.2'}}</td>
-                                    <td>
-                                        <div *ngIf="verItems">
-                                            <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
-                                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                            <!-- <ng-template pTemplate="footer">
-                                <tr>
-                                    <td colspan="6" class="text-right">Total: </td>
-                                    <td>{{montoTotal | number: '0.2'}}</td>
-                                </tr>
-                            </ng-template> -->
-                        </p-table>  
+                            [scrollable]="true"  styleClass="p-datatable-sm ">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                                        <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1">TIPO PRODUCTO</th>
+                                        <th [ngStyle]="{'width':'300px'}" class="bg-teal-50 border-1">DESCRIPCIÓN</th>
+                                        <th class="bg-teal-50 border-1">CANT.</th>
+                                        <th class="bg-teal-50 border-1">ACCIONES</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                                    <tr>
+                                        <td>{{rowIndex + 1}}</td>
+                                        <td>{{ product.nomtipoprod}}</td>
+                                        <td>{{ product.descripcion | uppercase}}</td>
+                                        <!-- <td>
+                                            <div pTooltip="{{product.descripcion | uppercase}}">
+                                                {{(product.descripcion.length > 70) ? ((product.descripcion).slice(0, 70) + '...' | uppercase) : product.descripcion | uppercase}}
+                                            </div>  
+                                        </td> -->
+                                        <td>{{ product.cantidad | number: '0.2'}}</td>
+                                        <td>
+                                            <div *ngIf="verItems">
+                                                <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                                <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>  
+                        </div>                    
                     </div>
+                
+                              
+            </p-tabPanel>
+
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-list"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Proveedores
+                        </span>
+                    </div>
+                </ng-template>
+                <div class="grid">
+                    
                     <div class="lg:col-9">
                         <div *ngIf="verItems" class="flex mt-3 ml-2 gap-2">
                             <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Proveedor" icon="pi pi-user" label="Agregar Proveedor" (click)="agregarProveedor([],0)"></button>
-                            <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Enviar Mail" icon="pi pi-envelope" label="Enviar Mail" (click)="EnviarMail()"></button>
+                            <!-- <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Enviar Mail" icon="pi pi-envelope" label="Enviar Mail" (click)="EnviarMail()"></button> -->
 
                         </div>
                         <p-table [value]="lstPostores" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [scrollable]="true"  styleClass="p-datatable-sm " >
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
-                            <th class="bg-teal-50 border-1">PROVEEDOR</th>
-                            <th class="bg-teal-50 border-1">RUC</th>
-                            <th class="bg-teal-50 border-1">CONTACTO</th> 
-                            <th [ngStyle]="{'width':'150px'}" class="bg-teal-50 border-1">ACCIONES</th>
-                            <!-- <th class="bg-teal-50 border-1">WIN</th> -->
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                        <tr>      
-                            <td>{{rowIndex + 1}}</td>
-                            <td>{{ product.nomcomercial }}</td>
-                            <td>{{ product.nrodocumento }}</td>
-                            <td>{{ product.snombrecontacto}}</td>                        
-                            <td>
-                                <div class="flex">
-                                    <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onVerDetalle(product)"></button>
-                                    <div *ngIf="verItems">
-                                        <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left"  class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarProveedor(product, rowIndex)"></button>
-                                        <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" class="p-button-text p-button-rounded text-900 text-red-600" (click)="eliminarCotizacion(product)"></button>
-                                    </div>
-                                </div>
-                                
-                            </td>
-                            <!-- <td [ngStyle]="{'width':'40px','text-align': 'center'}" >
-                                <div>
-                                    <p-checkbox pTooltip="Seleccionar Cotización" [(ngModel)]="product.indseleccion" [binary]="true" variant="filled" (click)="checkEvent(product);"/>
-                                </div>
-                            </td> -->
-                        </tr>
-                    </ng-template>
-                    <!-- <ng-template pTemplate="footer">
-                        <tr>
-                            <td colspan="6" class="text-right">Total: </td>
-                            <td>{{montoTotal | number: '0.2'}}</td>
-                        </tr>
-                    </ng-template> -->
-                </p-table>   
+                            [scrollable]="true"  styleClass="p-datatable-sm " >
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                                    <th class="bg-teal-50 border-1">PROVEEDOR</th>
+                                    <th class="bg-teal-50 border-1">RUC</th>
+                                    <th class="bg-teal-50 border-1">CONTACTO</th> 
+                                    <th [ngStyle]="{'width':'150px'}" class="bg-teal-50 border-1">ACCIONES</th>
+                                    <!-- <th class="bg-teal-50 border-1">WIN</th> -->
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                                <tr>      
+                                    <td>{{rowIndex + 1}}</td>
+                                    <td>{{ product.nomcomercial }}</td>
+                                    <td>{{ product.nrodocumento }}</td>
+                                    <td>{{ product.snombrecontacto}}</td>                        
+                                    <td>
+                                        <div class="flex">
+                                            <button *ngIf="verPdfMail" pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onVerDetalle(product)"></button>
+                                            <div *ngIf="verItems">
+                                                <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="bottom"  class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarProveedor(product, rowIndex)"></button>
+                                                <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="bottom" class="p-button-text p-button-rounded text-900 text-red-600" (click)="eliminarCotizacion(product)"></button>
+                                                <button *ngIf="verPdfMail" pButton pRipple icon="pi pi-envelope" pTooltip="Enviar Mail...!" tooltipPosition="bottom"  class="p-button-text p-button-rounded text-900 text-green-600" (click)="EnviarMail(product)"></button>
+                                            </div>
+                                        </div>
+                                        
+                                    </td>
+                                    <!-- <td [ngStyle]="{'width':'40px','text-align': 'center'}" >
+                                        <div>
+                                            <p-checkbox pTooltip="Seleccionar Cotización" [(ngModel)]="product.indseleccion" [binary]="true" variant="filled" (click)="checkEvent(product);"/>
+                                        </div>
+                                    </td> -->
+                                </tr>
+                            </ng-template>
+                        </p-table>   
                     </div>
                 </div>
                               
@@ -255,7 +261,7 @@
                                 <div *ngIf="verItems">
                                     <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left" (click)="agregarCotizacion(product, rowIndex)" class="p-button-text p-button-rounded text-xs"></button>
                                     <!-- <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" (click)="eliminarCotizacion(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button> -->
-                                    <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="left" pTooltip="Agregar Anexos..." class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-orange-600" (click)="anexos(product, 'B')"></button>
+                                    <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="left" pTooltip="Adjuntos..." class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-orange-600" (click)="anexos(product, 'B')"></button>
                                     <button *ngIf="product.indselmostrar" pButton pRipple type="button" icon="pi pi-check" tooltipPosition="left" pTooltip="Seleccionar Ganador...!" class="p-button-rounded p-button-text text-green-600" (click)="mensajeCoti(product)"></button>
                                 </div>
                             </td>

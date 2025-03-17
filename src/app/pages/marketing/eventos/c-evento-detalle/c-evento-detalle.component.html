@@ -1,0 +1,351 @@
+<div class="-mt-1">      
+    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button pButton icon="pi pi-save" label="Grabar" (click)="guardar()" class="p-button-primary w-auto h-2rem"></button>
+    </div> 
+    <div class="card p-2">
+        <p-tabView>
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-cog text-blue-700"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Datos Generales
+                        </span>
+                    </div>
+                </ng-template>
+
+                <form [formGroup]="registerForm" class="p-fluid p-formgrid grid lg:col-5 text-sm p-2 m-2">           
+                    <div class="sm:col-6 lg:col-12 md:col-3 -mt-4 col-12">
+                        <label class="block text-900 font-semibold mb-1">Título <span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="1" formControlName="title" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                        </span>
+                    </div>             
+                    <div class="col-4 sm:col-12 lg:col-3 md:col-12 justify-content-end -mt-4">
+                        <label class="block text-900 font-semibold mb-1">Fecha Inicio<span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
+                            <p-calendar formControlName="startDate" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" 
+                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                        </span>
+                    </div>            
+                    <div class="col-4 sm:col-12 lg:col-3 md:col-12 justify-content-end -mt-4">
+                        <label class="block text-900 font-semibold mb-1">Fecha Fin<span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
+                            <p-calendar formControlName="dueDate" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" 
+                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                        </span>
+                    </div>
+                    <div class="sm:col-4 lg:col-3 md:col-2 -mt-4">                    
+                        <label class="block text-900 font-bold mb-1">Hora <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2.5rem;">
+                            <p-dropdown [options]="horas" formControlName="horareg" optionLabel="name" optionValue="name" 
+                            class="p-inputtext-sm" appendTo="body" ></p-dropdown>
+                        </span>
+                    </div>
+                    <div class="sm:col-6 lg:col-12 md:col-3 -mt-4 col-12"></div>
+                    <div class="sm:col-6 lg:col-12 md:col-3 -mt-5 col-12">
+                        <label class="block text-900 font-semibold mb-1">Lugar <span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="2" formControlName="lugarevento" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                        </span>
+                    </div>  
+                            
+                    <div class="col-4 sm:col-7 lg:col-7 md:col-6 -mt-4">                            
+                        <label class="block text-900 font-semibold mb-1">Organizador <span class="text-red-500 font-bold"> * </span></label>                            
+                        <span>
+                            <p-dropdown [options]="lstProveedores" placeholder="Seleccionar...!"  formControlName="idcliente" class="p-inputtext-sm"
+                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead></p-dropdown>            
+                        </span>
+                    </div>                         
+                    <div class="sm:col-6 lg:col-5 md:col-3 col-8 -mt-4">
+                        <div class="flex">
+                            <label class="block text-900 font-semibold mb-1">Responsable <span class="text-red-500 font-bold"> * </span></label>
+                        </div>                            
+                        <span>
+                            <p-dropdown [options]="lstResponsable" formControlName="idresponsable" placeholder="Seleccionar...!" optionLabel="nomUsuario" 
+                            optionValue="codigoUsuario" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div>    
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 -mt-3">
+                        <label class="block text-900 font-semibold mb-1">Presupuesto <span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid">
+                            <p-inputNumber class="mt-1" formControlName="monto" locale="es-PE" mode="decimal" [minFractionDigits]="2" name="monto" 
+                            [min]="0" class="p-inputtext-sm" ></p-inputNumber>
+                        </span>
+                    </div>   
+                    <div class="sm:col-6 lg:col-4 md:col-3 col-6 -mt-3">
+                        <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                            optionValue="idmoneda" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
+                        </span>                                      
+                    </div>     
+                    <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">
+                        <label class="block text-900 font-semibold mb-1">Descripción</label>                        
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="3" formControlName="description" style="resize: none" class="w-full p-inputtext-sm" id="observacion" [readonly]=onlyRead></textarea>
+                        </span>
+                    </div>                                 
+                </form>            
+            </p-tabPanel>
+
+            <p-tabPanel >
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-users text-green-600"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Participantes
+                        </span>
+                    </div>
+                </ng-template>           
+                <div class="lg:col-9 gap-2">
+                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3" pTooltip="Agregar Participante" icon="pi pi-user" label="Agregar" (click)="agregarProveedor([],0)"></button>
+                    
+                    <p-table [value]="lstParticipantes" class="ml-2 mt-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                        [scrollable]="true"  styleClass="p-datatable-sm " >
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
+                                <th class="bg-teal-50 border-1 text-600">CONTACTO</th>
+                                <th class="bg-teal-50 border-1 text-600">CARGO</th>
+                                <th class="bg-teal-50 border-1 text-600">EMAIL</th> 
+                                <th class="bg-teal-50 border-1 text-600">TELEFONO</th> 
+                                <th [ngStyle]="{'width':'60px'}" class="bg-teal-50 border-1 text-600">ACCIONES</th>
+                                <!-- <th class="bg-teal-50 border-1">WIN</th> -->
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                            <tr>      
+                                <td>{{rowIndex + 1}}</td>
+                                <td>{{ product.nombrecontacto }}</td>
+                                <td>{{ product.cargo }}</td>
+                                <td>{{ product.email}}</td>     
+                                <td>{{ product.telefono}}</td>                        
+                                <td>
+                                    <div class="flex">                               
+                                            <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left"  class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarProveedor(product, rowIndex)"></button>
+                                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" class="p-button-text p-button-rounded text-900 text-red-600" (click)="eliminarCotizacion(product)"></button>
+                                        
+                                    </div>
+                                    
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>   
+                </div>
+            </p-tabPanel>
+
+            <!-- <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-money-bill"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Presupuesto
+                        </span>
+                    </div>
+                </ng-template>             
+            </p-tabPanel> -->
+
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-users"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Involucrados
+                        </span>
+                    </div>
+                </ng-template>             
+                <div class="lg:col-6 flex flex-column field px-5 -mb-3">
+                    <div class="flex">
+                        <i class="pi pi-info-circle mb-2 text-lg text-orange-600" style="margin-left: 10px;" pTooltip="Para Agregar un Involucrado, debe dar la flecha del teclado para abajo"></i>
+                    </div>
+                    <p-autoComplete [(ngModel)]="lstAssignees" [suggestions]="filteredAssignees" (completeMethod)="filterAssignees($event)" field="name" [multiple]="true" appendTo="body"
+                            [showEmptyMessage]="true" emptyMessage="No se han encontrado resultados" placeholder="Elegir Involucrados" [inputStyle]="{'height': '3rem'}">
+                        <ng-template let-assignee pTemplate="selectedItem">
+                            <div class="flex align-items-center gap-3 border-round">
+                                <img src="{{assignee.image}}" [alt]="assignee.name" (click)="op1.toggle($event)" class="h-2rem w-2rem border-2 border-circle surface-border mr-2 cursor-pointer">
+                                <span class="text-900">{{assignee.name}}</span>
+                                <p-overlayPanel #op1 >
+                                        <div class="flex">
+                                            <img src="{{assignee.image}}" [alt]="assignee.name" class="h-3rem w-3rem border-2 border-circle surface-border mr-2">
+                                            <div style="margin-left: 10px;">
+                                                <span class="text-900 font-semibold">{{assignee.name}}</span>
+                                                <br>
+                                                <span>{{assignee.cargo}}</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="flex align-items-center text-900">
+                                            <i class="pi pi-phone font-semibold" style="left: 3.5rem; margin-left: 15px;"></i>
+                                            <span style="margin-left: 10px;">{{assignee.nrocelular}}</span>
+                                        </div>
+                                        <br>
+                                        <div class="flex align-items-center text-900">
+                                            <i class="pi pi-envelope font-semibold" style="left: 1.5rem; margin-left: 15px;"></i>
+                                            <span style="margin-left: 10px;">{{assignee.email}}</span>
+                                        </div>
+                                        <br>
+
+                                </p-overlayPanel>
+                            </div>
+                        </ng-template>
+                        <ng-template let-assignee pTemplate="item">
+                            <div class="flex align-items-center border-round">
+                                <img src="{{assignee.image}}" [alt]="assignee.name" class="h-2rem w-2rem border-2 border-circle surface-border mr-2">
+                                <span class="text-900">{{assignee.name}}</span>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                </div>
+            </p-tabPanel>
+
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-check-square"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Tareas
+                        </span>
+                    </div>
+                </ng-template>             
+                <div class="lg:col-5 flex flex-column ">
+                    <div class="flex justify-content-between mb-3">
+                        <span class="text-900 font-semibold">Progreso</span>
+                        <span class="text-900 font-semibold">{{progress}}%</span>
+                    </div>
+                    <p-progressBar name="progress" [value]="progress" [showValue]="false"></p-progressBar>
+                </div>
+
+                
+                    <div class="lg:col-5 flex flex-column ">
+                        <textarea type="text" pInputTextarea name="taskContent" [(ngModel)]="taskContent" style="resize: none" class="w-full -mt-3 mb-3" placeholder="Agregar Tarea" (keydown.enter)="addTask($event)"></textarea>
+
+                        <div class="w-full align-items-start gap-3 surface-border border-1 border-round p-2 mt-2 bg-blue-50 h-8rem"
+                            *ngFor="let task of this.taskList.tasks;let i=index" 
+                            (onDragStart)="dragStart(task, i)" (onDragEnd)="dragEnd()" pDroppable="ouch" (onDrop)="drop($event, i)" >
+
+                            <div class="justify-content-between flex field gap-5">
+                                 <!-- *ngIf="task.asignados.length > 0 && task.idtarea !== 0" -->
+                                <p-checkbox [name]="task.text + i" pTooltip="Completar Tarea" [(ngModel)]="task.completed" [binary]="true" [inputId]="task.text" 
+                                (onChange)="calculateProgress()"></p-checkbox>
+
+                                <i *ngIf="!task.completed" class="pi pi-users cursor-pointer mt-2" pTooltip="Asignar Tarea" tooltipPosition="left" (click)="AsignarTarea(task);"></i>
+
+                                <div class="w-full flex-column" >
+                                    <p-inplace [disabled]="task.completed" #inplace3 [closable]="true" closeIcon="pi pi-check" styleClass="h-3rem" (onActivate)="focus()" styleClass="white-space-nowrap">
+                                        <ng-template pTemplate="display">
+                                            <span style="white-space: pre-line" pTooltip="Click para Editar" [ngClass]="{'text-600 line-through': task.completed, 'text-900': !task.completed}">
+                                                {{task.text}}
+                                            </span>
+                                        </ng-template>
+                                        <ng-template pTemplate="content">
+                                            <input #inputTaskList type="text" [value]="task.text" name="text" [(ngModel)]="task.text" pInputText class="w-full h-3rem text-900 text-lg -mr-5" (keydown.enter)="inplace3.deactivate()">
+                                        </ng-template>
+                                    </p-inplace>
+                                </div>
+                                <div *ngIf="task.idtarea === 0" class="flex">
+                                    <button pRipple pButton type="button" icon="pi pi-trash text-700" pTooltip="Eliminar Tarea" tooltipPosition="left" class="p-button-rounded p-button-text mr-2 -mt-2" (click)="removeTask(i)"></button>
+                                </div>
+                                <!-- <div *ngIf="task.idtarea !== 0" class="flex">
+                                    <button pRipple pButton type="button" icon="pi pi-paperclip text-700" pTooltip="Agregar Adjunto a Tarea" tooltipPosition="left"
+                                    class="p-button-rounded p-button-text mr-2 -mt-2" (click)="anexosT(task, 'T')"></button>
+                                </div> -->
+                            </div>
+                            <div class="flex gap-3 justify-content-between">
+                                <div ></div>
+                                <p-avatarGroup>
+                                    <p-avatar *ngFor="let assignee of this.taskList.tasks[i].asignados | slice:0:3" image="{{assignee.image}}" shape="circle" styleClass="border-2 surface-border"></p-avatar>
+                                    <p-avatar *ngIf="this.taskList.tasks[i].asignados && this.taskList.tasks[i].asignados.length > 3" label="+ {{this.taskList.tasks[i].asignados.length - 1}}" shape="circle" styleClass="border-2 surface-border mb-1 surface-ground"></p-avatar>
+                                </p-avatarGroup>
+                                <div class="justify-content-end flex gap-5">
+                                    <div class="flex -mt-2 bg-blue-50 border-1 surface-border">
+                                        <span class="p-input-icon-left bg-blue-50 -ml-9" style="height: 2.5rem;" pTooltip="Fecha Inicial de Tarea" tooltipPosition="left">
+                                            <i class="pi pi-calendar z-1" style="left: 2.5rem;"></i>
+                                            <p-calendar [disabled]="task.completed" [name]="task.fechaini + i" dataType="string" dateFormat="dd/mm/yy" [showTime]="false" [required]="true"
+                                                [inputId]="task.fechaini" inputStyleClass="w-full pl-7 text-600 border-0 cursor-pointer" styleClass="w-full myClass" [inputStyle]="{'height':'2.5rem'}"
+                                                [(ngModel)]="task.fechaini" [ngModelOptions]="{standalone: true}" appendTo="body" [maxDate]="maxDateValueTarea" (onSelect)="setFechaMinTarea($event)"></p-calendar>
+                                        </span>
+                                    </div>
+                                    <div class="flex -mt-2 bg-blue-50 border-1 surface-border -ml-2">
+                                        <span class="p-input-icon-left surface-ground " style="height: 2.5rem;" pTooltip="Fecha final de Tarea" tooltipPosition="left">
+                                            <i class="pi pi-calendar z-1" style="left: 2.5rem;"></i>
+                                            <p-calendar [disabled]="task.completed" [name]="task.fechafin + i" dataType="string" dateFormat="dd/mm/yy" [showTime]="false" [required]="true"
+                                                [inputId]="task.fechafin" inputStyleClass="w-full pl-7 text-600 border-0 cursor-pointer" styleClass="w-full myClass" [inputStyle]="{'height':'2.5rem'}"
+                                                [(ngModel)]="task.fechafin" [ngModelOptions]="{standalone: true}" appendTo="body" [minDate]="minDateValueTarea" (onSelect)="setFechaMaxTarea($event)"></p-calendar>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                
+            </p-tabPanel>
+
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-dollar"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Gastos
+                        </span>
+                    </div>
+                </ng-template>             
+                <div class="lg:col-9 gap-2">
+                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3" pTooltip="Agregar Gastos" icon="pi pi-user" label="Agregar" (click)="agregarGastos([],0)"></button>
+                    
+                    <p-table [value]="lstGastos" class="ml-2 mt-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                        [scrollable]="true"  styleClass="p-datatable-sm " >
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
+                                <th class="bg-teal-50 border-1 text-600">DETALLE DEL GASTO</th> 
+                                <th class="bg-teal-50 border-1 text-600">FECHA</th>
+                                <th class="bg-teal-50 border-1 text-600">TIPO/NRO/DOCUM</th>
+                                <th class="bg-teal-50 border-1 text-600">MONEDA</th> 
+                                <th class="bg-teal-50 border-1 text-600">MONTO</th> 
+                                <th [ngStyle]="{'width':'150px'}" class="bg-teal-50 border-1 text-600">ACCIONES</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                            <tr>      
+                                <td>{{rowIndex + 1}}</td>
+                                <td>{{ product.descripcion }}</td>
+                                <td>{{ product.fecgasto | date:'dd/MM/yyyy'}}</td>
+                                <td>{{ product.tipnrodocum }}</td>
+                                <td>{{ product.simbmoneda }}</td>
+                                <td>{{ product.mtogasto | number: '0.2-2' }}</td>                        
+                                <td>
+                                    <div class="flex">                               
+                                        <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left"  
+                                            class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarGastos(product, rowIndex)"></button>
+                                        <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" 
+                                            class="p-button-text p-button-rounded text-900 text-red-600" (click)="eliminarGastos(product)"></button>                                        
+                                    </div>                                    
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>   
+                </div>
+            </p-tabPanel>
+    
+            <p-tabPanel [disabled]=visibleDocument>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-paperclip"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Adjuntos
+                        </span>
+                    </div>
+                </ng-template>             
+                <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
+            </p-tabPanel>
+        </p-tabView> 
+    </div>
+       
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-toast></p-toast>

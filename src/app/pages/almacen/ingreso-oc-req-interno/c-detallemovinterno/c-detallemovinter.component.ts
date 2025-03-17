@@ -67,6 +67,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
   selectedProducts: any;
   selectedItems: any;
   lstTransacciones: any[]=[];
+  listadoArchivos: any[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -91,6 +92,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
     this.listaClientes();
     this.listaProveedores();
     this.listarItemsTabla(); 
+    this.listaProyectoTipo();
     
     if (this.idMovimiento > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -117,6 +119,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       }     
       this.mostrarBotones('NVO');
       this.servicioGenerico();
+      this.cargarProyectos(2);
     }   
   }
 
@@ -126,7 +129,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
     //Agregar validaciones de formulario
     this.registerFormRegistro = this.formBuilder.group({
       idproyecto: [{ value: 0, disabled: false }],
-      idtipoproyecto: [{ value: 0, disabled: false }],
+      idtipoproyecto: [{ value: 2, disabled: false }],
       idtipodocprc: [{ value: this.IA_data.idtipodocprc, disabled: false }],
       idoportunidad: [{ value: 0, disabled: false }],
       sustentodoc: [{ value: '', disabled: false }],
@@ -142,7 +145,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       idmoneda: [{ value: 1, disabled: false }],
       labelnrodocumento: [{ value: '', disabled: true }],
       idcontacto: [{ value: 0, disabled: false }],
-      codtipodoc: [{ value: 'OPO', disabled: false }],
+      codtipodoc: [{ value: 'REQ', disabled: false }],
       tiempoentrega: [{ value: 0, disabled: false }],
       codformapago: [{ value: 118, disabled: false }],
       validezoferta: [{ value: 0, disabled: false }],
@@ -259,6 +262,8 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
             if (rpta.ordencompra[0].quotes !== undefined) {
               this.lstQuotes =  rpta.ordencompra[0].quotes; 
             }    
+            this.getOrigen(rpta.ordencompra[0].idtipoproyecto);   
+            //this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto); 
                          
           this.visibleDocument = false;
           // console.log('s_monto', rpta.ordencompra[0].s_monto);
@@ -268,7 +273,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
           this.cargarMenu(rpta.ordencompra[0].acciones);
-          this.mostrarBotones(rpta.ordencompra[0].estado);                
+          this.mostrarBotones(rpta.ordencompra[0].estado);    
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -546,26 +551,65 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
     });
   }
 
+ 
   onAccion(item: any) {
+    this.getListaArchivos(item);
+      console.log('onAccion', item);
+  // this.ordenCompra.idtrx = item.idtrx;
+  // console.log('onAccion', item);
+  // const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+  //     data: this.ordenCompra,
+  //     header: item.nomtrx,
+  //     closeOnEscape: false,
+  //     styleClass: 'testDialog',
+  //     width: '40%'
+  // });
 
-    const objeto = this.lstItemOC.filter((x: { indcompleto: boolean; }) => x.indcompleto == false);
-    console.log('onAccion', objeto);
-    if (objeto.length > 0) {
-      this.messageService.add({severity: 'error', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
-          return;
+  // ref.onClose.subscribe(() => {
+  //     this.getListar();
+  //   });
+  }
+
+  getListaArchivos(valor:any) {
+  
+    const objeto = {
+      idoportunidad: 0,
+      codtipoproc: 7 , 
+      idnroproceso: this.ordenCompra.idordencompra, 
     }
+    console.log('this.objeto ...', objeto );
+  
+  const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
+    .subscribe({
+      next: (rpta: any) => {
+        this.listadoArchivos = rpta;
+        console.log('this.listadoArchivos ...', this.listadoArchivos );
 
-    this.ordenCompra.idtrx = item.idtrx;
+        if (this.listadoArchivos.length === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+              return;
+        }else{
+          this.ordenCompra.idtrx = valor.idtrx;
+    console.log('onAccion', valor);
     const ref = this.dialogService.open(CModalExcAlmacenComponent, {
         data: this.ordenCompra,
-        header: item.nomtrx,
+        header: valor.nomtrx ,
         closeOnEscape: false,
         styleClass: 'testDialog',
         width: '40%'
     });
+
     ref.onClose.subscribe(() => {
         this.traerUnoOrdenC();
       });
+        }
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => { }
+    });
+  this.$listSubcription.push($listarArchivos)
   }
 
   
@@ -654,17 +698,19 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
     }
 
     getOCtraerItems(dato: any) {  
-      console.info('dato : ', dato);
+      console.info('getOCtraerItems : ', dato);
+      //this._alm_idordencompra = dato;
       this.lstItemOC = []
       this.selectedItems=[];
       const objeto ={
         idordencompra: dato,
-        idusuario: constantesLocalStorage.idusuario
+        idusuario: constantesLocalStorage.idusuario,
+        idtipodocprc: this.IA_data.idtipodocprc
       }
-      const $personaProveedorlist = this.proyectosService.ordenCompraTraeruno(objeto).subscribe({
+      const $personaProveedorlist = this.proyectosService.ordenCompraTraerunoSubproceso(objeto).subscribe({
           next: (rpta: any) => {
               this.setSpinner(false);
-              console.info('getOCtraerItems : ', rpta);                
+              console.info('personaProveedorlist : ', rpta);                
 
               if (rpta.ordencompra[0].items !== undefined) {
 
@@ -703,6 +749,73 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       }))
 
       this.lstItemOC = data;
+    }
+
+  
+
+    cargarProyectos(dato:any){
+      console.log('cargarProyectos', dato);
+      this.ordencompraService.portipoProyectoList(dato).subscribe({
+        next: (rpta: any) => {
+        this.lstProyectos = rpta;
+        console.log('lstProyectos',rpta);
+  
+        if (this.idMovimiento > 0) {
+          this.changeProyecto(this.registerFormRegistro.get('idproyecto').value);
+        }
+  
+        },
+  
+        error: (err) => {
+        this.messageService.clear();
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: mensajesQuestion.msgErrorGenerico,
+            });
+        },
+        complete: () => {
+        },
+    });
+    }
+
+    changeProyecto(idproyecto : any){
+      if (this.registerFormRegistro.get('codtipodoc').value === 'OPO') {  
+        const idoportunidad = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].idoportunidad;
+        // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
+        // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
+        //this.oportunidadTraerUno(idoportunidad);     
+      }    else{
+        // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
+        // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
+        this.verCotizacion = true;
+      }
+    }
+
+    listaProyectoTipo(){
+      this.ordencompraService.tipoProyectoList().subscribe({
+        next: (rpta: any) => {
+          console.log('listaProyectoTipo', rpta);
+          let lista = rpta.filter((x: any) => x.idtipoproyecto != 1);
+        this.lstOrigen = lista;
+        },
+        error: (err) => {
+        this.messageService.clear();
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: mensajesQuestion.msgErrorGenerico,
+        });
+        },
+        complete: () => {
+        },
+    });
+    }
+
+    getOrigen(data:any){
+      console.log('getOrigen', data);
+      this.cargarProyectos(data);   
+  
     }
 
 }

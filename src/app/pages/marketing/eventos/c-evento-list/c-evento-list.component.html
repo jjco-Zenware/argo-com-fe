@@ -1,0 +1,23 @@
+<div class="card md:w-25rem mb-4 w-full" style="height: 600px;">
+    <div  class="flex justify-content-center align-items-center w-full h-2rem border-round border-1 surface-border bg-blue-400 text-white" >
+        <!-- <span class="custom-marker shadow-2" [style.backgroundColor]="list.bgcolor">
+            <i [ngClass]="list.bgicon" ></i>
+        </span> -->
+        <i [ngClass]="list.bgicon" ></i>
+        <span class="font-semibold pl-2 text-base">{{list.title}}</span>
+    </div>
+
+    <div class="flex flex-column gap-2 overflow-auto w-full h-full mb-6">
+        <!-- <div class="w-full mt-2 flex" *ngIf="list.creaOportunidad !== 0 && list.listId === '1'">
+            <button pButton pRipple label="Nuevo Evento" icon="pi pi-plus font-semibold" class="justify-content-center font-semibold w-full border-round zoomin animation-duration-300"
+            (click)="insertCard()" ></button>
+        </div>  -->
+        <div [id]="list.listId" class="flex flex-column gap-5 overflow-y-auto mb-6 mt-2 scrollable kanban-list" cdkDropList (cdkDropListDropped)="dropCard($event)"
+            (cdkDropListEntered)="insertHeight($event)" (cdkDropListExited)="removeHeight($event)" [cdkDropListData]="list.cards" [cdkDropListConnectedTo]="listIds"
+                #listEl style="min-height:2rem">
+            <c-evento-card *ngFor="let card of list.cards" [card]="card" [listId]="list.listId" (click)="onCardClick($event, card)" cdkDrag cdkDragHandle [cdkDragDisabled]="isMobileDevice"></c-evento-card>
+        </div>
+    </div>
+</div>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+

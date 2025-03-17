@@ -14,52 +14,69 @@
                         </span>
                     </div>
                 </ng-template>
-                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">                    
-                                              
-                    <div class="sm:col-12 lg:col-2 md:col-12 col-6 field">
+                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">
+                    <div class="col-6 sm:col-5 lg:col-5 md:col-6 ">                            
+                        <label class="block text-900 font-semibold mb-1">Almacen Ingreso<span class="text-red-500 font-bold"> * </span></label>                            
+                        <span>
+                            <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
+                            optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div> 
+                    <div class="sm:col-8 lg:col-1 md:col-12 col-0"></div>
+                    <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end  field">
+                        <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm">
+                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                        </span>
+                    </div>
+                    <div class="sm:col-12 lg:col-3 md:col-12 col-6 field">
                         <label class="block text-900 font-semibold mb-1">N° </label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="labelnrodocumento"/>
                         </span>
                     </div>
-                    <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end  field">
-                        <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
-                        <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;" >
-                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
-                        </span>
-                    </div>
-                    <div class=" sm:col-8 lg:col-2 md:col-12 -mt-4"></div>                        
-                    <div class="col-6 sm:col-6 lg:col-5 md:col-6 ">                            
-                        <label class="block text-900 font-semibold mb-1">Almacen <span class="text-red-500 font-bold"> * </span></label>                            
-                        <span>
-                            <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
-                            optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
-                        </span>
-                    </div>       
-                    <div class="col-4 sm:col-6 lg:col-5 md:col-6 col-12 -mt-4">                            
-                        <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
-                        <span>
-                            <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
-                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead></p-dropdown>            
-                        </span>
-                    </div>   
-                    <div class="sm:col-6 lg:col-7 md:col-3 col-12 -mt-4">
-                        <div class="flex">
-                            <label class="block text-900 font-semibold mb-1 ">Orden Compra <span class="text-red-500 font-bold"> * </span></label>
-                        </div>                            
-                        <span>
-                            <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
-                            optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="getOCtraerItems($event.value)"></p-dropdown>
-                        </span>
-                    </div>                        
-                    <div class="sm:col-6 lg:col-12 md:col-3 mt-3 col-12 -mt-4">
-                        <label class="block text-900 font-semibold">Observación</label>                        
-                        <span class="p-fluid">
-                            <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
-                            class="p-inputtext-sm w-full" id="observacion" [readonly]=onlyRead></textarea>
-                        </span>
-                    </div>          
+                        
+
+                        <div class="sm:col-6 lg:col-4 md:col-3 col-4 -mt-6">
+                            <label class="block text-900 font-semibold mb-1">Origen <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
+                                optionValue="idtipoproyecto" (onChange)="getOrigen($event.value)" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div> 
+                        <div class=" sm:col-8 lg:col-7 md:col-12"></div> 
+                        <div class="col-12 field -mt-4">
+                            <label class="block text-900 font-semibold mb-1">Proyecto <span class="text-red-500 font-bold"> * </span></label>                        
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
+                                optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
+                            </span>
+                        </div>
+                        
+                        <div class="sm:col-6 lg:col-5 md:col-6 col-12 -mt-5">                            
+                            <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
+                            <span>
+                                <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+                                optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead></p-dropdown>            
+                            </span>
+                        </div>   
+                        <div class="sm:col-6 lg:col-7 md:col-3 col-12 -mt-5">
+                            <div class="flex">
+                                <label class="block text-900 font-semibold mb-1">Orden Compra <span class="text-red-500 font-bold"> * </span></label>
+                            </div>                            
+                            <span>
+                                <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
+                                optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="getOCtraerItems($event.value)"></p-dropdown>
+                            </span>
+                        </div> 
+                        <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-4">
+                            <label class="block text-900 font-semibold mb-1">Observación</label>                        
+                            <span class="p-fluid">
+                                <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
+                                class="p-inputtext-sm w-full" id="observacion" [readonly]=onlyRead></textarea>
+                            </span>
+                        </div>           
                 </form>
             </p-tabPanel>             
 

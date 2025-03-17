@@ -3,7 +3,7 @@
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center text-orange-500" icon="pi pi-file" label="Nuevo"
+                    <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-file" label="Nuevo"
                         pTooltip="Nuevo" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                 
                 <div class="mb-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
@@ -24,6 +24,13 @@
                 <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                     [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
             </div>
+            <div class="sm:col-12 lg:col-3 md:col-6 col-12">                            
+                <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
+                <span>
+                    <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor..."  formControlName="idproveedor" class="p-inputtext-sm"
+                    optionLabel="nomcomercial" optionValue="idcliente" appendTo="body"></p-dropdown>            
+                </span>
+            </div> 
             <div class="field col-4 md:col-5 gap-2">
                 <button pButton type="button" (click)="getListarOrdenCompra()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                     class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
@@ -43,17 +50,22 @@
                             N°
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1" >
+                    <th class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             ID OC
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'70px'}" class="bg-teal-50 border-1" >
+                    <th class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            FECHA
+                        </div>
+                    </th>
+                    <th class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             TIPO <br> ORDEN
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'70px'}" class="bg-teal-50 border-1" >
+                    <th class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             N° ORDEN
                         </div>
@@ -63,7 +75,7 @@
                             PROVEEDOR
                         </div>
                     </th>
-                    <th style="width: 250px;" class="bg-teal-50 border-1" >
+                    <th class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             CÓDIGO <br> PROYECTO
                         </div>
@@ -93,11 +105,21 @@
                             TOTAL
                         </div>
                     </th>
-                    <th style="width: 80px" class="bg-teal-50 border-1" >
+                    <th style="width: 70px" class="bg-teal-50 border-1" >
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
                             ESTADO
                         </div>
                     </th>
+                    <!-- <th style="width: 70px" class="bg-teal-50 border-1" >
+                        <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                            RECIBIDO
+                        </div>
+                    </th>
+                    <th style="width: 70px" class="bg-teal-50 border-1" >
+                        <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                            ENTREGADO
+                        </div>
+                    </th> -->
                     <th style="width: 80px;" class="bg-teal-50 border-1" >
                         <div class="flex justify-content-between align-items-center">
                             ACCIONES
@@ -118,19 +140,19 @@
                         {{rowIndex + 1}}
                     </td>
                     <td >
-                        <div [ngStyle]="{'width':'50px'}">
-                            {{data.idordencompra}}
-                        </div>
+                        {{data.idordencompra}}
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'70px'}">
-                            {{data.nomtipoorden}}
-                        </div>
+                        {{data.fechaingreso}}
                     </td>
                     <td>
-                        <div [ngStyle]="{'width':'100px'}">
+                        {{data.nomtipoorden}}
+                    </td>
+                    <td>
+                        <!-- <div [ngStyle]="{'width':'100px'}">
                             {{data.codigonroorden}}
-                        </div>
+                        </div> -->
+                        {{data.codigonroorden}}
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'150px'}">
@@ -138,9 +160,10 @@
                         </div>
                     </td>
                     <td >
-                        <div [ngStyle]="{'width':'100px'}">
+                        <!-- <div [ngStyle]="{'width':'150px'}">
                             {{data.codigoproyecto }}
-                        </div>
+                        </div> -->
+                        {{data.codigoproyecto }}
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'250px'}">
@@ -149,7 +172,7 @@
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'60px'}">
-                            {{data.nommoneda | uppercase}}
+                            {{data.simbmoneda}}
                         </div>
                     </td>
                     <td>
@@ -168,11 +191,21 @@
                         </div>
                     </td>
                     <td>                       
-                        <div [ngStyle]="{'width':'80px','text-align': 'center'}">
+                        <div [ngStyle]="{'width':'70px','text-align': 'center'}">
                             <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                             <!-- {{data.estado | uppercase}} -->
                         </div>
                     </td>
+                    <!-- <td>                       
+                        <div [ngStyle]="{'width':'70px','text-align': 'center'}">
+                            <p-tag [value]="data.estadoentrada" [severity]="data.serevity_estadoentrada"></p-tag>
+                        </div>
+                    </td>
+                    <td>                       
+                        <div [ngStyle]="{'width':'70px','text-align': 'center'}">
+                            <p-tag [value]="data.estadosalida" [severity]="data.serevity_estadosalida"></p-tag>
+                        </div>
+                    </td> -->
                     <td>
                         <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'70px'}">
                             <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onVerDetalle(data)"></button>
@@ -205,7 +238,7 @@
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 h-2rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center text-red-500" icon="pi pi-backward" label="Regresar"
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar a Bandeja" tooltipPosition="left" (click)="getBack()" ></button>                    
                 </div>
                 <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">

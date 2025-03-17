@@ -178,4 +178,9 @@ export class ProyectosService {
         const url = `${constantesApiWeb.listarUsuario}`;
         return  this.http.post<any>(url, objeto)
     }
+
+    ordenCompraTraerunoSubproceso(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompraTraerunoSubproceso}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

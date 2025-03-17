@@ -1,0 +1,86 @@
+<ng-container *ngIf="vistaLista; else visSecciones">
+    <div class="card m-4">
+        <div class="grid">
+            <div class="flex justify-content-between col-12 mt-2 gap-2">   
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                    <button pButton class="p-button-outlined font-semibold justify-content-center" icon="pi pi-plus" label="Nuevo"
+                        pTooltip="Nuevo Registro" tooltipPosition="bottom" (click)="onNuevo(0)" ></button>
+                </div> 
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                    <button pButton type="button" (click)="getKanbanList()" pTooltip="Actualizar Registros" tooltipPosition="bottom" 
+                    class="font-semibold justify-content-center p-button-outlined h-2rem w-3rem w-auto" icon="pi pi-refresh"></button>
+                </div>
+                <!-- <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                    <button pButton type="button" (click)="getPersona()" pTooltip="Actualizar Registros" tooltipPosition="bottom" 
+                    class="font-semibold justify-content-center p-button-outlined h-2rem w-3rem w-auto" icon="pi pi-refresh"></button>
+                </div>
+                  
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                    <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                    class="font-semibold justify-content-center p-button-outlined text-green-500" icon="pi pi-file-excel"></button>   
+                </div>     -->
+                         
+                <div class="mb-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-base font-semibold">EVENTOS </span>
+                </div>           
+            </div>
+        </div>
+
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-12 lg:col-9 text-sm -mt-5">
+            <div class="md:col-6 sm:col-4 lg:col-2 col-5">
+                <label class="font-semibold text-blue-600 text-base">Desde</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
+                </p-calendar>
+            </div>
+            <div class="md:col-6 sm:col-4 lg:col-2 col-5">
+                <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
+            </div>
+            <div class="sm:col-12 lg:col-3 md:col-6 col-12">                            
+                <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
+                <span>
+                    <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor..."  formControlName="idproveedor" class="p-inputtext-sm"
+                    optionLabel="nomcomercial" optionValue="idcliente" appendTo="body"></p-dropdown>            
+                </span>
+            </div> 
+            <div class="field col-4 md:col-5 gap-2">
+                <button pButton type="button" (click)="getKanbanList()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
+                <!-- <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button> -->
+            </div>
+        </form>    
+
+        <div id="kanban-wrapper" cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="dropList($event)" [cdkDropListData]="lists"
+            class="grid grid-nogutter w-full flex-column md:flex-row flex-nowrap gap-5 lg:overflow-y-hidden overflow-x-auto -mt-3">  
+            <c-evento-list (actualizarEvento)="actualizarEventos()" (verEventos)="EditarCliente($event)" *ngFor="let list of lists; let i = index;" [list]="list" [listIds]="listIds"></c-evento-list>
+        </div>
+      </div>
+</ng-container>
+
+<ng-template #visSecciones>
+
+    <div class="p-fluid p-3 mb-1 card m-4" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
+                        pTooltip="Regresar" tooltipPosition="left" (click)="getBack()" ></button>
+                </div>
+                <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-base font-semibold">{{tituloDetalle}}</span>
+                </div>
+                
+            </div>
+        </div>
+        <app-c-evento-detalle [IA_data]="dataCT"></app-c-evento-detalle>
+    </div>
+
+</ng-template>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-toast></p-toast>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>

@@ -98,7 +98,7 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
       idunidad: [{ value: 0, disabled: false }],
       stockmin: [{ value: 0, disabled: false }],
       stockmax: [{ value: 0, disabled: false }],
-      idmoneda: [{ value: '', disabled: false }],
+      idmoneda: [{ value: 1, disabled: false }],
     });
   }
 

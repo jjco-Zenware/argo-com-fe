@@ -1,0 +1,56 @@
+<div [id]="card.idevento" class="flex surface-card w-full border-1 surface-border p-1 gap-2 hover:surface-ground cursor-pointer border-round">
+    <div class="col-3 bg-blue-400 flex flex-column align-items-center justify-content-center p-0 gap-2 text-white border-round">
+        <span class="text-2xl">{{parseDia(card.startDate) }}</span>
+        <span class="font-semibold text-sm">{{parseDate(card.startDate) }}</span>
+        <span class="font-semibold text-sm">{{card.horareg }}</span>
+        <div class="flex flex-column md:flex-row gap-4 md:gap-0 text-base">
+            <i class="pi pi-sign-out"></i>
+            <span class="font-semibold ml-2">{{parseDate(card.dueDate) }}</span>
+        </div>
+    </div>
+    <div class="col-8 h-full p-0">
+        <div class="flex justify-content-between align-items-center mt-2">
+            <span class="text-800 font-semibold">{{card.id + ' - ' + card.title}}</span>
+            <!-- <div>
+                <button pButton pRipple type="button" icon="pi pi-ellipsis-v text-700" class="p-button-rounded p-button-text p-button-secondary p-trigger" (click)="menu.toggle($event)"></button>
+                <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
+            </div> -->
+        </div>
+        <div class="flex flex-column md:flex-row gap-4 md:gap-2 h-2rem mt-2">
+            <i class="pi pi-map-marker font-semibold text-orange-500"></i>
+            <span class="font-semibold text-800 ml-2">{{card.lugarevento }}</span>
+        </div>
+        <span class="text-500 font-semibold h-2rem">{{card.razonsocial}}</span>
+
+        <div class="flex flex-column md:flex-row gap-4 md:gap-2 h-2rem mt-2 text-blue-800">
+            <i class="pi pi-users font-semibold"></i>
+            <span class="font-semibold ">Participantes:</span>
+            <span class="font-semibold ml-2">{{card.nrocontactos}}</span>
+        </div>
+        <!-- <div class="flex flex-column md:flex-row gap-4 md:gap-2 h-2rem -mt-2 text-green-800">
+            <i class="pi pi-user-plus font-semibold"></i>
+            <span class="font-semibold ">Confirmados:</span>
+            <span class="font-semibold ml-2">0</span>
+        </div> -->
+
+        <!-- <div *ngIf="card.description" style="word-break: break-word" class="text-500 mb-2">{{card.description}}</div> -->
+        <p-progressBar color=card.bgcolor class="bg-white" [value]="card.progress" [showValue]="false" [style]="{'height':'.5rem'}" ></p-progressBar> 
+        <!-- *ngIf="card.taskList.tasks.length"  -->
+        <div class="flex align-items-center justify-content-between flex-column md:flex-row gap-4 md:gap-0 mt-3">
+            <p-avatarGroup pTooltip="Involucrados" tooltipPosition="bottom">
+                <p-avatar *ngFor="let assignee of card.assignees | slice:0:3" image="{{assignee.image}}" shape="circle" styleClass="border-2 surface-border"></p-avatar>
+                <p-avatar *ngIf="card.assignees && card.assignees.length > 3" label="+ {{card.assignees.length - 3}}" shape="circle" 
+                    styleClass="border-2 surface-border mb-1 surface-ground"></p-avatar>
+            </p-avatarGroup>
+            <div class="flex align-items-center gap-3">
+                <span class="text-900 font-semibold" pTooltip="Tareas" tooltipPosition="bottom"><i class="pi pi-check-square text-700 mr-2"></i>{{generateTaskInfo()}}</span>
+                <span class="text-900 font-semibold" pTooltip="Adjuntos" tooltipPosition="bottom"><i class="pi pi-paperclip text-700 mr-2"></i>{{card.nroadjuntos}}</span>
+                <!-- <span class="text-blue-900 font-semibold"><i class="pi pi-clock text-green-400 mr-2"></i>{{parseDate(card.startDate)}}</span> -->
+    
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

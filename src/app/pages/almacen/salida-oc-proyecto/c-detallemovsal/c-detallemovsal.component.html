@@ -1,0 +1,179 @@
+<div class="p-fluid mt-1">
+    <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardarOC()"></button>
+        <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
+    </div>
+    <div class="card p-2">
+        <p-tabView [(activeIndex)]="activeIndex">
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-building"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Datos
+                        </span>
+                    </div>
+                </ng-template>
+                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">
+                    <div class="col-6 sm:col-5 lg:col-5 md:col-6 ">                            
+                        <label class="block text-900 font-semibold mb-1">Almacen Salida<span class="text-red-500 font-bold"> * </span></label>                            
+                        <span>
+                            <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
+                            optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div> 
+                    <div class="sm:col-8 lg:col-1 md:col-12 col-0"></div>
+                    <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end  field">
+                        <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm">
+                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                        </span>
+                    </div>
+                    <div class="sm:col-12 lg:col-3 md:col-12 col-6 field">
+                        <label class="block text-900 font-semibold mb-1">N° </label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="labelnrodocumento"/>
+                        </span>
+                    </div>
+                        
+
+                        <!-- <div class="sm:col-6 lg:col-4 md:col-3 col-4 -mt-6">
+                            <label class="block text-900 font-semibold mb-1">Origen <span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
+                                optionValue="idtipoproyecto" (onChange)="getOrigen($event.value)" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div> 
+                        <div class=" sm:col-8 lg:col-7 md:col-12"></div>  -->
+                        <div class="col-12 field -mt-6">
+                            <label class="block text-900 font-semibold mb-1">Proyecto <span class="text-red-500 font-bold"> * </span></label>                        
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
+                                optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
+                            </span>
+                        </div>
+                        
+                        <div class="sm:col-6 lg:col-5 md:col-6 col-12 -mt-5">                            
+                            <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
+                            <span>
+                                <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+                                optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead></p-dropdown>            
+                            </span>
+                        </div>   
+                        <div class="sm:col-6 lg:col-7 md:col-3 col-12 -mt-5">
+                            <div class="flex">
+                                <label class="block text-900 font-semibold mb-1">Orden Compra <span class="text-red-500 font-bold"> * </span></label>
+                            </div>                            
+                            <span>
+                                <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
+                                optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="getOCtraerItems($event.value)"></p-dropdown>
+                            </span>
+                        </div> 
+                        <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-4">
+                            <label class="block text-900 font-semibold mb-1">Observación</label>                        
+                            <span class="p-fluid">
+                                <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
+                                class="p-inputtext-sm w-full" id="observacion" [readonly]=onlyRead></textarea>
+                            </span>
+                        </div>           
+                </form>
+            </p-tabPanel>             
+
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-list"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Items
+                        </span>
+                    </div>
+                </ng-template>
+                <!-- <div *ngIf="verItems" class="flex mt-3 ml-2 gap-2">
+                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
+                </div> -->
+                <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                [(selection)]="selectedItems" [scrollable]="true"  styleClass="p-datatable-sm">
+                    <ng-template pTemplate="header">
+                        <tr class="text-sm">
+                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
+                            <th *ngIf="verbtnGrabar" [ngStyle]="{'width':'50px'}" class="surface-200">
+                                <!-- <p-tableHeaderCheckbox style="width:15px; height:15px;"></p-tableHeaderCheckbox> -->
+                            </th>
+                            <th class="surface-200">CÓDIGO</th>
+                            <th class="surface-200">DESCRIPCIÓN</th>
+                            <th class="surface-200">MARCA</th>
+                            <!-- <th class="surface-200">N° SERIE</th> -->
+                            <!-- <th class="surface-200">SKU</th>
+                            <th class="surface-200">N° CONTRATO</th> -->
+                            <!-- <th class="surface-200">F. INICIO</th>
+                            <th class="surface-200">F. FIN</th> -->
+                            <th class="surface-200">U. MED</th>
+                            <!-- <th class="surface-200">P. UNI.</th> -->
+                            <th class="surface-200">CANT.</th>
+                            <!-- <th class="surface-200">TOTAL</th> -->
+                            <!-- <th class="surface-200">ACCIONES</th> -->
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                        <tr class="text-sm">
+                            <td>{{rowIndex + 1}}</td>
+                            <td *ngIf="verbtnGrabar">
+                                <input type="checkbox" [(ngModel)]="product.indcompleto" [ngModelOptions]="{standalone: true}" 
+                                style="width:15px; height:15px; cursor:pointer">
+                            </td>
+                            <td>{{ product.codproducto }}</td>
+                            <td>{{ product.descripcion | uppercase}}</td>
+                            <td>{{ product.nommarca | uppercase}}</td>
+                            <!-- <td>{{ product.sku }}</td>
+                            <td>{{ product.nrocontrato }}</td> -->
+                            <!-- <td>{{ product.fecini }}</td> 
+                            <td>{{ product.fecfin }}</td> -->
+                            <td>{{ product.nomunidad }}</td>
+                            <!-- <td>{{ product.preciocosto | number: '0.2'}}</td> -->
+                            <td>{{ product.cantidad }}</td>
+                            <!-- <td>{{ product.preciocostototal | number: '0.2'}}</td> -->
+                            <!-- <td>
+                                <div *ngIf="verItems">
+                                    <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                </div>
+                            </td> -->
+                        </tr>
+                    </ng-template>
+                    <!-- <ng-template pTemplate="footer">
+                        <tr>
+                            <td colspan="11" class="text-right">Sub Total: </td>
+                            <td>{{s_monto | number: '0.2'}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="11" class="text-right">IGV: </td>
+                            <td>{{s_igv | number: '0.2'}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="11" class="text-right">Total: </td>
+                            <td>{{s_monto_total | number: '0.2'}}</td>
+                        </tr>
+                    </ng-template> -->
+                </p-table>                
+            </p-tabPanel>
+
+            <p-tabPanel [disabled]=visibleDocument>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-paperclip"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Adjuntos
+                        </span>
+                    </div>
+                </ng-template>             
+                <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
+            </p-tabPanel>            
+                  
+        </p-tabView> 
+    </div>
+   
+
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

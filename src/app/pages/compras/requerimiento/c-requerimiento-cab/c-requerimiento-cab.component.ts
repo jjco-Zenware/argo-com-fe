@@ -134,7 +134,7 @@ export class CRequerimientoComponent implements OnInit, OnDestroy{
       }else{
         codigo = dato.idordencompra;
       }
-        this.tituloDetalle = dato.servicionombre;
+        this.tituloDetalle = "SOLICITUD DE PEDIDO/REQUERIMIENTO N° " +dato.idordencompra;
         this.dataOC = {
           idordencompra: dato.idordencompra,
           paramReg:'V'
@@ -145,7 +145,7 @@ export class CRequerimientoComponent implements OnInit, OnDestroy{
 
     verCotiza(data: any) {
         console.log('onVer...', data);
-        this.tituloDetalle = "REQUERIMIENTO N° " + data.codigonroorden;
+        this.tituloDetalle = "SOLICITUD DE PEDIDO/REQUERIMIENTO N° " + data.idordencompra;
         this.vistaLista = false;
         this.visDetalle = false;
     }
@@ -163,7 +163,7 @@ export class CRequerimientoComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "NUEVO REQUERIMIENTO";
+      this.tituloDetalle = "NUEVA SOLICITUD DE PEDIDO/REQUERIMIENTO";
       this.dataOC = {
         idordencompra: 0,
         paramReg:'N'
@@ -268,7 +268,7 @@ export class CRequerimientoComponent implements OnInit, OnDestroy{
       }
 
       onEditar(dato: any) {
-          this.tituloDetalle = dato.servicionombre;
+          this.tituloDetalle = "EDITAR SOLICITUD DE PEDIDO/REQUERIMIENTO N° " + dato.idordencompra;
           this.dataOC = {
             idordencompra: dato.idordencompra,
             paramReg:''
