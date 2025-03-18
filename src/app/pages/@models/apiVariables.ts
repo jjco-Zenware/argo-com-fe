@@ -178,4 +178,5 @@ export const constantesApiWeb = {
     
     ordenCompraTraerunoSubproceso: controllerComercial + '/ordencompratrearunosubproceso',
     personaTraerUno: controllerMain + '/personatraeruno',
+    ordencompraaprobadasprovlistsal: controllerComercial + '/ordencompraaprobadasprovlistSalida/',
 }

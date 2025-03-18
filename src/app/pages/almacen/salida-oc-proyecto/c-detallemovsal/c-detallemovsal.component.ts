@@ -252,8 +252,7 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
           this.cargarMenu(rpta.ordencompra[0].acciones);
-          this.mostrarBotones(rpta.ordencompra[0].estado);          
-          this.getListaArchivos();                  
+          this.mostrarBotones(rpta.ordencompra[0].estado);  
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -496,7 +495,7 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
 
   getOcproveedor(dato: any) {  
     this.lstOrdenC = []
-    const $personaProveedorlist = this.ordencompraService.ordencompraaprobadasprovlist(dato).subscribe({
+    const $personaProveedorlist = this.ordencompraService.ordencompraaprobadasprovlistSal(dato).subscribe({
         next: (rpta: any) => {
             this.setSpinner(false);
             console.info('next : ', rpta);
@@ -532,22 +531,65 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
   }
 
   onAccion(item: any) {
-    if (this.listadoArchivos.length === 0) {
-      this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
-          return;
+    this.getListaArchivos(item);
+      console.log('onAccion', item);
+  // this.ordenCompra.idtrx = item.idtrx;
+  // console.log('onAccion', item);
+  // const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+  //     data: this.ordenCompra,
+  //     header: item.nomtrx,
+  //     closeOnEscape: false,
+  //     styleClass: 'testDialog',
+  //     width: '40%'
+  // });
+
+  // ref.onClose.subscribe(() => {
+  //     this.getListar();
+  //   });
+  }
+
+  getListaArchivos(valor:any) {
+  
+    const objeto = {
+      idoportunidad: 0,
+      codtipoproc: 7 , 
+      idnroproceso: this.ordenCompra.idordencompra, 
     }
-    this.ordenCompra.idtrx = item.idtrx;
+    console.log('this.objeto ...', objeto );
+  
+  const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
+    .subscribe({
+      next: (rpta: any) => {
+        this.listadoArchivos = rpta;
+        console.log('this.listadoArchivos ...', this.listadoArchivos );
+
+        if (this.listadoArchivos.length === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+              return;
+        }else{
+          this.ordenCompra.idtrx = valor.idtrx;
+    console.log('onAccion', valor);
     const ref = this.dialogService.open(CModalExcAlmacenComponent, {
         data: this.ordenCompra,
-        header: item.nomtrx,
+        header: valor.nomtrx ,
         closeOnEscape: false,
         styleClass: 'testDialog',
         width: '40%'
     });
+
     ref.onClose.subscribe(() => {
         this.traerUnoOrdenC();
       });
+        }
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => { }
+    });
+  this.$listSubcription.push($listarArchivos)
   }
+
 
   
   getQuotes(dato: any){
@@ -688,41 +730,7 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
       this.lstItemOC = data;
     }
 
-    getListaArchivos() {
-    
-      const objeto = {
-        idoportunidad: 0,
-        codtipoproc: 7 , 
-        idnroproceso: this.idMovimiento, 
-      }
-    
-    const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
-      .subscribe({
-        next: (rpta: any) => {
-            this.setSpinner(false);
-          //let dataTmp: any[] = [];
-          // rpta.forEach((item: any) => {
-          //   const { nombre, extension } = this.separarNombreYExtension(item.nomasset.trim());
-          //   const tipoArchivoLowerCase = extension.toLowerCase();
-          //   const extensiones = this.extensionesPorTipo[tipoArchivoLowerCase];
-          //   dataTmp.push({
-          //     ...item,
-          //     nombreFile: nombre,
-          //     extensionFile: this.asignarIconArchivo(extension),
-          //     colorExtFile: this.colorIconArchivo(extension)
-          //   });
-          // });
-          this.listadoArchivos = rpta;
-          console.log('this.listadoArchivos ...', this.listadoArchivos );
-        },
-        error: (err) => {
-            this.setSpinner(false);
-          this.serviceSharedApp.messageToast();
-        },
-        complete: () => { }
-      });
-    this.$listSubcription.push($listarArchivos)
-    }
+  
 
     cargarProyectos(dato:any){
       console.log('cargarProyectos', dato);

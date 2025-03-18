@@ -162,7 +162,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     //Agregar validaciones de formulario
     this.registerFormRegistro = this.formBuilder.group({
       idproyecto: [{ value: 0, disabled: false }],
-      idtipoproyecto: [{ value: 0, disabled: false }],
+      idtipoproyecto: [{ value: 1, disabled: false }],
       idtipodocprc: [{ value: 8, disabled: false }],
       idoportunidad: [{ value: 0, disabled: false }],
       sustentodoc: [{ value: '', disabled: false }],

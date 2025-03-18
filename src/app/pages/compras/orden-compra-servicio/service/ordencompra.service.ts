@@ -179,4 +179,9 @@ export class OrdencompraService {
             responseType: 'blob'
           })
     }
+
+    ordencompraaprobadasprovlistSal(idproveedor:any) {
+        const url = `${constantesApiWeb.ordencompraaprobadasprovlistsal}${idproveedor}`;
+        return this.http.get<any>(url);
+    }
 }
