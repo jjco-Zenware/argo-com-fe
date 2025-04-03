@@ -641,3 +641,17 @@ export interface TaskList {
     tasks: Tasks[];
 }
 
+export interface Message {
+    text: string;
+    ownerId: number,
+    createdAt: number;
+}
+
+export interface User {
+    id: number;
+    name: string;
+    image: string;
+    status: string;
+    messages: Message[];
+    lastSeen: string;
+}
