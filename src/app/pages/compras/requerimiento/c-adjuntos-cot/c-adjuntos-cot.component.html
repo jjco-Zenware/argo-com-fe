@@ -1,0 +1,137 @@
+
+
+<div class="p-fluid grid lg:col-12 col-12 border-round surface-border -mb-2 p-2">
+    <div class="sm:col-12 lg:col-8 md:col-3 col-12 ">
+        <label class="text-blue-600 font-semibold mb-1">Proveedor</label>                        
+        <span class="p-fluid mb-1">
+            <textarea type="text" pInputTextarea [rows]="1" [(ngModel)]="nomproveedor" style="resize: none" class="w-full" id="observacion"
+                 class="p-inputtext-sm" readonly="true"></textarea>
+        </span>
+    </div> 
+    <div class="sm:col-12 lg:col-4 md:col-3 col-12 ">
+        <label class="text-blue-600 font-semibold mb-1">N° Requerimiento</label>                        
+        <span class="p-fluid mb-1">
+            <textarea type="text" pInputTextarea [rows]="1" [(ngModel)]="nroreque" style="resize: none" class="w-full" id="observacion"
+                 class="p-inputtext-sm" readonly="true"></textarea>
+        </span>
+    </div> 
+    <div class="sm:col-6 lg:col-2 md:col-3 col-6 -mt-3 field">
+        <label class="text-blue-600 font-semibold mb-1">Monto <span class="text-red-500 font-bold"> * </span></label>                        
+        <span class="p-fluid">
+            <p-inputNumber class="mt-1" [(ngModel)]="monto" locale="es-PE" mode="decimal" [minFractionDigits]="2" name="monto" 
+            [min]="0" class="p-inputtext-sm" ></p-inputNumber>
+        </span>
+    </div> 
+    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field -mt-3">
+        <label class="text-blue-600 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+        <span class="p-fluid mt-1">
+            <p-dropdown [options]="lstMonedas" [(ngModel)]="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+            [ngModelOptions]="{standalone: true}" optionValue="idmoneda" appendTo="body"  class="p-inputtext-sm" ></p-dropdown>
+        </span>                                      
+    </div> 
+    <div *ngIf="verAcciones" class="sm:col-6 lg:col-5 md:col-3 h-4rem field -mt-3">
+        <label class="block font-semibold text-blue-600 mb-1">Descripción</label>
+        <input pInputText type="text" class="p-inputtext-sm" [formControl]="descripcion" placeholder="Ingresar Descripción..."/>
+    </div>
+    <div *ngIf="verAcciones" class="field h-4rem field mt-4">
+        <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" [auto]="true" chooseLabel="Archivo" chooseIcon="pi pi-file" 
+            class="text-sm p-inputtext-sm" [disabled]="disabUpload" (uploadHandler)="onUpload($event, fubauto)" 
+            pTooltip="Agregar Archivo" tooltipPosition="bottom">
+        </p-fileUpload>
+    </div>   
+</div>
+
+    <p-table #dt1 [value]="listadoArchivos" [rows]="5" [rowHover]="true" responsiveLayout="stack"
+        [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+        [resizableColumns]="true"responsiveLayout="scroll"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" dataKey="id"
+        stateStorage="session" [globalFilterFields]="['title','razonsocial','nomlista','startDate']"
+        styleClass="p-datatable-sm sm:col-12 lg:col-12 md:col-12 col-12">
+
+        <ng-template pTemplate="header" let-columns>
+            <tr class="text-sm">
+                <th style="width:5%;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        N°
+                    </div>
+                </th>
+                <th style="width: 30%;" class="surface-200">
+                    <div class="justify-content-between align-items-center ">
+                        DESCRIPCIÓN
+                    </div>
+                </th>
+                <th style="width: 30%;" class="surface-200">
+                    <div class="justify-content-between align-items-center ">
+                        NOMBRE
+                    </div>
+                </th>
+                <th style="width: 20%;" class="surface-200">
+                    <div class="justify-content-between align-items-center">
+                        TIPO
+                    </div>
+                </th>
+                <th style="width: 20%;" class="surface-200">
+                    <div class="justify-content-between align-items-center">
+                        FECHA
+                    </div>
+                </th>
+                <th style="width: 5%;" class="surface-200">
+                    <div class="flex justify-content-between align-items-center">
+                        ACCIONES
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td>
+                    {{rowIndex + 1}}
+                </td>
+                <td [pEditableColumn]="data.descripcion | uppercase" pEditableColumnField="descripcion" class="cursor-pointer">
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="data.descripcion" required
+                            (blur)="editarRegistro(data)" (keydown.enter)="editarRegistro(data)"/>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ data.descripcion | uppercase }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    {{data.nombreFile | uppercase}}
+                </td>
+                <td>
+                    <i class="pi {{data.extensionFile}}" [style.color]="data.colorExtFile"></i>
+                </td>
+                <td>
+                    {{data.fechadoc| date: 'dd/MM/yyyy'}}
+                </td>
+                <td>
+                    <div class="flex align-items-center m:justify-content-end">
+                        <button *ngIf="verAcciones" pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="left" (click)="deleteArchivo(data.idmovasset)" 
+                            pTooltip="eliminar" class="p-button-rounded p-button-text -mt-1 text-red-500"></button>
+                        <button pButton pRipple type="button" icon="pi pi-cloud-download" tooltipPosition="left" (click)="download(data)"
+                            pTooltip="Descargar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="7">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="7">Cargando datos. Espere por favor.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+<div class="flex justify-content-end flex-wrap ">
+    <button pButton class="font-semibold" icon="pi pi-save"
+        pTooltip="Grabar" tooltipPosition="bottom" (click)="onGrabar()" label="Grabar"></button>
+    <button pButton class="font-semibold ml-2 p-button-danger" icon="pi pi-backward"
+        pTooltip="Grabar" tooltipPosition="bottom" (click)="onSalir()" label="Salir" ></button>
+</div> 

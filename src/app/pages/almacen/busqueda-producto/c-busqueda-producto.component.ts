@@ -4,11 +4,12 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AlmacenService } from '../service/almacenServices';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-c-busqueda-producto',
@@ -16,6 +17,8 @@ import { AlmacenService } from '../service/almacenServices';
   styleUrls: ['./c-busqueda-producto.component.scss']
 })
 export class CBusquedaProductoComponent implements OnInit, OnDestroy{
+
+  @ViewChild(Table) dt1!: Table;
 
     $listSubcription: Subscription[] = [];
     blockedDocument: boolean = false;
@@ -27,6 +30,7 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
     lstProducto:any;
     lstFamilia:any;
     lstSubFamilia:any;
+    verAlm!: boolean;
 
     constructor(
         private fb: FormBuilder,
@@ -37,6 +41,7 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
         private messageService: MessageService,
         private almacenService: AlmacenService, 
         public refDatoItem: DynamicDialogRef,
+        public config: DynamicDialogConfig,
       ){    
         
     }
@@ -44,6 +49,12 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
     ngOnInit(): void{
         this.createFrm();
         this.listarFamilia();
+        console.log('this.config.data', this.config.data);
+        if(this.config.data > 0){
+          this.verAlm = true;
+        }else{
+          this.verAlm = false;
+        }
     }
 
     createFrm(){
@@ -89,13 +100,15 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
     //   }
 
       getListar(){
+        this.dt1.reset();
         this.setSpinner(true);
         this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
         console.log('this.frmDatos...', this.frmDatos.value);
         const objeto = {
           ...this.frmDatos.value,
           idfamilia: this.frmDatos.value.idfamilia === null ? 0 : this.frmDatos.value.idfamilia,
-          idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia
+          idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia,
+          idalmacen: this.config.data
         }
         console.log('this.objeto...', objeto);
   

@@ -14,32 +14,32 @@
 
         <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm">
                  
-                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
+                <div class="md:col-2 sm:col-2 lg:col-2 col-6 -mt-3">
                     <label class="font-semibold text-blue-600 text-base">Desde</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini" [showOnFocus]="false"
                         [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
                     </p-calendar>                    
                 </div>
-                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
+                <div class="md:col-2 sm:col-2 lg:col-2 col-6 -mt-3">
                     <label class="font-semibold text-blue-600 text-base">Hasta</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
                 </div>
-                <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">                            
+                <div class="sm:col-8 lg:col-3 md:col-6 col-12 -mt-3">                            
                     <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
                     <span>
                         <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor..."  formControlName="idproveedor" class="p-inputtext-sm"
                         optionLabel="nomcomercial" optionValue="idcliente" appendTo="body"></p-dropdown>            
                     </span>
                 </div> 
-                <div class="sm:col-12 lg:col-2 md:col-6 col-12 -mt-3">                            
+                <div class="sm:col-3 lg:col-2 md:col-6 col-12 -mt-3">                            
                     <label class="font-semibold text-blue-600 text-base">Moneda</label>  
                     <span class="p-fluid">
                         <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda..." optionLabel="desmoneda" 
                         optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
                     </span> 
                 </div> 
-                <div class="field md:col-2 -mt-3 gap-2">
+                <div class="field sm:col-2 md:col-2 -mt-3 gap-2">
                     <button pButton type="button" (click)="getListar(); dt1.reset()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                         class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem" icon="pi pi-search"></button>
                         <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
@@ -279,7 +279,7 @@
         <div class="grid ">
             <div class="flex justify-content-between col-12 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center text-red-500" icon="pi pi-backward" label="Regresar"
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar" tooltipPosition="left" (click)="getBack()" ></button>
                 </div>
                 <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">

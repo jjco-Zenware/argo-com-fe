@@ -78,6 +78,8 @@ export class CModalProductoComponent implements OnInit{
       stockmin: [{ value: 0, disabled: false }],
       stockmax: [{ value: 0, disabled: false }],
       idmoneda: [{ value: 0, disabled: false }],
+      indctrlunidad: [{ value: true, disabled: false }],
+      modelo:[{ value: '', disabled: false }],
     });
   }
 
@@ -234,11 +236,11 @@ export class CModalProductoComponent implements OnInit{
           _error = true;
       }  
       
-      // if (!_error && (this.registerFormRegistro.value.idmoneda === 0 || this.registerFormRegistro.value.idmoneda === null))
-      //   {
-      //       this.errorMensaje="Seleccionar Moneda...!";
-      //       _error = true;
-      //   } 
+      if (!_error && (this.registerFormRegistro.value.modelo === '' || this.registerFormRegistro.value.modelo === null))
+        {
+            this.errorMensaje="Ingresar Modelo...!";
+            _error = true;
+        } 
        return _error;
      }
      

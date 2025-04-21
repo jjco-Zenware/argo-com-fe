@@ -17,7 +17,7 @@
                     </div>
                 </ng-template>
 
-                <form [formGroup]="registerFormRegistro" class="p-fluid p-formgrid grid col-12 lg:col-7 text-sm p-0">                
+                <form [formGroup]="registerFormRegistro" class="p-fluid p-formgrid grid lg:col-6 text-sm p-0">                
                     <div class="col-4 sm:col-6 lg:col-3 md:col-3">
                         <label class="block text-900 font-semibold mb-1">Orden <span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-fluid ">
@@ -25,13 +25,16 @@
                             optionValue="code" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div>
-                    <div class="col-4 sm:col-12 lg:col-3 md:col-12 justify-content-end">
-                        <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
-                        <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
-                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+                        <div class="flex mb-1">
+                            <label class="block text-900 font-semibold">Fecha </label>    
+                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
+                        </div>
+                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
+                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
                         </span>
-                    </div>
+                    </div> 
                     <div class=" sm:col-8 lg:col-3 md:col-12"></div>
                     <div class="sm:col-12 lg:col-3 md:col-12 col-4">
                         <label class="block text-900 font-semibold mb-1">N° OC</label>
@@ -54,14 +57,7 @@
                                     <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
                                     optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
                                 </span>
-                            </div>
-                            <!-- <div class="col-8 field h-4rem mt-1">
-                                <label class="block text-900 font-semibold mb-1">Descripción Proyecto</label>                        
-                                <span class="p-fluid">
-                                    <input pInputText type="text" formControlName="nomproyecto" readonly="true"/>
-                                </span>
-                            </div> -->
-                            
+                            </div>                            
                             <div class="col-4 sm:col-6 lg:col-4 md:col-6 -mt-4">                            
                                 <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
                                 <span>
@@ -88,28 +84,38 @@
                             </div>                            
                             <p-divider class="col-12 -mt-5 -mb-5"></p-divider>
                             
-                            <div class="sm:col-6 lg:col-4 md:col-3 col-6">
+                            <div class="sm:col-6 lg:col-3 md:col-3 col-6">
                                 <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
                                 <span class="p-fluid mt-1">
                                     <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeMoneda($event.value)"></p-dropdown>
                                 </span>                                      
                             </div> 
-                            <div class="sm:col-6 lg:col-4 md:col-3 col-6 ">
+                            <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem">
+                                <label class="block text-900 font-semibold mb-1">Tipo Cambio<span class="text-red-500 font-bold"> * </span></label>                        
+                                <span class="p-fluid">
+                                    <p-inputNumber class="mt-1" formControlName="tc" locale="es-PE" mode="decimal" [minFractionDigits]="4" name="tipocambio" 
+                                    [min]="0" [max]="9" class="p-inputtext-sm" [readonly]=onlyRead></p-inputNumber>                                  
+                                </span>
+                            </div> 
+                            <div class="sm:col-6 lg:col-3 md:col-3 col-6 ">
                                 <label class="block text-900 font-semibold mb-1">Forma de Pago <span class="text-red-500 font-bold"> * </span></label>
                                 <span>
                                     <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem" placeholder="Seleccionar..."
                                     optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                                 </span>
-                            </div>    
-                            <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end field">
-                                <label class="block text-900 font-semibold">Fecha Entrega<span class="text-red-500 font-bold"> * </span></label>
-                                <span class="p-input-icon-left w-auto p-fluid -mt-1" style="height: 3.5rem;">
-                                    <p-calendar formControlName="fecentrega" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                                    inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"></p-calendar>
+                            </div>  
+                            <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+                                <div class="flex mb-1">
+                                    <label class="block text-900 font-semibold">Fecha Entrega</label>    
+                                    <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
+                                </div>
+                                <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
+                                    <p-calendar formControlName="fecentrega" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
+                                    inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
                                 </span>
-                            </div>
-                            <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-5">                        
+                            </div>   
+                            <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-2">                        
                                 <label class="block text-900 font-semibold mb-1">Terminos para el Pago de Factura </label>                        
                                 <span class="p-fluid">
                                     <textarea type="text" formControlName="terminosdepago" pInputTextarea [rows]="5"
@@ -159,7 +165,6 @@
                             <th class="surface-200">CÓDIGO</th>
                             <th class="surface-200">DESCRIPCIÓN</th>
                             <th class="surface-200">MARCA</th>
-                            <!-- <th class="surface-200">N° SERIE</th> -->
                             <th class="surface-200">SKU</th>
                             <th class="surface-200">N° CONTRATO</th>
                             <th class="surface-200">F. INICIO</th>
@@ -179,7 +184,6 @@
                             <!-- <td>{{ product.descripcion | uppercase}}</td> -->
                             <td>{{(product.descripcion.length > 60 ) ? ((product.descripcion ).slice(0, 60) + '...') : product.descripcion }} </td>
                             <td>{{ product.nommarca | uppercase}}</td>
-                            <!-- <td>{{ product.serialnumber }}</td> -->
                             <td>{{ product.sku }}</td>
                             <td>{{ product.nrocontrato }}</td>
                             <td>{{ product.fecini }}</td> <!-- | date: 'dd/MM/yyyy' -->
@@ -198,15 +202,15 @@
                     </ng-template>
                     <ng-template pTemplate="footer">
                         <tr>
-                            <td colspan="11" class="text-right">Sub Total: </td>
+                            <td colspan="12" class="text-right">Sub Total: </td>
                             <td>{{s_monto | number: '0.2'}}</td>
                         </tr>
                         <tr>
-                            <td colspan="11" class="text-right">IGV: </td>
+                            <td colspan="12" class="text-right">IGV: </td>
                             <td>{{s_igv | number: '0.2'}}</td>
                         </tr>
                         <tr>
-                            <td colspan="11" class="text-right">Total: </td>
+                            <td colspan="12" class="text-right">Total: </td>
                             <td>{{s_monto_total | number: '0.2'}}</td>
                         </tr>
                     </ng-template>

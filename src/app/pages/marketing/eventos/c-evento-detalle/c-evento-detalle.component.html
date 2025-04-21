@@ -14,50 +14,77 @@
                     </div>
                 </ng-template>
 
-                <form [formGroup]="registerForm" class="p-fluid p-formgrid grid lg:col-5 text-sm p-2 m-2">           
-                    <div class="sm:col-6 lg:col-12 md:col-3 -mt-4 col-12">
+                <form [formGroup]="registerForm" class="p-fluid p-formgrid grid lg:col-5 text-sm p-2 m-2"> 
+                    <div class="sm:col-6 lg:col-7 md:col-12 h-5rem">
+                        <label class="block text-900 font-semibold mb-1">Categoría <span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstCategoria" formControlName="codcategoria" optionLabel="valoritem" placeholder="Seleccionar..."
+                            optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div>           
+                    <div class="sm:col-6 lg:col-12 md:col-3 h-5rem col-12">
                         <label class="block text-900 font-semibold mb-1">Título <span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
                             <textarea type="text" pInputTextarea [rows]="1" formControlName="title" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
                         </span>
                     </div>             
-                    <div class="col-4 sm:col-12 lg:col-3 md:col-12 justify-content-end -mt-4">
+                    <div class="col-4 sm:col-6 lg:col-3 md:col-12 justify-content-end h-5rem">
                         <label class="block text-900 font-semibold mb-1">Fecha Inicio<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
                             <p-calendar formControlName="startDate" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" 
                             inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
                         </span>
                     </div>            
-                    <div class="col-4 sm:col-12 lg:col-3 md:col-12 justify-content-end -mt-4">
+                    <div class="col-4 sm:col-6 lg:col-3 md:col-12 justify-content-end h-5rem">
                         <label class="block text-900 font-semibold mb-1">Fecha Fin<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
                             <p-calendar formControlName="dueDate" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" 
                             inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
                         </span>
                     </div>
-                    <div class="sm:col-4 lg:col-3 md:col-2 -mt-4">                    
-                        <label class="block text-900 font-bold mb-1">Hora <span class="text-red-500 font-bold"> * </span></label>
+                    <div class="sm:col-6 lg:col-3 md:col-2 h-5rem">                    
+                        <label class="block text-900 font-bold mb-1">Hora Inicio<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-input-icon-left w-auto p-fluid " style="height: 2.5rem;">
                             <p-dropdown [options]="horas" formControlName="horareg" optionLabel="name" optionValue="name" 
                             class="p-inputtext-sm" appendTo="body" ></p-dropdown>
                         </span>
                     </div>
-                    <div class="sm:col-6 lg:col-12 md:col-3 -mt-4 col-12"></div>
-                    <div class="sm:col-6 lg:col-12 md:col-3 -mt-5 col-12">
+                    <div class="sm:col-6 lg:col-3 md:col-2 h-5rem">                    
+                        <label class="block text-900 font-bold mb-1">Hora fin<span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2.5rem;">
+                            <p-dropdown [options]="horas" formControlName="horafin" optionLabel="name" optionValue="name" 
+                            class="p-inputtext-sm" appendTo="body" ></p-dropdown>
+                        </span>
+                    </div>
+                    <div class="sm:col-6 lg:col-4 md:col-12 h-5rem">
+                        <label class="block text-900 font-semibold mb-1">Ubicación<span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstUbicacion" formControlName="codubicacion" optionLabel="name" placeholder="Seleccionar..."
+                            optionValue="codigo" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeUbicacion($event.value)"></p-dropdown>
+                        </span>
+                    </div>
+                    <div class="sm:col-6 lg:col-4 md:col-12 h-5rem">
+                        <label class="block text-900 font-semibold mb-1">Pais<span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstPais" formControlName="codpais" optionLabel="name" placeholder="Seleccionar..."
+                            optionValue="codigo" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                        </span>
+                    </div>
+                    <div class="sm:col-12 lg:col-12 md:col-3 col-12 h-6rem">
                         <label class="block text-900 font-semibold mb-1">Lugar <span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
                             <textarea type="text" pInputTextarea [rows]="2" formControlName="lugarevento" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
                         </span>
                     </div>  
                             
-                    <div class="col-4 sm:col-7 lg:col-7 md:col-6 -mt-4">                            
+                    <div class="sm:col-6 lg:col-12 md:col-12 h-5rem">                            
                         <label class="block text-900 font-semibold mb-1">Organizador <span class="text-red-500 font-bold"> * </span></label>                            
                         <span>
                             <p-dropdown [options]="lstProveedores" placeholder="Seleccionar...!"  formControlName="idcliente" class="p-inputtext-sm"
                             optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead></p-dropdown>            
                         </span>
                     </div>                         
-                    <div class="sm:col-6 lg:col-5 md:col-3 col-8 -mt-4">
+                    <div class="sm:col-6 lg:col-7 md:col-3 col-8 h-5rem">
                         <div class="flex">
                             <label class="block text-900 font-semibold mb-1">Responsable <span class="text-red-500 font-bold"> * </span></label>
                         </div>                            
@@ -65,23 +92,24 @@
                             <p-dropdown [options]="lstResponsable" formControlName="idresponsable" placeholder="Seleccionar...!" optionLabel="nomUsuario" 
                             optionValue="codigoUsuario" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                         </span>
-                    </div>    
-                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 -mt-3">
+                    </div>  
+                    <div class="lg:col-5"></div>  
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-5rem">
                         <label class="block text-900 font-semibold mb-1">Presupuesto <span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
                             <p-inputNumber class="mt-1" formControlName="monto" locale="es-PE" mode="decimal" [minFractionDigits]="2" name="monto" 
                             [min]="0" class="p-inputtext-sm" ></p-inputNumber>
                         </span>
                     </div>   
-                    <div class="sm:col-6 lg:col-4 md:col-3 col-6 -mt-3">
+                    <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-5rem">
                         <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
                             optionValue="idmoneda" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
                         </span>                                      
                     </div>     
-                    <div class="sm:col-6 lg:col-12 md:col-3 -mt-3">
-                        <label class="block text-900 font-semibold mb-1">Descripción</label>                        
+                    <div class="sm:col-12 lg:col-12 md:col-3 h-8rem">
+                        <label class="block text-900 font-semibold mb-1">Objetivo</label>                        
                         <span class="p-fluid">
                             <textarea type="text" pInputTextarea [rows]="3" formControlName="description" style="resize: none" class="w-full p-inputtext-sm" id="observacion" [readonly]=onlyRead></textarea>
                         </span>
@@ -99,17 +127,24 @@
                     </div>
                 </ng-template>           
                 <div class="lg:col-9 gap-2">
-                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3" pTooltip="Agregar Participante" icon="pi pi-user" label="Agregar" (click)="agregarProveedor([],0)"></button>
+                    <div>
+                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3" pTooltip="Agregar Participante" 
+                            icon="pi pi-user" label="Agregar" (click)="agregarProveedor([],0)"></button>
+                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3 text-green-600 ml-3" pTooltip="Enviar Correo" 
+                            icon="pi pi-envelope" label="Email" (click)="obtenrToken()"></button>
+                    </div>
                     
                     <p-table [value]="lstParticipantes" class="ml-2 mt-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
                         [scrollable]="true"  styleClass="p-datatable-sm " >
                         <ng-template pTemplate="header">
                             <tr>
                                 <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
+                                <th class="bg-teal-50 border-1 text-600">CLIENTE</th>
                                 <th class="bg-teal-50 border-1 text-600">CONTACTO</th>
                                 <th class="bg-teal-50 border-1 text-600">CARGO</th>
                                 <th class="bg-teal-50 border-1 text-600">EMAIL</th> 
                                 <th class="bg-teal-50 border-1 text-600">TELEFONO</th> 
+                                <th class="bg-teal-50 border-1 text-600">USUARIO</th> 
                                 <th [ngStyle]="{'width':'60px'}" class="bg-teal-50 border-1 text-600">ACCIONES</th>
                                 <!-- <th class="bg-teal-50 border-1">WIN</th> -->
                             </tr>
@@ -117,10 +152,12 @@
                         <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
                             <tr>      
                                 <td>{{rowIndex + 1}}</td>
+                                <td>{{ product.razonsocial }}</td>
                                 <td>{{ product.nombrecontacto }}</td>
                                 <td>{{ product.cargo }}</td>
                                 <td>{{ product.email}}</td>     
-                                <td>{{ product.telefono}}</td>                        
+                                <td>{{ product.telefono}}</td>  
+                                <td>{{ product.nomusuario}}</td>                         
                                 <td>
                                     <div class="flex">                               
                                             <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left"  class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarProveedor(product, rowIndex)"></button>
@@ -134,17 +171,6 @@
                     </p-table>   
                 </div>
             </p-tabPanel>
-
-            <!-- <p-tabPanel>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-money-bill"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Presupuesto
-                        </span>
-                    </div>
-                </ng-template>             
-            </p-tabPanel> -->
 
             <p-tabPanel>
                 <ng-template pTemplate="header">
@@ -284,7 +310,7 @@
                 
             </p-tabPanel>
 
-            <p-tabPanel>
+            <p-tabPanel [disabled]=visibleDocumentGasto>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-dollar"></i>
@@ -301,9 +327,9 @@
                         <ng-template pTemplate="header">
                             <tr>
                                 <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
-                                <th class="bg-teal-50 border-1 text-600">DETALLE DEL GASTO</th> 
+                                <th class="bg-teal-50 border-1 text-600">PROVEEDOR</th> 
                                 <th class="bg-teal-50 border-1 text-600">FECHA</th>
-                                <th class="bg-teal-50 border-1 text-600">TIPO/NRO/DOCUM</th>
+                                <th class="bg-teal-50 border-1 text-600">DOCUMENTO</th>
                                 <th class="bg-teal-50 border-1 text-600">MONEDA</th> 
                                 <th class="bg-teal-50 border-1 text-600">MONTO</th> 
                                 <th [ngStyle]="{'width':'150px'}" class="bg-teal-50 border-1 text-600">ACCIONES</th>
@@ -312,16 +338,18 @@
                         <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
                             <tr>      
                                 <td>{{rowIndex + 1}}</td>
-                                <td>{{ product.descripcion }}</td>
-                                <td>{{ product.fecgasto | date:'dd/MM/yyyy'}}</td>
-                                <td>{{ product.tipnrodocum }}</td>
+                                <td>{{ product.nomempresa }}</td>
+                                <td>{{ product.fecemision }}</td>
+                                <td>{{ product.nrofactura }}</td>
                                 <td>{{ product.simbmoneda }}</td>
-                                <td>{{ product.mtogasto | number: '0.2-2' }}</td>                        
+                                <td>{{ product.monto | number: '0.2-2' }}</td>                        
                                 <td>
-                                    <div class="flex">                               
-                                        <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left"  
+                                    <div class="flex">       
+                                        <button pButton pRipple type="button" icon="pi pi-paperclip" tooltipPosition="bottom" pTooltip="Adjuntos..." 
+                                        class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-600" (click)="anexos(product, 'B')"></button>                        
+                                        <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="bottom"  
                                             class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarGastos(product, rowIndex)"></button>
-                                        <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" 
+                                        <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="bottom" 
                                             class="p-button-text p-button-rounded text-900 text-red-600" (click)="eliminarGastos(product)"></button>                                        
                                     </div>                                    
                                 </td>
@@ -346,6 +374,61 @@
     </div>
        
 </div>
+
+<p-dialog [(visible)]="asignadosTareaVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '40vw'}" [breakpoints]="{'960px': '85vw'}" >
+    <p-header styleClass="testDialog"> <i class="pi pi-users" style="margin-right: 10px;"></i> {{ headerTitle }} </p-header>
+    <div class="p-fluid mt-2">
+        <span class="text-lg font-semibold">{{headerTarea}}</span>
+    </div>
+    <div class="p-fluid mt-2">
+        <p-autoComplete appendTo="body" [(ngModel)]="asignadosTareas" [suggestions]="filteredAsignadosTareas" (completeMethod)="filterAsignadoTarea($event)" field="name" [multiple]="true" [showEmptyMessage]="true" emptyMessage="No se han encontrado resultados" placeholder="Elegir Asignados" [inputStyle]="{'height': '2.5rem'}">
+            <ng-template let-assignee pTemplate="selectedItem">
+                <div class="flex align-items-center gap-3 border-round">
+                    <img src="{{assignee.image}}" [alt]="assignee.name" (click)="op1.toggle($event)" class="h-2rem w-2rem border-2 border-circle surface-border mr-2 cursor-pointer">
+                    <span class="text-900">{{assignee.name}}</span>
+                    <p-overlayPanel #op1 >
+                            <div class="flex">
+                                <img src="{{assignee.image}}" [alt]="assignee.name" class="h-3rem w-3rem border-2 border-circle surface-border mr-2">
+                                <div style="margin-left: 10px;">
+                                    <span class="text-900 font-semibold">{{assignee.name}}</span>
+                                    <br>
+                                    <span>Gerente Financiero</span>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="flex align-items-center text-900">
+                                <i class="pi pi-phone font-semibold" style="left: 3.5rem; margin-left: 15px;"></i>
+                                <span style="margin-left: 10px;">993 050 988</span>
+                            </div>
+                            <br>
+                            <div class="flex align-items-center text-900">
+                                <i class="pi pi-envelope font-semibold" style="left: 1.5rem; margin-left: 15px;"></i>
+                                <span style="margin-left: 10px;">democorreo@mail.com</span>
+                            </div>
+                            <br>
+
+                    </p-overlayPanel>
+                </div>
+            </ng-template>
+            <ng-template let-assignee pTemplate="item">
+                <div class="flex align-items-center border-round">
+                    <img src="{{assignee.image}}" [alt]="assignee.name" class="h-2rem w-2rem border-2 border-circle surface-border mr-2">
+                    <span class="text-900">{{assignee.name}}</span>
+                </div>
+            </ng-template>
+        </p-autoComplete>
+
+
+        <div class="flex justify-content-end flex-wrap mt-2">
+
+                <button pButton icon="pi pi-check" label="Aceptar" (click)="aceptarAsignado()"
+                    class="w-full sm:w-auto flex-order-0 sm:flex-order-0 p-button-primary"></button>
+
+        </div>
+    </div>
+
+
+</p-dialog>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
 <p-toast></p-toast>

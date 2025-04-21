@@ -1,0 +1,24 @@
+<form [formGroup]="registerFormCliente" class="p-2 m-2 p-fluid grid" >
+        
+    <div class="lg:col-12 col-12 field ">
+        <label  class="font-semibold">Descripción <span class="text-red-500 font-bold"> * </span></label>
+        <input pInputText type="text" formControlName="nomubicacion" class="p-inputtext-sm"/>
+    </div>              
+    <div class="sm:col-12 lg:col-12 md:col-12 col-6 -mt-5">
+        <label class="block text-900 font-semibold mb-1">Icono <span class="text-red-500 font-bold"> * </span></label>
+        <span>
+            <!-- <p-dropdown [options]="lstIcons" formControlName="idiconotree" optionLabel="valoritem" placeholder="Seleccionar..."
+            optionValue="iditem" appendTo="body" class="p-inputtext-sm">        </p-dropdown> -->
+
+        <p-dropdown [options]="lstIcons" formControlName="idiconotree" optionLabel="valoritem" placeholder="Seleccionar..."
+            optionValue="iditem" appendTo="body" class="p-inputtext-sm">
+            <ng-template let-item pTemplate="idiconotree">
+                <i class="{{item.valoritem}}"></i>
+            </ng-template>
+        </p-dropdown>
+        </span>
+    </div> 
+</form>
+<div class="flex justify-content-end">
+    <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary" (click)="guardar()"></button>
+</div>

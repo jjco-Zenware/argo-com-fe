@@ -12,10 +12,10 @@ import { ComprasService } from '../../Service/compraServices';
 import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
 import { OrdenCompraItem } from '@interfaces';
 import { CModalPropuestaComponent } from '../modal-propuesta/c-modalpropuesta.component';
-import { CAdjuntosComponent } from '../../registro-proveedor/c-adjuntos/c-adjuntos.component';
 import { CItemCotizacionComponent } from '../c-item-cotizacion/c-item-cotizacion.component';
 import { CModalComentarioComponent } from '../modal-comentario/c-modalcomentario.component';
 import { CModalProveedorComponent } from '../modal-proveedor/c-modalproveedor.component';
+import { CAdjuntosCotComponent } from '../c-adjuntos-cot/c-adjuntos-cot.component';
 
 @Component({
   selector: 'app-c-requerimiento-det',
@@ -653,44 +653,49 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
     });
     }
 
-    // eliminarCotizacion(data:any, index :number)  {
-    //   console.log('index', index);
-    //   this.lstPostores.splice(index, 1)
-    // }
-
     anexos(dato: any, param: string) {
       console.log("anexos : ", dato);
-      const ref = this.dialogService.open(CAdjuntosComponent, {
-          data: { idoportunidad: 0 , codtipoproc: 2, idnroproceso: 0, parametro: param, idCliente: dato.iditempostor},
-          header: 'Adjuntar Propuesta de ' +  dato.nomcomercial,
+      const refMensaje = this.dialogService.open(CAdjuntosCotComponent, {
+          data: { idoportunidad: 0 , 
+            codtipoproc: 2, 
+            idnroproceso: 0, 
+            parametro: param, 
+            idCliente: dato.iditempostor, 
+            proveedor: dato.razonsocial, 
+            nroreq: dato.iddocumentoprc
+          },
+          header: 'Cotización',
           styleClass: 'testDialog',
           closeOnEscape: false,
-          closable: true,
+          closable: false,
           width: '50%'
       });
-      ref.onClose.subscribe(() => {
-          this.traerUno();
+      refMensaje.onClose.subscribe((rpta: any) => {
+        if (rpta.objeto.param === 'G') {
+         for (let i = 0; i < this.lstPostores.length; i++) {
+          if (this.lstPostores[i].iditempostor === rpta.objeto.iditempostor) {
+            this.lstPostores[i].monto = rpta.objeto.monto;
+            this.lstPostores[i].idmoneda = rpta.objeto.idmoneda;
+            this.lstPostores[i].simbmoneda = rpta.objeto.simbmoneda;
+            this.lstPostores[i].comentario = rpta.objeto.comentario;
+            this.lstPostores[i].estado = rpta.objeto.estado;
+          }          
+         }      
+         this.guardarOC();    
+        }else{
+          for (let i = 0; i < this.lstPostores.length; i++) {
+            if (this.lstPostores[i].iditempostor === rpta.objeto.iditempostor) {
+              this.lstPostores[i].estado = rpta.objeto.estado;
+            }          
+           } 
+           this.guardarOC(); 
+        }
         });
   }
 
   checkEvent(dato: any){
     console.log('checkEvent', dato);
-    // console.log('this.lstPostoresxxxxx', this.lstPostores);
-
-    // const postor = this.lstPostores.filter(x=>x.indseleccion === true)
-    // console.log('postor......', postor);
-
-    // if (postor.length > 0) {
-    //   this.messageService.add({ severity: 'info', summary: 'Advrtencia...', detail: 'Solo se puede Seleccionar un Postor ganador...!' });
-
-    //   this.lstPostores.forEach(item => {
-    //     if (item.iditempostor === dato.iditempostor) {
-    //       item.indseleccion = false;
-    //   }
-    //   });
-    //   console.log('this.lstPostores', this.lstPostores);
-    //   return;
-    // }
+  
 
         this.lstPostores.forEach(item => {
         if (item.iditempostor === dato.iditempostor) {
@@ -705,7 +710,7 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
   mensajeCoti(data:any){
     const refMensaje = this.dialogService.open(CModalComentarioComponent, {
       data: data,
-      header: 'Selección de Cotización de ' +  data.nomcomercial,
+      header: 'Cotización Ganadora ' +  data.nomcomercial,
       styleClass: 'testDialog',
       closeOnEscape: false,
       closable: true,
@@ -714,6 +719,7 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
   refMensaje.onClose.subscribe((rpta: any) => {
     console.log('onClose mensajeCoti',rpta);
     if (rpta != undefined) {
+      console.log('objeto objeto',rpta.objeto);
       this.traerUno();
     }
   });
@@ -721,7 +727,30 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
   }
 
   EnviarMail(data:any){
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Enviando Correo...!';
     
+    const obj = {
+      emailDestino: data.email1,
+    }
+    
+    this.proyectosService.enviarEmailRequerimiento(obj).subscribe({
+      next: (rpta: any) => {      
+        this.setSpinner(false);     
+      },
+      error: (err) => {
+        this.setSpinner(false);
+      this.messageService.clear();
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+      });
+      },
+      complete: () => {
+        this.setSpinner(false);
+      },
+  });
   }
 
   agregarProveedor(data: any,index: number){
@@ -809,13 +838,6 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
 
   onVerDetalle(data: any) {
     console.log('onVerDetalle...', data);
-        // const refItem = this.dialogService.open(CDetalleFacturaComponent, {
-        //   data: data,
-        //   header: "Detalle de la Factura N° " + data.nrofactura,
-        //   closeOnEscape: false,
-        //   styleClass: 'testDialog',
-        //   width: '50%'
-        // });  
         
         this.setSpinner(true);
       this.mensajeSpinner = 'Descargando Detalle...!';
@@ -867,7 +889,6 @@ export class RequerimientoDetComponent implements OnInit, OnDestroy{
 }
 
 servicioGenerico(){
-  //this.registerFormRegistro.get('condicionescomerciales').setValue(''); 
   
   this.comprasService.obtenerItemsTabla(109).subscribe({
     next: (rpta: any) => {
@@ -904,49 +925,50 @@ getDireccion(data:any){
   this.registerFormRegistro.get('lugarentrega')?.setValue(direccion);
 }
 
-// async download(data: any) {
-//   console.log('download...', data);
+async download(data: any) {
+  console.log('download...', data);
  
-//       this.confirmationService.confirm({
-//           key: 'confirm1',
-//           header: 'Confirmación',
-//           message: '¿Estás seguro de Descargar el Adjunto?...',
-//           accept: () => {
-//               const objeto = {
-//                 idoportunidad: data.iditempostor,
-//                 urlasset: ""
-//                 }
-//                 const $downloadArchivo = this.comprasService.downloadArchivo(objeto)
-//                 .subscribe({
-//                     next: (rpta: any) => {
-//                     console.log("download archivo : ", rpta);
+      this.confirmationService.confirm({
+          key: 'confirm1',
+          header: 'Confirmación',
+          message: '¿Estás seguro de Descargar el Adjunto?...',
+          accept: () => {
+              const objeto = {
+                idoportunidad: data.idnroproceso,
+                urlasset: data.nomasset
+                }
+                const $downloadArchivo = this.comprasService.downloadArchivo(objeto)
+                .subscribe({
+                    next: (rpta: any) => {
+                    console.log("download archivo : ", rpta);
             
-//                     const mediaType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-//                     const blob = new Blob([rpta.body], { type: mediaType });
-//                     const filename = data.nomasset;
+                    const mediaType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                    const blob = new Blob([rpta.body], { type: mediaType });
+                    const filename = data.nomasset;
             
-//                     const url = window.URL.createObjectURL(blob);
-//                     const a = document.createElement('a');
-//                     a.href = url;
-//                     a.download = filename;
-//                     document.body.appendChild(a);
-//                     a.target = '_blank';
-//                     a.click();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.target = '_blank';
+                    a.click();
             
-//                     setTimeout(() => {
-//                         document.body.removeChild(a);
-//                         window.URL.revokeObjectURL(url);
-//                     }, 100);
-//                     },
-//                     error: (err) => {
-//                     this.serviceSharedApp.messageToast();
-//                     },
-//                     complete: () => { }
-//                 });
-//                 this.$listSubcription.push($downloadArchivo)
-//               }
-//           });
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }, 100);
+                    },
+                    error: (err) => {
+                    //this.setSpinner(false);
+                    this.serviceSharedApp.messageToast();
+                    },
+                    complete: () => { }
+                });
+                this.$listSubcription.push($downloadArchivo)
+              }
+          });
       
-// }
+}
 
 }

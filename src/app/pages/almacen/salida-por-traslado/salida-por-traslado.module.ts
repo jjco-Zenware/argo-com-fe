@@ -14,12 +14,15 @@ import { RegistroProveedorModule } from '../../compras/registro-proveedor/regist
 import { AlmacenService } from '../service/almacenServices';
 import { TagModule } from 'primeng/tag';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { CGuiaRemisionComponent } from '../guiaremision/c-guiaremision.component';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 
 @NgModule({
   declarations: [
     CSalidaTrasladoComponent,
-    CDetalleMovSalTrasladoComponent
+    CDetalleMovSalTrasladoComponent,
+    CGuiaRemisionComponent
   ],
   imports: [
     CommonModule,
@@ -32,6 +35,6 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     TagModule,
     SplitButtonModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, ContabilidadService]
 })
 export class SalidaTrasladoModule { }

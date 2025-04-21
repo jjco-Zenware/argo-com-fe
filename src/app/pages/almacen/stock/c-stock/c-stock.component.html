@@ -1,6 +1,6 @@
 
 <div class="card m-4">
-    <div class="grid mt-2">
+    <div class="grid">
         <div class="flex justify-content-between col-12 -mt-3 gap-2">                                  
             <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                 <span class="text-base font-semibold">{{tituloKardex}}</span>
@@ -8,14 +8,14 @@
         </div>
     </div>
 
-    <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-9 text-sm">
-            <div class="sm:col-6 lg:col-3 md:col-3 -mt-4 col-8 field">
-                <label class="text-blue-600 font-semibold mb-1">CÓDIGO</label>
-                <span class="p-input-icon-right">
-                    <i class="pi pi-search cursor-pointer" pTooltip="Busqueda Avanzada de Producto" tooltipPosition="bottom" (click)="getBusquedaAvanzada([])"></i>
-                    <input type="text" pInputText formControlName="codproducto" class="p-inputtext-sm" placeholder="Ingresar Código Producto"/>
+    <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-12 text-sm">            
+            <div class="col-6 sm:col-6 lg:col-2 md:col-6 -mt-3 field">                            
+                <label class="text-blue-600 font-semibold mb-1">Almacén </label>                            
+                <span>
+                    <p-dropdown [options]="lstAlmacenCB" placeholder="Seleccionar Almacén"  formControlName="idalmacen" 
+                    optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" class="p-inputtext-sm"></p-dropdown>            
                 </span>
-            </div> 
+            </div>
             <div class="sm:col-6 lg:col-3 md:col-6 col-12 -mt-3 field">                            
                 <label class="font-semibold mb-1 text-blue-600">GRUPO</label>                            
                 <span>
@@ -30,7 +30,14 @@
                     optionLabel="nomsubfamilia" optionValue="idsubfamilia" appendTo="body" ></p-dropdown>            
                 </span>
             </div> 
-            <div class="field col-4 md:col-2 -mt-4 gap-2">
+            <div class="sm:col-6 lg:col-2 md:col-3 -mt-3 col-8 field">
+                <label class="text-blue-600 font-semibold mb-1">CÓDIGO</label>
+                <span class="p-input-icon-right">
+                    <i class="pi pi-search cursor-pointer" pTooltip="Busqueda Avanzada de Producto" tooltipPosition="bottom" (click)="getBusquedaAvanzada([])"></i>
+                    <input type="text" pInputText formControlName="codproducto" class="p-inputtext-sm" placeholder="Ingresar Código Producto"/>
+                </span>
+            </div> 
+            <div class="field col-2 md:col-2 -mt-3 gap-2">
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                     class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
             </div>
@@ -42,38 +49,25 @@
         styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-gridlines -mt-3">
            <ng-template pTemplate="header">
             <tr class="text-sm" >
-                <th rowspan="2" style="width: 30px" class="bg-teal-50 border-1" >
+                <th style="width: 30px" class="bg-teal-50 border-1" >
                     <div class="flex justify-content-between align-items-center">
                         N°
                     </div>
                 </th>
-                <th rowspan="2" class="bg-teal-50 border-1">
-                    <div [ngStyle]="{'width':'100px','text-align': 'center'}">
-                        CÓDIGO
-                    </div>
-                </th>
-                <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">PRODUCTO</th>
-                <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">GRUPO</th>
-                <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">CATEGORÍA</th>
-                <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">MARCA</th>
-                <th colspan="5" class="bg-teal-50 border-1">
-                    <div [ngStyle]="{'width':'400px','text-align': 'center'}">
-                        DETALLES
-                    </div>
-                </th>
-               
+                <th rowspan="1" class="bg-teal-50 border-1">FECHA <br> INGRESO</th>    
+                <th class="bg-teal-50 border-1">CÓDIGO</th>                
+                <th style="width: 200px;" class="bg-teal-50 border-1">PRODUCTO</th>
+                <th style="width: 300px;" class="bg-teal-50 border-1">GRUPO</th>
+                <th style="width: 300px;" class="bg-teal-50 border-1">CATEGORÍA</th>
+                <th style="width: 300px;" class="bg-teal-50 border-1">MARCA</th>
+                <th style="width: 300px;" class="bg-teal-50 border-1">MODELO</th>
+                <th style="width: 300px;" class="bg-teal-50 border-1">SERIAL N</th>
+                <th style="width: 300px;" class="bg-teal-50 border-1">SERVICE T</th>
+                <th style="width: 300px;" class="bg-teal-50 border-1">UBICACIÓN</th>
+                <th style="width: 300px;" class="bg-teal-50 border-1">ALMACEN</th>
+                <th colspan="1" class="bg-teal-50 border-1">STOCK </th>           
             </tr>
             <tr class="text-sm" >
-                <th colspan="4" class="bg-teal-50 border-1">
-                    <div [ngStyle]="{'text-align': 'center'}">
-                        ALMACEN
-                    </div>
-                </th>
-                <th colspan="1" class="bg-teal-50 border-1">
-                    <div [ngStyle]="{'text-align': 'center'}">
-                        STOCK
-                    </div>
-                </th>
                 
                 
             </tr>
@@ -83,27 +77,32 @@
                 <td [ngStyle]="{'width':'30px', 'text-align': 'center'}">
                     {{rowIndex + 1}}
                 </td>
-                <td>{{data.codproducto}}</td>
+                <td>{{data.s_fecaprobacion}}</td>
+                <td>{{data.codproducto}}</td>                
                 <td>
                     <div pTooltip="{{data.despro | uppercase}}">
-                        {{(data.despro.length > 40) ? ((data.despro).slice(0, 40) + '...' | uppercase) : data.despro | uppercase}}
+                        {{(data.despro.length > 70) ? ((data.despro).slice(0, 70) + '...' | uppercase) : data.despro | uppercase}}
                     </div>  
                 </td>
                 <td>{{data.nomfamilia}}</td>
                 <td>{{data.nomsubfamilia}}</td>
                 <td>{{data.nommarca}}</td>
-                <td colspan="4">{{data.nomalmacen}}</td>
+                <td>{{data.modelo}}</td>
+                <td>{{data.serialnumber}}</td>
+                <td>{{data.servicetag}}</td>
+                <td>{{data.rutaubicacion}}</td>
+                <td >{{data.nomalmacen}}</td>
                 <td>{{data.saldostock }}</td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="12">No se encontraron registros.</td>
+                <td colspan="13">No se encontraron registros.</td>
             </tr>
         </ng-template>
         <ng-template pTemplate="loadingbody">
             <tr>
-                <td colspan="12">Cargando datos. Espere por favor.</td>
+                <td colspan="13">Cargando datos. Espere por favor.</td>
             </tr>
         </ng-template>
     </p-table>

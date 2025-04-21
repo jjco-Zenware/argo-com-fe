@@ -118,17 +118,19 @@ export class CEventoListComponent implements OnInit, OnDestroy{
                     const $procesarTrxEvento = this.marketingService.procesarTrxEvento(objeto).subscribe({
                         next: (rpta: any) => {
                             console.log('procesarTrxEvento', rpta);
-                            // if (rpta.procesoSwitch == 1) {
-                            //     this.actualizarEvento.emit();
-                            // }
+                            if (rpta.procesoSwitch == 1) {
+                                if (event.container.id === "9") {
+                                    this.generarCodigo(event.container.data[0]);
+                                }
+                                this.actualizarEvento.emit();
+                            }
 
                             this.serviceSharedApp.messageToast({
                                 severity: rpta.procesoSwitch == "0" ? 'success' : 'warn',
                                 summary: rpta.procesoSwitch == "0" ? 'Exito' : 'Warning',
                                 detail: rpta.mensaje
                             });
-
-                            this.actualizarEvento.emit();
+                            
                         },
                         error: (err) => {
                             console.error('error : ', err);
@@ -158,6 +160,36 @@ export class CEventoListComponent implements OnInit, OnDestroy{
         if (this.$listSubcription != undefined) {
             this.$listSubcription.forEach((sub) => sub.unsubscribe());
         }
+    }
+
+    generarCodigo(data: any){
+        const objeto = {
+            idtipoproyecto: 6,
+            idoportunidad: data.id,
+            idrequerimiento: 0,
+            nomproyecto: data.title,
+            descripcion: data.razonsocial,
+            idusuario: constantesLocalStorage.idusuario,
+            idcentrocosto: 325
+        }
+        console.log('objeto...', objeto);
+        this.marketingService.newProyecto(objeto).subscribe({
+            next: (rpta: any) => {
+                console.log('generarCodigo...', rpta);
+                // if (rpta.procesoSwitch === 0){
+                //     this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje }); 
+                    
+                //   }else{
+                //   this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+                //   }
+            },
+            error: (err) => {
+            console.info('error : ', err);
+            this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+        });
     }
 
 }

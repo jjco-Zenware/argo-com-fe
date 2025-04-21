@@ -1,15 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
+import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 
 @Component({
   selector: 'app-c-salida-varios',
@@ -33,13 +34,16 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
     menuItems: MenuItem[] = [];
     @ViewChild('menu') menu!: Menu;
     ordenCompra: any;
+    listadoArchivos: any[]=[];
 
     constructor(
         private fb: FormBuilder,
         private utilitariosService: UtilitariosService,
         public dialogService: DialogService  ,
         private proyectosService: ProyectosService,     
-        private serviceSharedApp: SharedAppService,
+        private serviceSharedApp: SharedAppService,      
+                private comprasService: ComprasService, 
+                private messageService: MessageService,  
         
       ){          
     }
@@ -49,7 +53,8 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
         this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
-          { field: 'nomtipoorden', header: 'OFICINA ' },
+          { field: 'codigonroorden', header: 'codigonroorden ' },
+          { field: 'nomalmacen', header: 'nomalmacen' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
@@ -77,6 +82,7 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
           ],
           idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
+        idcliente: [{value: 0,disabled: false}],
         })
       }
 
@@ -119,7 +125,7 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
 
     onVer(dato: any) {
      
-        this.tituloDetalle =  'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
+        this.tituloDetalle =  'N° SALIDA - '+ dato.idordencompra;
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
@@ -130,7 +136,7 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
 
     onEditar(dato: any) {
       
-        this.tituloDetalle = 'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
+        this.tituloDetalle = 'N° SALIDA - '+ dato.idordencompra;
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'E',
@@ -220,11 +226,48 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
       }
     
       onAccion(item: any) {
-        this.ordenCompra.idtrx = item.idtrx;
+        this.getListaArchivos(item);
         console.log('onAccion', item);
+
+        // this.ordenCompra.idtrx = item.idtrx;
+        // console.log('onAccion', item);
+        // const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+        //     data: this.ordenCompra,
+        //     header: item.nomtrx ,
+        //     closeOnEscape: false,
+        //     styleClass: 'testDialog',
+        //     width: '40%'
+        // });
+    
+        // ref.onClose.subscribe(() => {
+        //     this.getListar();
+        //   });
+      }
+
+      getListaArchivos(valor:any) {
+    
+        const objeto = {
+          idoportunidad: 0,
+          codtipoproc: 7 , 
+          idnroproceso: this.ordenCompra.idordencompra, 
+        }
+        console.log('this.objeto ...', objeto );
+      
+      const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
+        .subscribe({
+          next: (rpta: any) => {
+            this.listadoArchivos = rpta;
+            console.log('this.listadoArchivos ...', this.listadoArchivos );
+
+            if (this.listadoArchivos.length === 0) {
+              this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+                  return;
+            }else{
+              this.ordenCompra.idtrx = valor.idtrx;
+        console.log('onAccion', valor);
         const ref = this.dialogService.open(CModalExcAlmacenComponent, {
             data: this.ordenCompra,
-            header: item.nomtrx,
+            header: valor.nomtrx ,
             closeOnEscape: false,
             styleClass: 'testDialog',
             width: '40%'
@@ -233,5 +276,63 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
         ref.onClose.subscribe(() => {
             this.getListar();
           });
+            }
+          },
+          error: (err) => {
+            this.serviceSharedApp.messageToast();
+          },
+          complete: () => { }
+        });
+      this.$listSubcription.push($listarArchivos)
       }
+       onVerDetalle(data: any) {
+                      console.log('onVerDetalle...', data);
+                          
+                          this.setSpinner(true);
+                        this.mensajeSpinner = 'Descargando Detalle...!';
+                    
+                        const objeto = {
+                          idusuario : constantesLocalStorage.idusuario,
+                          iddocumentoprc: data.idordencompra,
+                          codtipoprc: 4,
+                          idplantilla: 0
+                        }
+                    
+                        const $cargarOrdenC = this.comprasService.prcDocumentoDet(objeto).subscribe({
+                          next: (rpta: any) => {
+                            this.setSpinner(false);      
+                            
+                            const mediaType = 'application/pdf';
+                              const blob = new Blob([rpta.body], { type: mediaType });
+                              const filename = 'PECOSA-' + data.codigonroorden;
+                      
+                              const url = window.URL.createObjectURL(blob);
+                              const a = document.createElement('a');
+                              a.href = url;
+                              a.download = filename;
+                              document.body.appendChild(a);
+                              a.target = '_blank';
+                              a.click();
+                    
+                              window.open(url);
+                    
+                              setTimeout(() => {
+                                  document.body.removeChild(a);
+                                  window.URL.revokeObjectURL(url);
+                              }, 100);
+                          },
+                              error: (err) => {
+                                this.setSpinner(false);
+                              this.messageService.clear();
+                              this.messageService.add({
+                                  severity: 'error',
+                                  summary: 'Error',
+                                  detail: mensajesQuestion.msgErrorGenerico,
+                              });
+                          },
+                              complete: () => {
+                          },
+                        });
+                        this.$listSubcription.push($cargarOrdenC)
+                  }
 }

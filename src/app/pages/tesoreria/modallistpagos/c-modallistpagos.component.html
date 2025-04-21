@@ -11,7 +11,7 @@
             </th>
             <th style="width: 30px;" class="bg-teal-50 border-1" >
                 <div class="justify-content-between align-items-center">
-                    ID PAGO
+                    ID 
                 </div>
             </th>
             <th style="width: 150px;" class="bg-teal-50 border-1" >
@@ -37,6 +37,11 @@
             <th style="width: 70px;" class="bg-teal-50 border-1" >
                 <div [ngStyle]="{'width':'70px','text-align':'center'}">
                     MONTO
+                </div>
+            </th>
+            <th style="width: 70px;" class="bg-teal-50 border-1" >
+                <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                    ESTADO
                 </div>
             </th>
             <th style="width: 30px;" class="bg-teal-50 border-1">
@@ -88,10 +93,15 @@
                     {{data.montopago | number: '0.2-2' }}
                 </div>
             </td>
+            <td>                       
+                <div [ngStyle]="{'width':'80px','text-align': 'center'}">
+                    <p-tag [value]="data.estado" [severity]="data.serevity_estado"></p-tag>
+                </div>
+            </td>
             <td>
-                <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'30px'}">
-                    <button pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="bottom" pTooltip="Eliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onEliminar(data)"></button>
-                    <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="onEdit(data)"></button>
+                <div *ngIf="data.estado !== 'EXTORNADO' " class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'30px'}">
+                    <button  pButton pRipple type="button" icon="pi pi-trash" tooltipPosition="bottom" pTooltip="Eliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onEliminar(data)"></button>
+                    <button *ngIf="!verEditarPagos" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="onEdit(data)"></button>
                 
                 </div>
             </td>

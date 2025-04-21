@@ -19,7 +19,7 @@
                             <label class="block text-900 font-semibold mb-1">Banco</label>
                             <span class="p-fluid">
                                 <p-dropdown [options]="lstBancos" formControlName="idbanco" placeholder="Seleccionar..." optionLabel="razonsocial" 
-                                    optionValue="idbanco" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                                    optionValue="idpersona" appendTo="body" class="p-inputtext-sm" (onChange)="changeBanco($event.value)"></p-dropdown>
                             </span>
                         </div>
                         <div class="col-12 lg:col-4 md:col-12 field">

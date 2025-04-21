@@ -13,12 +13,19 @@ import { CItemOrdenesComponent } from './items-ordenes/c-items-ordenes.component
 import { CheckboxModule } from 'primeng/checkbox';
 import { CBusquedaProductoComponent } from './busqueda-producto/c-busqueda-producto.component';
 import { ProyectosService } from '../compras/proyectos-ganados/service/proyectos.service';
+import { CItemAlmacenComponent } from './c-item-almacen/c-item-almacen.component';
+import { CModalUbicacionComponent } from './modal-ubicacion/modal-ubicacion.component';
+import { TreeModule } from 'primeng/tree';
+import { ContabilidadService } from '../contabilidad/service/contabilidad.services';
 
 
 @NgModule({
   declarations: [
     CItemOrdenesComponent,
-    CBusquedaProductoComponent
+    CBusquedaProductoComponent,
+    CItemAlmacenComponent,
+    CModalUbicacionComponent
+    
   ],
   imports: [
     CommonModule,
@@ -29,9 +36,10 @@ import { ProyectosService } from '../compras/proyectos-ganados/service/proyectos
     ReactiveFormsModule,
     ProyectosGanadosModule,
     TableModule,
-    CheckboxModule
+    CheckboxModule,
+    TreeModule
     
   ],
-  providers : [OrdencompraService, ComprasService, ProyectosService]
+  providers : [OrdencompraService, ComprasService, ProyectosService, ContabilidadService]
 })
 export class AlmacenModule { }

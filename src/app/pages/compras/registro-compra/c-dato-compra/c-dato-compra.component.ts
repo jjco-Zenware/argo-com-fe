@@ -98,6 +98,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   maximaFechaHasta: Date = this.serviceUtilitario.obtenerFechaFinMesTotal();
   lstCentroCosto: any;
   nrocuotas!:number;
+  s_monto!:number;
+  s_igv!:number;
 
   constructor(
     private fb: FormBuilder,
@@ -131,9 +133,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
-
-    this.registerFormRegistro.get('fecemision')?.setValue(this.serviceUtilitario.obtenerFechaActual());
-    this.registerFormRegistro.get('fecvencimiento')?.setValue(this.serviceUtilitario.obtenerFechaActual());
     
     if (this.idOrdenC > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -153,7 +152,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       this.traerUno();
     }else{
       //this.verControles('NOA');
-      //this.cargarProyectos(4); 
+      this.cargarProyectos(1); 
       this.dataAdjunto ={
         idCliente: 0,
         codtipoproc: 8,
@@ -194,7 +193,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd:[{ value: '', disabled: false }],
-      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
       idordencompra: [{ value: this.idOrdenC, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: '', disabled: false }],
@@ -220,7 +219,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       nroserie_ctb:[{ value: '', disabled: false }],
       nrodocumento_ctb:[{ value: '', disabled: false }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-      nrocuotas:[{ value: '', disabled: false }],
+      nrocuotas:[{ value: 0, disabled: false }],
       porc_detraccion:[{ value: null, disabled: false }],
       s_monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
       s_monto_detraccion_CTB:[{ value: 0, disabled: false }],
@@ -233,11 +232,12 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       codunidadejecutora_ctb:[{ value: null, disabled: false }],
       nroprocesoseleccion_ctb:[{ value: null, disabled: false }],
       observacion: [{ value: '', disabled: false }],
-      nrodias:[{ value: 0, disabled: false }],
+      nrodias:[{ value: 1, disabled: false }],
       idordencompra_origen_ctb:[{ value: 0, disabled: false }],
       monto_pen_pago:[{ value: 0, disabled: false }],
       idcentrocosto:[{ value: 0, disabled: false }],
       s_monto_neto_CTB:[{ value: 0, disabled: false }],
+      direccion:[{ value: null, disabled: false }],
     });
 
     
@@ -352,12 +352,16 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             }   
 
             this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
+            this.changeMoneda(rpta.ordencompra[0].idmoneda );
+            
           this.visibleDocument = false; 
           this.visibleAsiento = false;
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
           this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
           //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
+          this.s_monto = rpta.ordencompra[0].s_monto;
+          this.s_igv = rpta.ordencompra[0].s_igv;
           this.montoTotal = rpta.ordencompra[0].s_monto_total;
           this.mostrarBotones(rpta.ordencompra[0].estado); 
           this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);     
@@ -373,8 +377,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             this.serviceSharedApp.messageToast()
         },
         complete:() => {
-          this.setSpinner(false);
-          
+          this.getBusquedaRUC();
         }
       });
     this.$listSubcription.push($cargarOrdenC)
@@ -408,7 +411,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     fecemision = this.registerFormRegistro.value.fecemision;
     fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
 
-    if (this.idOrdenC > 0) {
+    //if (this.idOrdenC > 0) {
       if (fechaingreso.toString().length === 10) {
         fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
       }
@@ -418,7 +421,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       if (fecvencimiento.toString().length === 10) {
         fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));    
       }         
-    }
+    //}
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
       if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -530,6 +533,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
           this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
           //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
+          this.s_monto = rpta.ordencompra[0].s_monto;
+          this.s_igv = rpta.ordencompra[0].s_igv;
           this.montoTotal = rpta.ordencompra[0].s_monto_total;
           this.mostrarBotones(rpta.ordencompra[0].estado); 
           this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);     
@@ -743,7 +748,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
 
   NuevoPersona(){
     const objet = {
-      idrolpersona:'CLI'
+      idrolpersona:'PRO'
           }
     const refItem = this.dialogService.open(CModalPersonaComponent, {
       data: objet,
@@ -787,7 +792,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.lstItemOC.push(rpta.objeto);
         console.log('this.lstItemOC',this.lstItemOC);
       }
-      //this.calcularTotales();
+      this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
     });
   }
 
@@ -797,7 +802,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       header: 'Confirmación',
       message:  '¿Desea Eliminar Item ' + '<b>' + data.descripcion + '</b>' + '?' ,
       accept: () => {
-        if (data.idcotizaitem > 0) {
+        if (data.idordencompra > 0) {
           const _posAll: number = this.lstItemOC.findIndex((x => x.idordencompraitem == data.idordencompraitem))
           if (_posAll != -1) {
           this.lstItemOC.splice(_posAll, 1)
@@ -808,7 +813,26 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           this.lstItemOC.splice(_posAll, 1)
           }
       }
-      this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
+      if (this.lstItemOC.length === 0) {
+        this.registerFormRegistro.get('nrocuota')?.setValue(0);
+        this.nrocuotas = 0;
+        this.listaCuotas=[];
+
+        this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(0);
+        this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(0);
+        this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(0);
+        this.registerFormRegistro.get('s_monto_detraccion_mn_CTB')?.setValue('');
+        this.registerFormRegistro.get('monto_pen_pago')?.setValue(0);
+
+        /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
+        this.s_monto = 0;
+        this.s_igv = 0;
+        this.montoTotal = 0;
+      }else{
+        
+        this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
+
+      }
       }
   });
   }
@@ -1125,6 +1149,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           return;
         }
         this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
+        this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);
       },
       error: (err) => {
         this.setSpinner(false);
@@ -1159,7 +1184,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     console.log('prcCuota...', data);
     if (this.registerFormRegistro.value.monto_pen_pago === 0) {
       this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Aún no existe Monto de Pago para agregar cuotas'});
-      //this.registerFormRegistro.get('nrocuotas')?.setValue('');
+      this.registerFormRegistro.get('nrocuotas')?.setValue(data);
       this.nrocuotas = 0;
           return;
     }
@@ -1239,9 +1264,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   }
 
   changeFechaDesde(event: Date) {
-    console.log('this.registerFormRegistro.value.fecvencimiento', new Date(this.registerFormRegistro.value.fecvencimiento));
-    console.log('this.registerFormRegistro.value.fecemision', this.registerFormRegistro.value.fecemision);
-
     this.minimaFechaHasta = event;
     let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
     let vencimiento = new Date(this.registerFormRegistro.get('fecvencimiento')?.value);
@@ -1249,30 +1271,24 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     console.log('vencimiento', vencimiento);
     let inicio = emision.getTime();
     let fin = vencimiento.getTime();
-    // console.log('inicio', inicio);
-    // console.log('fin', fin);
     var diff = fin - inicio;
-    console.log('nro dias', diff/(1000*60*60*24));
-    console.log('changeFechaDesde diff', diff);
-    let numerDiff = diff/(1000*60*60*24);
+    let numerDiff = (diff/(1000*60*60*24))+1;
     this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
   }
 
   changeFechaHasta(event: Date) {
-    // console.log('this.registerFormRegistro.value.fecvencimiento', this.registerFormRegistro.value.fecvencimiento.getTime());
-    // console.log('this.registerFormRegistro.value.fecemision', this.registerFormRegistro.value.fecemision.getTime());
+    let fecemision = this.registerFormRegistro.value.fecemision;
+    if (fecemision.toString().length === 10) {
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
+    }
+
     this.maximaFechaDesde = event;
-    let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
     let vencimiento = new Date(this.registerFormRegistro.get('fecvencimiento')?.value);
-    console.log('emision', emision, 'vencimiento', vencimiento);
-    let inicio = emision.getTime();
+    console.log('fecemision', fecemision, 'vencimiento', vencimiento);
+    let inicio = fecemision.getTime();
     let fin = vencimiento.getTime();
-    // console.log('inicio', inicio);
-    // console.log('fin', fin);
     var diff = fin - inicio;
-    console.log('nro dias', diff/(1000*60*60*24));
-    console.log('changeFechaDesde diff', diff);
-    let numerDiff = diff/(1000*60*60*24);
+    let numerDiff = (diff/(1000*60*60*24))+1;
     this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
   }
 
@@ -1284,7 +1300,12 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
 
 
   addDiasFec(){
-    let fecha = this.addDays(this.registerFormRegistro.value.fecemision, parseInt(this.registerFormRegistro.value.nrodias));
+    let fecemision = this.registerFormRegistro.value.fecemision;
+    if (fecemision.toString().length === 10) {
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
+    } 
+
+    let fecha = this.addDays(fecemision, parseInt(this.registerFormRegistro.value.nrodias));
     this.registerFormRegistro.get('fecvencimiento')?.setValue( fecha );
   }
 
@@ -1351,7 +1372,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         porc_detraccion : dato,
         tc : this.registerFormRegistro.get('tc')?.value,
         idmoneda : this.registerFormRegistro.get('idmoneda')?.value,
-        nrocuotas : this.registerFormRegistro.get('nrocuotas')?.value,
+        nrocuotas : this.nrocuotas,
         nrodias : this.registerFormRegistro.get('nrodias')?.value,
       }
       const $recalcularRegistro = this.comprasService.recalcularRegistro(objeto)
@@ -1363,6 +1384,11 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(rpta[0].s_monto_total_CTB);
             this.registerFormRegistro.get('s_monto_detraccion_mn_CTB')?.setValue(rpta[0].s_monto_detraccion_mn_CTB);
             this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta[0].s_monto_neto_CTB);
+
+            /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
+            this.s_monto = rpta[0].s_monto_valor_venta_CTB;
+            this.s_igv = rpta[0].s_monto_igv_CTB;
+            this.montoTotal = rpta[0].s_monto_total_CTB;
 
             this.listaCuotas=[];
 
@@ -1390,6 +1416,17 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       });
     this.$listSubcription.push($recalcularRegistro)
     }
+  }
+
+  changeMoneda(value:any){
+    console.log('changeProyecto...', value);
+    if (value === 1) {
+      this.registerFormRegistro.get('tc')?.disable()
+      this.registerFormRegistro.get('tc')?.setValue(0);
+    }else{
+      this.registerFormRegistro.get('tc')?.enable();
+    }
+    
   }
 
 }

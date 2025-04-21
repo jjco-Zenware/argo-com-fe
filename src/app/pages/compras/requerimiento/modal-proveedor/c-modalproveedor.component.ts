@@ -74,6 +74,8 @@ export class CModalProveedorComponent implements OnInit, OnDestroy {
         idcontacto: [{ value: 0, disabled: false }],
         nrodocumento: [{ value: null, disabled: false }],
         snombrecontacto: [{ value: null, disabled: false }],
+        estado: [{ value: 'PEN', disabled: false }],
+        nomestado: [{ value: 'PENDIENTE', disabled: false }],
     });
 }
 

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
@@ -19,6 +19,9 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
 import { CModalProveedorComponent } from './modal-proveedor/c-modalproveedor.component';
 import { CModalGastosComponent } from './modal-gastos/c-modalgastos.component';
+import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
+import { CModalPersonaComponent } from './modalPersona/c-modalpersona.component';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
   declarations: [
@@ -27,7 +30,8 @@ import { CModalGastosComponent } from './modal-gastos/c-modalgastos.component';
     CEventoListComponent,
     CEventoCardComponent,
     CModalProveedorComponent,
-    CModalGastosComponent
+    CModalGastosComponent,
+    CModalPersonaComponent
   ],
   imports: [
     CommonModule,
@@ -40,7 +44,9 @@ import { CModalGastosComponent } from './modal-gastos/c-modalgastos.component';
     RegistroProveedorModule,
     DragDropModule,
     CheckboxModule,
+    AutoCompleteModule 
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, MarketingService, ComprasService, ProyectosService ]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, MarketingService,
+     ComprasService, ProyectosService, OrdencompraService, ComprasService, DatePipe ]
 })
 export class EventoModule { }

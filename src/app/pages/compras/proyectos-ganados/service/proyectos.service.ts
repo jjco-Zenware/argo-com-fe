@@ -183,4 +183,54 @@ export class ProyectosService {
         const url = `${constantesApiWeb.ordenCompraTraerunoSubproceso}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    ordenCompraListGasto(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompralistGasto}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    ordenCompraUpdEstado(objeto:any) {
+        const url = `${constantesApiWeb.ordendocumentoupd}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    obtenerUsuario(codigo:number) {
+        const url = `${constantesApiWeb.obtenerUsuario}/${codigo}`;
+        return this.http.get<any>(url);
+      }
+
+      enviarEmailRequerimiento(objeto:any) {
+        const url = `${constantesApiWeb.enviarEmailRequerimiento}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    listarMovimientosPrc() {
+        const url = `${constantesApiWeb.listarMovimientosPrc}`;
+        return this.http.get<any>(url);
+    }
+
+    ordenCompraListCuentas(objeto:any) {
+        const url = `${constantesApiWeb.ordencompralistcuentas}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    pagosProgramados(objeto:any) {
+        const url = `${constantesApiWeb.pagosProgramados}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    ordenCompraTraerunoNroDoc(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompraTraerunoNroDoc}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    emitirDocumento(objeto:any) {
+        const url = `${constantesApiWeb.emitirDocumento}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    operacionFel(objeto:any) {
+        const url = `${constantesApiWeb.operacionFel}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

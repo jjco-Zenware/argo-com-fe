@@ -1,0 +1,39 @@
+
+<form [formGroup]="registerForm" class="p-2">                    
+    <div class="p-fluid grid">        
+        <div class="sm:col-6 lg:col-12 md:col-12 h-4rem field">
+            <label class="block text-900 font-semibold mb-1">Proveedor</label>
+            <span class="p-fluid">
+                <input pInputText type="text" readonly="true" formControlName="nomcomercial" class="p-inputtext-sm surface-200"/>
+            </span>
+        </div>
+        <div class="sm:col-6 lg:col-12 md:col-12 h-4rem field">
+            <label class="block text-900 font-semibold mb-1">N° Factura</label>
+            <span class="p-fluid">
+                <input pInputText type="text" readonly="true" formControlName="nrofactura" class="p-inputtext-sm surface-200"/>
+            </span>
+        </div>
+        <div class="sm:col-12 lg:col-6 md:col-12 justify-content-end h-4rem field">
+            <label class="text-900 font-semibold">Fecha Pago </label>
+            <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm" style="height: 3rem;">
+                <p-calendar formControlName="fecprogramacion" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" ></p-calendar>
+            </span>
+        </div>   
+        <div class="sm:col-12 lg:col-3 md:col-12 field h-4rem flex flex-column">
+            <div class="flex mb-1">
+                <label class="block text-900 font-semibold">Programar</label>    
+                <i class="pi pi-question-circle text-orange-600" style="margin-left: 5px;" tooltipPosition="bottom" 
+                pTooltip="Este Indicador Programa el pago para la Fecha registrada" ></i> 
+            </div>
+            <span class="mt-1">
+                <p-checkbox formControlName="indprogramado" inputId="ny" [binary]="true" class="align-items-start"/>
+            </span>
+        </div>
+    </div>
+    <div class="flex justify-content-end mt-3">
+        <button pButton icon="pi pi-calendar" label="Programar" class="p-button-primary" (click)="programarPago()"></button>
+    </div>     
+</form>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

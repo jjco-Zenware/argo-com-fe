@@ -14,6 +14,8 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { CSalidaOcProyectoComponent } from './c-listamovsal/c-listamovsal.component';
 import { CDetalleSalOcProyComponent } from './c-detallemovsal/c-detallemovsal.component';
 import { SalidaOcProyectoRoutingModule } from './salida-oc-proyecto-routing.module';
+import { ComprasService } from '../../compras/Service/compraServices';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -32,6 +34,6 @@ import { SalidaOcProyectoRoutingModule } from './salida-oc-proyecto-routing.modu
     TagModule,
     SplitButtonModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, ComprasService, MessageService]
 })
 export class SalidaOcProyectoModule { }

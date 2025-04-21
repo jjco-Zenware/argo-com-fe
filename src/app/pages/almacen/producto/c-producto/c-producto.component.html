@@ -57,11 +57,11 @@
                             MARCA
                         </div>
                     </th>
-                    <!-- <th style="width: 80px" class="bg-teal-50 border-1" >
+                    <th style="width: 80px" class="bg-teal-50 border-1" >
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                            MONEDA
+                            MODELO
                         </div>
-                    </th> -->
+                    </th>
                     <th style="width: 80px" class="bg-teal-50 border-1" >
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
                             UNIDAD
@@ -114,6 +114,11 @@
                     <td>                       
                         <div [ngStyle]="{'width':'60px'}">
                             {{data.nommarca | uppercase}}
+                        </div>
+                    </td>
+                    <td>                       
+                        <div [ngStyle]="{'width':'60px'}">
+                            {{data.modelo | uppercase}}
                         </div>
                     </td>
                     <td>                       

@@ -3,11 +3,12 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Subscription } from 'rxjs';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, TreeNode } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AlmacenService } from '../../service/almacenServices';
+import { CModalUbicacionComponent } from '../c-modal-ubicacion/c-modalubicacion.component';
 
 @Component({
   selector: 'app-c-almacenes-detalle',
@@ -28,6 +29,11 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   idAlmacen: any;
   param:any;
   lstOficina:any;
+  files!: TreeNode[];
+  selectedFiles!: TreeNode[];
+  verbtnUbicacion: boolean = false; 
+  file: any; 
+  visUbicacion: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -43,14 +49,21 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   ) { }
 
   ngOnInit(): void {
-    console.log('this.config', this.config);
-    this.idAlmacen = this.config.data.idcodigo;
-    this.param = this.config.data.paramReg;
+    console.log('this.config', this.IA_data);
+    this.idAlmacen = this.IA_data.idalmacen;
+    this.param = this.IA_data.paramReg;
     this.createFormRegistro(); 
     this.listarOficinas();
     
     if (this.idAlmacen > 0) {      
       this.traerUno();
+      // if (this.files.length = 0) {        
+      //   this.verbtnUbicacion = true;
+      // }else{        
+      //   this.verbtnUbicacion = false;
+      // }
+
+      
     }   
   }
 
@@ -63,7 +76,7 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
       idofi: [{ value: 0, disabled: false }],
       nomalmacen: [{ value: '', disabled: false }],
       diralmacen: [{ value: '', disabled: false }],
-      estado: [{ value: 'A', disabled: false }],
+      estado: [{ value: 'REG', disabled: false }],
       codUsuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
     });
   }
@@ -112,8 +125,12 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (rpta:any) => {
           console.log('rpta', rpta);
+
+          this.idAlmacen = rpta.idalmacen
             this.setSpinner(false);
-            this.registerFormRegistro.patchValue(rpta);                
+            this.registerFormRegistro.patchValue(rpta);  
+            this.visUbicacion = false;   
+            this.TraerUbicacion();           
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -149,11 +166,12 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
         if (rpta.procesoSwitch === 0){
           this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
           if (this.idAlmacen === 0) {
-            this.idAlmacen = rpta.resultProceso;   
-
+            this.idAlmacen = rpta.resultProceso; 
+            this.registerFormRegistro.value.idalmacen =  rpta.resultProceso; 
           }
-          this.cerrar();
-          //this.traerUno();
+          this.visUbicacion = false;
+          //this.cerrar();
+          this.traerUno();
          
         }else{
         this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
@@ -203,6 +221,73 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
 
        return _error;
      }
+
+  TraerUbicacion(){
+    const $TraerUbicacion = this.almacenService.traerUbicaciones(this.idAlmacen)
+    .subscribe({
+      next: (rpta:any) => {
+          console.log('TraerUbicacion', rpta)
+          this.files = rpta;
+          this.files.forEach((node) => {
+            this.expandRecursive(node, true);
+        });
+      },
+      error:(err)=>{
+          this.serviceSharedApp.messageToast()
+      },
+      complete:() => { 
+      }
+    });
+  this.$listSubcription.push($TraerUbicacion)
+  }
+
+  nodeSelect(event: any) {
+    this.verbtnUbicacion = true;
+    console.log('nodeSelect', event.node)
+    this.file = event.node;
+  }
+
+  private expandRecursive(node: TreeNode, isExpand: boolean) {
+    node.expanded = isExpand;
+    if (node.children) {
+        node.children.forEach((childNode) => {
+            this.expandRecursive(childNode, isExpand);
+        });
+    }
+}
+
+accionUbicacion(dato:any){
+  let file_ = this.file
+  let title = this.file.label
+
+  switch (dato) {
+    case 0:
+      file_.idubicacionpadre = file_.key;
+      file_.nomubicacion = '';
+      file_.key = 0;
+      title = 'Nueva Ubicación'
+      break;
+      case 1:
+        file_.nomubicacion = file_.label;
+        break;
+        case 2:
+          
+          break;
+  }
+
+  const ref = this.dialogService.open(CModalUbicacionComponent, {
+            data: file_,
+            header: title,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '30%'
+        });
+    
+        ref.onClose.subscribe(() => {
+            this.TraerUbicacion();
+            this.verbtnUbicacion = false;
+          });
+}
 
 
 }

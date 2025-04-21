@@ -15,27 +15,37 @@
                     </div>
                 </ng-template>
                 <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">
-                    <div class="col-6 sm:col-5 lg:col-5 md:col-6 ">                            
-                        <label class="block text-900 font-semibold mb-1">Almacen Ingreso<span class="text-red-500 font-bold"> * </span></label>                            
-                        <span>
-                            <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
-                            optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                    <div class="sm:col-6 lg:col-3 md:col-12 h-4rem field -mt-1">
+                        <div class="flex mb-1">
+                            <label class="block text-900 font-semibold">Fecha</label>    
+                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
+                        </div>
+                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
+                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
                         </span>
                     </div> 
-                    <div class="sm:col-8 lg:col-1 md:col-12 col-0"></div>
-                    <div class="col-6 sm:col-12 lg:col-3 md:col-12 justify-content-end  field">
-                        <label class="block text-900 font-semibold">Fecha <span class="text-red-500 font-bold"> * </span></label>
-                        <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm">
-                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
-                            inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
-                        </span>
-                    </div>
-                    <div class="sm:col-12 lg:col-3 md:col-12 col-6 field">
+                    <div class="lg:col-6"></div>
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field">
                         <label class="block text-900 font-semibold mb-1">N° </label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="labelnrodocumento"/>
                         </span>
-                    </div>
+                    </div> 
+                    <div class="col-6 sm:col-6 lg:col-5 md:col-12 -mt-5">                            
+                        <label class="block text-900 font-semibold mb-1">Almacen Ingreso<span class="text-red-500 font-bold"> * </span></label>                            
+                        <span>
+                            <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" (onChange)="changeAlmacen()"
+                            optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div> 
+                    <div class="lg:col-4 "></div>
+                    <div class="sm:col-6 lg:col-3 md:col-12 -mt-5">
+                        <label class="block text-900 font-semibold mb-1">N° Guia <span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid">
+                            <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
+                        </span>
+                    </div>  
                         
 
                         <!-- <div class="sm:col-6 lg:col-4 md:col-3 col-4 -mt-6">
@@ -46,7 +56,7 @@
                             </span>
                         </div> 
                         <div class=" sm:col-8 lg:col-7 md:col-12"></div>  -->
-                        <div class="col-12 field -mt-6">
+                        <div class="col-12 field -mt-3">
                             <label class="block text-900 font-semibold mb-1">Proyecto <span class="text-red-500 font-bold"> * </span></label>                        
                             <span class="p-fluid mt-1">
                                 <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
@@ -65,13 +75,14 @@
                             <div class="flex">
                                 <label class="block text-900 font-semibold mb-1">Orden Compra <span class="text-red-500 font-bold"> * </span></label>
                             </div>                            
-                            <span>
+                            <span *ngIf="verOc">
                                 <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
                                 optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="getOCtraerItems($event.value)"></p-dropdown>
                             </span>
+                            <input *ngIf="!verOc" pInputText type="text" class="p-inputtext-sm surface-100" readonly="true" formControlName="label_resumen_alm"/>
                         </div> 
-                        <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-4">
-                            <label class="block text-900 font-semibold mb-1">Observación</label>                        
+                        <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-4">
+                            <label class="block text-900 font-semibold mb-1">Justificación</label>                        
                             <span class="p-fluid">
                                 <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
                                 class="p-inputtext-sm w-full" id="observacion" [readonly]=onlyRead></textarea>
@@ -93,52 +104,82 @@
                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar" (click)="getItem([],0)"></button>
                 </div> -->
                 <p-table [value]="lstItemOC" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [scrollable]="true"  styleClass="p-datatable-sm" (onHeaderCheckboxToggle)="selectCheckbox($event)" [(selection)]="selectedItems">
+                [scrollable]="true"  styleClass="p-datatable-sm p-datatable-gridlines" (onHeaderCheckboxToggle)="selectCheckbox($event)" [(selection)]="selectedItems">
                     <ng-template pTemplate="header" >
                         <tr class="text-sm">
-                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th [ngStyle]="{'width':'50px'}" class="surface-200">
-                                <!-- <p-tableHeaderCheckbox style="width:15px; height:15px;"></p-tableHeaderCheckbox> -->
+                            <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                            <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
+                                SELECCIONAR 
                             </th>
-                            <th class="surface-200">CÓDIGO</th>
-                            <th class="surface-200">DESCRIPCIÓN</th>
-                            <th class="surface-200">MARCA</th>
-                            <!-- <th class="surface-200">N° SERIE</th> -->
-                            <th class="surface-200">SKU</th>
-                            <th class="surface-200">N° CONTRATO</th>
-                            <!-- <th class="surface-200">F. INICIO</th>
-                            <th class="surface-200">F. FIN</th> -->
-                            <th class="surface-200">U. MED</th>
-                            <!-- <th class="surface-200">P. UNI.</th> -->
-                            <th class="surface-200">CANT.</th>
-                            <!-- <th class="surface-200">TOTAL</th> -->
-                            <!-- <th class="surface-200"></th> -->
+                            <th class="bg-teal-50 border-1">CÓDIGO</th>
+                            <th class="bg-teal-50 border-1">CATEGORIA</th>
+                            <th class="bg-teal-50 border-1">TIPO <br> EXISTENCIA</th>
+                            <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
+                            <th class="bg-teal-50 border-1">MARCA</th>
+                            <th class="bg-teal-50 border-1">MODELO</th>
+                            <th class="bg-teal-50 border-1">SERIAL N</th>
+                            <th class="bg-teal-50 border-1">SERVICE TAG</th>
+                            <th class="bg-teal-50 border-1">U. MED</th>
+                            <th class="bg-teal-50 border-1">CANT.</th>
+                            <th class="bg-teal-50 border-1">ACCIÓN.</th>
+                            <th class="bg-teal-50 border-1">UBICACIÓN</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
                         <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
-                            <td>
-                                <input type="checkbox" [(ngModel)]="product.indcompleto" [ngModelOptions]="{standalone: true}" 
-                                style="width:15px; height:15px; cursor:pointer">
+                            <td >
+                                <input [disabled]=!verItems type="checkbox" [(ngModel)]="product.indcompleto" [ngModelOptions]="{standalone: true}" 
+                                style="width:15px; height:15px; cursor:pointer"  >
                             </td>
                             <td>{{ product.codproducto | uppercase}}</td>
+                            <td>{{ product.nomsubfamilia | uppercase}}</td>
+                            <td [pEditableColumn]="product.nomtipoexistencia | uppercase" pEditableColumnField="nomtipoexistencia" class="cursor-pointer">
+                                <p-cellEditor >
+                                    <ng-template pTemplate="input">
+                                        <p-dropdown [options]="lstExistencia" appendTo="body" [(ngModel)]="product.codtipoexistencia" [style]="{'width':'100%'}"
+                                        optionLabel="valoritem" optionValue="iditem" (onChange)="changeExistencia($event.value, product)"/>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ product.nomtipoexistencia | uppercase }}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
                             <td>{{ product.descripcion | uppercase}}</td>
                             <td>{{ product.nommarca | uppercase}}</td>
-                            <td>{{ product.sku }}</td>
-                            <td>{{ product.nrocontrato }}</td>
-                            <!-- <td>{{ product.fecini }}</td> 
-                            <td>{{ product.fecfin }}</td> -->
+                            <td>{{ product.modelo | uppercase}}</td>
+                            <td [pEditableColumn]="product.serialnumber | uppercase" pEditableColumnField="serialnumber" class="cursor-pointer">
+                                <p-cellEditor >
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="product.serialnumber" required/>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ product.serialnumber | uppercase }}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                            <td [pEditableColumn]="product.servicetag | uppercase" pEditableColumnField="servicetag" class="cursor-pointer">
+                                <p-cellEditor >
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="product.servicetag" required/>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ product.servicetag | uppercase }}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
+                           
                             <td>{{ product.nomunidad }}</td>
-                            <!-- <td>{{ product.preciocosto | number: '0.2'}}</td> -->
                             <td>{{ product.cantidad }}</td>
-                            <!-- <td>{{ product.preciocostototal | number: '0.2'}}</td> -->
-                            <!-- <td>
-                                <div *ngIf="verItems" class="flex justify-content-end">
+                            <td>
+                                <div *ngIf="verItems" class="flex">
+                                    <button pButton pRipple icon="pi pi-map" pTooltip="Ubicación Item" tooltipPosition="left" (click)="verUbicacion(product, product)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
                                     <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
-                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+
                                 </div>
-                            </td> -->
+                            </td>
+                            <td>{{ product.rutaubicacion }}</td>
+                            
                         </tr>
                     </ng-template>
                     <!-- <ng-template pTemplate="footer">
@@ -180,15 +221,14 @@
                     </div>
                 </ng-template>    
                 <p-table [value]="lstTransacciones" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                [scrollable]="true"  styleClass="p-datatable-sm">
+                [scrollable]="true"  styleClass="p-datatable-sm p-datatable-gridlines">
                     <ng-template pTemplate="header">
                         <tr class="text-sm">
-                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th [ngStyle]="{'width':'120px'}" class="surface-200">FECHA MOV</th>
-                            <th class="surface-200">TRANSACCIÓN</th>
-                            <th class="surface-200">DESCRIPCIÓN</th>
-                            <th class="surface-200">USUARIO</th>
-                            <th class="surface-200"></th>
+                            <th rowspan="2" [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                            <th [ngStyle]="{'width':'120px'}" class="bg-teal-50 border-1">FECHA MOV</th>
+                            <th class="bg-teal-50 border-1">TRANSACCIÓN</th>
+                            <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
+                            <th class="bg-teal-50 border-1">USUARIO</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">

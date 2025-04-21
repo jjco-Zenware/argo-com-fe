@@ -54,11 +54,12 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'ID ALMACÉN' },
+          { field: 'idordencompra', header: 'CÓDIGO' },
+          { field: 'nroordencompra_origen', header: 'nroordencompra_origen' },
           { field: 'fechaingreso', header: 'FECHA ' },
-          { field: 'nomtipoorden', header: 'OFICINA ' },
-          { field: 'codigonroorden', header: 'NOMBRE' },
-          { field: 'nomcomercial', header: 'DIRECCIÓN' },
+          { field: 'nomcomercial', header: 'PROVEEDOR' },
+          { field: 'alm_idordencompra', header: 'N° ORDEN' },
+          { field: 'nomalmacen', header: 'ALMACÉN ' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
@@ -87,6 +88,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
           ],
           idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
+        idcliente: [{value: 0,disabled: false}],
         })
       }
 
@@ -128,7 +130,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     }
 
     onVer(dato: any) {     
-        this.tituloDetalle =  'N° - '+ dato.idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
+        this.tituloDetalle =  'INGRESO N° - '+ dato.idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
@@ -138,7 +140,7 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
     }
 
     onEditar(dato: any) {      
-        this.tituloDetalle = 'N° - '+ dato.idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
+        this.tituloDetalle = 'INGRESO N° - '+ dato.idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'E',
@@ -235,6 +237,33 @@ export class CIngresoOcReqInternoComponent implements OnInit, OnDestroy{
       onAccion(item: any) {
         this.getListaArchivos(item);
         console.log('onAccion', item);
+
+        let lstItem = this.ordenCompra.items;
+
+        const total = lstItem.filter((item: any) => item.indcompleto === true).length;
+        if (total === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+            return;
+        }
+
+        for (let i = 0; i < lstItem.length; i++) {
+         
+
+          if (lstItem[i].indcompleto === true && lstItem[i].idubicacion === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Ubicación...!' });
+            return;
+          }
+
+          if (lstItem[i].codtipoexistencia === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Tipo de Existencia...!' });
+            return;
+          }
+
+          if (lstItem[i].servicetag === '' && lstItem[i].serialnumber === '') {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Service Tag o Serial Number...!' });
+            return;
+          }
+      }
 
         // this.ordenCompra.idtrx = item.idtrx;
         // console.log('onAccion', item);

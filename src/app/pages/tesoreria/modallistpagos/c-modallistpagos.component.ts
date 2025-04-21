@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
-import { MessageService } from 'primeng/api';
-import { mensajesQuestion, mensajesSpinner } from '@constantes';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { CModalRegPAgosComponent } from '../modalregpagos/c-modalregpagos.component';
 import { TesoreriaService } from '../service/tesoreriaServices';
 import { SharedAppService } from '@sharedAppService';
@@ -21,6 +21,7 @@ export class CModalListPAgosComponent implements OnInit, OnDestroy {
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   summontoTotal: number= 0;
+  verEditarPagos: boolean = false;
  
   constructor(
     public refDatoItem: DynamicDialogRef,
@@ -29,13 +30,18 @@ export class CModalListPAgosComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private tesoreriaService: TesoreriaService, 
           private serviceSharedApp: SharedAppService,
+                   private confirmationService: ConfirmationService,
   ) { }
 
 
   ngOnInit(): void {
     this.param = this.config.data;
     console.log('this.param...', this.param);
-    this.getListar();
+    if (this.param.saldo_documento === 0) {
+      this.verEditarPagos = true;
+    }
+   this.getListar();
+    
   }
 
   ngOnDestroy() {
@@ -52,8 +58,13 @@ export class CModalListPAgosComponent implements OnInit, OnDestroy {
       //console.log('this.frmDatos...', this.frmDatos.value);
       this.setSpinner(true);
           this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+
+          const objeto = {  
+            idordencompra: this.param.idordencompra,
+            tipodeuda: this.param.tipodeuda,
+          }
      
-      const $getListar = this.tesoreriaService.listPagoDocumento(this.param.idordencompra)
+      const $getListar = this.tesoreriaService.listPagoDocumento(objeto)
         .subscribe({
           next: (rpta:any) => {
               console.log('rpta getListar', rpta);
@@ -80,45 +91,59 @@ export class CModalListPAgosComponent implements OnInit, OnDestroy {
   }
 
   onEdit(data: any){
-
-    data.nomcomercial = this.param.nomcomercial;
+    console.log('rpta data', data);
+    data.tipodeuda = 1;
+    data.nomcomercial = this.param.nomcomercial;  
     data.nrofactura = this.param.nrofactura;
-
-    const $traerUno = this.tesoreriaService.traerunoPagoDocumento(data.idpagodocprc)
-        .subscribe({
-          next: (rpta:any) => {
-              console.log('rpta traerUno', rpta[0]);
-              if (rpta.length > 0) {
-                const refItem = this.dialogService.open(CModalRegPAgosComponent, {
-                  data: rpta[0],
-                  header: "Editar Pago / Cliente  "+ data.nomcomercial + ' / N° DOC - ' + data.nrofactura,
-                  closeOnEscape: false,
-                  styleClass: 'testDialog',
-                  width: '30%'
-                });
-                refItem.onClose.subscribe((rpta: any) => {
-                  
-                  console.log('onClose',rpta);
-                  if (rpta != undefined) {
-                            this.getListar();
-                  }
-                });
-              }
-          },
-          error:(err)=>{
-              this.serviceSharedApp.messageToast()
-          },
-          complete:() => {
-          }
-        });
-      this.$listSubcription.push($traerUno)
-
-
-   
+    data.bancoproveedor = this.param.bancoproveedor;
+    data.nomempresa = this.param.nomempresa;
+    
+    const refItem = this.dialogService.open(CModalRegPAgosComponent, {
+      data: data,
+      header: "Editar Pago",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '30%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      
+      console.log('onClose',rpta);
+      if (rpta != undefined) {
+                this.getListar();
+      }
+    });   
   }
 
-  onEliminar(data: any){
 
+  onEliminar(data: any){
+    console.log('onEliminar...', data);
+   
+    this.confirmationService.confirm({
+        key: 'confirm1',
+        header: 'Confirmación',
+        message: '¿Estás seguro de Extornar el Registro...',
+        accept: () => {
+          const objeto = {
+            idpagodocprc :data.idpagodocprc,  
+            idusuario: constantesLocalStorage.idusuario,
+          }
+          const $getListar = this.tesoreriaService.pagodocextornoprc(objeto)
+          .subscribe({
+            next: (rpta:any) => {
+                console.log('Extornar ', rpta);
+                this.cerrar({...rpta})
+            },
+            error:(err)=>{
+              this.setSpinner(false);
+                this.serviceSharedApp.messageToast()
+            },
+            complete:() => {
+            }
+          });
+        this.$listSubcription.push($getListar)
+              
+            }
+        });
   }
  
 }

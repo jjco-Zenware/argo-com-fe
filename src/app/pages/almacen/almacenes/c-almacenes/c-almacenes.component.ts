@@ -8,6 +8,7 @@ import { SharedAppService } from '@sharedAppService';
 //import * as FileSaver from 'file-saver';
 import { AlmacenService } from '../../service/almacenServices';
 import { CAlmacenesDetalleComponent } from '../c-almacenes-detalle/c-almacenes-detalle.component';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-c-almacenes',
@@ -28,13 +29,14 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
     lstExportExcel: any[] = [];
     frmDatos!: FormGroup;
     lstOficina: any;
-    data:any;
+    dataALM:any;
 
     constructor(
         private fb: FormBuilder,
         public dialogService: DialogService  ,
         private almacenService: AlmacenService,     
         private serviceSharedApp: SharedAppService,
+        private confirmationService: ConfirmationService
         
       ){          
     }
@@ -124,31 +126,38 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
 
     onVer(dato: any) {     
         this.tituloDetalle =  dato.nomalmacen;     
-        this.data = {
+        this.dataALM = {
           idcodigo: dato.idalmacen,
           paramReg:'V'
         }    
         this.vistaLista = false;
     }
 
-    onEditar(dato: any) {      
-        //this.tituloDetalle = dato.nomalmacen; 
-        this.data = {
-          idcodigo: dato.idalmacen,
-          paramReg:'E'
-        }        
-        //this.vistaLista = false;
-        const refItem = this.dialogService.open(CAlmacenesDetalleComponent, {
-          data: this.data,
-          header: "Editar Almacén" ,
-          closeOnEscape: false,
-          styleClass: 'testDialog',
-          width: '30%'
-        });
-        refItem.onClose.subscribe((rpta: any) => {    
-          console.log('onClose',rpta);  
-          this.getListar();
-        });
+    onEditar(data: any) {      
+        // //this.tituloDetalle = dato.nomalmacen; 
+        // this.data = {
+        //   idcodigo: dato.idalmacen,
+        //   paramReg:'E'
+        // }        
+        // //this.vistaLista = false;
+        // const refItem = this.dialogService.open(CAlmacenesDetalleComponent, {
+        //   data: this.data,
+        //   header: "Editar Almacén" ,
+        //   closeOnEscape: false,
+        //   styleClass: 'testDialog',
+        //   width: '30%'
+        // });
+        // refItem.onClose.subscribe((rpta: any) => {    
+        //   console.log('onClose',rpta);  
+        //   this.getListar();
+        // });
+
+        console.log('EditarCliente...', data);
+      this.tituloDetalle = "EDITAR " + data.nomalmacen;
+      this.vistaLista = false;
+      this.visDetalle = true;
+
+      this.dataALM = data;
     }  
 
     
@@ -164,28 +173,79 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
       this.getListar();
     }
 
-    onNuevo() {        
-      //this.tituloDetalle = "REGISTRAR ALMACÉN";  
-      this.data = {
-        idcodigo: 0,
+    onNuevo() {              
+      this.dataALM = {
+        idalmacen: 0,
         paramReg:'N'
-      }     
+      } 
+      this.tituloDetalle = "REGISTRAR NUEVO ALMACÉN" ;
+      this.vistaLista = false;
+      this.visDetalle = true;
+      //this.tituloDetalle = "REGISTRAR ALMACÉN";  
+      // this.data = {
+      //   idcodigo: 0,
+      //   paramReg:'N'
+      // }     
       //this.vistaLista = false;
 
-      const refItem = this.dialogService.open(CAlmacenesDetalleComponent, {
-        data: this.data,
-        header: "Registrar Almacén" ,
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: ' 30%'
-      });
-      refItem.onClose.subscribe((rpta: any) => {   
-        console.log('onClose',rpta);   
-        this.getListar();
-      });
+      // const refItem = this.dialogService.open(CAlmacenesDetalleComponent, {
+      //   data: this.data,
+      //   header: "Registrar Almacén" ,
+      //   closeOnEscape: false,
+      //   styleClass: 'testDialog',
+      //   width: ' 30%'
+      // });
+      // refItem.onClose.subscribe((rpta: any) => {   
+      //   console.log('onClose',rpta);   
+      //   this.getListar();
+      // });
     }
 
+ 
 
+    getActvarDesactivar(dato:any){   
+      console.log('getActvarDesactivar', dato);
+      let message_: string =
+      dato.estado == 'ACT'
+        ? '¿Está seguro de desactivar el Almacén '
+        : '¿Está seguro de activar el Almacén ';
+
+        switch (dato.estado) {
+          case 'ACT':
+            dato.estado = 'ICT'
+          break;
+          case 'ICT':    
+          case 'REG':        
+            dato.estado = 'ACT'
+          break;
+        }
+      this.confirmationService.confirm({
+        key: 'confirm1',
+        header: 'Confirmación',
+        //target: event.target || new EventTarget,
+        message: message_ + '<b>'+ dato.nomalmacen +'</b>'+ '?',
+        //icon: 'pi pi-exclamation-triangle text-6xl',
+        accept: () => {
+          this.activarAlmacen(dato);  
+        }
+    }); 
+
+  }
+
+  activarAlmacen(dato: any) {
+   const $activarAlmacen = this.almacenService.GrabarAlamcen(dato)
+        .subscribe({
+          next: (rpta:any) => {              
+              this.getListar();
+          },
+          error:(err)=>{
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+          }
+        });
+      this.$listSubcription.push($activarAlmacen)
+  }
     // getExportarExcel(data :any) {
     //   this.lstExportar = [];
     //   console.log(data.filteredValue);
@@ -230,5 +290,5 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
     //     });
     //     FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
     //   }
-}
 
+}

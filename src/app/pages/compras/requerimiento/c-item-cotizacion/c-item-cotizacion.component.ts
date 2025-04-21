@@ -93,7 +93,8 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       ref1: [{ value: '', disabled: false }],
       codproducto: [{ value: '', disabled: false }],
       despro: [{ value: '', disabled: false }],
-      idfamilia: [{ value: '', disabled: false }],
+      idfamilia: [{ value: 0, disabled: false }],
+      idsubfamilia: [{ value: 0, disabled: false }],
     })
   }
 

@@ -1,9 +1,9 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { constantesLocalStorage, mensajesQuestion } from '@constantes';
-import { Assignees, TablaDetalle, TaskList, Tasks } from '@interfaces';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
+import { Assignees, TablaDetalle, TareaAsignado, TaskList, Tasks } from '@interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
@@ -11,6 +11,10 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { MarketingService } from '../../service/marketingServices';
 import { CModalProveedorComponent } from '../modal-proveedor/c-modalproveedor.component';
 import { CModalGastosComponent } from '../modal-gastos/c-modalgastos.component';
+import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
+import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import { CAdjuntosComponent } from 'src/app/pages/compras/registro-proveedor/c-adjuntos/c-adjuntos.component';
+
 
 @Component({
   selector: 'app-c-evento-detalle',
@@ -30,6 +34,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   idCliente: number = 0;
   lstTipoDocumento: TablaDetalle[] = []; 
   visibleDocument: boolean = true;
+  visibleDocumentGasto: boolean = true;
   errorMensaje!: string;
   verAdjunto: boolean = true;
   dataAdjunto: any;
@@ -51,6 +56,32 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   horas: any[] = [];
   lstMonedas: any;
   taskList: TaskList={id:0, title:'', tasks:[]};
+  lstProyectos: any;
+  lstCategoria: any;
+  idtarea: number =0;
+  asignadosTareas: any[] = [];
+  private _nroorden: number = 0;
+  asignadosTareaVisible: boolean = false;
+  headerTarea!: string;
+  filteredAsignadosTareas: TareaAsignado[] = [];
+  assigneesTarea: TareaAsignado[] = [];
+
+  lstUbicacion = [
+    { codigo:'NAC', name: 'NACIONAL' },
+    { codigo: 'INT', name: 'INTERNACIONAL' },
+  ];
+
+  lstPais = [
+    { codigo:'ARG', name: 'ARGENTINA' },
+    { codigo: 'BOL', name: 'BOLIVIA' },
+    { codigo: 'CHI', name: 'CHILE' },
+    { codigo: 'PAR', name: 'PARAGUAY' },
+    { codigo: 'BRA', name: 'BRASIL' },
+    { codigo: 'ECU', name: 'ECUADOR' },
+    { codigo: 'COL', name: 'COLOMBIA' },
+    { codigo: 'URU', name: 'URUGUAY' },
+  ];
+  token: any;
 
 constructor(
   private messageService: MessageService,
@@ -61,6 +92,8 @@ constructor(
   public dialogService: DialogService,
   private marketingService: MarketingService,
   private confirmationService: ConfirmationService,
+  private ordencompraService: OrdencompraService,
+  private proyectosService: ProyectosService,  
 ) {
   this.comprasService.emitirEvento(0);
 }
@@ -115,17 +148,26 @@ createForm() {
     codproyecto: [{ value: '', disabled: false }],
     tc:[{ value: 0, disabled: false }],
     lugarevento: [{ value: '', disabled: false }],
+    idproyecto:[{ value: 0, disabled: false }],
+    horafin: [{ value: '00:00', disabled: false }],
+    codcategoria:[{ value: 0, disabled: false }],
+    codubicacion: [{ value: 'NAC', disabled: false }],
+    codpais: [{ value: '', disabled: false }],
   });
   
 }
 
 
 cargarData(){
+  this.asignadosTareas = [];
   this.listaAsignados();
   this.listaProveedores();  
   this.listaUsuarios();  
   this.cargarHoras();
   this.listaMonedas();
+  this.listarItemsTabla()
+  this.cargarProyectos(6);
+
   if (this.idCliente > 0) {
     this.visibleDocument = false;
     this.registerForm.patchValue(this.IA_data);  
@@ -133,6 +175,11 @@ cargarData(){
     this.lstAssignees = this.IA_data.assignees;
     this.lstParticipantes = this.IA_data.contactos;
     this.calculateProgress();
+    this.visibleDocumentGasto = false; 
+    this.getListarGasto();
+    // if (this.IA_data.idlista > 8) {
+    //   this.visibleDocumentGasto = false;      
+    // }
   }else{
     this.addTaskNew();
   }
@@ -200,6 +247,7 @@ guardar() {
               if (rpta.procesoSwitch === 0){
                   this.messageService.add({severity: 'success', detail: "Operación exitosa" });
                   this.visibleDocument = false;
+                  this.visibleDocumentGasto = false; 
                   //this.idCliente = rpta.resultProceso;
                   if (this.idCliente === 0) {
                     this.comprasService.emitirEvento(rpta.resultProceso);
@@ -235,7 +283,13 @@ guardar() {
     this.errorMensaje="";
     console.log('this.formValue...', this.registerForm.value);
 
-    if (this.registerForm.value.titulo === '' || this.registerForm.value.titulo === null)
+    if (this.registerForm.value.codcategoria === '' || this.registerForm.value.codcategoria === null)
+      {
+          this.errorMensaje="Seleccionar Categoría...!";
+          _error = true;
+      }
+
+    if (!_error && (this.registerForm.value.titulo === '' || this.registerForm.value.titulo === null))
       {
           this.errorMensaje="Ingresar Título...!";
           _error = true;
@@ -255,9 +309,15 @@ guardar() {
 
     if (!_error && (this.registerForm.value.horareg === null || this.registerForm.value.horareg === '' || this.registerForm.value.horareg === '00:00'))
       {
-          this.errorMensaje="Ingresar Hora...!";
+          this.errorMensaje="Ingresar Hora Inicial...!";
           _error = true;
       }
+
+      if (!_error && (this.registerForm.value.horafin === null || this.registerForm.value.horafin === '' || this.registerForm.value.horafin === '00:00'))
+        {
+            this.errorMensaje="Ingresar Hora Final...!";
+            _error = true;
+        }
 
     if (!_error && (this.registerForm.value.lugarevento === '' || this.registerForm.value.lugarevento === null))
       {
@@ -366,13 +426,51 @@ guardar() {
 
 AsignarTarea(task: Tasks)  {
   console.log('task...' ,task);
-  // this.asignadosTareas=[];
-  // this.idtarea = task.idtarea;
-  // this._nroorden = task.nroorden;
-  // this.asignadosTareas = task.asignados;
-  // this.headerTitle= 'Asignados de la Tarea';
-  // this.headerTarea= 'Tarea: ' + task.text;
-  // this.asignadosTareaVisible = true;
+  this.asignadosTareas=[];
+  this.idtarea = task.idtarea;
+  this._nroorden = task.nroorden;
+  this.asignadosTareas = task.asignados;
+  this.headerTitle= 'Asignados de la Tarea';
+  this.headerTarea= 'Tarea: ' + task.text;
+  this.asignadosTareaVisible = true;
+}
+
+aceptarAsignado()  {
+  console.log(' this.asignadosTareas.length....', this.asignadosTareas.length);
+  if (this.asignadosTareas.length === 0) {
+      this.messageService.add({severity: 'info', detail: "Como mínimo la tarea debe tener un Asignado" });
+      return;
+  }
+  for (let x = 0; x < this.taskList.tasks.length; x++) {
+      if (this.taskList.tasks[x].idtarea == this.idtarea
+       && this.taskList.tasks[x].nroorden == this._nroorden)
+       {    //identificamos la tarea
+          this.taskList.tasks[x].asignados=[]; //limpiamos array de asigandos de la tarea
+          for (let z = 0; z < this.asignadosTareas.length; z++) {
+              this.taskList.tasks[x].asignados.unshift(this.asignadosTareas[z]); //agregamos asignados a la tarea
+          }
+      }
+  }
+  console.log('this.formValue.taskList?.tasks....',this.taskList.tasks);
+  this.asignadosTareaVisible = false;
+}
+
+
+
+filterAsignadoTarea(event: any) {
+  let filtered: TareaAsignado[] = [];
+  let query = event.query;
+
+  for (let i = 0; i < this.assigneesTarea.length; i++) {
+      let asignadotar = this.assigneesTarea[i];
+      if (
+          asignadotar.name &&
+          asignadotar.name.toLowerCase().indexOf(query.toLowerCase()) == 0
+      ) {
+          filtered.push(asignadotar);
+      }
+  }
+  this.filteredAsignadosTareas = filtered;
 }
 
 draggedBlock : any;
@@ -477,7 +575,7 @@ listaAsignados() {
       next: (rpta: any) => {
           this.assignees = rpta;
           console.log('this.assignees...', this.assignees);
-          //this.assigneesTarea = rpta;
+          this.assigneesTarea = rpta;
       },
       error: (err) => {
       console.info('error : ', err);
@@ -495,24 +593,26 @@ listaAsignados() {
 
 agregarGastos(data: any,index: number){
   data.nroindex = index;
-  data.idordencompra = this.idEvento;
+  //data.idordencompra = this.idEvento;
   const refMensaje = this.dialogService.open(CModalGastosComponent, {
     data: data,
     header: data.length == 0 ? "Agregar Gasto" : "Editar Gasto", //'Selección de Cotización de ' +  data.nomcomercial,
     styleClass: 'testDialog',
     closeOnEscape: false,
     closable: true,
-    width: '30%'
+    width: '40%'
 });
 refMensaje.onClose.subscribe((rpta: any) => {
   console.log('onClose index',index);
   if (rpta != undefined) {
-      const _posAll: number = this.lstGastos.findIndex(((x: { nroindex: number; }) => x.nroindex == index))
-      if (_posAll != -1) {
-        this.lstGastos.splice(_posAll, 1)
-      }
-    this.lstGastos.push(rpta.objeto);
-    console.log('this.lstGastos',this.lstGastos);
+    //   const _posAll: number = this.lstGastos.findIndex(((x: { nroindex: number; }) => x.nroindex == index))
+    //   if (_posAll != -1) {
+    //     this.lstGastos.splice(_posAll, 1)
+    //   }
+    // this.lstGastos.push(rpta.objeto);
+    // console.log('this.lstGastos',this.lstGastos);
+
+    this.guardarGasto(rpta.objeto);
   }
 });
 
@@ -529,20 +629,9 @@ eliminarGastos(data: any) {
   this.confirmationService.confirm({
     key: 'confirm1',
     header: 'Confirmación',
-    message:  '¿Desea Eliminar Item ' + '<b>' + data.nomcomercial + '</b>' + '?' ,
+    message:  '¿Desea Eliminar ' + '<b>' + data.nomempresa + '</b>' + '?' ,
     accept: () => {
-      if (data.iditempostor > 0) {
-        const _posAll: number = this.lstGastos.findIndex(((x: { iditempostor: any; }) => x.iditempostor == data.iditempostor))
-        if (_posAll != -1) {
-        this.lstGastos.splice(_posAll, 1)
-        }
-    }else{
-        const _posAll: number = this.lstGastos.findIndex(((x: { idcontacto: any; }) => x.idcontacto == data.idcontacto))
-        if (_posAll != -1) {
-        this.lstGastos.splice(_posAll, 1)
-        }
-    }
-    //this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
+    this.estadoGasto(data);
     }
 });
 }
@@ -617,4 +706,233 @@ listaMonedas() {
   });
   this.$listSubcription.push($listaMonedas);
 }
+
+cargarProyectos(dato:any){
+  this.ordencompraService.portipoProyectoList(dato).subscribe({
+    next: (rpta: any) => {
+    this.lstProyectos = rpta;
+    const obj ={
+      idproyecto:0,
+      codproyecto:''
+    }
+    this.lstProyectos.unshift(obj);
+    console.log('cargarProyectos...',this.lstProyectos);
+
+        },
+
+    error: (err) => {
+    this.messageService.clear();
+    this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: mensajesQuestion.msgErrorGenerico,
+        });
+    },
+    complete: () => {
+    },
+});
+} 
+
+guardarGasto(objeto:any){
+
+
+  this.setSpinner(true);
+  this.mensajeSpinner = 'Guardando...!'; 
+
+  const obj = {
+    ...objeto,
+    idproyecto: this.registerForm.get('idproyecto').value,
+    idtipodocprc: 7
+  }
+
+  console.log('guardarOC...', obj);
+  
+  this.ordencompraService.ordenDocumentoprc(obj).subscribe({
+    next: (rpta: any) => {
+      this.setSpinner(false);
+      if (rpta.procesoSwitch === 0){
+        this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+                 
+         this.getListarGasto();
+          // this.dataAdjunto ={
+          //   idCliente: this.idOrdenC,
+          //   codtipoproc: 8,
+          //   veracciones: 0
+          // }   
+
+       
+      }else{
+      this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+      }
+    },
+    error: (err) => {
+      this.setSpinner(false);
+    this.messageService.clear();
+    this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: mensajesQuestion.msgErrorGenerico,
+        });
+    },
+    complete: () => {
+    },
+});
+}
+
+getListarGasto(){
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+    
+    const objeto = {
+      //...this.frmDatos.value,
+      idproyecto: this.registerForm.get('idproyecto').value,
+      idtipodocprc: 7,
+      idusuario: constantesLocalStorage.idusuario
+    }
+
+    const $getListarOrdenCompra = this.proyectosService.ordenCompraListGasto(objeto)
+      .subscribe({
+        next: (rpta:any) => {
+            this.setSpinner(false);
+            console.log('rpta getListar', rpta);
+            this.lstGastos = rpta.ordenescompra
+        },
+        error:(err)=>{
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($getListarOrdenCompra)
+  }
+
+  estadoGasto(data:any){
+    const objeto ={
+      idordencompra: data.idordencompra,
+      estado: 'ANU'
+    }
+
+    const $cargarOrdenC = this.proyectosService.ordenCompraUpdEstado(objeto)
+      .subscribe({next: (rpta:any) => { 
+        if (rpta.procesoSwitch === 0){
+          this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });     
+         this.getListarGasto();
+        }else{
+          this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+        }
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+          
+        }
+      });
+    this.$listSubcription.push($cargarOrdenC)
+  }
+
+   anexos(dato: any, param: string) {
+        console.log("anexos : ", dato);
+        const refMensaje = this.dialogService.open(CAdjuntosComponent, {
+            data: { idoportunidad: 0 , 
+              codtipoproc: 2, 
+              idnroproceso: 0, 
+              parametro: param, 
+              idCliente: dato.idordencompra
+            },
+            header: 'Adjuntos de ' + dato.nomempresa,
+            styleClass: 'testDialog',
+            closeOnEscape: false,
+            closable: true,
+            width: '50%'
+        });
+        refMensaje.onClose.subscribe((rpta: any) => {
+          
+          });
+    }
+    listarItemsTabla() {
+    this.comprasService.obtenerItemsTabla(127).subscribe({
+        next: (rpta: any) => {
+          console.info('listarItemsTabla : ', rpta);
+            this.lstCategoria = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
+    }
+
+    changeUbicacion(value:any){
+      console.log('changeUbicacion...', value);
+      if (value === 'NAC') {	
+        this.registerForm.get('codpais')?.disable()
+        this.registerForm.get('codpais')?.setValue('');
+      }else{
+        this.registerForm.get('codpais')?.enable();
+      }
+      
+    }
+
+    obtenrToken(){
+      const $obtenerToken = this.marketingService.obtenerToken()
+          .subscribe({
+          next: (rpta:any) => {
+            this.setSpinner(false);
+              console.log("rpta obtenerToken : ", rpta.access_token);
+              this.token = rpta.access_token;
+              this.enviarCorreos();
+          },
+          error:(err)=>{
+            this.setSpinner(false);
+              console.error('error : ',err)
+              this.messageService.clear();
+              this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: mensajesQuestion.msgErrorGenerico
+              })
+          },
+          complete:() => {
+            this.setSpinner(false);
+          }
+          });
+          this.$listSubcription.push($obtenerToken);
+    }
+
+   
+    
+    enviarCorreos(){
+     
+
+      const $obtenerToken = this.marketingService.enviarCorreo()
+          .subscribe({
+          next: (rpta:any) => {
+            this.setSpinner(false);
+              console.log("rpta enviarCorreos : ", rpta);
+              
+          },
+          error:(err)=>{
+            this.setSpinner(false);
+              console.error('error : ',err)
+              this.messageService.clear();
+              this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: mensajesQuestion.msgErrorGenerico
+              })
+          },
+          complete:() => {
+            this.setSpinner(false);
+          }
+          });
+          this.$listSubcription.push($obtenerToken);
+    }
+
+   
 }

@@ -34,11 +34,19 @@
                 </span> 
             </div> 
            
-            <div class="field col-12 md:col-2 -mt-4 gap-2">
+            <div class="sm:col-12 lg:col-2 md:col-6 col-12 -mt-4">                            
+                <label class="font-semibold text-blue-600 text-base">Estado</label>  
+                <span class="p-fluid">
+                    <p-dropdown [options]="lstEstado" formControlName="estado" placeholder="Seleccionar..." optionLabel="name" 
+                    optionValue="value" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
+                </span> 
+            </div> 
+            
+            <div class="field -mt-2 gap-2">
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                     class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                <!-- <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
-                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button> -->
+                <button pButton type="button" (click)="getExportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
             </div>
     </form> 
 
@@ -53,9 +61,14 @@
                     N°
                 </div>
             </th>
+            <th style="width: 100px;" class="bg-teal-50 border-1" >
+                <div class="justify-content-between align-items-center">
+                    CÓDIGO <br> PROYECTO
+                </div>
+            </th>
             <th style="width: 60px;" class="bg-teal-50 border-1" >
                 <div class="justify-content-between align-items-center">
-                    N° DOC
+                    N° DOCUMENTO
                 </div>
             </th>
             <th style="width: 60px;" class="bg-teal-50 border-1" >
@@ -65,7 +78,7 @@
             </th>
             <th style="width: 60px;" class="bg-teal-50 border-1" >
                 <div class="justify-content-between align-items-center">
-                    FECHA <br> VENCIMIENTO
+                    FECHA <br> VENC.
                 </div>
             </th>
             <th style="width: 60px;" class="bg-teal-50 border-1" >
@@ -73,7 +86,7 @@
                     RUC
                 </div>
             </th>
-            <th [ngStyle]="{'width':'150px'}" class="bg-teal-50 border-1" >
+            <th [ngStyle]="{'width':'120px'}" class="bg-teal-50 border-1" >
                 <div class="justify-content-between align-items-center">
                     CLIENTE
                 </div>
@@ -88,7 +101,16 @@
                     MONTO NETO <br> A COBRAR
                 </div>
             </th>
-            
+            <th style="width: 70px;" class="bg-teal-50 border-1" > 
+                <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                    DETRACCIÓN S/
+                </div>
+            </th>
+            <!-- <th style="width: 60px;" class="bg-teal-50 border-1" >
+                <div [ngStyle]="{'width':'60px','text-align':'center'}">
+                    SALDO <br> DETRACCIÓN
+                </div>
+            </th> -->
             <th style="width: 50px; text-align:center" class="bg-teal-50 border-1" >
                 <div class="justify-content-between align-items-center">
                     MONEDA
@@ -97,11 +119,6 @@
             <th style="width: 70px;" class="bg-teal-50 border-1" >
                 <div [ngStyle]="{'width':'70px','text-align':'center'}">
                     GLOSA
-                </div>
-            </th>
-            <th style="width: 50px" class="bg-teal-50 border-1" >
-                <div [ngStyle]="{'width':'50px','text-align':'center'}">
-                    DÍAS DE <br> CRÉDITO
                 </div>
             </th>
             <th style="width: 50px" class="bg-teal-50 border-1" >
@@ -126,7 +143,7 @@
             </th>
             <th style="width: 50px" class="bg-teal-50 border-1" >
                 <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                    IMPOR POR  <br> COBRAR
+                    SALDO POR  <br> COBRAR
                 </div>
             </th>
             <th style="width: 80px;" class="bg-teal-50 border-1">
@@ -147,6 +164,11 @@
         <tr class="text-sm">
             <td [ngStyle]="{'width':'10px'}">
                 {{rowIndex + 1}}
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'100px'}">
+                    {{data.codigoproyecto}}
+                </div>
             </td>
             <td>
                 <div [ngStyle]="{'width':'70px'}">
@@ -184,6 +206,20 @@
                 </div>
             </td>
             <td>
+                <div class="flex gap-1 align-items-center">
+                    <div [ngStyle]="{'width':'50px', 'text-align':'right'}" >
+                        {{data.s_monto_detraccion_mn_CTB | number: '0.2-2' }}
+                    </div>
+                    <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-orange-500" (click)="onVerDetra(data)"></button>
+                    <button *ngIf="data.saldo_detraccion !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Pagar Detraccion" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagarDetra(data)"></button>           
+                </div>                
+            </td>
+            <!-- <td>
+                <div [ngStyle]="{'width':'60px', 'text-align':'right'}">
+                    {{data.saldo_detraccion | number: '0.2-2' }}
+                </div>
+            </td> -->
+            <td>
                 <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
                     {{data.simbmoneda }}
                 </div>
@@ -191,11 +227,6 @@
             <td>
                 <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
                     {{data.observacion }}
-                </div>
-            </td>
-            <td>
-                <div [ngStyle]="{'width':'50px', 'text-align':'right'}">
-                    {{data.nrodias }}
                 </div>
             </td>
             <td>
@@ -210,8 +241,8 @@
             </td>
             <td>          
                 <div [ngStyle]="{'width':'80px','text-align': 'center'}">
-                    <p-tag [value]="data.desestadocobro" [severity]="getSeverity(data.nrodiasporven)"></p-tag>
-                </div> 
+                    <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
+                </div>
             </td>
             <td>
                 <div [ngStyle]="{'width':'70px','text-align':'right'}">
@@ -226,7 +257,7 @@
             <td>
                 <div class="flex align-items-center m:justify-content-end">
                     <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                    <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Registrar Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagar(data)"></button>
+                    <button *ngIf="data.saldo_documento !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Registrar Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagar(data)"></button>
                
                 </div>
             </td>
@@ -243,315 +274,32 @@
         </tr>
     </ng-template>
 </p-table>
-
-    <!-- <p-tabView (onChange)="selectHeaders($event);" styleClass="-mt-4">
-        <p-tabPanel>
-            <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                    <i class="pi pi-cog"></i>
-                    <span class="font-bold white-space-nowrap m-0">
-                        Pendientes 
-                    </span>
-                </div>
-            </ng-template>
-            <p-table #dt1 [value]="lstPendientes" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-                [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-                currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
-                styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
-                <ng-template pTemplate="header">
-                    <tr class="text-sm">
-                        <th style="width: 10px" class="bg-teal-50 border-1">
-                            <div class="flex justify-content-between align-items-center">
-                                N°
-                            </div>
-                        </th>
-                        <th style="width: 50px;" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                N° DOCUMENTO
-                            </div>
-                        </th>
-                        <th [ngStyle]="{'width':'150px'}" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                CLIENTE
-                            </div>
-                        </th>
-                        <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                CENTRO COSTO
-                            </div>
-                        </th>
-                        <th style="width: 50px;" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                FECHA <br> EMISIÓN
-                            </div>
-                        </th>
-                        <th style="width: 50px;" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                FECHA <br> VENCIMIENTO
-                            </div>
-                        </th>
-                        <th style="width: 60px;" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                MONEDA
-                            </div>
-                        </th>
-                        <th style="width: 70px;" class="bg-teal-50 border-1" >
-                            <div [ngStyle]="{'width':'70px','text-align':'center'}">
-                                MONTO
-                            </div>
-                        </th>
-                        <th style="width: 70px;" class="bg-teal-50 border-1" >
-                            <div [ngStyle]="{'width':'70px','text-align':'center'}">
-                                SALDO
-                            </div>
-                        </th>
-                        <th style="width: 50px" class="bg-teal-50 border-1" >
-                            <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                                ESTADO
-                            </div>
-                        </th>
-                        <th style="width: 80px;" class="bg-teal-50 border-1">
-                            <div class="flex justify-content-between align-items-center">
-                                ACCIONES
-                            </div>
-                        </th>
-                    </tr>
-                    <tr >
-                        <th></th>
-                        <th *ngFor="let col of cols">
-                            <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
-                        </th>
-                    </tr>
-            
-                </ng-template>
-                <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-                    <tr class="text-sm">
-                        <td [ngStyle]="{'width':'10px'}">
-                            {{rowIndex + 1}}
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">
-                                {{data.nrofactura}}
-                            </div>
-                        </td>
-                        <td >
-                            <div [ngStyle]="{'width':'50px'}">
-                                {{data.nomcomercial | uppercase}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'120px'}">
-                                {{data.descentrocosto}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">
-                                {{data.fecemision}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">
-                                {{data.fecvencimiento}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">
-                                {{data.nommoneda | uppercase}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'70px','text-align':'right'}">
-                                {{data.s_monto_neto_CTB | number: '0.2-2' }}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'70px','text-align':'right', 'color':'red'}">
-                                {{data.saldo_documento | number: '0.2-2' }}
-                            </div>
-                        </td>
-                        <td>                       
-                            <div [ngStyle]="{'width':'80px','text-align': 'center'}">
-                                <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="flex align-items-center m:justify-content-end">
-                                <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                                <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Registrar Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagar(data)"></button>
-                           
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td colspan="12">No se encontraron registros.</td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="loadingbody">
-                    <tr>
-                        <td colspan="12">Cargando datos. Espere por favor.</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-            
-        </p-tabPanel> 
-        <p-tabPanel>
-            <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                    <i class="pi pi-check"></i>
-                    <span class="font-bold white-space-nowrap m-0">
-                        Cobradas 
-                    </span>
-                </div>
-            </ng-template>
-            <p-table #dt2 [value]="lstAprobadas" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-                [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-                currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
-                styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
-                <ng-template pTemplate="header">
-                    <tr class="text-sm">
-                        <th style="width: 10px" class="bg-teal-50 border-1">
-                            <div class="flex justify-content-between align-items-center">
-                                N°
-                            </div>
-                        </th>
-                        <th style="width: 50px;" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                N° DOCUMENTO
-                            </div>
-                        </th>
-                        <th [ngStyle]="{'width':'150px'}" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                CLIENTE
-                            </div>
-                        </th>
-                        <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                CENTRO COSTO
-                            </div>
-                        </th>
-                        <th style="width: 50px;" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                FECHA <br> EMISIÓN
-                            </div>
-                        </th>
-                        <th style="width: 50px;" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                FECHA <br> VENCIMIENTO
-                            </div>
-                        </th>
-                        <th style="width: 60px;" class="bg-teal-50 border-1" >
-                            <div class="justify-content-between align-items-center">
-                                MONEDA
-                            </div>
-                        </th>
-                        <th style="width: 70px;" class="bg-teal-50 border-1" >
-                            <div [ngStyle]="{'width':'70px','text-align':'center'}">
-                                MONTO
-                            </div>
-                        </th>
-                        <th style="width: 70px;" class="bg-teal-50 border-1" >
-                            <div [ngStyle]="{'width':'70px','text-align':'center'}">
-                                SALDO
-                            </div>
-                        </th>
-                        <th style="width: 50px" class="bg-teal-50 border-1" >
-                            <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                                ESTADO
-                            </div>
-                        </th>
-                        <th style="width: 80px;" class="bg-teal-50 border-1">
-                            <div class="flex justify-content-between align-items-center">
-                                ACCIONES
-                            </div>
-                        </th>
-                    </tr>
-                    <tr >
-                        <th></th>
-                        <th *ngFor="let col of cols">
-                            <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
-                        </th>
-                    </tr>
-            
-                </ng-template>
-                <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-                    <tr class="text-sm">
-                        <td [ngStyle]="{'width':'10px'}">
-                            {{rowIndex + 1}}
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">
-                                {{data.nrofactura}}
-                            </div>
-                        </td>
-                        <td >
-                            <div [ngStyle]="{'width':'50px'}">
-                                {{data.nomcomercial | uppercase}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'120px'}">
-                                {{data.descentrocosto}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">
-                                {{data.fecemision}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">
-                                {{data.fecvencimiento}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'100px'}">
-                                {{data.nommoneda | uppercase}}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'70px','text-align':'right'}">
-                                {{data.s_monto_neto_CTB | number: '0.2-2' }}
-                            </div>
-                        </td>
-                        <td>
-                            <div [ngStyle]="{'width':'70px','text-align':'right', 'color':'red'}">
-                                {{data.saldo_documento | number: '0.2-2' }}
-                            </div>
-                        </td>
-                        <td>                       
-                            <div [ngStyle]="{'width':'80px','text-align': 'center'}">
-                                <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="flex align-items-center m:justify-content-end">
-                                <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                                <button pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Registrar Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagar(data)"></button>
-                           
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td colspan="12">No se encontraron registros.</td>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="loadingbody">
-                    <tr>
-                        <td colspan="12">Cargando datos. Espere por favor.</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-            
-        </p-tabPanel>  
-    </p-tabView>
-
-    -->
-
-    
+<div class="flex justify-content-end m-2 p-2 gap-3">
+    <div>
+        <p-tag class="text-4xl" value="PENDIENTE" severity="primary"></p-tag>
+        <div class="gap-2">
+            <span class="font-bold text-xl">S/</span>
+            <span class="ml-2 text-lg">{{saldo_documento_sol | number: '0.2'}}</span>
+        </div>
+        <div class="gap-2">
+            <span class="font-bold text-xl">$</span>
+            <span class="ml-2 text-lg">{{saldo_documento_dol | number: '0.2'}}</span>
+        </div>
+        
+    </div>
+    <div>
+        <p-tag class="text-3xl" value="PAGADO" severity="success"></p-tag>
+        <div class="gap-3">
+            <span class="font-bold text-xl">S/</span>
+            <span class="ml-2 text-lg">{{s_monto_recaudado_sol | number: '0.2'}}</span>
+        </div>
+        <div class="gap-3">
+            <span class="font-bold text-xl">$</span>
+            <span class="ml-2 text-lg">{{s_monto_recaudado_dol | number: '0.2'}}</span>
+        </div>
+    </div>
+  
+</div>
 
 </div>
 

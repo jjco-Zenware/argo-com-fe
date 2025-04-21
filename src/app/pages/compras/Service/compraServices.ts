@@ -219,4 +219,17 @@ export class ComprasService {
         const url = `${constantesApiWeb.personaTraerUno}`;
         return this.http.post<Cliente>(url, objeto)
     }
+
+    prcDocumentoDet(objeto:any) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=utf-8',
+          });
+
+          const url = `${constantesApiWeb.prcDocumentoDet}`;
+          return this.http.post(url,objeto, {
+            headers: headers,
+            observe: 'response',
+            responseType: 'blob'
+          })
+    }
 }

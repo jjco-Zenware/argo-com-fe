@@ -36,6 +36,8 @@ export class OrdencompraService {
 
     ordenCompraprc(objeto:any) {
         const url = `${constantesApiWeb.ordencompraprc}`;
+        console.log("ordenCompraprc : ", objeto);   
+        console.log("url : ", url);   
             return  this.http.post<any>(url, objeto)
     }
 
@@ -139,7 +141,6 @@ export class OrdencompraService {
     }
 
     prcClientes(objeto: any) {
-        console.log("prcClientes : ", objeto);
         const url = `${constantesApiWeb.prcClientes}`;
         return this.http.post<any>(url, objeto)
     }
@@ -183,5 +184,25 @@ export class OrdencompraService {
     ordencompraaprobadasprovlistSal(idproveedor:any) {
         const url = `${constantesApiWeb.ordencompraaprobadasprovlistsal}${idproveedor}`;
         return this.http.get<any>(url);
+    }
+
+    documentoPrcTipoDocPrcLista(objeto:any) {
+        const url = `${constantesApiWeb.documentoPrcTipoDocPrcLista}`;
+        return this.http.post<any>(url, objeto);
+    }
+
+    documentoPrcOrdenCompraxProyecto(objeto:any) {
+        const url = `${constantesApiWeb.documentoPrcOrdenCompraxProyecto}`;
+        return this.http.post<any>(url, objeto);
+    }
+
+    ordenDocumentoprc(objeto:any) {
+        const url = `${constantesApiWeb.ordendocumentoprc}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    emitirDocumento(objeto:any) {
+        const url = `${constantesApiWeb.emitirDocumento}`;
+            return  this.http.post<any>(url, objeto)
     }
 }

@@ -15,6 +15,9 @@ import { AlmacenService } from '../../service/almacenServices';
 import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 import { CItemCotizacionComponent } from 'src/app/pages/compras/proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
+import { CModalUbicacionComponent } from '../../modal-ubicacion/modal-ubicacion.component';
+import { CBusquedaProductoComponent } from '../../busqueda-producto/c-busqueda-producto.component';
+import { CItemAlmacenComponent } from '../../c-item-almacen/c-item-almacen.component';
 
 @Component({
   selector: 'app-c-detallemovvarios',
@@ -67,6 +70,8 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
   lstAlmacen: any;
   selectedItems: any;
   lstTransacciones: any[]=[];
+  lstExistencia: any[]=[];
+  listadoArchivos: any[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -91,6 +96,7 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
     this.listaClientes();
     this.listaProveedores();
     this.listarItemsTabla(); 
+    this.listarItemsTablaExistencia();
     
     if (this.idMovimiento > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -135,7 +141,7 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd:[{ value: '', disabled: false }],
-      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaFormateadoDMA(),disabled: false,}],
       idordencompra: [{ value: this.idMovimiento, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: 0, disabled: false }],
@@ -314,10 +320,12 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecentrega = this.registerFormRegistro.value.fecentrega;
 
-    if (this.idMovimiento > 0) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
-      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
+    if (fechaingreso.toString().length === 10) {
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
     }
+    if (fecentrega.toString().length === 10) {
+      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega)); 
+    } 
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
       if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -457,9 +465,9 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
     data.idordencompra = this.idMovimiento; 
     data.movalmacen = 'N';
     console.log('CItemOrdenesComponent', data);
-    const refItem = this.dialogService.open(CItemCotizacionComponent, {
+    const refItem = this.dialogService.open(CItemAlmacenComponent, {
       data: data,
-      header: data.length == 0 ? "Agregar Item" : "Editar Item - " + data.idordencompraitem,
+      header: "Producto" ,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: ' 50%'
@@ -545,27 +553,152 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
   }
 
   onAccion(item: any) {
+    this.getListaArchivos(item);
+      console.log('onAccion', item);
+  // this.ordenCompra.idtrx = item.idtrx;
+  // console.log('onAccion', item);
+  // const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+  //     data: this.ordenCompra,
+  //     header: item.nomtrx,
+  //     closeOnEscape: false,
+  //     styleClass: 'testDialog',
+  //     width: '40%'
+  // });
 
-    const objeto = this.lstItemOC.filter((x: { indcompleto: boolean; }) => x.indcompleto == false);
-    console.log('onAccion', objeto);
-    if (objeto.length > 0) {
-      this.messageService.add({severity: 'warn', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
-          return;
-    }
-
-    this.ordenCompra.idtrx = item.idtrx;
-    const ref = this.dialogService.open(CModalExcAlmacenComponent, {
-        data: this.ordenCompra,
-        header: item.nomtrx,
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: '40%'
-    });
-    ref.onClose.subscribe(() => {
-        this.traerUnoOrdenC();
-      });
+  // ref.onClose.subscribe(() => {
+  //     this.getListar();
+  //   });
   }
 
+  getListaArchivos(valor:any) {
+  
+    const objeto = {
+      idoportunidad: 0,
+      codtipoproc: 7 , 
+      idnroproceso: this.ordenCompra.idordencompra, 
+    }
+    console.log('this.objeto ...', objeto );
+  
+  const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
+    .subscribe({
+      next: (rpta: any) => {
+        this.listadoArchivos = rpta;
+        console.log('this.listadoArchivos ...', this.listadoArchivos );
+
+        const total = this.lstItemOC.filter((item: any) => item.indcompleto === true).length;
+        if (total === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items sin Seleccionar...!' });
+            return;
+        }
+
+        for (let i = 0; i < this.lstItemOC.length; i++) {
+          if (this.lstItemOC[i].indcompleto === true && this.lstItemOC[i].idubicacion === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Ubicación...!' });
+            return;
+          }
+
+          if (this.lstItemOC[i].codtipoexistencia === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Tipo de Existencia...!' });
+            return;
+          }
+
+          if (this.lstItemOC[i].indcompleto === true &&((this.lstItemOC[i].servicetag === '' ||this.lstItemOC[i].servicetag === null )
+            && (this.lstItemOC[i].serialnumber === ''|| this.lstItemOC[i].serialnumber === null))){
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Service Tag o Serial Number...!' });
+            return;
+          }
+      }
+
+        if (this.listadoArchivos.length === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+              return;
+        }else{
+          this.guardarOC2(valor);
+        }
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => { }
+    });
+  this.$listSubcription.push($listarArchivos)
+  }
+
+  guardarOC2(item:any){
+
+    if (this.validarDatos())
+      {
+          this.setSpinner(false);
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+          return;
+      }
+
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Procesando...!';
+    let fechaingreso;
+    let fecentrega;
+    fechaingreso = this.registerFormRegistro.value.fechaingreso;
+    fecentrega = this.registerFormRegistro.value.fecentrega;
+
+    if (this.idMovimiento > 0) {
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
+      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
+    }
+
+    for (let i = 0; i < this.lstItemOC.length; i++) {      
+      if (this.lstItemOC[i].cantidad.toString() === '') {
+        this.lstItemOC[i].cantidad = 0;
+      }    
+      if (this.lstItemOC[i].preciocosto.toString() === '') {
+        this.lstItemOC[i].preciocosto = 0;
+      }
+    }
+
+    const objeto = {
+      ...this.registerFormRegistro.getRawValue(),
+      items: this.lstItemOC,
+      fechaingreso,
+      fecentrega,
+      quotes: this.lstQuotes
+    }
+
+    console.log('guardarOC...', objeto);
+    
+    this.ordencompraService.ordenCompraprc(objeto).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        if (rpta.procesoSwitch === 0){
+          //this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+          this.ordenCompra.idtrx = item.idtrx;
+          const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+              data: this.ordenCompra,
+              header: item.nomtrx,
+              closeOnEscape: false,
+              styleClass: 'testDialog',
+              width: '40%'
+          });
+          ref.onClose.subscribe(() => {
+              this.traerUnoOrdenC();
+            });
+         
+        this.visibleDocument = false;
+        }else{
+        this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+        }
+      },
+      error: (err) => {
+        this.setSpinner(false);
+      this.messageService.clear();
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+          });
+      },
+      complete: () => {
+      },
+  });
+  }
   
   getQuotes(dato: any){
     let objeto = {
@@ -592,6 +725,12 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
           this.errorMensaje="Seleccionar Almacen...!";
           _error = true;
       }
+
+      if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
+        {
+            this.errorMensaje="Ingresar Guia...!";
+            _error = true;
+        }
 
       // if (!_error && this.registerFormRegistro.value.idproveedor === null)
       // {
@@ -704,4 +843,112 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
       this.lstItemOC = data;
     }
 
+     verUbicacion(dato:any, producto:any){
+
+      if (this.registerFormRegistro.value.idalmacen === null || this.registerFormRegistro.value.idalmacen=== 0) {
+        this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Debe Seleccionar Almacén..." });
+        return;
+        
+      }
+              console.log('verUbicacion', dato);
+              dato.idalmacen = this.registerFormRegistro.value.idalmacen;
+              dato.iddocumentoprcitem_trx = producto.iddocumentoprcitem_trx
+              const ref = this.dialogService.open(CModalUbicacionComponent, {
+                data: dato,
+                header: 'Ubicaciones del Almacén ' ,
+                closeOnEscape: false,
+                styleClass: 'testDialog',
+                width: '40%'
+            });
+        
+            ref.onClose.subscribe((rpta: any) => {
+              console.log('verUbicacion',rpta.objeto);
+              console.log('this.lstItemOC', this.lstItemOC);
+                //this.traerUnoOrdenC();
+                for (let i = 0; i < this.lstItemOC.length; i++) {
+                    // if (this.lstItemOC[i].idordencompraitem === rpta.objeto.idordencompraitem) {
+                    //   this.lstItemOC[i].idubicacion = parseInt(rpta.objeto.idubicacion)
+                    //   this.lstItemOC[i].rutaubicacion = rpta.objeto.rutaubicacion
+                    // }
+                    if (this.lstItemOC[i].idordencompraitem === 0) {
+                      if (this.lstItemOC[i].iddocumentoprcitem_trx === rpta.objeto.iddocumentoprcitem_trx) {
+                        this.lstItemOC[i].idubicacion = parseInt(rpta.objeto.idubicacion)
+                      this.lstItemOC[i].rutaubicacion = rpta.objeto.rutaubicacion
+                      }
+                    }else{            
+                      if (this.lstItemOC[i].idordencompraitem === rpta.objeto.idordencompraitem) {
+                        this.lstItemOC[i].idubicacion = parseInt(rpta.objeto.idubicacion)
+                      this.lstItemOC[i].rutaubicacion = rpta.objeto.rutaubicacion
+                      }
+                    }
+                }
+              });
+            }
+
+            listarItemsTablaExistencia() {
+              this.comprasService.obtenerItemsTabla(126).subscribe({
+                  next: (rpta: any) => {
+                    console.info('lstExistencia : ', rpta);
+                      this.lstExistencia = rpta;
+                      const obj = {
+                        iditem:0,
+                        valoritem:'TODOS'
+                      }
+                      this.lstExistencia.unshift(obj);
+                  },
+                  error: (err) => {
+                  console.info('error : ', err);
+                  this.serviceSharedApp.messageToast()
+                  },
+                  complete: () => {
+                  },
+              });
+            
+              }
+        
+              changeExistencia(existencia:any, item:any){
+                console.info('existencia : ', existencia);
+                console.info('item : ', item);
+                let nomexis = this.lstExistencia.filter((x: { iditem: number; }) => x.iditem === existencia)[0].valoritem;
+                for (let i = 0; i < this.lstItemOC.length; i++) {
+                  if (this.lstItemOC[i].idordencompraitem === 0) {
+                    if (this.lstItemOC[i].iddocumentoprcitem_trx === item.iddocumentoprcitem_trx) {
+                      this.lstItemOC[i].coptipoexistencia = existencia
+                      this.lstItemOC[i].nomtipoexistencia = nomexis
+                    }
+                  }else{            
+                    if (this.lstItemOC[i].idordencompraitem === item.idordencompraitem) {
+                      this.lstItemOC[i].coptipoexistencia = existencia
+                      this.lstItemOC[i].nomtipoexistencia = nomexis
+                    }
+                  }
+                  
+        
+        
+              }
+              }
+
+               getBusquedaAvanzada() {
+                    
+                     let idalamacen = 0
+                        
+                          const refItem = this.dialogService.open(CBusquedaProductoComponent, {
+                            data: idalamacen,
+                            header: "Productos" ,
+                            closeOnEscape: false,
+                            styleClass: 'testDialog',
+                            width: '60%'
+                          });
+                          refItem.onClose.subscribe((rpta: any) => {
+                            
+                            console.log('onClose',rpta);
+                            if (rpta !== undefined) {
+                              let objeto = rpta.data;
+                              objeto.descripcion = rpta.data.despro;
+
+                              this.getItem(objeto,0);
+                              
+                            }
+                          });
+                        }
 }

@@ -1,0 +1,13 @@
+
+        
+    <p-tree 
+    [value]="files" 
+    class="w-full md:w-30rem m-2 p-2" 
+    selectionMode="single"
+    [(selection)]="selectedFiles"
+    (onNodeSelect)="nodeSelect($event)" 
+    [loading]="loading"/> 
+
+    <div class="flex justify-content-end">
+        <button pButton icon="pi pi-check" label="Seleccionar" class="p-button-primary" (click)="guardar()"></button>
+    </div>

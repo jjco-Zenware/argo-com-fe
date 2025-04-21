@@ -5,10 +5,13 @@ import { FacturacionRoutingModule } from './facturacion-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
+import { ComprasService } from '../compras/Service/compraServices';
+import { CMotivoComponent } from './modalanular/c-modalanular.component';
 
 
 @NgModule({
-  declarations: [        
+  declarations: [   
+    CMotivoComponent     
   ],
   imports: [
     CommonModule,
@@ -17,7 +20,7 @@ import { SharedAppModule } from 'src/app/shared/shared-App.module';
     FormsModule,
     ReactiveFormsModule,
     FacturacionRoutingModule
-  ]
-  
+  ],
+  providers: [ComprasService]
 })
 export class FacturacionModule { }

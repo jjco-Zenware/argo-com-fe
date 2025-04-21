@@ -127,6 +127,7 @@ export class CCuentaBancoDetComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (rpta:any) => {
             this.lstBancos = rpta;
+            console.log('this.lstBancos...', this.lstBancos);
         },
         error:(err)=>{
             this.serviceSharedApp.messageToast()
@@ -216,9 +217,11 @@ export class CCuentaBancoDetComponent implements OnInit, OnDestroy{
        return _error;
      }
 
-  // getPersona(data:any){
-  //   const persona:number =this.lstBancos.filter((x: { idbanco: any; })=>x.idbanco == data)[0].idpersona;
-  //   console.log('persona...', persona);
-  //   this.registerFormRegistro.get('idpersona')?.setValue(persona);
-  // }
+  changeBanco(data:any){
+    console.log('event...', data);
+    let persona = this.lstBancos.filter((x: { idbanco: number; })=>x.idbanco === data)[0].idpersona;
+
+    console.log('persona...', persona);
+    this.registerFormRegistro.get('idpersona')?.setValue(persona);
+  }
 }

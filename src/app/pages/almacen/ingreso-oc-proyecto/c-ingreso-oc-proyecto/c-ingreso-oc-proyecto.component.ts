@@ -1,7 +1,7 @@
 
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -12,6 +12,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
+import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 
 
 @Component({
@@ -47,6 +48,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
         private proyectosService: ProyectosService,
         private messageService: MessageService,
         private comprasService: ComprasService, 
+        private ordencompraService: OrdencompraService
       ){          
     }
 
@@ -68,26 +70,12 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
 
     createFrm(){
         this.frmDatos = this.fb.group({
-          fecini: [
-            {
-              value: this.utilitariosService.obtenerFechaInicioMes(),
-              disabled: false,
-            },
-          ],
-          fecfin: [
-            {
-              value: this.utilitariosService.obtenerFechaFinMes(),
-              disabled: false,
-            },
-          ],
-          idusuario: [
-            {
-              value: constantesLocalStorage.idusuario,
-              disabled: false,
-            },
-          ],
+          fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}],
+          fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],
+          idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
           idproveedor: [{value: 0,disabled: false}],
-        idmoneda: [{value: 0,disabled: false}],
+          idmoneda: [{value: 0,disabled: false}],
+          idcliente: [{value: 0,disabled: false}],
         })
       }
 
@@ -129,7 +117,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     }
 
     onVer(dato: any) {     
-        this.tituloDetalle =  'N° - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase(); 
+        this.tituloDetalle =  'INGRESO N° - '+ dato.idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase(); 
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
@@ -139,7 +127,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     }
 
     onEditar(dato: any) {      
-        this.tituloDetalle = 'N° - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase(); 
+        this.tituloDetalle = 'INGRESO N° - '+ dato.idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase(); 
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'N',
@@ -230,6 +218,31 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
     }
     
     onAccion(item: any) {
+      console.log('onAccion',item);
+      let lstItem = this.ordenCompra.items;
+
+      const total = lstItem.filter((item: any) => item.indcompleto === true).length;
+        if (total === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+            return;
+        }
+
+        for (let i = 0; i < lstItem.length; i++) {
+          if (lstItem[i].indcompleto === true && lstItem[i].idubicacion === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Ubicación...!' });
+            return;
+          }
+
+          if (lstItem[i].codtipoexistencia === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Tipo de Existencia...!' });
+            return;
+          }
+
+          if (lstItem[i].servicetag === '' && lstItem[i].serialnumber === '') {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Service Tag o Serial Number...!' });
+            return;
+          }
+      }
       this.getListaArchivos(item);
         console.log('onAccion', item);
     // this.ordenCompra.idtrx = item.idtrx;
@@ -310,5 +323,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
       this.$listSubcription.push($getClientes);
   
     }
+
+     
 }
 

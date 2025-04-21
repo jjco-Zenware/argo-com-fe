@@ -41,6 +41,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
     lstProveedores: any[] = [];
+    lstCliente: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -69,12 +70,13 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
           { field: 's_monto', header: 'SUBTOTAL' },
           { field: 's_monto', header: 'IGV' },
           { field: 's_monto', header: 'TOTAL' },
-          // { field: 'nomestado', header: 'ESTADO' },
-          // { field: 'nomestado', header: 'ESTADO' },
-          { field: 'nomestado', header: 'ESTADO' }
+          { field: 'nomestado', header: 'ESTADO' },
+          { field: 'estadoentrada', header: 'ESTADO' },
+          { field: 'estadosalida', header: 'ESTADO' }
           
       ];
       this.listaProveedores();
+      this.listaClientes();
     }
 
     ngOnDestroy(): void {
@@ -94,6 +96,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
+        idcliente: [{value: 0,disabled: false}],
       })
     }
 
@@ -302,7 +305,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
                 
                 const mediaType = 'application/pdf';
                   const blob = new Blob([rpta.body], { type: mediaType });
-                  const filename = data.codigonroorden;
+                  const filename = data.codigonroorden !== undefined ? data.codigonroorden : data.idordencompra;
           
                   const url = window.URL.createObjectURL(blob);
                   const a = document.createElement('a');
@@ -341,10 +344,29 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
             this.lstProveedores = rpta;
             const objet = {
               idcliente: 0,
-              nomcomercial: 'TODOS'
+              razonsocial: 'TODOS'
             }
             this.lstProveedores.unshift(objet);
-            console.log('this.lstProveedores', this.lstProveedores);
+          },
+          error: (err) => {
+            this.serviceSharedApp.messageToast()
+          },
+          complete: () => { },
+        });
+        this.$listSubcription.push($getClientes);
+    
+      }
+
+      listaClientes() {
+
+        const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
+          next: (rpta: any) => {
+            this.lstCliente = rpta;
+            const objet = {
+              idcliente: 0,
+              razonsocial: 'TODOS'
+            }
+            this.lstCliente.unshift(objet);
           },
           error: (err) => {
             this.serviceSharedApp.messageToast()

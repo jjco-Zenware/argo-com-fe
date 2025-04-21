@@ -1,0 +1,573 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Marca, TipoProducto } from '@interfaces';
+import { SharedAppService } from '@sharedAppService';
+import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
+import { Subscription } from 'rxjs';
+import { UtilitariosService } from 'src/app/services/utilitarios.service';
+import { MessageService } from 'primeng/api';
+import { DatePipe } from '@angular/common';
+import { AlmacenService } from 'src/app/pages/almacen/service/almacenServices';
+import { CBusquedaProductoComponent } from 'src/app/pages/almacen/busqueda-producto/c-busqueda-producto.component';
+import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
+import { ComprasService } from '../../compras/Service/compraServices';
+
+@Component({
+  selector: 'app-c-item-almacen',
+  templateUrl: './c-item-almacen.component.html'
+})
+export class CItemAlmacenComponent implements OnInit, OnDestroy {
+  $listSubcription: Subscription[] = [];
+  param: any;
+  frmDatosItem!: FormGroup;
+  lstTipoProducto: TipoProducto[] = [];
+  lstTipoProductoTot: TipoProducto[] = [];
+  lstMarcas: Marca[] = [];
+  marcaVisible?: boolean;
+  headerTitle?: string;
+  submitted?: boolean;
+  registerFormMarca: any = FormGroup;
+  verporTipo: boolean = false;
+  verporLic: boolean = false;
+  verporSerie: boolean = false;
+  verSku: boolean = false;
+  lstUnidades: any[]=[];
+  lstTag: any[]=[];
+  listaTag: any = [];
+  tagVisible: boolean = false;
+  registerFormTag!: FormGroup;  
+  verporLicContrato  : boolean = false;
+  verCondic: boolean = false;
+  verMovAlmacen: boolean = true;
+
+  constructor(
+    private fb: FormBuilder,
+    public refDatoItem: DynamicDialogRef,
+    public config: DynamicDialogConfig,
+    public dialogService: DialogService,
+    private serviceSharedApp: SharedAppService,
+    private serviceUtilitario: UtilitariosService,
+    private messageService: MessageService,
+    private proyectosService: ProyectosService,
+    private comprasService: ComprasService,
+    public datepipe: DatePipe,
+    private almacenService: AlmacenService
+  ) { }
+
+  get formContacto() { return this.registerFormMarca.controls; }
+  get formTag() { return this.registerFormTag.controls; }
+
+  ngOnInit(): void {
+    this.param = this.config.data;
+    this.createFrm();
+    this.createFormContacto(); 
+    this.createFormTag();   
+    this.listarTipoProducto();
+    this.listarMarcas();
+    this.listarItemsTabla();
+    this.listarItemsTag();
+    
+
+    // if (this.param.idordencompra === 0) {
+    // }else{
+    //   this.verControles(this.param.idtipoprod);
+    // }    
+    this.getRegistro();
+    this.verControles(this.param.idtipoprod);
+
+    if (this.param.movalmacen === 'N') {
+      this.verMovAlmacen = false;
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.$listSubcription != undefined) {
+      this.$listSubcription.forEach((sub) => sub.unsubscribe());
+    }
+  }
+
+  createFrm() {
+    this.frmDatosItem = this.fb.group({
+      idordencompraitem: [{ value: 0, disabled: false }],
+      idordencompra: [{ value: 0, disabled: false }],
+      idtipoprod: [{ value: '', disabled: false }, [Validators.required]],
+      idprod: [{ value: 0, disabled: false }],
+      descripcion: [{ value: '', disabled: false }, [Validators.required]],
+      cantidad: [{ value: 1, disabled: false }, [Validators.required]],
+      codunidad: [{ value: 'UNID', disabled: false }],
+      preciocosto: [{ value: 0, disabled: false }, [Validators.required]],
+      descuento: [{ value: 0, disabled: false }],
+      margen: [{ value: 0, disabled: false }],
+      precioventa: [{ value: 0, disabled: true }],
+      indvig: [{ value: true, disabled: true }],
+      iduserreg: [{ value: 0, disabled: false }],
+      fecreg :[{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: true }],
+      iduseract: [{ value: 0, disabled: false }],
+      fecact: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: true }],
+      coditem: [{ value: '0', disabled: false }],
+      idmarca: [{ value: '', disabled: false }, [Validators.required]],
+      nomprod: [{ value: '', disabled: false }],
+      nommarca: [{ value: '', disabled: false }],
+      preciocostototal: [{ value: 0, disabled: true }],
+      precioventatotal: [{ value: 0, disabled: true }],
+      preprofit: [{ value: 0, disabled: true }],
+      nomtipoprod: [{ value: '', disabled: false }],
+      nomproveedor: [{ value: '', disabled: false }],
+      serialnumber: [{ value: '', disabled: false }],
+      sku: [{ value: '', disabled: false }],
+      nrocontrato: [{ value: '', disabled: false }],
+      nromeses: [{ value: 0, disabled: false }],
+      fecini: [{ value: null, disabled: false }], //this.serviceUtilitario.obtenerFechaInicioMes()
+      fecfin: [{ value: null, disabled: false }], //this.serviceUtilitario.obtenerFechaFinMes()
+      idunidad: [{ value: 130, disabled: false }, [Validators.required]],
+      nomunidad: [{ value: '', disabled: false }],
+      valor: [{ value: '', disabled: false }],
+      ref1: [{ value: '', disabled: false }],
+      codproducto: [{ value: '', disabled: false }],
+      despro: [{ value: '', disabled: false }],
+      idinstancia: [{ value: 0, disabled: false }],
+      codtipoexistencia: [{ value: 0, disabled: false }],
+      servicetag: [{ value: '', disabled: false }],
+      idsubfamilia: [{ value: '', disabled: false }],
+      nomsubfamilia: [{ value: '', disabled: false }],
+      modelo: [{ value: '', disabled: false }],
+      idubicacion: [{ value: 0, disabled: false }],
+      rutaubicacion: [{ value: '', disabled: false }],
+      nomtipoexistencia: [{ value:'', disabled: false }],
+    })
+  }
+
+  createFormContacto() {
+    //Agregar validaciones de formulario
+    this.registerFormMarca = this.fb.group({
+    nommarca: ['', [Validators.required]],
+    });
+}
+
+createFormTag() {
+  //Agregar validaciones de formulario
+  this.registerFormTag = this.fb.group({
+  nomtag: ['', [Validators.required]],
+  });
+}
+
+  getRegistro(){
+    console.log('getRegistro : ', this.param);
+    this.frmDatosItem.patchValue(this.param);
+    // if (this.param.idordencompra > 0) {
+       this.listaTag = this.param.tags;
+    // }
+
+    if (this.param.idtipoprod != undefined) {      
+    this.traerUnonomproducto(this.param.idprod);
+    }
+    //this.frmDatosItem.get('despro')?.setValue(this.param.descripcion); 
+  }
+
+  listarItemsTabla() {
+    this.comprasService.obtenerItemsTabla(107).subscribe({
+        next: (rpta: any) => {
+            this.lstUnidades = rpta;
+            console.log('lstUnidades : ', rpta);
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
+    }
+
+    listarItemsTag() {
+      this.comprasService.obtenerItemsTabla(108).subscribe({
+          next: (rpta: any) => {
+              this.lstTag = rpta;
+          },
+          error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+          },
+          complete: () => {
+          },
+      });
+    
+      }
+
+  listarTipoProducto() {
+    const $listarTipoProducto = this.proyectosService.obtenerTipoProducto().subscribe({
+      next: (rpta: any) => {
+        this.lstTipoProductoTot = rpta;
+        this.lstTipoProducto = this.lstTipoProductoTot.filter(x => x.idtipoprod !== 0 && x.idtipoprod !== 8);
+        //this.frmDatosItem.get('idtipoprod')?.setValue(1);
+      },
+      error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+    });
+    this.$listSubcription.push($listarTipoProducto);
+
+  }
+
+  listarMarcas() {
+    const $listarMarcas = this.proyectosService.obtenerMarcas().subscribe({
+      next: (rpta: any) => {
+        this.lstMarcas = rpta;
+      },
+      error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+    });
+    this.$listSubcription.push($listarMarcas);
+
+  }
+
+  calcularBCQ(event: any) {
+    if (event.value > 0) {
+      const total = event.value * this.frmDatosItem.get('preciocosto')?.value;
+      this.frmDatosItem.get('preciocostototal')?.setValue(total);
+    }
+  }
+
+  calcularBCPu(event: any) {
+    if (event.value > 0) {
+      const total = event.value * this.frmDatosItem.get('cantidad')?.value;
+      this.frmDatosItem.get('preciocostototal')?.setValue(total);
+    }
+  }
+
+  guardarItem() {
+
+    console.log('guardarItem...', this.frmDatosItem.value );
+
+    if (this.frmDatosItem.get('codproducto')?.value === '' || this.frmDatosItem.get('codproducto')?.value === null) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Descripción'});
+      return;
+    }
+
+    if (this.frmDatosItem.get('descripcion')?.value == 0) {
+      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Descripción'});
+      return;
+    }
+
+      if (this.frmDatosItem.get('preciocosto')?.value === 0 && this.verMovAlmacen === true) {
+        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Precio Costo'});
+        return;
+      }
+
+    if (this.frmDatosItem.invalid) {
+      this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
+      return;
+    }
+
+    if (this.verMovAlmacen === true) {
+      if (this.frmDatosItem.get('idtipoprod')?.value  === 6 || this.frmDatosItem.get('idtipoprod')?.value  === 7) {
+        if (this.frmDatosItem.get('fecini')?.value === null) {
+          this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Inicio'});
+          return;
+        }
+        if (this.frmDatosItem.get('fecfin')?.value === null) {
+          this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Agregar Fecha Final'});
+          return;
+        }
+          if (this.frmDatosItem.value.idordencompraitem === 0) {
+            console.log('cero',this.frmDatosItem.value);
+            const _fecini = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecini')?.value);
+            this.frmDatosItem.get('fecini')?.setValue(_fecini);
+            const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
+            this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
+          }
+  
+          if (this.frmDatosItem.value.fecini.length > 10) {
+            console.log('ini 10', this.frmDatosItem.value.fecini.length);
+            const _fecini = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecini')?.value);
+            this.frmDatosItem.get('fecini')?.setValue(_fecini);
+          }
+          if (this.frmDatosItem.value.fecfin.length > 10) {
+            console.log('fin 10', this.frmDatosItem.value.fecfin.length);
+            const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
+            this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
+          }
+       
+       
+      } 
+    }
+
+      
+
+    const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
+    this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
+
+    const _marca:string=this.lstMarcas.filter(x=>x.idmarca == this.frmDatosItem.get('idmarca')?.value)[0].nommarca;
+    this.frmDatosItem.get('nommarca')?.setValue(_marca)
+    
+    const _nomunidad:string=this.lstUnidades.filter(x=>x.iditem == this.frmDatosItem.get('idunidad')?.value)[0].valoritem;
+    this.frmDatosItem.get('nomunidad')?.setValue(_nomunidad)
+
+    console.log('guardarItem',this.frmDatosItem.value);
+
+    this.cerrar({...this.frmDatosItem.getRawValue()})
+  }
+
+  cerrar(data:any) {
+    const objeto = {
+      ...data,
+      tags: this.listaTag
+    }
+    this.refDatoItem.close({objeto});
+  }
+
+  NuevaMarca()  {
+    this.submitted = false;
+    this.headerTitle= 'Nueva Marca' ;
+    this.marcaVisible = true;
+  }
+
+  guardarMarca() {
+      this.submitted = true;
+      if (this.registerFormMarca.invalid) {
+          this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Falta Ingresar Datos ..." });
+          return;
+      }
+      if(this.submitted)
+      {
+          const objeto = {
+              idmarca: 0,
+              nommarca: this.registerFormMarca.value.nommarca,
+              idproveedor: 0
+            }
+            const $prcMarcas = this.proyectosService.procesarMarca(objeto).subscribe({
+              next: (rpta: any) => {
+                this.listarMarcas();
+              },
+              error: (err) => {
+                console.info('error : ', err);
+                this.serviceSharedApp.messageToast()
+              },
+              complete: () => {
+              },
+            });
+            this.$listSubcription.push($prcMarcas);
+
+          this.marcaVisible=false;
+      }
+  }
+
+  verControles(dato: any){
+    console.log('verControles', dato);
+    switch (dato) {
+      case 1:  
+        this.verporTipo = true;
+        this.verporLic = false;
+        this.verporSerie = false;
+        this.verSku = true;
+        this.verporLicContrato = false;
+        this.verCondic = false;
+      break;
+      case 2:
+        this.verporTipo = false;
+        this.verporLic = false;
+        this.verporSerie = false;
+        this.verSku = false;
+        this.verporLicContrato = true;
+        this.verCondic = false;
+      break;
+      case 3: 
+        this.verCondic = true;
+        this.verporTipo = false;
+        this.verporLic = false;
+        this.verporSerie = false;
+        this.verSku = false;
+        this.verporLicContrato = false;
+      break;
+      case 6: 
+      case 7:  
+        this.verporTipo = false;
+        this.verporLic = true;
+        this.verporSerie = false;
+        this.verSku = false;
+        this.verporLicContrato = true;
+        this.verCondic = false;
+      break;
+      case 4: 
+      case 5: 
+        this.verporTipo = false;
+        this.verporLic = false;  
+        this.verporSerie = false;   
+        this.verSku = false; 
+        this.verporLicContrato = false;
+        this.verCondic = false;
+      break;
+      // case 5:  
+      //   this.verporTipo = false;
+      //   this.verporLic = false; 
+      //   this.verporSerie = false; 
+      //   this.verSku = false;    
+      //   this.verporLicContrato = false;
+      // break;
+    }
+  }
+
+  changeDatePicker(data:any): any {
+    let fecha = this.datepipe.transform(data, 'dd/MM/yyyy');
+    return fecha;
+  }
+
+  NuevoTag(){
+    this.submitted = false;
+    this.registerFormTag.get('nomtag')?.setValue('');
+    this.tagVisible = true;
+  }
+
+  guardarTag() {
+    this.submitted = true;
+    if (this.registerFormTag.invalid) {
+        this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Ingresar Descripción ..." });
+        return;
+    }
+    if(this.submitted)
+    {
+        const objeto = {
+            iditem: 0,
+            idtabla: 108,
+            valor: this.registerFormTag.value.nomtag,
+            coditem: ''
+          }
+          const $prcMarcas = this.proyectosService.prcItem(objeto).subscribe({
+            next: (rpta: any) => {
+              if (rpta.procesoSwitch === 0){
+                this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+                this.tagVisible=false;
+                this.listarItemsTag();
+              }else{
+              this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+              }
+                
+                
+              
+            },
+            error: (err) => {
+              console.info('error : ', err);
+              this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+          });
+          this.$listSubcription.push($prcMarcas);
+
+        
+    }
+}
+
+  eliminarTag(data:any){
+    const _posAll: number = this.listaTag.findIndex(((x: { idtag: any; }) => x.idtag == data.idtag))
+      if (_posAll != -1) {
+      this.listaTag.splice(_posAll, 1)
+      }
+  }
+
+  addTag(data:any){
+    if (this.listaTag === undefined) { this.listaTag =[]}
+
+    //if (this.listaTag !== undefined) {
+      if (this.listaTag.length > 0) {
+        let _idtagtabla = this.listaTag.filter((x: { idtag: any; }) => x.idtag === data);
+        
+        if (_idtagtabla.length > 0) {
+          if (_idtagtabla[0].idtag === data) {
+            this.messageService.add({ severity: 'info', summary: 'OK...', detail: 'El TAG ya fue registrado...' });
+          return;
+          }
+        }            
+      }
+    //}    
+
+    let _objeto = this.lstTag.filter(x => x.iditem === data);
+    
+    const objeto = {
+      idtag: data,
+      nomtag: _objeto[0].valoritem,
+      valor: '',
+      iditemdocumento: this.frmDatosItem.value.idordencompraitem
+    }
+    this.listaTag.unshift(objeto);
+  }
+
+  
+
+  getBusquedaAvanzada(data: any) {
+    console.log('CBusquedaProductoComponent', data);
+    const refItem = this.dialogService.open(CBusquedaProductoComponent, {
+      data: data,
+      header: "Busqueda Avanzada por Productos",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '60%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      
+      console.log('onClose',rpta);
+      if (rpta !== undefined) {
+        this.frmDatosItem.get('idprod')?.setValue(rpta.data.idprod);
+        this.frmDatosItem.get('codproducto')?.setValue(rpta.data.codproducto); 
+        this.frmDatosItem.get('idmarca')?.setValue(rpta.data.idmarca);
+        this.frmDatosItem.get('despro')?.setValue(rpta.data.despro);
+        this.frmDatosItem.get('descripcion')?.setValue(rpta.data.despro);
+        this.frmDatosItem.get('idtipoprod')?.setValue(rpta.data.idtipoprod);    
+
+        this.verControles(rpta.data.idtipoprod);
+        
+      }
+    });
+  }
+
+  traerUno(data:any){   
+    console.log('traerUno', data);
+    const $traerUno = this.almacenService.traerunoProducto(data)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta.traerUno', rpta.producto[0]);  
+          this.frmDatosItem.get('idprod')?.setValue(rpta.producto[0].idprod);
+            this.frmDatosItem.get('descripcion')?.setValue(rpta.producto[0].despro); 
+            this.frmDatosItem.get('despro')?.setValue(rpta.producto[0].despro); 
+            this.frmDatosItem.get('idmarca')?.setValue(rpta.producto[0].idmarca);      
+            this.frmDatosItem.get('codproducto')?.setValue(rpta.producto[0].codproducto);  
+            this.frmDatosItem.get('idtipoprod')?.setValue(rpta.producto[0].idtipoprod); 
+            
+            this.verControles(rpta.producto[0].idtipoprod);
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {        
+        }
+      });
+    this.$listSubcription.push($traerUno)
+  }
+  
+  traerUnonomproducto(data:any){   
+    console.log('traerUno', data);
+    const $traerUno = this.almacenService.traerunoProducto(data)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta.traerUno', rpta.producto[0]);  
+            this.frmDatosItem.get('despro')?.setValue(rpta.producto[0].despro); 
+            
+            this.verControles(rpta.producto[0].idtipoprod);
+        },
+        error:(err)=>{
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {        
+        }
+      });
+    this.$listSubcription.push($traerUno)
+  }
+}

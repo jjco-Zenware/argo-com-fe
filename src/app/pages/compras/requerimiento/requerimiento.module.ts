@@ -19,6 +19,8 @@ import { CModalPropuestaComponent } from './modal-propuesta/c-modalpropuesta.com
 import { CItemCotizacionComponent } from './c-item-cotizacion/c-item-cotizacion.component';
 import { CModalComentarioComponent } from './modal-comentario/c-modalcomentario.component';
 import { CModalProveedorComponent } from './modal-proveedor/c-modalproveedor.component';
+import { CAdjuntosCotComponent } from './c-adjuntos-cot/c-adjuntos-cot.component';
+import { ProyectosService } from '../proyectos-ganados/service/proyectos.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import { CModalProveedorComponent } from './modal-proveedor/c-modalproveedor.com
     CModalPropuestaComponent,
     CItemCotizacionComponent,
     CModalComentarioComponent,
-    CModalProveedorComponent
+    CModalProveedorComponent,
+    CAdjuntosCotComponent
   ],
   imports: [
     CommonModule,
@@ -42,6 +45,6 @@ import { CModalProveedorComponent } from './modal-proveedor/c-modalproveedor.com
     SelectButtonModule,
     TagModule ,
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, OrdencompraService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, OrdencompraService, ProyectosService]
 })
 export class RequerimientoModule { }

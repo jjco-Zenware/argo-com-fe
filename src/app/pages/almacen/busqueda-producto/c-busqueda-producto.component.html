@@ -23,7 +23,7 @@
                 </span>
             </div> 
            
-            <div class="field col-6 md:col-2 -mt-4 gap-2">
+            <div class="field col-6 md:col-2 -mt-3 gap-2">
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar" tooltipPosition="bottom" 
                     class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
             </div>
@@ -41,7 +41,7 @@
                     </div>
                 </th>
                 <th class="surface-200">
-                    <div [ngStyle]="{'width':'100px','text-align': 'center'}">
+                    <div [ngStyle]="{'text-align': 'center'}">
                         CÓDIGO
                     </div>
                 </th>
@@ -49,6 +49,9 @@
                 <th style="width: 300px;" class="surface-200">GRUPO</th>
                 <th style="width: 300px;" class="surface-200">CATEGORIA</th>
                 <th style="width: 300px;" class="surface-200">MARCA</th>
+                <th style="width: 300px;" class="surface-200">MODELO</th>
+                <th style="width: 300px;" class="surface-200" *ngIf="verAlm">CANTIDAD</th>
+                <th style="width: 300px;" class="surface-200" *ngIf="verAlm">UBICACIÓN</th>
                 <th style="width: 300px;" class="surface-200">SELECCIONAR</th>            
             </tr>
         </ng-template>
@@ -64,6 +67,9 @@
                 <td>{{data.nomfamilia}}</td>
                 <td>{{data.nomsubfamilia}}</td>
                 <td>{{data.nommarca}}</td>
+                <td>{{data.modelo}}</td>
+                <td *ngIf="verAlm">{{data.saldostock}}</td>
+                <td *ngIf="verAlm">{{data.rutaubicacion}}</td>
                 <td>
                     <button pButton type="button" icon="pi pi-check" tooltipPosition="bottom" pTooltip="Seleccionar Producto" (click)="seleccionarProducto(data)"></button>                     
                 </td>
@@ -81,3 +87,5 @@
         </ng-template>
     </p-table>
 </div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

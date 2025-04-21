@@ -15,6 +15,9 @@ import { AlmacenService } from '../../service/almacenServices';
 import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 import { CItemCotizacionComponent } from 'src/app/pages/compras/proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
+import { CBusquedaProductoComponent } from '../../busqueda-producto/c-busqueda-producto.component';
+import { CItemAlmacenComponent } from '../../c-item-almacen/c-item-almacen.component';
+import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 
 @Component({
   selector: 'app-c-detallemovsaltras',
@@ -67,6 +70,14 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
   lstAlmacen: any;
   selectedProducts: any;
   lstTransacciones: any[]=[];
+  selectedItems: any;
+  verbtnPreliminar: boolean = false;
+  dataGuia:any;
+  lstTipoND: any[] = [];
+  lstTipoTransporte: any[] = [];
+  lstTipoMotivo: any[] = [];
+  lstTipoDoc: any[] = [];
+  lstComprobante: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -80,17 +91,26 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     private ordencompraService: OrdencompraService,
     private comprasService: ComprasService,    
     private almacenService: AlmacenService, 
+    private contabilidadService: ContabilidadService, 
   ) { }
 
   ngOnInit(): void {
     this.idMovimiento = this.IA_data.idcodigo;
+    this.dataGuia ={
+      idcodigo: this.idMovimiento,
+    }
 
     this.createFrm();
     this.createFormRegistro();
     this.ListarAlamcen();  
-    this.listaClientes();
-    this.listaProveedores();
+    //this.listaClientes();
+    //this.listaProveedores();
     this.listarItemsTabla(); 
+    this.listarItemsTablaSunat();
+    this.listarTipoTransporteTablaSunat();
+    this.listarMotivoTrasladoTablaSunat();
+    this.listarItemsTablaTipoDocumento();
+    this.listarItemsTablaComprobante();
     
     if (this.idMovimiento > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -135,7 +155,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd:[{ value: '', disabled: false }],
-      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaFormateadoDMA(),disabled: false,}],
       idordencompra: [{ value: this.idMovimiento, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: 0, disabled: false }],
@@ -160,6 +180,35 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
       idalmacen:[{ value: 0, disabled: false }],
       alm_idordencompra:[{ value: 0, disabled: false }],
       idprod: [{ value: 0, disabled: false }],
+      alm_idalmacen_destino: [{ value: 0, disabled: false }],
+      gre_peso_bruto_total: [{ value: 0, disabled: false }],
+      gre_numero_de_bultos: [{ value: 0, disabled: false }],
+      gre_tipo_de_transporte: [{ value: '', disabled: false }],
+      gre_transportista_documento_tipo: [{ value: '1', disabled: false }],
+      gre_conductor_documento_tipo: [{ value: '1', disabled: false }],
+      gre_conductor_documento_numero: [{ value: '', disabled: false }],
+      gre_conductor_denominacion: [{ value: '', disabled: false }],
+      gre_punto_de_partida_ubigeo: [{ value: '', disabled: false }],
+      gre_punto_de_llegada_ubigeo: [{ value: '', disabled: false }],
+      gre_fec_ini_traslado: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
+      gre_ruc_emp_transporte: [{ value: '', disabled: false }],
+      gre_nom_emp_transporte: [{ value: '', disabled: false }],
+      gre_marca_placa_unid_transporte: [{ value: '', disabled: false }],
+      gre_punto_partida: [{ value: '', disabled: false }],
+      gre_punto_llegada: [{ value: '', disabled: false }],
+      gre_motivo_de_traslado: [{ value: '', disabled: false }],
+      gre_guia_tipo: [{ value: '', disabled: false }],
+      gre_conductor_nombre: [{ value: '', disabled: false }],
+      gre_conductor_apellidos: [{ value: '', disabled: false }],
+      gre_conductor_numero_licencia: [{ value: '', disabled: false }],
+      tipo_igv: [{ value: 0, disabled: false }],
+      fel_codmotivo: [{ value: 0, disabled: false }],
+      fel_tiponotadebito: [{ value: 0, disabled: false }],
+      fel_tipoigv: [{ value: 0, disabled: false }],
+      nroserie_ctb:[{ value: '', disabled: false }],
+      nrodocumento_ctb:[{ value: '', disabled: false }],
+      fecemision: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      tipodoc_ctb: [{ value: 505, disabled: false }],
     });
   }
 
@@ -185,44 +234,30 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
     switch (data) {
       case 'REG':
-      case 'OBS':
         this.verbtnGrabar = true;
         this.verbtnAcciones = true;
         this.onlyRead = false;
+        this.verbtnPreliminar= true;
       break;
       case 'NVO':
         this.verbtnGrabar = true;
         this.verbtnAcciones = false;
         this.onlyRead = false;
-      break;
-      case 'PRC':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = true;
-        this.verItems = false;
-        this.onlyRead = true;
+        this.verbtnPreliminar= false;
       break;
       case 'EMI':
         this.verbtnGrabar = false;
         this.verbtnAcciones = true;
         this.verItems = false;
         this.onlyRead = true;
+        this.verbtnPreliminar= true;
       break;
       case 'ANU':
         this.verbtnGrabar = false;
         this.verbtnAcciones = false;
         this.verItems = false;
         this.onlyRead = true;
-      break;
-      case 'ELI':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = false;
-        this.verItems = false;
-        this.onlyRead = true;
-      break;
-      case 'REC':
-        this.verbtnGrabar = false;
-        this.verbtnAcciones = true;
-        this.onlyRead = true;
+        this.verbtnPreliminar= false;
       break;
     
       default:
@@ -232,6 +267,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     if (this.IA_data.paramReg === 'V') {
       console.log('entro', this.IA_data.paramReg);
       this.verbtnGrabar = false;
+      this.verbtnPreliminar= this.idMovimiento === 0 ? true : false;
       this.verbtnAcciones = false;
       this.verItems = false;
       this.onlyRead = true;
@@ -268,6 +304,8 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
           // this.s_monto_total = rpta.ordencompra[0].s_monto_total; 
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          
+          this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
           this.cargarMenu(rpta.ordencompra[0].acciones);
           this.mostrarBotones(rpta.ordencompra[0].estado);                
         },
@@ -312,13 +350,27 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     this.mensajeSpinner = 'Guardando...!';
     let fechaingreso;
     let fecentrega;
+    let gre_fec_ini_traslado;
+    let fecemision;
+
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecentrega = this.registerFormRegistro.value.fecentrega;
+    gre_fec_ini_traslado = this.registerFormRegistro.value.gre_fec_ini_traslado;
+    fecemision = this.registerFormRegistro.value.fecemision;
+    
 
-    if (this.idMovimiento > 0) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
-      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
+    if (fechaingreso.toString().length === 10) {
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
     }
+    if (fecentrega.toString().length === 10) {
+      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega)); 
+    } 
+    if (gre_fec_ini_traslado.toString().length === 10) {
+      gre_fec_ini_traslado = new Date(this.serviceUtilitario.formatFecha(gre_fec_ini_traslado)); 
+    } 
+    if (fecemision.toString().length === 10) {
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
+    } 
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
       if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -334,7 +386,10 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
       items: this.lstItemOC,
       fechaingreso,
       fecentrega,
-      quotes: this.lstQuotes
+      gre_fec_ini_traslado,
+      quotes: this.lstQuotes,
+      fecemision,
+      tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
     }
 
     console.log('guardarOC...', objeto);
@@ -386,6 +441,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
       },
   });
   }
+
   servicioGenerico(){    
     this.comprasService.obtenerItemsTabla(109).subscribe({
       next: (rpta: any) => {
@@ -458,9 +514,9 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     data.idordencompra = this.idMovimiento;    
     data.movalmacen = 'N';
     console.log('CItemOrdenesComponent', data);
-    const refItem = this.dialogService.open(CItemCotizacionComponent, {
+    const refItem = this.dialogService.open(CItemAlmacenComponent, {
       data: data,
-      header: data.length == 0 ? "Agregar Producto" : "Editar Producto - " + data.idordencompraitem,
+      header: data.length == 0 ? "Agregar Producto " : "Editar Producto " ,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '50%'
@@ -549,20 +605,14 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     const objeto = this.lstItemOC.filter((x: { indcompleto: boolean; }) => x.indcompleto == false);
     console.log('onAccion', objeto);
     if (objeto.length > 0) {
-      this.messageService.add({severity: 'warn', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+      this.messageService.add({severity: 'warn', summary: 'Aviso', detail: 'Existen Items sin Seleccionar...!' });
           return;
+    }else{
+      this.guardarOC2(item);
     }
-    this.ordenCompra.idtrx = item.idtrx;
-    const ref = this.dialogService.open(CModalExcAlmacenComponent, {
-        data: this.ordenCompra,
-        header: item.nomtrx,
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: '40%'
-    });
-    ref.onClose.subscribe(() => {
-        this.traerUnoOrdenC();
-      });
+
+
+   
   }
 
   
@@ -586,47 +636,23 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-      if (this.registerFormRegistro.value.idalmacen === null || this.registerFormRegistro.value.idalmacen === 0)
+      // if (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === '')
+      // {
+      //     this.errorMensaje="Ingresar Guia...!";
+      //     _error = true;
+      // }
+
+      if (this.registerFormRegistro.value.idalmacen === 0 || this.registerFormRegistro.value.idalmacen === null)
+                {
+            this.errorMensaje="Seleccionar Almacén Salida...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.alm_idalmacen_destino === 0 || this.registerFormRegistro.value.alm_idalmacen_destino === null))
       {
-          this.errorMensaje="Seleccionar Almacen...!";
+          this.errorMensaje="Seleccionar Almacén Destino...!";
           _error = true;
       }
-
-      if (!_error && this.registerFormRegistro.value.idproveedor === null)
-      {
-          this.errorMensaje="Seleccionar Proveedor...!";
-          _error = true;
-      }
-
-      // if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null))
-      // {
-      //     this.errorMensaje="Seleccionar Orden Compra...!";
-      //     _error = true;
-      // }
-
-      // if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
-      // {
-      //     this.errorMensaje="Ingresar N° de Referencia...!";
-      //     _error = true;
-      // }
-
-      // if (!_error && this.registerFormRegistro.value.idmoneda === null)
-      // {
-      //       this.errorMensaje="Seleccionar Moneda...!";
-      //       _error = true;
-      // }
-
-      // if (!_error && this.registerFormRegistro.value.codformapago === null)
-      // {
-      //       this.errorMensaje="Seleccionar Termino de Pago...!";
-      //       _error = true;
-      // }
-
-      // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
-      // {
-      //     this.errorMensaje="Ingresar Condiciones Comerciales...!";
-      //     _error = true;
-      // }
        return _error;
      }
      
@@ -690,4 +716,289 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
       this.$listSubcription.push($personaProveedorlist);
     }
 
+    getBusquedaAvanzada() {       
+      if (this.registerFormRegistro.value.idalmacen === undefined || this.registerFormRegistro.value.idalmacen === null || this.registerFormRegistro.value.idalmacen === '') {
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Debe Seleccionar Almacén de Salida" });
+        return;
+      }
+       let idalamacen = this.registerFormRegistro.value.idalmacen;
+       const nomalmacen = this.lstAlmacen.filter((x: { idalmacen: number; }) => x.idalmacen === idalamacen)[0].nomalmacen
+       
+        const refItem = this.dialogService.open(CBusquedaProductoComponent, {
+          data: idalamacen,
+          header: "Productos del Almacén " + nomalmacen,
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '60%'
+        });
+        refItem.onClose.subscribe((rpta: any) => {
+          
+          console.log('onClose',rpta);
+          if (rpta !== undefined) {
+            let objeto = rpta.data;
+            objeto.descripcion = rpta.data.despro;
+            this.getItem(objeto,0);
+            // this.frmDatosItem.get('idprod')?.setValue(rpta.data.idprod);
+            // this.frmDatosItem.get('codproducto')?.setValue(rpta.data.codproducto); 
+            // this.frmDatosItem.get('idmarca')?.setValue(rpta.data.idmarca);
+            // this.frmDatosItem.get('despro')?.setValue(rpta.data.despro);
+            // this.frmDatosItem.get('descripcion')?.setValue(rpta.data.despro);
+            // this.frmDatosItem.get('idtipoprod')?.setValue(rpta.data.idtipoprod);    
+    
+            // this.verControles(rpta.data.idtipoprod);
+            
+          }
+        });
+      }
+      validarAlmacen(valor:number){
+        console.log('validarAlmacen', valor);
+        console.log('this.registerFormRegistro.value.idalamacen', this.registerFormRegistro.value.idalmacen);
+        console.log('this.registerFormRegistro.value.alm_idalmacen_destino', this.registerFormRegistro.value.alm_idalmacen_destino);
+        if (this.registerFormRegistro.value.idalmacen === this.registerFormRegistro.value.alm_idalmacen_destino) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Debe Seleccionar Almacén de Salida" });
+          if (valor === 1) {
+            this.registerFormRegistro.get('alm_idalmacen_destino').setValue('');  
+          }else{
+            this.registerFormRegistro.get('idalmacen').setValue(''); 
+          }
+          return;
+        }
+        
+       
+      }
+
+      guardarOC2(item:any){
+
+        if (this.validarDatos())
+          {
+              this.setSpinner(false);
+              this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+              return;
+          }
+    
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Procesando...!';
+        let fechaingreso;
+    let fecentrega;
+    let gre_fec_ini_traslado;
+    let fecemision;
+
+    fechaingreso = this.registerFormRegistro.value.fechaingreso;
+    fecentrega = this.registerFormRegistro.value.fecentrega;
+    gre_fec_ini_traslado = this.registerFormRegistro.value.gre_fec_ini_traslado;
+    fecemision = this.registerFormRegistro.value.fecemision;
+    
+
+    if (fechaingreso.toString().length === 10) {
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
+    }
+    if (fecentrega.toString().length === 10) {
+      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega)); 
+    } 
+    if (gre_fec_ini_traslado.toString().length === 10) {
+      gre_fec_ini_traslado = new Date(this.serviceUtilitario.formatFecha(gre_fec_ini_traslado)); 
+    } 
+    if (fecemision.toString().length === 10) {
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
+    } 
+    
+        for (let i = 0; i < this.lstItemOC.length; i++) {      
+          if (this.lstItemOC[i].cantidad.toString() === '') {
+            this.lstItemOC[i].cantidad = 0;
+          }    
+          if (this.lstItemOC[i].preciocosto.toString() === '') {
+            this.lstItemOC[i].preciocosto = 0;
+          }
+        }
+    
+        const objeto = {
+          ...this.registerFormRegistro.getRawValue(),
+          items: this.lstItemOC,
+          fechaingreso,
+          fecentrega,
+          quotes: this.lstQuotes,
+          gre_fec_ini_traslado,
+          fecemision,
+          tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
+        }
+    
+        console.log('guardarOC...', objeto);
+        
+        this.ordencompraService.ordenCompraprc(objeto).subscribe({
+          next: (rpta: any) => {
+            this.setSpinner(false);
+            if (rpta.procesoSwitch === 0){
+              //this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+              this.ordenCompra.idtrx = item.idtrx;
+              const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+                  data: this.ordenCompra,
+                  header: item.nomtrx,
+                  closeOnEscape: false,
+                  styleClass: 'testDialog',
+                  width: '40%'
+              });
+              ref.onClose.subscribe(() => {
+                  this.traerUnoOrdenC();
+                  this.listarTransacciones();
+                });
+             
+            this.visibleDocument = false;
+            }else{
+            this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+            }
+          },
+          error: (err) => {
+            this.setSpinner(false);
+          this.messageService.clear();
+          this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico,
+              });
+          },
+          complete: () => {
+          },
+      });
+      }
+
+      selectCheckbox(dato: any){
+        console.log('selectCheckbox...', dato);
+        console.log('selectCheckbox...', this.selectedItems);
+  
+        const data = this.lstItemOC.map((item: any) => ({
+          ...item,
+          indcompleto: dato.checked === true ? true : false,
+        }))
+  
+        this.lstItemOC = data;
+      }
+
+      vistaPreliminar() {
+          
+        this.setSpinner(true);
+      this.mensajeSpinner = 'Descargando Detalle...!';
+  
+      const objeto = {
+        idusuario : constantesLocalStorage.idusuario,
+        iddocumentoprc: this.idMovimiento,
+        codtipoprc: 12,
+        idplantilla: 0
+      }
+  
+      const $cargarOrdenC = this.comprasService.prcDocumentoDet(objeto).subscribe({
+        next: (rpta: any) => {
+          this.setSpinner(false);      
+          
+          const mediaType = 'application/pdf';
+            const blob = new Blob([rpta.body], { type: mediaType });
+            const filename = 'PECOSA-' + this.ordenCompra.codigonroorden;
+    
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.target = '_blank';
+            a.click();
+  
+            window.open(url);
+  
+            setTimeout(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+        },
+            error: (err) => {
+              this.setSpinner(false);
+            this.messageService.clear();
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: mensajesQuestion.msgErrorGenerico,
+            });
+        },
+            complete: () => {
+        },
+      });
+      this.$listSubcription.push($cargarOrdenC)
+}
+
+listarItemsTablaSunat() {
+  this.contabilidadService.listarItemsTablaSunat(4).subscribe({
+      next: (rpta: any) => {
+        console.info('listarItemsTablaSunat : ', rpta);
+          this.lstTipoND = rpta;
+      },
+      error: (err) => {
+      console.info('error : ', err);
+      this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+  });
+
+  }
+
+  listarTipoTransporteTablaSunat() {
+    this.contabilidadService.listarTipoTransporteTablaSunat().subscribe({
+        next: (rpta: any) => {
+          console.info('lstTipoTransporte : ', rpta);
+            this.lstTipoTransporte = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
+  }
+
+  listarMotivoTrasladoTablaSunat() {
+    this.contabilidadService.listarMotivoTrasladoTablaSunat().subscribe({
+        next: (rpta: any) => {
+          console.info('lstTipoTransporte : ', rpta);
+            this.lstTipoMotivo = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
+    }
+
+    listarItemsTablaTipoDocumento() {
+      this.contabilidadService.listarTipoDocumentoTablaSunat("N").subscribe({
+          next: (rpta: any) => {
+            console.info('listarItemsTablaTipoDocumento : ', rpta);
+              this.lstTipoDoc = rpta;
+          },
+          error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+          },
+          complete: () => {
+          },
+      });
+    
+      }
+
+      listarItemsTablaComprobante() {
+        this.comprasService.obtenerItemsTabla(112).subscribe({
+            next: (rpta: any) => {
+              console.info('listarItemsTablaComprobante : ', rpta);
+                this.lstComprobante = rpta;
+            },
+            error: (err) => {
+            console.info('error : ', err);
+            this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+        });    
+      }
 }

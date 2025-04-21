@@ -1,66 +1,73 @@
 
     <div class="card m-4">
-        <div class="grid mt-2">
-            <div class="flex justify-content-between col-12 -mt-3 gap-2">                                  
+        <div class="grid">
+            <div class="flex justify-content-between col-12 gap-2">                                  
                 <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">{{tituloKardex}}</span>
                 </div>                         
             </div>
         </div>
 
-        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-9 text-sm ">
-            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
-                <label class="font-semibold text-blue-600">DESDE</label>
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-12 text-sm ">
+            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-3 field">
+                <label class="font-semibold text-blue-600">Desde</label>
                 <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fechaini"
                     [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
                 </p-calendar>
             </div>
-            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
-                <label class="font-semibold text-blue-600">HASTA</label>
+            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-3 field">
+                <label class="font-semibold text-blue-600">Hasta</label>
                 <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
                     [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
             </div> 
-            <div class="col-6 sm:col-6 lg:col-3 md:col-6 -mt-4">                            
-                <label class="text-blue-600 font-semibold mb-1">ALMACÉN </label>                            
+            <div class="col-6 sm:col-6 lg:col-2 md:col-6 -mt-2 field">                            
+                <label class="text-blue-600 font-semibold mb-1">Almacén </label>                            
                 <span>
                     <p-dropdown [options]="lstAlmacenCB" placeholder="Seleccionar Almacén"  formControlName="idalmacen" 
                     optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" class="p-inputtext-sm"></p-dropdown>            
                 </span>
             </div>
-            <div class="sm:col-6 lg:col-3 md:col-3 -mt-4 col-6 field">
-                <label class="text-blue-600 font-semibold -mb-1">CÓDIGO</label>
+            <div class="sm:col-6 lg:col-2 md:col-3 -mt-2 col-6 field">
+                <label class="text-blue-600 font-semibold mb-1">Código</label>
                 <span class="p-input-icon-right">
                     <i class="pi pi-search cursor-pointer" pTooltip="Busqueda Avanzada de Producto" tooltipPosition="bottom" (click)="getBusquedaAvanzada([])"></i>
                     <input type="text" pInputText formControlName="codproducto" class="p-inputtext-sm" placeholder="Ingresar Código Producto"/>
                 </span>
-            </div>                            
-            <div class="field col-12 md:col-2 -mt-5 gap-2">
-                <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                    class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-            </div>
-            <div class="sm:col-6 lg:col-2 md:col-3 -mt-5 field">
-                <label class="text-blue-600 font-semibold mb-1">ORIGEN </label>
+            </div>          
+            <!-- <div class="lg:col-4"></div>   
+            <div class="sm:col-6 lg:col-2 md:col-3 -mt-5 col-12 field">
+                <label class="text-blue-600 font-semibold mb-1">Origen </label>
                 <span class="p-fluid mt-1">
                     <p-dropdown [options]="lstOrigen" formControlName="idtipoproyecto" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
                     optionValue="idtipoproyecto" (onChange)="getOrigen($event.value)"  class="p-inputtext-sm"></p-dropdown>
                 </span>
             </div> 
-            <div class="sm:col-6 lg:col-5 md:col-3  field -mt-5">
-                <label class="text-blue-600 font-semibold mb-1">PROYECTO </label>                        
+            <div class="sm:col-6 lg:col-6 md:col-3 field -mt-5 col-12">
+                <label class="text-blue-600 font-semibold mb-1">Proyectos </label>                        
                 <span class="p-fluid mt-1">
                     <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
-                    optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="getOcproveedor($event.value)" ></p-dropdown>
+                    optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="getOcproveedor(0,$event.value)"></p-dropdown>
                 </span>
             </div>
-            <div class="sm:col-6 lg:col-3 md:col-3 col-12 -mt-5">
-                <div class="flex">
-                    <label class="text-blue-600 font-semibold mb-1">ORDEN COMPRA</label>
-                </div>                            
+            <div class="lg:col-3"></div>
+            <div class="sm:col-6 lg:col-4 md:col-6 col-12 -mt-5 field">                            
+                <label class="text-blue-600 font-semibold mb-1">Proveedor</label>                            
                 <span>
-                    <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
-                    optionValue="alm_idordencompra" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
+                    <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+                    optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor(1,$event.value)"></p-dropdown>            
                 </span>
-            </div> 
+            </div>  
+            <div class="sm:col-6 lg:col-4 md:col-3 col-12 -mt-5 field">                
+                <label class="text-blue-600 font-semibold mb-1">Ordenes de Compra</label>                                          
+                <span>
+                    <p-dropdown [options]="lstOrdenC" formControlName="idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
+                    optionValue="idordencompra" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
+                </span>
+            </div>  -->
+            <div class="field col-12 md:col-2 -mt-3 gap-2">
+                <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                    class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
+            </div>
         </form> 
 
         <p-table #dt1 [value]="lstAlmacen" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
@@ -75,17 +82,17 @@
                         </div>
                     </th>
                     <th rowspan="2" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'100px','text-align': 'center'}">
-                            N° ORDEN
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            N° OC
                         </div>
                     </th>
                     <th rowspan="2" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'100px','text-align': 'center'}">
+                        <div [ngStyle]="{'text-align': 'center'}">
                             FECHA
                         </div>
                     </th>
                     <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">DETALLE</th>
-                    <th rowspan="2" style="width: 200px;" class="bg-teal-50 border-1"> ALMACÉN </th>
+                    <th rowspan="2" class="bg-teal-50 border-1"> ALMACÉN </th>
                     <th colspan="3" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'width':'150px','text-align': 'center'}" class="text-green-500">
                             ENTRADAS
@@ -110,27 +117,12 @@
                     </th>
                     <th colspan="1" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'text-align': 'center'}">
-                            P.UNIT
+                            V. UNIT. S/
                         </div>
                     </th>
                     <th colspan="1" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'text-align': 'center'}">
-                            TOTAL
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            CANT
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            P.UNIT
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            TOTAL
+                            TOTAL S/
                         </div>
                     </th>
                     <th colspan="1" class="bg-teal-50 border-1">
@@ -140,12 +132,27 @@
                     </th>
                     <th colspan="1" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'text-align': 'center'}">
-                            P.UNIT
+                            V. UNIT. S/
                         </div>
                     </th>
                     <th colspan="1" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'text-align': 'center'}">
-                            TOTAL
+                            TOTAL S/
+                        </div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            CANT
+                        </div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            V. UNIT. S/
+                        </div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">
+                            TOTAL S/
                         </div>
                     </th>
                 </tr>
@@ -155,12 +162,12 @@
                     <td>{{rowIndex + 1}}</td>
                     <td>{{sale.nroordencompra_origen}}</td>
                     <td>{{sale.fechamov}}</td>
-                    <td>{{sale.descripcion | uppercase}}</td>
-                    <!-- <td>
+                    <!-- <td>{{sale.descripcion | uppercase}}</td> -->
+                    <td>
                         <div pTooltip="{{sale.descripcion | uppercase}}">
                             {{(sale.descripcion.length > 70) ? ((sale.descripcion).slice(0, 70) + '...' | uppercase) : sale.descripcion | uppercase}}
                         </div>  
-                    </td>                     -->
+                    </td>                    
                     <td>{{sale.nomalmacen}}</td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
@@ -169,12 +176,12 @@
                     </td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.preciounit_entrada}}
+                            {{sale.valorunitario | number: '0.2-2'}}
                         </div> 
                     </td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.total_entrada}}
+                            {{sale.total_entrada | number: '0.2-2'}}
                         </div> 
                     </td>
                     <td>
@@ -184,27 +191,27 @@
                     </td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.preciounit_entrada}}
+                            {{sale.valorunitario | number: '0.2-2'}}
                         </div> 
                     </td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.total_salida}}
+                            {{sale.total_salida | number: '0.2-2'}}
                         </div> 
                     </td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.cantidad}}
+                            {{sale.saldo_item}}
                         </div> 
                     </td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.preciounit_entrada}}
+                            {{sale.valorunitario | number: '0.2-2'}}
                         </div> 
                     </td>
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
-                            {{sale.preciocostototal}}
+                            {{sale.preciocostototal | number: '0.2-2'}}
                         </div> 
                     </td>
                 </tr>

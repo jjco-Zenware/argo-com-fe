@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { AlmacenService } from '../service/almacenServices';
 import { CDetalleMovComponent } from './c-detallemov/c-detallemov.component';
 import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
+import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
 
 
 @NgModule({
@@ -33,6 +34,6 @@ import { RegistroProveedorModule } from '../../compras/registro-proveedor/regist
     TagModule,
     RegistroProveedorModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, OrdencompraService]
 })
 export class IngresoOcProyectoModule { }

@@ -126,6 +126,13 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       ref1: [{ value: '', disabled: false }],
       codproducto: [{ value: '', disabled: false }],
       despro: [{ value: '', disabled: false }],
+      codtipoexistencia: [{ value: 0, disabled: false }],
+      servicetag: [{ value: '', disabled: false }],
+      idsubfamilia: [{ value: 0, disabled: false }],
+      nomsubfamilia: [{ value: '', disabled: false }],
+      modelo: [{ value: '', disabled: false }],
+      idubicacion: [{ value: 0, disabled: false }],
+      rutaubicacion: [{ value: '', disabled: false }],
     })
   }
 
@@ -531,9 +538,10 @@ createFormTag() {
   }
 
   getBusquedaAvanzada(data: any) {
+    let idalamacen = 0
     console.log('CBusquedaProductoComponent', data);
     const refItem = this.dialogService.open(CBusquedaProductoComponent, {
-      data: data,
+      data: idalamacen,
       header: "Busqueda Avanzada por Productos",
       closeOnEscape: false,
       styleClass: 'testDialog',

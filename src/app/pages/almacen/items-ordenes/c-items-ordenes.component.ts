@@ -35,6 +35,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
   listaTag: any = [];
   tagVisible: boolean = false;
   registerFormTag!: FormGroup; 
+  verTag: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -55,6 +56,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.param = this.config.data;
+    
     this.createFrm();
     this.createFormContacto(); 
     this.createFormTag();   
@@ -137,6 +139,9 @@ createFormTag() {
   getRegistro(){
     this.frmDatosItem.patchValue(this.param);
     console.log('getRegistro... : ', this.param);
+    if (this.param.origenreg !=='OC') {
+      this.verTag = false;
+    }
     // if (this.param.idordencompra > 0) {
        this.listaTag = this.param.tags;
     // }
@@ -279,9 +284,12 @@ createFormTag() {
     console.log('verControles', dato);
     switch (dato) {
       case 'RC':  
-        this.verporTipo = true;
+        this.verporTipo = false;
       break;
       case 'OC':
+        this.verporTipo = true;
+      break;
+      case 'RV':  
         this.verporTipo = false;
       break;
     }
@@ -409,8 +417,9 @@ createFormTag() {
 
   getBusquedaAvanzada(data: any) {
       console.log('CBusquedaProductoComponent', data);
+      let idalmacen = 0
       const refItem = this.dialogService.open(CBusquedaProductoComponent, {
-        data: data,
+        data: idalmacen,
         header: "Busqueda Avanzada por Productos",
         closeOnEscape: false,
         styleClass: 'testDialog',

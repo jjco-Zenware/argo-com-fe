@@ -97,4 +97,44 @@ export class MarketingService {
         const url = `${constantesApiWeb.procesarTrxEvento}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    newProyecto(objeto:any) {
+        const url = `${constantesApiWeb.newProyecto}`;
+        return  this.http.post<any>(url, objeto)
+    }
+
+    obtenerToken() {
+        const url = `${constantesApiWeb.obtenerToken}`;
+        return this.http.get<any>(url);
+    }
+
+    enviarCorreo() {
+        const url = `${constantesApiWeb.enviarCorreo}`;
+        return this.http.get<any>(url);
+    }
+
+    listarGastos(objeto: any) {
+        const url = `${constantesApiWeb.listarGastos}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    listarItemsTabla(codigo: any) {
+        const url = `${constantesApiWeb.lstItemsTabla}${codigo}`;
+        return this.http.get<any>(url)
+    }
+
+    listarTrasacciones(objeto: any) {
+        const url = `${constantesApiWeb.listarTrasacciones}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    gastoTraeruno(objeto:any) {
+        const url = `${constantesApiWeb.gastosTraeruno}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    gastoprc(objeto:any) {
+        const url = `${constantesApiWeb.prcGastos}`;
+        return  this.http.post<any>(url, objeto)
+    }
 }

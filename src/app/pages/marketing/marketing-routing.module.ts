@@ -11,6 +11,11 @@ const routes: Routes = [
     path: 'fondos',
     loadChildren: () => import('./fondos/fondo.module').then(m => m.FondosModule),
     data: { breadcrumb: 'Fondos' }
+  },
+  {
+    path: 'RegistroParticipantes',
+    loadChildren: () => import('./participantes/registroParticipantes.module').then(m => m.ParticipanteModule),
+    data: { breadcrumb: 'Participantes' }
   }
 
  

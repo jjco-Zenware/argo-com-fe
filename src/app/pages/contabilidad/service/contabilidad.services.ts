@@ -44,9 +44,23 @@ export class ContabilidadService {
         return this.http.get<any>(url);
     }
 
- 
-    
-   
+    listarItemsTablaSunat(codigo: any) {
+        const url = `${constantesApiWeb.listaritemTablaSunat}${codigo}`;
+        return this.http.get<any>(url)
+    }
 
- 
+    listarTipoTransporteTablaSunat() {
+        const url = `${constantesApiWeb.listarTipoTransporteTablaSunat}`;
+        return this.http.get<any>(url)
+    }
+
+    listarMotivoTrasladoTablaSunat() {
+        const url = `${constantesApiWeb.listarMotivoTrasladoTablaSunat}`;
+        return this.http.get<any>(url)
+    }
+
+    listarTipoDocumentoTablaSunat(codigo: any) {
+        const url = `${constantesApiWeb.listarTipoDocumentoTablaSunat}${codigo}`;
+        return this.http.get<any>(url)
+    }
 }

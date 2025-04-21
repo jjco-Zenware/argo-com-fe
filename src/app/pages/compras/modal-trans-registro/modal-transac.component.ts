@@ -68,7 +68,6 @@ export class CModalTransacComponent {
           next: (rpta: any) => {
               console.log('prcReunion', rpta);
               if (rpta.procesoSwitch === 0) {
-                  console.log('entro procesoSwitch....');
                   this.cerrar(objeto)
               }
 
@@ -100,5 +99,7 @@ export class CModalTransacComponent {
 cerrar(data:any) {
   this.refDatoItem.close({data});
 }
+
+
 
 }

@@ -1,0 +1,36 @@
+
+
+<div class="card p-2 m-4 lg:col-7">
+    <form [formGroup]="registerFormRegistro" class="p-fluid grid lg:col-12 p-2 m-2 mt-4" >
+                   
+            <div class="lg:col-4 col-12 field -mt-5">
+                <label >Nombres</label>
+                <input pInputText type="text" formControlName="nombres" class="p-inputtext-sm"/>
+            </div>
+            <div class="lg:col-4 col-12 field -mt-5">
+                <label >Apellidos</label>
+                <input pInputText type="text" formControlName="apellidos" class="p-inputtext-sm"/>
+            </div>
+            <div class="lg:col-4 col-12 field -mt-5" >
+                <label >Celular</label>
+                <input pInputText type="text" formControlName="celular" class="p-inputtext-sm"/>
+            </div>   
+            <div class="lg:col-4 col-12 field -mt-5" >
+                <label >Cargo</label>
+                <input pInputText type="text" formControlName="cargo" class="p-inputtext-sm"/>
+            </div> 
+            <div class="lg:col-4 col-12 field -mt-5" >
+                <label >Empresa</label>
+                <input pInputText type="text" formControlName="empresa" class="p-inputtext-sm"/>
+            </div>   
+            <div class="lg:col-4 col-12 field -mt-5" >
+                <label >Correo</label>
+                <input pInputText type="text" formControlName="email" class="p-inputtext-sm"/>
+            </div>    
+       
+        
+    </form>
+    <div class="flex justify-content-end lg:col-12 -mt-5">
+        <button pButton icon="pi pi-check" label="Confirmar" class="p-button-primary" (click)="guardarParticipante()"></button>
+    </div>
+</div>

@@ -27,12 +27,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   frmDatosCab!: FormGroup;
   visibleDocument: boolean = true;
   dataAdjunto: any;
-  registerFormRegistro: any= FormGroup;
-  // verOpor: boolean = false;
-  // verInter: boolean = false;
-  // verVent: boolean = false;
-  // verOtro: boolean = false;
-  //idtipoproyecto: any;
+  registerFormRegistro!: FormGroup ;
   lstProyectos: any;
   lstCliente: Cliente []=[];
   lstProveedores: Cliente[] = [];
@@ -84,7 +79,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   idfamilia: any;
   idsubfamilia: any;
   lstFamilia:any;
-    lstSubFamilia:any;
+  lstSubFamilia:any;
+  fecha = this.serviceUtilitario.obtenerFechaFormateadoDMA();
 
   constructor(
     private fb: FormBuilder,
@@ -102,7 +98,6 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.idOrdenC = this.IA_data.idordencompra;
-
     this.createFrm();
     this.createFormRegistro();
     this.createFormContacto();
@@ -158,6 +153,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     });
 }
 
+   
+
   createFormRegistro() {
     //Agregar validaciones de formulario
     this.registerFormRegistro = this.formBuilder.group({
@@ -171,7 +168,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd:[{ value: '', disabled: false }],
-      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      fechaingreso: [{value: this.fecha,disabled: false,}],
       idordencompra: [{ value: this.idOrdenC, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: 0, disabled: false }],
@@ -195,6 +192,9 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       terminosdepago:[{ value: '', disabled: false }],
       estadoentrada:[{ value: 'PEN', disabled: false }],
       estadosalida:[{ value: 'PEN', disabled: false }],
+      idsubfamilia: [{ value: 0, disabled: false }],
+      tc: [{ value: 0, disabled: false }],
+      fecprogramacion: [{ value: null, disabled: false }],
     });
   }
 
@@ -306,6 +306,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
             this.ordenCompra = rpta.ordencompra[0];
             //this.ordenCompra.codformapago = (rpta.ordencompra[0].codformapago).toString();
             this.getContactos(rpta.ordencompra[0].idproveedor);      
+            this.changeMoneda(rpta.ordencompra[0].idmoneda );
             if (rpta.ordencompra[0].items !== undefined) {
               this.lstItemOC = rpta.ordencompra[0].items;
               //this.calcularTotales();
@@ -359,14 +360,14 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecentrega = this.registerFormRegistro.value.fecentrega;
 
-    if (this.idOrdenC > 0) {
+    //if (this.idOrdenC > 0) {
       if (fechaingreso.toString().length === 10) {
         fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
       }
       if (fecentrega.toString().length === 10) {
         fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));
       }   
-    }
+    //}
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
       if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -394,8 +395,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
           this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
           if (this.idOrdenC === 0) {
             this.idOrdenC = rpta.resultProceso;  
-            this.registerFormRegistro.get('idordencompra').setValue(rpta.resultProceso);
-            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);  
+            this.registerFormRegistro.get('idordencompra')?.setValue(rpta.resultProceso);
+            this.registerFormRegistro.get('codigonroorden')?.setValue(rpta.resultProceso);  
 
             this.dataAdjunto ={
               idCliente: this.idOrdenC,
@@ -443,7 +444,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         console.info('servicioGenerico : ', rpta);
 
         let _terminosdepago = rpta.filter((x: { iditem: number; }) => x.iditem === 135);
-        this.registerFormRegistro.get('terminosdepago').setValue(_terminosdepago[0].valoritem);
+        this.registerFormRegistro.get('terminosdepago')?.setValue(_terminosdepago[0].valoritem);
       },
       error: (err) => {
       console.info('error : ', err);
@@ -763,7 +764,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       console.log('lstProyectos',rpta);
 
       if (this.idOrdenC > 0) {
-        this.changeProyecto(this.registerFormRegistro.get('idproyecto').value);
+        this.changeProyecto(this.registerFormRegistro.get('idproyecto')?.value);
       }
 
       },
@@ -802,12 +803,13 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         width: '40%'
     });
     ref.onClose.subscribe(() => {
-        this.traerUnoOrdenC();
+        this.traerUnoOrdenC();        
+      this.listarTransacciones();
       });
   }
 
   changeProyecto(idproyecto : any){
-    if (this.registerFormRegistro.get('codtipodoc').value === 'OPO') {  
+    if (this.registerFormRegistro.get('codtipodoc')?.value === 'OPO') {  
       const idoportunidad = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].idoportunidad;
       // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == idproyecto)[0].nomproyecto;
       // this.registerFormRegistro.get('nomproyecto').setValue(nomproyecto);
@@ -869,7 +871,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         
         const mediaType = 'application/pdf';
           const blob = new Blob([rpta.body], { type: mediaType });
-          const filename = this.ordenCompra.codigonroorden;
+          const filename = this.ordenCompra.codigonroorden !== undefined ? this.ordenCompra.codigonroorden : this.ordenCompra.idordencompra;
   
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
@@ -917,7 +919,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   }
 
   AgregarContacto(){
-    if (this.registerFormRegistro.get('idproveedor').value === null) {
+    if (this.registerFormRegistro.get('idproveedor')?.value === null) {
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Debe Seleccionar un Proveedor...' });
 
       return;
@@ -945,7 +947,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
           const objeto = {
             ...this.registerFormContacto.getRawValue(),
             idcontacto: 0,
-            idpersona: this.registerFormRegistro.get('idproveedor').value ,
+            idpersona: this.registerFormRegistro.get('idproveedor')?.value ,
         }
         console.log('objeto', objeto);
 
@@ -956,7 +958,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
                 if (rpta.procesoSwitch === 0){
                   this.contactoVisible = false;
                     this.messageService.add({severity: 'success', detail: "Operación exitosa" }); 
-                    this.getContactos(this.registerFormRegistro.get('idproveedor').value);                     
+                    this.getContactos(this.registerFormRegistro.get('idproveedor')?.value);                     
                     }
             },
             error:(err)=>{
@@ -1104,6 +1106,12 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
             _error = true;
       }
 
+      if (!_error && (this.registerFormRegistro.value.idmoneda === 2 && this.registerFormRegistro.value.tc === 0 ))
+        {
+              this.errorMensaje="Ingresar Tipo de Cambio...!";
+              _error = true;
+        }
+
       if (!_error && this.registerFormRegistro.value.codformapago === null)
       {
             this.errorMensaje="Seleccionar Termino de Pago...!";
@@ -1199,7 +1207,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       this.comprasService.personaTraerUno(objeto).subscribe({
         next: (rpta: any) => {
           console.log('personaTraerUno', rpta);
-          this.registerFormRegistro.get('codformapago').setValue(rpta[0].terminopago);
+          this.registerFormRegistro.get('codformapago')?.setValue(rpta[0].terminopago);
         },
         error: (err) => {
         this.messageService.clear();
@@ -1212,5 +1220,16 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
         complete: () => {
         },
     });
+    }
+
+    changeMoneda(value:any){
+      console.log('changeProyecto...', value);
+      if (value === 1) {
+        this.registerFormRegistro.get('tc')?.disable()
+        this.registerFormRegistro.get('tc')?.setValue(0);
+      }else{
+        this.registerFormRegistro.get('tc')?.enable();
+      }
+      
     }
 }

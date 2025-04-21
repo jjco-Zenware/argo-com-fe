@@ -7,9 +7,10 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
+import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 
 @Component({
   selector: 'app-c-ingreso-varios',
@@ -33,6 +34,7 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
     menuItems: MenuItem[] = [];
     @ViewChild('menu') menu!: Menu;
     ordenCompra: any;
+    listadoArchivos: any[]=[];
 
     constructor(
         private fb: FormBuilder,
@@ -40,6 +42,8 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
         public dialogService: DialogService  ,
         private proyectosService: ProyectosService,     
         private serviceSharedApp: SharedAppService,
+        private messageService: MessageService,
+        private comprasService: ComprasService, 
         
       ){          
     }
@@ -48,8 +52,10 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'ID ALMACÉN' },
-          { field: 'nomtipoorden', header: 'OFICINA ' },
+          { field: 'idordencompra', header: 'idordencompra' },
+          { field: 'codigonroorden', header: 'codigonroorden ' },
+          { field: 'fechaingreso', header: 'fechaingreso ' },
+          { field: 'nomalmacen', header: 'nomalmacen ' },
           { field: 'nomestado', header: 'ESTADO' }
           
       ];
@@ -76,7 +82,7 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
             },
           ],
           idproveedor: [{value: 0,disabled: false}],
-        idmoneda: [{value: 0,disabled: false}],
+        idmoneda: [{value: 0,disabled: false}],idcliente: [{value: 0,disabled: false}],
         })
       }
 
@@ -119,7 +125,7 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
 
     onVer(dato: any) {
      
-        this.tituloDetalle =  'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
+        this.tituloDetalle =  'N° DOCUMENTO - '+ dato.idordencompra;
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
@@ -130,7 +136,7 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
 
     onEditar(dato: any) {
       
-        this.tituloDetalle = 'N° ORDEN - '+ dato.alm_idordencompra + '  PROVEEDOR - ' + dato.nomcomercial.toUpperCase();
+        this.tituloDetalle = 'N° DOCUMENTO - '+ dato.idordencompra;
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'E',
@@ -219,11 +225,58 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
       }
     
       onAccion(item: any) {
-        this.ordenCompra.idtrx = item.idtrx;
-        console.log('onAccion', item);
+        console.log('onAccion',item);
+        let lstItem = this.ordenCompra.items;
+        const total = lstItem.filter((item: any) => item.indcompleto === true).length;
+        if (total === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+            return;
+        }
+        
+        for (let i = 0; i < lstItem.length; i++) {
+            if (lstItem[i].indcompleto === true && lstItem[i].idubicacion === 0) {
+              this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Ubicación...!' });
+              return;
+            }
+
+            if (lstItem[i].codtipoexistencia === 0) {
+              this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Tipo de Existencia...!' });
+              return;
+            }
+
+            if (lstItem[i].servicetag === '' && lstItem[i].serialnumber === '') {
+              this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Service Tag o Serial Number...!' });
+              return;
+            }
+        }
+        this.getListaArchivos(item);
+          console.log('onAccion', item);
+      }
+  
+      getListaArchivos(valor:any) {
+      
+        const objeto = {
+          idoportunidad: 0,
+          codtipoproc: 7 , 
+          idnroproceso: this.ordenCompra.idordencompra, 
+        }
+        console.log('this.objeto ...', objeto );
+      
+      const $listarArchivos = this.comprasService.ListarAdjuntoProc(objeto)
+        .subscribe({
+          next: (rpta: any) => {
+            this.listadoArchivos = rpta;
+            console.log('this.listadoArchivos ...', this.listadoArchivos );
+  
+            if (this.listadoArchivos.length === 0) {
+              this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+                  return;
+            }else{
+              this.ordenCompra.idtrx = valor.idtrx;
+        console.log('onAccion', valor);
         const ref = this.dialogService.open(CModalExcAlmacenComponent, {
             data: this.ordenCompra,
-            header: item.nomtrx,
+            header: valor.nomtrx ,
             closeOnEscape: false,
             styleClass: 'testDialog',
             width: '40%'
@@ -232,5 +285,13 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
         ref.onClose.subscribe(() => {
             this.getListar();
           });
+            }
+          },
+          error: (err) => {
+            this.serviceSharedApp.messageToast();
+          },
+          complete: () => { }
+        });
+      this.$listSubcription.push($listarArchivos)
       }
 }

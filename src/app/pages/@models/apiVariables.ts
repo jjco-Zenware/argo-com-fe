@@ -179,4 +179,40 @@ export const constantesApiWeb = {
     ordenCompraTraerunoSubproceso: controllerComercial + '/ordencompratrearunosubproceso',
     personaTraerUno: controllerMain + '/personatraeruno',
     ordencompraaprobadasprovlistsal: controllerComercial + '/ordencompraaprobadasprovlistSalida/',
+    documentoPrcTipoDocPrcLista: controllerComercial + '/documentoprctipodocprclista/',
+    documentoPrcOrdenCompraxProyecto: controllerComercial + '/documentoprcordencompraxproyectoxpro/',
+    ordenCompralistGasto: controllerComercial + '/ordencompralistgasto',
+    ordendocumentoprc: controllerComercial + '/ordendocumentoprc',
+    ordendocumentoupd: controllerComercial + '/ordendocumentoupd',
+
+    traerUbicaciones: controllerAlmacen + '/UbicacionesAlmacenTraerUno/',
+    UbicacionAlmacenPrc: controllerAlmacen + '/UbicacionAlmacenPrc',
+
+    obtenerUsuario: controllerUsuario + '/traerUnoUsuario',
+    enviarEmailRequerimiento: controllerUsuario + '/enviaremailrequerimiento',
+    
+    listarMovimientosPrc: controllerComercial + '/listarmovimientosprc/',
+    pagodocextornoprc: controllerTesoreria + '/pagodocextornoprc/',
+    exportarexcelcuentas: controllerMain + '/exportarexcelcuentas',
+    exportarexcelcuentaspc: controllerMain + '/exportarexcelcuentaspc',
+    updateFechaProgramacion: controllerTesoreria + '/updatefechaprogramacion/',
+
+    ordencompralistcuentas: controllerComercial + '/ordencompralistcuentas',
+    pagosProgramados: controllerComercial + '/pagosprogramados',
+    exportarExcelpagosprogramados: controllerMain + '/exportarexcelpagosprogramados',
+    obtenerToken: controllerEventos + '/obtenertoken',
+    enviarCorreo: controllerEventos + '/enviarcorreo',
+    listaritemTablaSunat: controllerContabilidad + '/listaritemtablasunat/',
+    listarTipoTransporteTablaSunat: controllerContabilidad + '/listartipotransportetablasunat',
+    listarMotivoTrasladoTablaSunat: controllerContabilidad + '/listarmotivotrasladotablasunat',
+    listarTipoDocumentoTablaSunat: controllerContabilidad + '/listartipodocumentotablasunat/',
+
+    listarGastos: controllerMarketing + '/gastoslist',
+    prcGastos: controllerMarketing + '/gastosprc',  
+    gastosTraeruno: controllerMarketing + '/gastostraeruno/',
+    
+    ordenCompraTraerunoNroDoc: controllerComercial + '/ordendocumentotrearunonrodoc',
+    emitirDocumento: controllerContabilidad + '/comprobantefelprc',
+    
+    operacionFel: controllerContabilidad + '/operacionfel',
 }

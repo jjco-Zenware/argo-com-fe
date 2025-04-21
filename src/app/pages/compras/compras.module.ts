@@ -7,6 +7,7 @@ import { SharedPrimeNgModule } from '@primeNgModule';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { ComprasService } from './Service/compraServices';
 import { CModalTransacComponent } from './modal-trans-registro/modal-transac.component';
+import { CModalPersonaComponent } from './registro-compra/modalPersona/c-modalpersona.component';
 
 //import { FieldsetModule } from 'primeng/fieldset';
 
@@ -14,7 +15,6 @@ import { CModalTransacComponent } from './modal-trans-registro/modal-transac.com
 @NgModule({
   declarations: [
     CModalTransacComponent
-    
   ],
   imports: [
     CommonModule,

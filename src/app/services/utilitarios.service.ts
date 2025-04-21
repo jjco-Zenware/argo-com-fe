@@ -19,6 +19,7 @@ export class UtilitariosService {
     return new Date();
   }
 
+
   obtenerFechaActualFormat() {
     let fecha = new Date();
     let fechaFormat =  `${fecha.getDate()}/${('0'+(fecha.getMonth()+1)).slice(-2)}/${fecha.getFullYear()}`;

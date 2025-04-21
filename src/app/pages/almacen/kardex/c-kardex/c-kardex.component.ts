@@ -35,6 +35,7 @@ export class CKardexComponent implements OnInit, OnDestroy{
     lstOrigen: any;
     lstProyectos: any;
     lstOrdenC: any;
+      lstProveedores: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -54,6 +55,7 @@ export class CKardexComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.ListarAlamcen(); 
         this.listaProyectoTipo();
+        this.listaProveedores();
         //this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
@@ -83,7 +85,9 @@ export class CKardexComponent implements OnInit, OnDestroy{
           idalmacen: [{value: 0 ,disabled: false}]  ,
           idtipoproyecto : [{value: 0 ,disabled: false}]  ,   
           idproyecto : [{value: 0 ,disabled: false}]  ,   
-          alm_idordencompra : [{value: 0 ,disabled: false}]  ,   
+          idordencompra : [{value: 0 ,disabled: false}]  ,    
+          idproveedor : [{value: 0 ,disabled: false}]  ,      
+          idtipodocprc : [{value: 0 ,disabled: false}]  
         })
       }
 
@@ -210,8 +214,9 @@ export class CKardexComponent implements OnInit, OnDestroy{
 
     getBusquedaAvanzada(data: any) {
       console.log('CBusquedaProductoComponent', data);
+      let idalmacen = 0;
       const refItem = this.dialogService.open(CBusquedaProductoComponent, {
-        data: data,
+        data: idalmacen,
         header: "Busqueda Avanzada por Productos",
         closeOnEscape: false,
         styleClass: 'testDialog',
@@ -220,7 +225,7 @@ export class CKardexComponent implements OnInit, OnDestroy{
       refItem.onClose.subscribe((rpta: any) => {
         
         console.log('onClose',rpta.data);
-        this.tituloKardex = "KARDEX  -  CÓDIGO: " + rpta.data.codproducto + "  -  PRODUCTO: " + rpta.data.despro ;
+        this.tituloKardex = "CONSULTA DE MOVIMIENTO  -  CÓDIGO: " + rpta.data.codproducto + "  -  PRODUCTO: " + rpta.data.despro ;
         this.frmDatos.get('codproducto')?.setValue(rpta.data.codproducto);
         this.idprod = rpta.data.idprod
         this.getListar();
@@ -257,61 +262,103 @@ export class CKardexComponent implements OnInit, OnDestroy{
             complete: () => {
             },
         });
-        }
+      }
+  
+      getOrigen(data:any){
+        console.log('getOrigen', data);
+        this.cargarProyectos(data);   
     
-        getOrigen(data:any){
-          console.log('getOrigen', data);
-          this.cargarProyectos(data);   
-      
-        }
+      }
 
-        cargarProyectos(dato:any){
-          console.log('cargarProyectos', dato);
-          this.ordencompraService.portipoProyectoList(dato).subscribe({
+      cargarProyectos(dato:any){
+        console.log('cargarProyectos', dato);
+        this.ordencompraService.portipoProyectoList(dato).subscribe({
+          next: (rpta: any) => {
+          this.lstProyectos = rpta;
+          const obj = {
+            idproyecto:0,
+            s_nomproyecto:'TODOS'
+          }
+          this.lstProyectos.unshift(obj);
+          this.frmDatos.get('idproyecto')?.setValue(0);
+    
+          
+    
+          },
+    
+          error: (err) => {
+          this.messageService.clear();
+          this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico,
+              });
+          },
+          complete: () => {
+          },
+      });
+      }
+
+      getOcproveedor(valor:number, dato: any) {  
+        this.lstOrdenC = []
+        let _persona = this.frmDatos.get('idproveedor')?.value;
+        let _proyecto = this.frmDatos.get('idproyecto')?.value;
+        if (valor === 0) {
+          _proyecto= dato
+        }else{
+          _persona = dato
+        }
+        const obj = {
+          idproyecto: _proyecto,
+          idpersona: _persona,
+        }
+        const $personaProveedorlist = this.ordencompraService.documentoPrcOrdenCompraxProyecto(obj).subscribe({
             next: (rpta: any) => {
-            this.lstProyectos = rpta;
-            console.log('lstProyectos',rpta);
-      
-           
-      
+                this.setSpinner(false);
+                this.lstOrdenC = rpta;
+                const obj = {
+                  idordencompra:0,
+                  label_resumen:'TODOS'
+                }
+                this.lstOrdenC.unshift(obj);
+                
+        this.frmDatos.get('idordencompra')?.setValue(0);
+                
+              
             },
-      
             error: (err) => {
-            this.messageService.clear();
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: mensajesQuestion.msgErrorGenerico,
+                this.setSpinner(false);
+                console.info('error : ', err);
+                this.messageService.clear();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: mensajesQuestion.msgErrorGenerico,
                 });
             },
-            complete: () => {
-            },
+            complete: () => {},
         });
-        }
+        this.$listSubcription.push($personaProveedorlist);
+      }
 
-        getOcproveedor(dato: any) {  
-          this.lstOrdenC = []
-          const $personaProveedorlist = this.ordencompraService.ordencompraaprobadasprovlist(dato).subscribe({
-              next: (rpta: any) => {
-                  this.setSpinner(false);
-                  this.lstOrdenC = rpta;
-                  // if (this.ordenCompra.idordencompra > 0) {
-                  //   this.registerFormRegistro.get('alm_idordencompra')?.setValue(this.ordenCompra.alm_idordencompra);
-                  // }
-              },
-              error: (err) => {
-                  this.setSpinner(false);
-                  console.info('error : ', err);
-                  this.messageService.clear();
-                  this.messageService.add({
-                      severity: 'error',
-                      summary: 'Error',
-                      detail: mensajesQuestion.msgErrorGenerico,
-                  });
-              },
-              complete: () => {},
-          });
-          this.$listSubcription.push($personaProveedorlist);
-        }
+      listaProveedores() {
+
+        const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+          next: (rpta: any) => {
+            this.lstProveedores = rpta;
+            const obj = {
+              idcliente : 0,
+              razonsocial: 'TODOS'
+            }
+            this.lstProveedores.unshift(obj);
+          },
+          error: (err) => {
+            this.serviceSharedApp.messageToast()
+          },
+          complete: () => { },
+        });
+        this.$listSubcription.push($getClientes);
+    
+      }
 }
 

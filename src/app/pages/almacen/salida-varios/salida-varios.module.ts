@@ -14,6 +14,8 @@ import { AlmacenService } from '../service/almacenServices';
 import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 import { TagModule } from 'primeng/tag';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { ComprasService } from '../../compras/Service/compraServices';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -32,6 +34,6 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     TagModule,
     SplitButtonModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, ComprasService, MessageService]
 })
 export class SalidaVariosModule { }

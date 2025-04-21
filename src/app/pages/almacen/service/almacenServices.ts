@@ -109,4 +109,20 @@ export class AlmacenService {
         const url = `${constantesApiWeb.buscarProducto03}`;
         return this.http.post<any>(url, objeto)
     }
+
+    traerUbicaciones(codigo: any) {
+        const url = `${constantesApiWeb.traerUbicaciones}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+    prcUbicaciones(objeto: any) {
+        const url = `${constantesApiWeb.UbicacionAlmacenPrc}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    obtenerItemsTabla(id:number) {
+        const url = `${constantesApiWeb.lstItemsTabla}${id}`;
+        return this.http.get<any>(url);
+    }
+    
 }

@@ -82,7 +82,7 @@ export class CModalExcAlmacenComponent {
               }
 
               this.serviceSharedApp.messageToast({
-                  severity: rpta.procesoSwitch === "0" ? 'success' : 'info',
+                  severity: rpta.procesoSwitch === "0" ? 'success' : 'success',
                   summary: rpta.procesoSwitch === "0" ? 'Exito' : 'Validación...!',
                   detail: rpta.mensaje
               });

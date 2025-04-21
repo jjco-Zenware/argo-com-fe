@@ -8,7 +8,7 @@ const routerOptions: ExtraOptions = {
 const routes: Routes = [
     { path: '', redirectTo: '/auth', pathMatch:'full' },
     { path: 'auth', data: { breadcrumb: 'auth' }, loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
-    { path: 'pages', data: { breadcrumb: 'Pages' }, loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) }
+    { path: 'pages', data: { breadcrumb: 'Opciones' }, loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule) }
 ];
 
 @NgModule({

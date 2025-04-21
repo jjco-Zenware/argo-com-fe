@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
-import { Marca, TipoProducto } from '@interfaces';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
@@ -8,7 +7,7 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
-import { constantesLocalStorage, mensajesQuestion } from '@constantes';
+import { mensajesQuestion } from '@constantes';
 @Component({
   selector: 'app-c-modalpersona',
   templateUrl: './c-modalpersona.component.html'
@@ -109,7 +108,7 @@ lstEnti = [
     idpersona: [{ value: 0, disabled: false }],
     tipocambio: [{ value: 0, disabled: false }],
     tipoentidad: [{ value: null, disabled: false }, [Validators.required]],
-    nroctadetraccion: [{ value: null, disabled: false }, [Validators.required]],
+    nroctadetraccion: [{ value: null, disabled: false }],
     });
 }
 

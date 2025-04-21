@@ -11,6 +11,7 @@ import { TesoreriaService } from '../../service/tesoreriaServices';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { CModalListPAgosComponent } from '../../modallistpagos/c-modallistpagos.component';
 import { CModalRegPAgosComponent } from '../../modalregpagos/c-modalregpagos.component';
+import { CModalProgramacionComponent } from '../../modalfecprogramacion/c-modalfecprogramacion.component';
 
 @Component({
   selector: 'app-c-cuentaporpagar',
@@ -21,19 +22,27 @@ import { CModalRegPAgosComponent } from '../../modalregpagos/c-modalregpagos.com
 export class CCuentaporPagarComponent implements OnInit, OnDestroy{
 
   $listSubcription: Subscription[] = [];
-  lstCuentas: any;
-  lstPendientes: any;
-  lstAprobadas: any;
+  lstCuentas: any[] = [];
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
-  cols: any[] = [];
   lstExportar: any[] = [];
   lstExportExcel: any[] = [];
   frmDatos!: FormGroup;
   lstMonedas: any;
   lstProveedores: any[] = [];
+  saldo_documento_sol: number = 0;
+  saldo_documento_dol: number = 0;
+  s_monto_recaudado_sol: number = 0;
+  s_monto_recaudado_dol: number = 0;
   
   @Output() OB_back = new EventEmitter<boolean>();
+
+  lstEstado = [
+    {value: '000', name: 'TODOS' },
+    {value: 'PEN', name: 'PENDIENTE' }, 
+    {value: 'PAR', name: 'PARCIAL' }, 
+    {value: 'PAG', name: 'PAGADO' }, 
+  ]
 
   constructor(
       private fb: FormBuilder,
@@ -54,26 +63,6 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
       this.listaMonedas();
       this.listaProveedores();
       this.listaProveedores();
-      this.cols = [
-        { field: 'nrofactura', header: 'FACTURA' },
-        { field: 'nomcomercial', header: 'PROVEEDOR ' },
-        { field: 'descentrocosto', header: 'COSTO ' },
-        { field: 'fecemision', header: 'EMISION' },
-        { field: 'fecvencimiento', header: 'VENCIMIENTO' },
-        { field: 'nommoneda', header: 'MONEDA' },
-        { field: 's_monto_total', header: 'MONTO' },
-        { field: 's_monto_total', header: 'SALDO' },
-        { field: 'nomestado', header: 'ESTADO' }      ,
-        { field: 'fecvencimiento', header: 'VENCIMIENTO' },
-        { field: 'nommoneda', header: 'MONEDA' },
-        { field: 's_monto_total', header: 'MONTO' },
-        { field: 's_monto_total', header: 'SALDO' },
-        { field: 'nomestado', header: 'ESTADO' } ,
-        { field: 's_monto_total', header: 'SALDO' },
-        { field: 'nomestado', header: 'ESTADO' }  ,
-        { field: 's_monto_total', header: 'SALDO' },
-        { field: 'nomestado', header: 'ESTADO' } 
-      ];
     this.getListar();
   }
 
@@ -84,6 +73,8 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
         idproveedor: [{ value: 0, disabled: false }],
         idmoneda: [{value: 0,disabled: false}],
+        idcliente: [{value: 0,disabled: false}],
+        estado: [{value: '000' ,disabled: false}],
       })
     }
 
@@ -100,24 +91,25 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
   getListar(){
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-    //console.log('this.frmDatos...', this.frmDatos.value);
+    this.saldo_documento_sol =0;
+    this.saldo_documento_dol =0;
+    this.s_monto_recaudado_sol =0;
+    this.s_monto_recaudado_dol =0;
+
     const objeto = {
       ...this.frmDatos.value,
-      idtipodocprc: 7
+      idtipodocprc: 18
     }
 
-    const $getListar = this.proyectosService.ordenCompraList(objeto)
+    const $getListar = this.proyectosService.ordenCompraListCuentas(objeto)
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
-            //this.lstCuentas= rpta.ordenescompra;
+            console.log('rpta',rpta);
 
-             let lista = rpta.ordenescompra;
-             
-            if (lista.length > 0) {
-              this.lstCuentas = lista.filter((x: { estado: string; }) => x.estado === 'EMI' || x.estado === 'EMT');
-            }
-            console.log('rpta getListar', this.lstCuentas);
+            this.lstCuentas = rpta.ordenescompra;
+
+          
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -125,18 +117,14 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
         },
         complete:() => {
           this.setSpinner(false);
+          this.saldo_documento_sol = this.lstCuentas.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.saldo_documento, 0);
+          this.saldo_documento_dol = this.lstCuentas.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.saldo_documento, 0);
+          this.s_monto_recaudado_sol = this.lstCuentas.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.s_monto_recaudado, 0);
+          this.s_monto_recaudado_dol = this.lstCuentas.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.s_monto_recaudado, 0);
         }
       });
     this.$listSubcription.push($getListar)
   }
-
-  selectHeaders(tabNumber: any) {
-    if (tabNumber.index === 0) {
-      this.lstExportExcel = this.lstPendientes;
-    }else{
-      this.lstExportExcel = this.lstAprobadas;
-    }
-  }  
   
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
@@ -186,12 +174,13 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
   }
 
     onVer(data :any) {
+      data.tipodeuda = 1;
       const refItem = this.dialogService.open(CModalListPAgosComponent, {
         data: data,
         header: "Lista de Pagos / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
         closeOnEscape: false,
         styleClass: 'testDialog',
-        width: '40%'
+        width: '50%'
       });
       refItem.onClose.subscribe((rpta: any) => {
         this.getListar();         
@@ -199,9 +188,10 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     }
     
     onPagar(data :any) {
+      data.tipodeuda = 1;
       const refItem = this.dialogService.open(CModalRegPAgosComponent, {
             data: data,
-            header: "Registrar Pago / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
+            header: "Registrar Pagos",
             closeOnEscape: false,
             styleClass: 'testDialog',
             width: '30%'
@@ -215,12 +205,84 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
           });
     }
 
-    getSeverity(data:number) {
-      console.log()
-      if (data > 0) {
-        return 'success';
-      }else{
-        return 'danger';
+
+  onPagarDetra(data :any) {
+    console.log('onPagarDetra',data);
+    data.tipodeuda = 2;
+    const refItem = this.dialogService.open(CModalRegPAgosComponent, {
+          data: data,
+          header: "Pagar Detracción",
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '30%'
+        });
+        refItem.onClose.subscribe((rpta: any) => {
+          console.log('onClose',rpta);
+          if (rpta != undefined) {
+            this.getListar()   ;
+          }
+        });
+  }
+
+  onVerDetra(data :any) {
+    data.tipodeuda = 2;
+    const refItem = this.dialogService.open(CModalListPAgosComponent, {
+      data: data,
+      header: "Pago Detracción de "+ data.nomcomercial + ' / FACT N° - ' + data.nrofactura,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '50%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      this.getListar();         
+    });
+  }
+
+  onProgramarPago(data :any){
+    console.log('onProgramarPago',data);
+    const refItem = this.dialogService.open(CModalProgramacionComponent, {
+      data: data,
+      header: "Programación de Pagos" ,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '20%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      if (rpta != undefined) {
+        this.getListar()   ;
+        
+      }        
+    });
+  }
+  
+
+  getExportarExcel() {
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+
+    const objeto = {
+      ...this.frmDatos.value,
+      idtipodocprc: 18,
+      saldo_documento_sol:this.saldo_documento_sol,
+      saldo_documento_dol:this.saldo_documento_dol,
+      s_monto_recaudado_sol: this.s_monto_recaudado_sol,
+      s_monto_recaudado_dol: this.s_monto_recaudado_dol,
+    }
+
+    const $getListar = this.tesoreriaService.exportarexcelcuentas(objeto)
+    .subscribe({
+      next: (rpta:any) => {
+          this.setSpinner(false);
+          this.utilitariosService.descargarExcel(rpta, 'CuentasPorPagar');
+      },
+      error:(err)=>{
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+      },
+      complete:() => {
+        this.setSpinner(false);
       }
+    });
+  this.$listSubcription.push($getListar)
   }
 }

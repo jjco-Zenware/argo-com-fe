@@ -29,7 +29,7 @@
 
         <p-table #dt1 [value]="lstAlmacen" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border -mt-3">
 
             <ng-template pTemplate="header">
                 <tr class="text-sm h-3rem">
@@ -56,6 +56,11 @@
                     <th style="width: 150px;" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             DIRECCIÓN
+                        </div>
+                    </th>
+                    <th style="width: 20px;"  class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            ESTADO
                         </div>
                     </th>
                     <th style="width: 80px;" class="bg-teal-50 border-1" >
@@ -97,10 +102,16 @@
                             {{data.diralmacen | uppercase}}
                         </div>
                     </td>
+                    <td>                       
+                        <div [ngStyle]="{'text-align': 'center','width':'20px'}">
+                            <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
+                        </div>
+                    </td>
                     <td>
-                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
-                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
-                            
+                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text" (click)="onEditar(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-lock" pTooltip="Activar/Desactivar"  tooltipPosition="left" class="-button-rounded p-button-text text-red-500" (click)="getActvarDesactivar(data)">
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -121,7 +132,7 @@
 
 <ng-template #visSecciones>
 
-    <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
+    <div class="p-fluid p-3 mb-1 card m-4" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 h-2rem">
@@ -133,7 +144,7 @@
                 </div>       
             </div>
         </div>
-        <app-c-almacenes-detalle [IA_data]="data"></app-c-almacenes-detalle>
+        <app-c-almacenes-detalle [IA_data]="dataALM"></app-c-almacenes-detalle>
     </div>
 
 </ng-template>

@@ -21,38 +21,38 @@
     [resizableColumns]="true"responsiveLayout="scroll"
     currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" dataKey="id"
     stateStorage="session" [globalFilterFields]="['title','razonsocial','nomlista','startDate']"
-    styleClass="p-datatable-sm">
+    styleClass="p-datatable-sm p-datatable-gridlines">
     <!-- <ng-template pTemplate="caption">
         <span class="text-900 text-xl font-semibold mt-8">Lista de Archivos</span>
     </ng-template> -->
     <ng-template pTemplate="header" let-columns>
         <tr class="text-sm">
-            <th style="width:5%;" class="surface-200">
+            <th style="width:5%;" class="bg-teal-50 border-1">
                 <div class="flex justify-content-between align-items-center">
                     N°
                 </div>
             </th>
-            <th style="width: 30%;" class="surface-200">
+            <th style="width: 30%;" class="bg-teal-50 border-1">
                 <div class="justify-content-between align-items-center ">
                     DESCRIPCIÓN
                 </div>
             </th>
-            <th style="width: 30%;" class="surface-200">
+            <th style="width: 30%;" class="bg-teal-50 border-1">
                 <div class="justify-content-between align-items-center ">
                     NOMBRE
                 </div>
             </th>
-            <th style="width: 20%;" class="surface-200">
+            <th style="width: 20%;" class="bg-teal-50 border-1">
                 <div class="justify-content-between align-items-center">
                     TIPO
                 </div>
             </th>
-            <th style="width: 20%;" class="surface-200">
+            <th style="width: 20%;" class="bg-teal-50 border-1">
                 <div class="justify-content-between align-items-center">
                     FECHA
                 </div>
             </th>
-            <th style="width: 5%;" class="surface-200">
+            <th style="width: 5%;" class="bg-teal-50 border-1">
                 <div class="flex justify-content-between align-items-center">
                     ACCIONES
                 </div>

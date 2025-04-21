@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -86,6 +86,7 @@ export class CSalidaOcProyectoComponent implements OnInit, OnDestroy{
           ],
           idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
+        idcliente: [{value: 0,disabled: false}],
         })
       }
 
@@ -230,6 +231,13 @@ export class CSalidaOcProyectoComponent implements OnInit, OnDestroy{
     }
     
     onAccion(item: any) {
+      let lstItem = this.ordenCompra.items;
+      const total = lstItem.filter((item: any) => item.indcompleto === true).length;
+        if (total === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items sin Confirmar...!' });
+            return;
+        }
+
       this.getListaArchivos(item);
       console.log('onAccion', item);
 
@@ -310,4 +318,61 @@ export class CSalidaOcProyectoComponent implements OnInit, OnDestroy{
       this.$listSubcription.push($getClientes);
   
     }
+    onVerDetalle(data: any) {
+      console.log('onVerDetalle...', data);
+          // const refItem = this.dialogService.open(CDetalleFacturaComponent, {
+          //   data: data,
+          //   header: "Detalle de la Factura N° " + data.nrofactura,
+          //   closeOnEscape: false,
+          //   styleClass: 'testDialog',
+          //   width: '50%'
+          // });  
+          
+          this.setSpinner(true);
+        this.mensajeSpinner = 'Descargando Detalle...!';
+    
+        const objeto = {
+          idusuario : constantesLocalStorage.idusuario,
+          iddocumentoprc: data.idordencompra,
+          codtipoprc: 15,
+          idplantilla: 0
+        }
+    
+        const $cargarOrdenC = this.comprasService.prcDocumentoDet(objeto).subscribe({
+          next: (rpta: any) => {
+            this.setSpinner(false);      
+            
+            const mediaType = 'application/pdf';
+              const blob = new Blob([rpta.body], { type: mediaType });
+              const filename = 'PECOSA-' + data.codigonroorden;
+      
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = filename;
+              document.body.appendChild(a);
+              a.target = '_blank';
+              a.click();
+    
+              window.open(url);
+    
+              setTimeout(() => {
+                  document.body.removeChild(a);
+                  window.URL.revokeObjectURL(url);
+              }, 100);
+          },
+              error: (err) => {
+                this.setSpinner(false);
+              this.messageService.clear();
+              this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error',
+                  detail: mensajesQuestion.msgErrorGenerico,
+              });
+          },
+              complete: () => {
+          },
+        });
+        this.$listSubcription.push($cargarOrdenC)
+  }
 }

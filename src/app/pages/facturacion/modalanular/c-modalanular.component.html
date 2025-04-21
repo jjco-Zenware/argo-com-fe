@@ -1,0 +1,18 @@
+
+<p-card class="m-2 gap-1">
+    <ng-template pTemplate="content">
+        <div class="p-fluid grid -mb-4 -mt-4">    
+            <div class="col-12">
+                <label class="font-semibold">MOTIVO</label>
+                <textarea id="description" name="description" type="text" [(ngModel)]="descripcion" pInputTextarea [rows]="2" style="resize: none" 
+                class="w-full mt-1 p-inputtext-sm"></textarea>
+            </div>
+        </div>
+    </ng-template>
+    
+    <ng-template pTemplate="footer" class="h-3rem">
+        <button pButton icon="pi pi-check" label="Confirmar" class="p-button-primary w-auto h-2rem" (click)="procesarSunat()"></button>
+
+    </ng-template>
+    
+</p-card>

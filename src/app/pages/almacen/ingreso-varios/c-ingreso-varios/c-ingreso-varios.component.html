@@ -1,7 +1,7 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
     <div class="card m-4">
-        <div class="grid mt-2">
-            <div class="flex justify-content-between col-12 -mt-3 gap-2">   
+        <div class="grid">
+            <div class="flex justify-content-between col-12 gap-2">   
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-file" label="Nuevo"
                         pTooltip="Nueva" tooltipPosition="left" (click)="onNuevo()" ></button>
@@ -44,9 +44,19 @@
                             N°
                         </div>
                     </th>
+                    <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            ID  
+                        </div>
+                    </th>
                     <th [ngStyle]="{'width':'30px'}"  class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             CÓDIGO 
+                        </div>
+                    </th>
+                    <th [ngStyle]="{'width':'30px'}" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            FECHA 
                         </div>
                     </th>
                     <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
@@ -89,8 +99,18 @@
                         {{rowIndex + 1}}
                     </td>
                     <td >
-                        <div [ngStyle]="{'width':'50px'}">
+                        <div [ngStyle]="{'width':'20px'}">
                             {{data.idordencompra}}
+                        </div>
+                    </td>
+                    <td >
+                        <div [ngStyle]="{'width':'30px'}">
+                            {{data.codigonroorden}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'30px'}">
+                            {{data.fechaingreso}}
                         </div>
                     </td>
                     <td>
@@ -141,8 +161,8 @@
 <ng-template #visSecciones>
 
     <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
-        <div class="grid mt-2">
-            <div class="flex justify-content-between col-12 -mt-3 gap-2">
+        <div class="grid ">
+            <div class="flex justify-content-between col-12 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 h-2rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar" tooltipPosition="left" (click)="getBack()" ></button>                    

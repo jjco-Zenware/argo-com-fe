@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { constantesApiWeb } from '@apiVariables';
+import { map } from 'rxjs';
 
 @Injectable()
 export class TesoreriaService {
@@ -111,18 +112,51 @@ export class TesoreriaService {
     }
 
     prcPagoDocumento(objeto: any) {
-        console.log("prcPagoDocumento : ", objeto);
         const url = `${constantesApiWeb.prcPagoDocumento}`;
         return this.http.post<any>(url, objeto)
     }
 
-    listPagoDocumento(codigo: any) {
-        const url = `${constantesApiWeb.listPagoDocumento}${codigo}`;
-        return this.http.get<any>(url);
+    listPagoDocumento(objeto: any) {
+        const url = `${constantesApiWeb.listPagoDocumento}`;
+        return this.http.post<any>(url, objeto)
     }
 
     traerunoPagoDocumento(codigo: any) {
         const url = `${constantesApiWeb.traerunoPagoDocumento}${codigo}`;
         return this.http.get<any>(url);
     }
+
+    pagodocextornoprc(objeto: any) {
+        const url = `${constantesApiWeb.pagodocextornoprc}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    exportarexcelcuentas(data: any) {
+    const url = `${constantesApiWeb.exportarexcelcuentas}`;
+    return this.http
+        .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+        .pipe(
+        map((resp: Blob) => resp));
+    }
+
+    exportarexcelcuentaspc(data: any) {
+    const url = `${constantesApiWeb.exportarexcelcuentaspc}`;
+    return this.http
+        .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+        .pipe(
+        map((resp: Blob) => resp));
+    }
+
+    updateFechaProgramacion(objeto: any) {
+        const url = `${constantesApiWeb.updateFechaProgramacion}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    exportarExcelpagosprogramados(data: any) {
+        const url = `${constantesApiWeb.exportarExcelpagosprogramados}`;
+        return this.http
+            .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+            .pipe(
+            map((resp: Blob) => resp));
+        }
 }

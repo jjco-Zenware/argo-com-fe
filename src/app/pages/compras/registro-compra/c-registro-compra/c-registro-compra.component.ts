@@ -62,7 +62,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
       this.cols = [
         { field: 'fecemision', header: '  EMISION' },
         { field: 'fecvencimiento', header: 'VENCIMIENTO' },
-        { field: 'nrofactura', header: 'DOCUMENTO' },
+        { field: 'nrofactura', header: 'DOCUMENTOa' },
         { field: 'nomcomercial', header: 'PROVEEDOR' },
         { field: 'descentrocosto', header: 'CENTRO COSTO' },
         { field: 'simbmoneda', header: 'MONEDA' },
@@ -91,6 +91,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
+        idcliente: [{value: 0,disabled: false}],
     }) 
   }
 

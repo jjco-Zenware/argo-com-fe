@@ -438,6 +438,11 @@ export interface OrdenCompraItem{
     sku?: string;
     serialnumber?: string;
     idproveedor?: number;
+    idubicacion?: number;
+    iddocumentoprcitem_trx?: number;
+    rutaubicacion: string;
+    coptipoexistencia: string;
+    nomtipoexistencia: string;
 }
 
 export interface OrdenCompra {
@@ -640,4 +645,3 @@ export interface TaskList {
     title: string;
     tasks: Tasks[];
 }
-

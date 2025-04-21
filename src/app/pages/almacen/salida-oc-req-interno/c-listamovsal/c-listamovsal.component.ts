@@ -1,15 +1,16 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
+import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 
 @Component({
   selector: 'app-c-listamovsal',
@@ -41,6 +42,8 @@ export class CSalidaOcReqComponent implements OnInit, OnDestroy{
         public dialogService: DialogService  ,
         private proyectosService: ProyectosService,     
         private serviceSharedApp: SharedAppService,
+        private comprasService: ComprasService, 
+        private messageService: MessageService,   
         
       ){          
     }
@@ -49,10 +52,13 @@ export class CSalidaOcReqComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'ID ALMACÉN' },
-          { field: 'nomtipoorden', header: 'OFICINA ' },
-          { field: 'nomcomercial', header: 'DIRECCIÓN' },
-          { field: 'nomestado', header: 'ESTADO' }          
+          { field: 'idordencompra', header: 'CÓDIGO' },
+          { field: 'nroordencompra_origen', header: 'nroordencompra_origen' },
+          { field: 'fechaingreso', header: 'FECHA ' },
+          { field: 'nomcomercial', header: 'PROVEEDOR' },
+          { field: 'alm_idordencompra', header: 'N° ORDEN' },
+          { field: 'nomalmacen', header: 'ALMACÉN ' },
+          { field: 'nomestado', header: 'ESTADO' }           
       ];
       this.listaProveedores();
     }
@@ -79,6 +85,7 @@ export class CSalidaOcReqComponent implements OnInit, OnDestroy{
           ],
           idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
+        idcliente: [{value: 0,disabled: false}],
         })
       }
 
@@ -257,4 +264,55 @@ export class CSalidaOcReqComponent implements OnInit, OnDestroy{
       this.$listSubcription.push($getClientes);
   
     }
+
+    onVerDetalle(data: any) {
+          console.log('onVerDetalle...', data);
+              
+              this.setSpinner(true);
+            this.mensajeSpinner = 'Descargando Detalle...!';
+        
+            const objeto = {
+              idusuario : constantesLocalStorage.idusuario,
+              iddocumentoprc: data.idordencompra,
+              codtipoprc: 16,
+              idplantilla: 0
+            }
+        
+            const $cargarOrdenC = this.comprasService.prcDocumentoDet(objeto).subscribe({
+              next: (rpta: any) => {
+                this.setSpinner(false);      
+                
+                const mediaType = 'application/pdf';
+                  const blob = new Blob([rpta.body], { type: mediaType });
+                  const filename = 'PECOSA-' + data.codigonroorden;
+          
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = filename;
+                  document.body.appendChild(a);
+                  a.target = '_blank';
+                  a.click();
+        
+                  window.open(url);
+        
+                  setTimeout(() => {
+                      document.body.removeChild(a);
+                      window.URL.revokeObjectURL(url);
+                  }, 100);
+              },
+                  error: (err) => {
+                    this.setSpinner(false);
+                  this.messageService.clear();
+                  this.messageService.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: mensajesQuestion.msgErrorGenerico,
+                  });
+              },
+                  complete: () => {
+              },
+            });
+            this.$listSubcription.push($cargarOrdenC)
+      }
 }

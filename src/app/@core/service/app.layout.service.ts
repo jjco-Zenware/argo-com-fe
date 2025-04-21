@@ -57,8 +57,8 @@ export class LayoutService {
         rightMenuActive: false,
         topbarMenuActive: false,
         menuProfileActive: false,
-        sidebarActive: false,
-        anchored: false
+        sidebarActive: true,
+        anchored: true
     };
 
     private configUpdate = new Subject<AppConfig>();

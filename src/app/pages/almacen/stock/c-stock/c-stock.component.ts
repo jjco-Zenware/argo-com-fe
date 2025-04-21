@@ -30,6 +30,7 @@ export class CStockComponent implements OnInit, OnDestroy{
     lstProducto:any;
     lstFamilia:any;
     lstSubFamilia:any;
+    lstAlmacenCB: any;
 
     constructor(
         private fb: FormBuilder,
@@ -47,6 +48,7 @@ export class CStockComponent implements OnInit, OnDestroy{
     ngOnInit(): void{
         this.createFrm();
         this.listarFamilia();
+        this.ListarAlamcen();
         //this.getListar();
         this.cols = [
           { field: 'idordencompra', header: 'ID ALMACÉN' },
@@ -73,8 +75,10 @@ export class CStockComponent implements OnInit, OnDestroy{
           fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(), disabled: false}],     
           idusuario: [{value: constantesLocalStorage.idusuario, disabled: false}],
           codproducto: [{value: '',disabled: false}],
-          idfamilia: [{value: '',disabled: false}],
-          idsubfamilia: [{value: '',disabled: false}]          
+          idfamilia: [{value: 0,disabled: false}],
+          idsubfamilia: [{value: 0,disabled: false}]     ,
+          idalmacen: [{value: 0,disabled: false}]  ,
+          idtipodocprc : [{value: 0 ,disabled: false}]       
         })
       }
 
@@ -91,15 +95,15 @@ export class CStockComponent implements OnInit, OnDestroy{
     getListar(){
       this.setSpinner(true);
       this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-      console.log('this.frmDatos...', this.frmDatos.value);
-      const objeto = {
-        ...this.frmDatos.value,
-        idfamilia: 0,
-        idsubfamilia:0
-      }
-      console.log('this.objeto...', objeto);
+      // console.log('this.frmDatos...', this.frmDatos.value);
+      // const objeto = {
+      //   ...this.frmDatos.value,
+      //   idfamilia: 0,
+      //   idsubfamilia:0
+      // }
+      // console.log('this.objeto...', objeto);
 
-      const $getListarOrdenCompra = this.almacenService.buscarProducto(objeto)
+      const $getListarOrdenCompra = this.almacenService.buscarProducto(this.frmDatos.value)
         .subscribe({
           next: (rpta:any) => {
               this.setSpinner(false);
@@ -135,8 +139,9 @@ export class CStockComponent implements OnInit, OnDestroy{
 
     getBusquedaAvanzada(data: any) {
       console.log('CBusquedaProductoComponent', data);
+      let idalmacen = 0;
       const refItem = this.dialogService.open(CBusquedaProductoComponent, {
-        data: data,
+        data: idalmacen,
         header: "Busqueda Avanzada por Productos",
         closeOnEscape: false,
         styleClass: 'testDialog',
@@ -161,45 +166,72 @@ export class CStockComponent implements OnInit, OnDestroy{
       });
     }
     
-     listarFamilia() {
-            const $listarFamilia = this.almacenService.listarFamilia().subscribe({
-              next: (rpta: any) => {
-                this.lstFamilia = rpta;
-                const objet = {
-                  idfamilia: 0,
-                  nomfamilia: 'TODOS'
-                }
-                this.lstFamilia.unshift(objet);
-              },
-              error: (err) => {
-                console.info('error : ', err);
-                this.serviceSharedApp.messageToast()
-              },
-              complete: () => {
-              },
-            });
-            this.$listSubcription.push($listarFamilia);
+    listarFamilia() {
+          const $listarFamilia = this.almacenService.listarFamilia().subscribe({
+            next: (rpta: any) => {
+              this.lstFamilia = rpta;
+              const objet = {
+                idfamilia: 0,
+                nomfamilia: 'TODOS'
+              }
+              this.lstFamilia.unshift(objet);
+            },
+            error: (err) => {
+              console.info('error : ', err);
+              this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+          });
+          this.$listSubcription.push($listarFamilia);
+    }
+
+    getSubFamilia(dato: any) {  
+      const $getSubFamilia = this.almacenService.listarSubFamilia(dato).subscribe({
+          next: (rpta: any) => {
+              this.setSpinner(false);
+              console.info('next : ', rpta);
+              this.lstSubFamilia = rpta;
+              const objet = {
+                idsubfamilia: 0,
+                nomsubfamilia: 'TODOS'
+              }
+              this.lstSubFamilia.unshift(objet);
+              this.frmDatos.get('idsubfamilia')?.setValue(0);
+          },
+          error: (err) => {
+              this.setSpinner(false);
+              console.info('error : ', err);
+              this.serviceSharedApp.messageToast()
+          },
+          complete: () => {},
+      });
+      this.$listSubcription.push($getSubFamilia);
+    }
+
+    ListarAlamcen(){
+      const objeto = {
+        idalmacen:0,
+        idofi: 0
+      }
+      const $getListar = this.almacenService.ListarAlamcen(objeto)
+        .subscribe({
+          next: (rpta:any) => {
+              console.log('rpta lstAlmacenCB', rpta);
+              
+              this.lstAlmacenCB = rpta
+              const objet = {
+                idalmacen: 0,
+                nomalmacen: 'TODOS'
+              }
+              this.lstAlmacenCB.unshift(objet);
+          },
+          error:(err)=>{
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
           }
-      
-          getSubFamilia(dato: any) {  
-            const $getSubFamilia = this.almacenService.listarSubFamilia(dato).subscribe({
-                next: (rpta: any) => {
-                    this.setSpinner(false);
-                    console.info('next : ', rpta);
-                    this.lstSubFamilia = rpta;
-                    const objet = {
-                      idsubfamilia: 0,
-                      nomsubfamilia: 'TODOS'
-                    }
-                    this.lstSubFamilia.unshift(objet);
-                },
-                error: (err) => {
-                    this.setSpinner(false);
-                    console.info('error : ', err);
-                    this.serviceSharedApp.messageToast()
-                },
-                complete: () => {},
-            });
-            this.$listSubcription.push($getSubFamilia);
-          }
+        });
+      this.$listSubcription.push($getListar)
+    }
 }

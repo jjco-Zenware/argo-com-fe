@@ -65,7 +65,7 @@ const routes: Routes = [
   {
     path: 'grupo',
     loadChildren: () => import('./grupo/grupo.module').then(m => m.GrupoModule),
-    data: { breadcrumb: 'Grupo' }
+    data: { breadcrumb: 'Grupo/Categoría' }
   },
   {
     path: 'salida-cotizacion',
@@ -86,6 +86,11 @@ const routes: Routes = [
     path: 'salida-oc-req-interno',
     loadChildren: () => import('./salida-oc-req-interno/salida-oc-req-interno.module').then(m => m.SalidaOcReqModule),
     data: { breadcrumb: 'salida-oc-re-interno' }
+  },
+  {
+    path: 'movProducto',
+    loadChildren: () => import('./movProducto/movProducto.module').then(m => m.MovProductoModule),
+    data: { breadcrumb: 'Movimientos de Producto' }
   }
 ];
 

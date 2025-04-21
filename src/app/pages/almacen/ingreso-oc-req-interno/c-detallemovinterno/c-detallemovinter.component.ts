@@ -14,6 +14,7 @@ import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { AlmacenService } from '../../service/almacenServices';
 import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
+import { CModalUbicacionComponent } from '../../modal-ubicacion/modal-ubicacion.component';
 
 @Component({
   selector: 'app-c-detallemovinter',
@@ -68,6 +69,8 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
   selectedItems: any;
   lstTransacciones: any[]=[];
   listadoArchivos: any[]=[];
+  lstExistencia:any[]=[];
+  verOc: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -93,6 +96,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
     this.listaProveedores();
     this.listarItemsTabla(); 
     this.listaProyectoTipo();
+    this.listarItemsTablaExistencia();
     
     if (this.idMovimiento > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -138,7 +142,7 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd:[{ value: '', disabled: false }],
-      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      fechaingreso: [{value: this.serviceUtilitario.obtenerFechaFormateadoDMA(),disabled: false,}],
       idordencompra: [{ value: this.idMovimiento, disabled: true }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: '', disabled: false }],
@@ -158,10 +162,11 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       codtipoorden:[{ value: 'OC', disabled: false }],
       codigonroorden:[{ value: '', disabled: true }],
       nomproyecto:[{ value: '', disabled: false }],
-      fecentrega: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      fecentrega: [{value: this.serviceUtilitario.obtenerFechaFormateadoDMA(),disabled: false,}],
       terminosdepago:[{ value: '', disabled: false }],
       idalmacen:[{ value: 0, disabled: false }],
       alm_idordencompra:[{ value: '', disabled: false }],
+      label_resumen_alm:[{ value: '', disabled: false }],
     });
   }
 
@@ -261,7 +266,10 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
             }  
             if (rpta.ordencompra[0].quotes !== undefined) {
               this.lstQuotes =  rpta.ordencompra[0].quotes; 
-            }    
+            }   
+            if (rpta.ordencompra[0].estado !== 'REG') {
+              this.verOc =  false; 
+            } 
             this.getOrigen(rpta.ordencompra[0].idtipoproyecto);   
             //this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto); 
                          
@@ -319,10 +327,12 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecentrega = this.registerFormRegistro.value.fecentrega;
 
-    if (this.idMovimiento > 0) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
-      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
+    if (fechaingreso.toString().length === 10) {
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
     }
+    if (fecentrega.toString().length === 10) {
+      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega)); 
+    } 
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
       if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -585,23 +595,37 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
         this.listadoArchivos = rpta;
         console.log('this.listadoArchivos ...', this.listadoArchivos );
 
+        const total = this.lstItemOC.filter((item: any) => item.indcompleto === true).length;
+        if (total === 0) {
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items sin Seleccionar...!' });
+            return;
+        }
+
+        for (let i = 0; i < this.lstItemOC.length; i++) {
+         
+
+          if (this.lstItemOC[i].indcompleto === true && this.lstItemOC[i].idubicacion === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Ubicación...!' });
+            return;
+          }
+
+          if (this.lstItemOC[i].codtipoexistencia === 0) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Tipo de Existencia...!' });
+            return;
+          }
+
+          if (this.lstItemOC[i].indcompleto === true &&((this.lstItemOC[i].servicetag === '' ||this.lstItemOC[i].servicetag === null )
+            && (this.lstItemOC[i].serialnumber === ''|| this.lstItemOC[i].serialnumber === null))) {
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Existen Items Confirmados sin Service Tag o Serial Number...!' });
+            return;
+          }
+      }
+
         if (this.listadoArchivos.length === 0) {
           this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
               return;
         }else{
-          this.ordenCompra.idtrx = valor.idtrx;
-    console.log('onAccion', valor);
-    const ref = this.dialogService.open(CModalExcAlmacenComponent, {
-        data: this.ordenCompra,
-        header: valor.nomtrx ,
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: '40%'
-    });
-
-    ref.onClose.subscribe(() => {
-        this.traerUnoOrdenC();
-      });
+          this.guardarOC2(valor);
         }
       },
       error: (err) => {
@@ -612,21 +636,81 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
   this.$listSubcription.push($listarArchivos)
   }
 
-  
-  getQuotes(dato: any){
-    let objeto = {
-      idcotiza: dato.idcotiza,
-      indseleccion: dato.indseleccion
+  guardarOC2(item:any){
+
+    if (this.validarDatos())
+      {
+          this.setSpinner(false);
+          this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+          return;
+      }
+
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Procesando...!';
+    let fechaingreso;
+    let fecentrega;
+    fechaingreso = this.registerFormRegistro.value.fechaingreso;
+    fecentrega = this.registerFormRegistro.value.fecentrega;
+
+    if (this.idMovimiento > 0) {
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
+      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
     }
-    if (dato.indseleccion) {
-      this.lstQuotes.push(objeto);
-    }else{
-      const _posAll: number = this.lstQuotes.findIndex(((x: { idcotiza: any; }) => x.idcotiza == dato.idcotiza))
-          if (_posAll != -1) {
-          this.lstQuotes.splice(_posAll, 1)
+
+    for (let i = 0; i < this.lstItemOC.length; i++) {      
+      if (this.lstItemOC[i].cantidad.toString() === '') {
+        this.lstItemOC[i].cantidad = 0;
+      }    
+      if (this.lstItemOC[i].preciocosto.toString() === '') {
+        this.lstItemOC[i].preciocosto = 0;
+      }
+    }
+
+    const objeto = {
+      ...this.registerFormRegistro.getRawValue(),
+      items: this.lstItemOC,
+      fechaingreso,
+      fecentrega,
+      quotes: this.lstQuotes
+    }
+
+    console.log('guardarOC...', objeto);
+    
+    this.ordencompraService.ordenCompraprc(objeto).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        if (rpta.procesoSwitch === 0){
+          //this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+          this.ordenCompra.idtrx = item.idtrx;
+          const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+              data: this.ordenCompra,
+              header: item.nomtrx,
+              closeOnEscape: false,
+              styleClass: 'testDialog',
+              width: '40%'
+          });
+          ref.onClose.subscribe(() => {
+              this.traerUnoOrdenC();
+            });
+         
+        this.visibleDocument = false;
+        }else{
+        this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
         }
-    }    
-  } 
+      },
+      error: (err) => {
+        this.setSpinner(false);
+      this.messageService.clear();
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+          });
+      },
+      complete: () => {
+      },
+  });
+  }
 
   validarDatos():boolean{
     let _error = false;
@@ -636,6 +720,18 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       if (this.registerFormRegistro.value.idalmacen === null || this.registerFormRegistro.value.idalmacen === 0)
       {
           this.errorMensaje="Seleccionar Almacen...!";
+          _error = true;
+      }
+
+      if (!_error && this.registerFormRegistro.value.idproyecto === null)
+      {
+          this.errorMensaje="Seleccionar Proyecto...!";
+          _error = true;
+      }
+
+      if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
+      {
+          this.errorMensaje="Ingresar Guia...!";
           _error = true;
       }
 
@@ -651,23 +747,23 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
-      {
-          this.errorMensaje="Ingresar N° de Referencia...!";
-          _error = true;
-      }
+      // if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
+      // {
+      //     this.errorMensaje="Ingresar N° de Referencia...!";
+      //     _error = true;
+      // }
 
-      if (!_error && this.registerFormRegistro.value.idmoneda === null)
-      {
-            this.errorMensaje="Seleccionar Moneda...!";
-            _error = true;
-      }
+      // if (!_error && this.registerFormRegistro.value.idmoneda === null)
+      // {
+      //       this.errorMensaje="Seleccionar Moneda...!";
+      //       _error = true;
+      // }
 
-      if (!_error && this.registerFormRegistro.value.codformapago === null)
-      {
-            this.errorMensaje="Seleccionar Termino de Pago...!";
-            _error = true;
-      }
+      // if (!_error && this.registerFormRegistro.value.codformapago === null)
+      // {
+      //       this.errorMensaje="Seleccionar Termino de Pago...!";
+      //       _error = true;
+      // }
 
       // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
       // {
@@ -817,5 +913,88 @@ export class CDetalleMovInterComponent implements OnInit, OnDestroy{
       this.cargarProyectos(data);   
   
     }
+
+    changeAlmacen(){
+      this.registerFormRegistro.get('alm_idordencompra').setValue('');
+      this.lstItemOC = []
+    }
+    
+        verUbicacion(dato:any, producto:any){
+          console.log('verUbicacion', dato);
+          dato.idalmacen = this.registerFormRegistro.value.idalmacen;
+          dato.iddocumentoprcitem_trx = producto.iddocumentoprcitem_trx
+          const ref = this.dialogService.open(CModalUbicacionComponent, {
+            data: dato,
+            header: 'Ubicaciones del Almacén ' ,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '40%'
+        });
+    
+        ref.onClose.subscribe((rpta: any) => {
+          console.log('verUbicacion',rpta.objeto);
+          console.log('this.lstItemOC', this.lstItemOC);
+            //this.traerUnoOrdenC();
+            for (let i = 0; i < this.lstItemOC.length; i++) {
+                // if (this.lstItemOC[i].idordencompraitem === rpta.objeto.idordencompraitem) {
+                //   this.lstItemOC[i].idubicacion = parseInt(rpta.objeto.idubicacion)
+                //   this.lstItemOC[i].rutaubicacion = rpta.objeto.rutaubicacion
+                // }
+                if (this.lstItemOC[i].idordencompraitem === 0) {
+                  if (this.lstItemOC[i].iddocumentoprcitem_trx === rpta.objeto.iddocumentoprcitem_trx) {
+                    this.lstItemOC[i].idubicacion = parseInt(rpta.objeto.idubicacion)
+                  this.lstItemOC[i].rutaubicacion = rpta.objeto.rutaubicacion
+                  }
+                }else{            
+                  if (this.lstItemOC[i].idordencompraitem === rpta.objeto.idordencompraitem) {
+                    this.lstItemOC[i].idubicacion = parseInt(rpta.objeto.idubicacion)
+                  this.lstItemOC[i].rutaubicacion = rpta.objeto.rutaubicacion
+                  }
+                }
+            }
+          });
+        }
+        listarItemsTablaExistencia() {
+          this.comprasService.obtenerItemsTabla(126).subscribe({
+              next: (rpta: any) => {
+                console.info('lstExistencia : ', rpta);
+                  this.lstExistencia = rpta;
+                  const obj = {
+                    iditem:0,
+                    valoritem:'TODOS'
+                  }
+                  this.lstExistencia.unshift(obj);
+              },
+              error: (err) => {
+              console.info('error : ', err);
+              this.serviceSharedApp.messageToast()
+              },
+              complete: () => {
+              },
+          });
+        
+          }
+    
+          changeExistencia(existencia:any, item:any){
+            console.info('existencia : ', existencia);
+            console.info('item : ', item);
+            let nomexis = this.lstExistencia.filter((x: { iditem: number; }) => x.iditem === existencia)[0].valoritem;
+            for (let i = 0; i < this.lstItemOC.length; i++) {
+              if (this.lstItemOC[i].idordencompraitem === 0) {
+                if (this.lstItemOC[i].iddocumentoprcitem_trx === item.iddocumentoprcitem_trx) {
+                  this.lstItemOC[i].coptipoexistencia = existencia
+                  this.lstItemOC[i].nomtipoexistencia = nomexis
+                }
+              }else{            
+                if (this.lstItemOC[i].idordencompraitem === item.idordencompraitem) {
+                  this.lstItemOC[i].coptipoexistencia = existencia
+                  this.lstItemOC[i].nomtipoexistencia = nomexis
+                }
+              }
+              
+    
+    
+          }
+          }
 
 }

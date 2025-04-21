@@ -53,15 +53,15 @@ export class CRequerimientoComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idordencompra', header: 'ID OC' },
-          { field: 'codigonroorden', header: 'N COTIZACIÓN' },
-          { field: 'nomcomercial', header: 'CLIENTE' },
-          { field: 'nommoneda', header: 'MONEDA' },
-          { field: 's_monto', header: 'SUBTOTAL' },
-          { field: 'nomestado', header: 'ESTADO' },
-          { field: 'nomestado', header: 'ESTADO' },
-          { field: 'nomestado', header: 'ESTADO' },
-          { field: 'nomestado', header: 'ESTADO' }
+          { field: 'idordencompra', header: 'idordencompra' },
+          { field: 'servicionombre', header: 'servicionombre' },
+          { field: 'nomusuario', header: 'nomusuario' },
+          { field: 'fecentrega', header: 'fecentrega' },
+          { field: 'descentrocosto', header: 'descentrocosto' },
+          { field: 'codigoproyecto', header: 'codigoproyecto' },
+          //{ field: 'observacion', header: 'observacion' },
+          { field: 'simbmoneda', header: 'simbmoneda' },
+          { field: 'nomestado', header: 'nomestado' }
       ];
     }
 
@@ -97,6 +97,7 @@ export class CRequerimientoComponent implements OnInit, OnDestroy{
         ],
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
+        idcliente: [{value: 0,disabled: false}],
       })
     }
 
@@ -113,7 +114,7 @@ export class CRequerimientoComponent implements OnInit, OnDestroy{
         .subscribe({
           next: (rpta:any) => {
               this.setSpinner(false);
-              console.log('rpta getListar', rpta.ordenescompra);
+              console.log('rpta getListar', rpta);
               this.lstCotizacion = rpta.ordenescompra
           },
           error:(err)=>{

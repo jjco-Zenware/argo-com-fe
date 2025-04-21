@@ -26,13 +26,23 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
   //lstAprobadas: any;
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
-  cols: any[] = [];
+  //cols: any[] = [];
   //cols2: any[] = [];
   lstExportar: any[] = [];
   lstExportExcel: any[] = [];
   frmDatos!: FormGroup;
   lstMonedas: any;
   lstProveedores: any[] = [];
+  lstEstado = [
+    {value: '000', name: 'TODOS' },
+    {value: 'PEN', name: 'PENDIENTE' }, 
+    {value: 'PAR', name: 'PARCIAL' }, 
+    {value: 'PAG', name: 'PAGADO' }, 
+  ]
+  saldo_documento_sol: number = 0;
+  saldo_documento_dol: number = 0;
+  s_monto_recaudado_sol: number = 0;
+  s_monto_recaudado_dol: number = 0;
 
   constructor(
       private fb: FormBuilder,
@@ -52,23 +62,6 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
     this.createFrm();
     this.listaClientes();
     this.listaMonedas();
-    this.cols = [
-      { field: 'nrofactura', header: 'FACTURA' },
-      { field: 'nomcomercial', header: 'PROVEEDOR ' },
-      { field: 'descentrocosto', header: 'COSTO ' },
-      { field: 'fecemision', header: 'EMISION' },
-      { field: 'fecvencimiento', header: 'VENCIMIENTO' },
-      { field: 'nommoneda', header: 'MONEDA' },
-      { field: 's_monto_total', header: 'MONTO' },
-      { field: 's_monto_total', header: 'SALDO' },
-      { field: 'descentrocosto', header: 'COSTO ' },
-      { field: 'fecemision', header: 'EMISION' },
-      { field: 'fecvencimiento', header: 'VENCIMIENTO' },
-      { field: 'nommoneda', header: 'MONEDA' },
-      { field: 's_monto_total', header: 'MONTO' },
-      { field: 's_monto_total', header: 'SALDO' },
-      { field: 'nomestado', header: 'ESTADO' }      
-    ];
     this.getListar();
   }
 
@@ -81,6 +74,7 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
         idcliente: [{ value: 0, disabled: false }],
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
+        estado: [{value: '000' ,disabled: false}],
       })
     }
 
@@ -100,18 +94,15 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
     //console.log('this.frmDatos...', this.frmDatos.value);
     const objeto = {
       ...this.frmDatos.value,
-      idtipodocprc: 6
+      idtipodocprc: 17
     }
 
-    const $getListar = this.proyectosService.ordenCompraList(objeto)
+    const $getListar = this.proyectosService.ordenCompraListCuentas(objeto)
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
 
-            let lista = rpta.ordenescompra;
-            if (lista.length > 0) {
-              this.lstPorCobrar = lista.filter((x: { estado: string; }) => x.estado === 'EMI' || x.estado === 'EMT');
-            }
+            this.lstPorCobrar = rpta.ordenescompra;
             console.log('rpta lstPorCobrar', this.lstPorCobrar);
         },
         error:(err)=>{
@@ -120,18 +111,14 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
         },
         complete:() => {
           this.setSpinner(false);
+          this.saldo_documento_sol = this.lstPorCobrar.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.saldo_documento, 0);
+          this.saldo_documento_dol = this.lstPorCobrar.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.saldo_documento, 0);
+          this.s_monto_recaudado_sol = this.lstPorCobrar.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.s_monto_recaudado, 0);
+          this.s_monto_recaudado_dol = this.lstPorCobrar.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.s_monto_recaudado, 0);
         }
       });
     this.$listSubcription.push($getListar)
   }
-
-  // selectHeaders(tabNumber: any) {
-  //   if (tabNumber.index === 0) {
-  //     this.lstExportExcel = this.lstPendientes;
-  //   }else{
-  //     this.lstExportExcel = this.lstAprobadas;
-  //   }
-  // }
   
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
@@ -175,6 +162,7 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
   }
 
   onVer(data :any) {
+    data.tipodeuda = 1;
     const refItemx = this.dialogService.open(CModalListPAgosComponent, {
       data: data,
       header: "Lista de Cobros / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
@@ -188,10 +176,11 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
   }
   
   onPagar(data :any) {
+    data.tipodeuda = 1;
     data.idpagodocprc = 0;
     const refItem = this.dialogService.open(CModalRegPAgosComponent, {
           data: data,
-          header: "Registrar Cobro / "+ data.nomcomercial + ' / N° FACT - ' + data.nrofactura,
+          header: "Registrar de Cobro",
           closeOnEscape: false,
           styleClass: 'testDialog',
           width: '30%'
@@ -205,12 +194,65 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
         });
   }
 
-  getSeverity(data:number) {
-    console.log()
-    if (data > 0) {
-      return 'success';
-    }else{
-      return 'danger';
-    }
-}
+  onPagarDetra(data :any) {
+    console.log('onPagarDetra',data);
+    data.tipodeuda = 2;
+    const refItem = this.dialogService.open(CModalRegPAgosComponent, {
+          data: data,
+          header: "Cobro de Detracción",
+          closeOnEscape: false,
+          styleClass: 'testDialog',
+          width: '30%'
+        });
+        refItem.onClose.subscribe((rpta: any) => {
+          console.log('onClose',rpta);
+          if (rpta != undefined) {
+            this.getListar()   ;
+          }
+        });
+  }
+
+  onVerDetra(data :any) {
+    data.tipodeuda = 2;
+    const refItem = this.dialogService.open(CModalListPAgosComponent, {
+      data: data,
+      header: "Pago Detracción de "+ data.nomcomercial + ' / FACT N° - ' + data.nrofactura,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '50%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      this.getListar();         
+    });
+  }
+
+ getExportarExcel() {
+     this.setSpinner(true);
+     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+ 
+     const objeto = {
+       ...this.frmDatos.value,
+       idtipodocprc: 17,
+       saldo_documento_sol:this.saldo_documento_sol,
+       saldo_documento_dol:this.saldo_documento_dol,
+       s_monto_recaudado_sol: this.s_monto_recaudado_sol,
+       s_monto_recaudado_dol: this.s_monto_recaudado_dol,
+     }
+ 
+     const $getListar = this.tesoreriaService.exportarexcelcuentaspc(objeto)
+     .subscribe({
+       next: (rpta:any) => {
+           this.setSpinner(false);
+           this.utilitariosService.descargarExcel(rpta, 'CuentasPorCobrar');
+       },
+       error:(err)=>{
+           this.setSpinner(false);
+           this.serviceSharedApp.messageToast()
+       },
+       complete:() => {
+         this.setSpinner(false);
+       }
+     });
+   this.$listSubcription.push($getListar)
+   }
 }

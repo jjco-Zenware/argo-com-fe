@@ -12,6 +12,8 @@ import { ComprasService } from '../compras/Service/compraServices';
 import { ToastModule } from 'primeng/toast';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { ConfirmationService } from 'primeng/api';
+import { TagModule } from 'primeng/tag';
 
 
 @NgModule({
@@ -25,8 +27,9 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
     FormsModule,
     ReactiveFormsModule,
     TesoreriaRoutingModule,
-    ToastModule
+    ToastModule,
+    TagModule
   ],  
-  providers : [OrdencompraService, ComprasService,ProyectosService, AlmacenService, SharedAppService, DynamicDialogRef, DynamicDialogConfig]
+  providers : [OrdencompraService, ComprasService,ProyectosService, AlmacenService, SharedAppService, DynamicDialogRef, DynamicDialogConfig, ConfirmationService]
 })
 export class TesoreriaModule { }

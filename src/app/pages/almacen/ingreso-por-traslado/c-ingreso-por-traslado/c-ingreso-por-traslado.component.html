@@ -1,11 +1,11 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
     <div class="card m-4">
-        <div class="grid mt-2">
-            <div class="flex justify-content-between col-12 -mt-3 gap-2">   
-                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+        <div class="grid">
+            <div class="flex justify-content-between col-12 gap-2">   
+                <!-- <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-file" label="Nuevo"
                         pTooltip="Nuevo" tooltipPosition="left" (click)="onNuevo()" ></button>
-                </div>                 
+                </div>                  -->
                 <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">INGRESOS POR TRASLADOS</span>
                 </div>                         
@@ -43,26 +43,31 @@
                         N°
                     </div>
                 </th>
+                <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        ID  
+                    </div>
+                </th>
                 <th [ngStyle]="{'width':'30px'}"  class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
-                        CÓDIGO 
+                        CÓDIGO
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'30px'}" class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        FECHA 
                     </div>
                 </th>
                 <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
-                        ALMACEN 
+                        ALMACEN INGRESO
                     </div>
                 </th>
-                <!--<th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
+                <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
-                        PROVEEDOR 
+                        ALMACEN ORIGEN
                     </div>
                 </th>
-                 <th style="width: 100px;" class="bg-teal-50 border-1" >
-                    <div class="justify-content-between align-items-center">
-                        N° ORDEN
-                    </div>
-                </th> -->
                 <th style="width: 30px" class="bg-teal-50 border-1" >
                     <div [ngStyle]="{'width':'30px','text-align':'center'}">
                         ESTADO
@@ -88,8 +93,18 @@
                     {{rowIndex + 1}}
                 </td>
                 <td >
-                    <div [ngStyle]="{'width':'50px'}">
+                    <div [ngStyle]="{'width':'20px'}">
                         {{data.idordencompra}}
+                    </div>
+                </td>
+                <td >
+                    <div [ngStyle]="{'width':'30px'}">
+                        {{data.codigonroorden}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'30px'}">
+                        {{data.fechaingreso}}
                     </div>
                 </td>
                 <td>
@@ -97,16 +112,11 @@
                         {{data.nomalmacen | uppercase}}
                     </div>
                 </td>
-                <!--<td>
-                    <div [ngStyle]="{'width':'100px'}">
-                        {{data.nomcomercial | uppercase}}
+                <td>
+                    <div [ngStyle]="{'width':'70px'}">
+                        {{data.nom_alm_idalmacen_destino | uppercase}}
                     </div>
                 </td>
-                 <td>
-                    <div [ngStyle]="{'width':'60px'}">
-                        {{data.alm_idordencompra }}
-                    </div>
-                </td> -->
                 <td>                       
                     <div [ngStyle]="{'width':'30px','text-align': 'center'}">
                         <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
@@ -115,7 +125,7 @@
                 <td>
                     <div class="flex align-items-center m:justify-content-end" >
                         <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                        <button *ngIf="data.estado === 'REG'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                        <button *ngIf="data.estado === 'PEN'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                         <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
                             pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
                         <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
@@ -140,8 +150,8 @@
 <ng-template #visSecciones>
 
     <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
-        <div class="grid mt-2">
-            <div class="flex justify-content-between col-12 -mt-3 gap-2">
+        <div class="grid ">
+            <div class="flex justify-content-between col-12  gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 h-2rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-backward" label="Regresar"
                         pTooltip="Regresar" tooltipPosition="left" (click)="getBack()" ></button>                    
