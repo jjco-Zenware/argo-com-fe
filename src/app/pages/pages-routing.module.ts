@@ -46,11 +46,6 @@ const routes: Routes = [
         path: 'marketing',
         loadChildren: () => import('./marketing/marketing.module').then(m => m.MarketingModule),
         data: { breadcrumb: 'Marketing' }
-      },
-      {
-        path: 'gastos',
-        loadChildren: () => import('./gastos/gastos.module').then(m => m.GastosModule),
-        data: { breadcrumb: 'Gastos' }
       }
     ]
   }

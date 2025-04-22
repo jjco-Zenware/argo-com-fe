@@ -161,30 +161,30 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
       idusuario: constantesLocalStorage.idusuario
     }
 
-    const $cargarOrdenC = this.marketingService.gastoTraeruno(objeto)
-      .subscribe({
-        next: (rpta:any) => {
-          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-            this.setSpinner(false);
-            this.gasto = rpta.ordencompra[0];            
+    // const $cargarOrdenC = this.marketingService.gastoTraeruno(objeto)
+    //   .subscribe({
+    //     next: (rpta:any) => {
+    //       console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+    //         this.setSpinner(false);
+    //         this.gasto = rpta.ordencompra[0];            
                          
-          this.visibleDocument = false;
+    //       this.visibleDocument = false;
 
-          this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-          this.cargarMenu(rpta.ordencompra[0].acciones);
-          this.mostrarBotones(rpta.ordencompra[0].estado);                
-        },
-        error:(err)=>{
-            this.setSpinner(false);
-            this.serviceSharedApp.messageToast()
-        },
-        complete:() => {
-          this.setSpinner(false);
-          this.listarTransacciones();
+    //       this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+    //       this.cargarMenu(rpta.ordencompra[0].acciones);
+    //       this.mostrarBotones(rpta.ordencompra[0].estado);                
+    //     },
+    //     error:(err)=>{
+    //         this.setSpinner(false);
+    //         this.serviceSharedApp.messageToast()
+    //     },
+    //     complete:() => {
+    //       this.setSpinner(false);
+    //       this.listarTransacciones();
           
-        }
-      });
-    this.$listSubcription.push($cargarOrdenC)
+    //     }
+    //   });
+    // this.$listSubcription.push($cargarOrdenC)
   }
 
   listarTransacciones() {
@@ -230,50 +230,50 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
 
     console.log('guardar...', objeto);
     
-    this.marketingService.gastoprc(objeto).subscribe({
-      next: (rpta: any) => {
-        this.setSpinner(false);
-        if (rpta.procesoSwitch === 0){
-          this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
-          if (this.idGasto === 0) {
-            this.idGasto = rpta.resultProceso;  
+  //   this.marketingService.gastoprc(objeto).subscribe({
+  //     next: (rpta: any) => {
+  //       this.setSpinner(false);
+  //       if (rpta.procesoSwitch === 0){
+  //         this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+  //         if (this.idGasto === 0) {
+  //           this.idGasto = rpta.resultProceso;  
 
-            this.dataAdjunto ={
-              idCliente: this.idGasto,
-              codtipoproc: 7,
-              veracciones: 0
-            }   
-            this.verAdjunto = true; 
+  //           this.dataAdjunto ={
+  //             idCliente: this.idGasto,
+  //             codtipoproc: 7,
+  //             veracciones: 0
+  //           }   
+  //           this.verAdjunto = true; 
 
-            //preguntar si desea agregar adjuntos
-            this.confirmationService.confirm({
-              key: 'confirm1',
-              header: 'Confirmación',
-              message:  '¿Desea Agregar Adjuntos ',
-              accept: () => {
-                this.activeIndex = 2;
-              }
-          });
-          }
-          this.traerUno();
+  //           //preguntar si desea agregar adjuntos
+  //           this.confirmationService.confirm({
+  //             key: 'confirm1',
+  //             header: 'Confirmación',
+  //             message:  '¿Desea Agregar Adjuntos ',
+  //             accept: () => {
+  //               this.activeIndex = 2;
+  //             }
+  //         });
+  //         }
+  //         this.traerUno();
          
-        this.visibleDocument = false;
-        }else{
-        this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
-        }
-      },
-      error: (err) => {
-        this.setSpinner(false);
-      this.messageService.clear();
-      this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-          });
-      },
-      complete: () => {
-      },
-  });
+  //       this.visibleDocument = false;
+  //       }else{
+  //       this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+  //       }
+  //     },
+  //     error: (err) => {
+  //       this.setSpinner(false);
+  //     this.messageService.clear();
+  //     this.messageService.add({
+  //         severity: 'error',
+  //         summary: 'Error',
+  //         detail: mensajesQuestion.msgErrorGenerico,
+  //         });
+  //     },
+  //     complete: () => {
+  //     },
+  // });
   }
 
   listarItemsTabla() {

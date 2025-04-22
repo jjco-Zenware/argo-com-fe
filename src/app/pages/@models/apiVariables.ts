@@ -17,6 +17,7 @@ const controllerContabilidad: string = webApi+'Contabilidad';
 const controllerAdministracion: string = webApi+'Administracion';
 const controllerMarketing: string = webApi +'Marketing'
 const controllerEventos: string = webApi +'Evento'
+const controllerIAServicio: string = webApi + 'IAServicio'
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
