@@ -26,13 +26,7 @@
                             inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
                         </span>
                     </div> 
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-12">
-                        <label class="block text-900 font-semibold mb-1">N° Guia <span class="text-red-500 font-bold"> * </span></label>                        
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="sustentodoc" [readonly]=onlyRead class="p-inputtext-sm"/>
-                        </span>
-                    </div>  
+                    <div class="lg:col-6"></div>                    
                     <div class="sm:col-6 lg:col-3 md:col-12 col-6 field">
                         <label class="block text-900 font-semibold mb-1">ID </label>
                         <span class="p-fluid">
@@ -54,7 +48,170 @@
                         </span>
                     </div>           
                 </form>
-            </p-tabPanel>             
+            </p-tabPanel>  
+            
+            <p-tabPanel >
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-cog"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Guia de Remisión
+                        </span>
+                    </div>
+                </ng-template>    
+                <!-- <app-guiaremision [IA_data]="dataGuia"></app-guiaremision>         -->
+                <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">    
+                    <div class="sm:col-4 lg:col-4 md:col-3 col-6 h-4rem field ">
+                        <label class="block text-900 font-semibold mb-1">Tipo Documento<span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb" placeholder="Seleccionar Origen" optionLabel="nomitemsunat" 
+                            optionValue="codsunat" readonly="true" class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div> 
+                    <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field ">
+                        <label class="block text-900 font-semibold mb-1">Serie</label>                        
+                        <span class="p-fluid">
+                            <input pInputText type="text" formControlName="nroserie_ctb" readonly="true" class="p-inputtext-sm surface-100"/>
+                        </span>
+                    </div>
+                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field ">
+                        <label class="block text-900 font-semibold mb-1">N° Documento</label>                        
+                        <span class="p-fluid">
+                            <input pInputText type="text" formControlName="nrodocumento_ctb" readonly="true" class="p-inputtext-sm surface-100" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                        </span>
+                    </div>
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Peso Bruto <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_peso_bruto_total"/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">N° Bultos <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" formControlName="gre_numero_de_bultos"  [readonly]=onlyRead 
+                            class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Tipo Transporte<span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstTipoTransporte" placeholder="Seleccionar..."  formControlName="gre_tipo_de_transporte" 
+                            optionLabel="nomitemsunat" optionValue="codsunat" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                        <!-- <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_tipo_de_transporte"/>
+                        </span> -->
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Tipo Doc. Transp. <span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstTipoDoc" placeholder="Seleccionar..."  formControlName="gre_transportista_documento_tipo" 
+                            optionLabel="destipodoc" optionValue="codsunat" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Tipo Doc. Conduc.  <span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstTipoDoc" placeholder="Seleccionar..."  formControlName="gre_conductor_documento_tipo" 
+                            optionLabel="destipodoc" optionValue="codsunat" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">N° Doc Conduc. <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_documento_numero"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="8" />
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Denominac. Conduc. <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_denominacion" [readonly]=onlyRead/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Punto Partida <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_de_partida_ubigeo" [readonly]=onlyRead/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Punto LLegada <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_de_llegada_ubigeo" [readonly]=onlyRead/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 h-4rem h-4rem field -mt-1">
+                        <div class="flex mb-1">
+                            <label class="block text-900 font-semibold">Fecha Traslado <span class="text-red-500 font-bold"> * </span></label>    
+                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
+                        </div>
+                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
+                            <p-calendar formControlName="gre_fec_ini_traslado" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
+                        </span>
+                    </div> 
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Ruc Transp. <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" formControlName="gre_ruc_emp_transporte" [readonly]=onlyRead class="p-inputtext-sm" maxlength="11" 
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-8 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Razón Transp. <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" formControlName="gre_nom_emp_transporte" [readonly]=onlyRead class="p-inputtext-sm"/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Placa <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_marca_placa_unid_transporte" [readonly]=onlyRead/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Partida <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_partida" [readonly]=onlyRead/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Llegada <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_llegada" [readonly]=onlyRead/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstTipoMotivo" placeholder="Seleccionar..."  formControlName="gre_motivo_de_traslado" 
+                            optionLabel="nomitemsunat" optionValue="codsunat" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div>   
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Nombre Conductor <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_nombre" [readonly]=onlyRead/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Apellidos Conductor <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_apellidos" [readonly]=onlyRead/>
+                        </span>
+                    </div>  
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">N° Licencia <span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_numero_licencia" 
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" [readonly]=onlyRead/>
+                        </span>
+                    </div>                             
+                </form>  
+            </p-tabPanel>
 
             <p-tabPanel>
                 <ng-template pTemplate="header">

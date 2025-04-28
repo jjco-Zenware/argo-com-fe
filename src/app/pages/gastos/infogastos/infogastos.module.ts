@@ -16,12 +16,17 @@ import { CInformeGastosComponent } from './c-infogastos-lista/c-infogastos.compo
 import { InformeGastosRoutingModule } from './infogastos-routing.module';
 import { CInformeGastosDetComponent } from './c-infogastos-detalle/c-infogastos-detalle.component';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { UtilitariosService } from 'src/app/services/utilitarios.service';
+import { ComprasService } from '../../compras/Service/compraServices';
+import { CModalTransacComponent } from '../modal-trans-gasto/modal-transac.component';
+import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
 
 
 @NgModule({
   declarations: [
     CInformeGastosComponent,
-    CInformeGastosDetComponent
+    CInformeGastosDetComponent,
+    CModalTransacComponent
   ],
   imports: [
     CommonModule,
@@ -33,8 +38,9 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     RegistroProveedorModule,
     TagModule,
     SplitButtonModule,
-    SelectButtonModule 
+    SelectButtonModule ,
+    TagModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, MarketingService, MessageService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, MarketingService, MessageService, UtilitariosService, ComprasService ,OrdencompraService]
 })
 export class InformeGastosModule { }

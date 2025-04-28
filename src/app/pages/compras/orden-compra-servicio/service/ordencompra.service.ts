@@ -205,4 +205,9 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.emitirDocumento}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    procesarTrxGasto(objeto:any) {
+        const url = `${constantesApiWeb.procesarTrxGasto}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

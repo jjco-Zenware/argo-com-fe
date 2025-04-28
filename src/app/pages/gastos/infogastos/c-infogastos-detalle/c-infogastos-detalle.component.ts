@@ -31,7 +31,6 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
   verbtnAcciones: boolean = false;
   gasto: any;
   verCotizacion: boolean = true;
-  verAdjunto: boolean = false;
   onlyRead: boolean = false;
   verReferencia: boolean = false;
   errorMensaje: string = "";
@@ -55,6 +54,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
   ) { }
 
   ngOnInit(): void {
+    console.log('ngOnInit', this.IA_data);
     this.idGasto = this.IA_data.idcodigo;
 
     this.createFormRegistro();
@@ -74,8 +74,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
           codtipoproc: 7,
           veracciones: 0
         }
-      }  
-      this.verAdjunto = true;     
+      }     
       this.traerUno();
     }else{
       this.dataAdjunto ={
@@ -98,11 +97,10 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
       fecgasto: [{value: this.serviceUtilitario.obtenerFechaFormateadoDMA(),disabled: false,}],
       desgasto: [{ value: '', disabled: false }],
       idmoneda: [{ value: '', disabled: false }],
-      pagadopor: [{ value: true, disabled: false }],
+      pagadopor: [{ value: false, disabled: false }],
       idcategoria: [{ value: 0, disabled: false }],
       monto: [{ value: 0, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
-      idaprobador: [{ value: null, disabled: false }],
     });
   }
 
@@ -157,34 +155,35 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
     this.setSpinner(true);
     this.mensajeSpinner = 'Cargando...!';
     const objeto ={
-      idordencompra: this.idGasto,
+      idgasto: this.idGasto,
       idusuario: constantesLocalStorage.idusuario
     }
 
-    // const $cargarOrdenC = this.marketingService.gastoTraeruno(objeto)
-    //   .subscribe({
-    //     next: (rpta:any) => {
-    //       console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-    //         this.setSpinner(false);
-    //         this.gasto = rpta.ordencompra[0];            
+    const $cargarOrdenC = this.marketingService.gastoTraeruno(this.idGasto)
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta traerUno', rpta.registro[0]);
+            this.setSpinner(false);
+            this.gasto = rpta.registro[0];            
                          
-    //       this.visibleDocument = false;
+          this.visibleDocument = false;
 
-    //       this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-    //       this.cargarMenu(rpta.ordencompra[0].acciones);
-    //       this.mostrarBotones(rpta.ordencompra[0].estado);                
-    //     },
-    //     error:(err)=>{
-    //         this.setSpinner(false);
-    //         this.serviceSharedApp.messageToast()
-    //     },
-    //     complete:() => {
-    //       this.setSpinner(false);
-    //       this.listarTransacciones();
+          this.registerFormRegistro.patchValue(rpta.registro[0]);
+          //this.cargarMenu(rpta.registro[0].acciones);
+          this.mostrarBotones(rpta.registro[0].estado);  
+          this.listarTransacciones();              
+        },
+        error:(err)=>{
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+          this.setSpinner(false);
           
-    //     }
-    //   });
-    // this.$listSubcription.push($cargarOrdenC)
+          
+        }
+      });
+    this.$listSubcription.push($cargarOrdenC)
   }
 
   listarTransacciones() {
@@ -217,11 +216,9 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
     let fecgasto;
     fecgasto = this.registerFormRegistro.value.fecgasto;
 
-    if (this.idGasto > 0) {
-        fecgasto = new Date(this.serviceUtilitario.formatFecha(fecgasto));   
-    }
-
- 
+    if (fecgasto.toString().length === 10) {
+      fecgasto = new Date(this.serviceUtilitario.formatFecha(fecgasto)); 
+    }  
 
     const objeto = {
       ...this.registerFormRegistro.getRawValue(),
@@ -230,50 +227,34 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
 
     console.log('guardar...', objeto);
     
-  //   this.marketingService.gastoprc(objeto).subscribe({
-  //     next: (rpta: any) => {
-  //       this.setSpinner(false);
-  //       if (rpta.procesoSwitch === 0){
-  //         this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
-  //         if (this.idGasto === 0) {
-  //           this.idGasto = rpta.resultProceso;  
+    this.marketingService.gastoprc(objeto).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        if (rpta.procesoSwitch === 0){
+          this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+          if (this.idGasto === 0) {
 
-  //           this.dataAdjunto ={
-  //             idCliente: this.idGasto,
-  //             codtipoproc: 7,
-  //             veracciones: 0
-  //           }   
-  //           this.verAdjunto = true; 
-
-  //           //preguntar si desea agregar adjuntos
-  //           this.confirmationService.confirm({
-  //             key: 'confirm1',
-  //             header: 'Confirmación',
-  //             message:  '¿Desea Agregar Adjuntos ',
-  //             accept: () => {
-  //               this.activeIndex = 2;
-  //             }
-  //         });
-  //         }
-  //         this.traerUno();
+            this.idGasto = rpta.resultProceso; 
+          }
+          //this.traerUno();
          
-  //       this.visibleDocument = false;
-  //       }else{
-  //       this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
-  //       }
-  //     },
-  //     error: (err) => {
-  //       this.setSpinner(false);
-  //     this.messageService.clear();
-  //     this.messageService.add({
-  //         severity: 'error',
-  //         summary: 'Error',
-  //         detail: mensajesQuestion.msgErrorGenerico,
-  //         });
-  //     },
-  //     complete: () => {
-  //     },
-  // });
+        this.visibleDocument = false;
+        }else{
+        this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+        }
+      },
+      error: (err) => {
+        this.setSpinner(false);
+      this.messageService.clear();
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+          });
+      },
+      complete: () => {
+      },
+  });
   }
 
   listarItemsTabla() {
@@ -316,7 +297,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
   });
 
   ref.onClose.subscribe(() => {
-     
+     this.traerUno();
     });
   }
 
@@ -325,17 +306,17 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-      if (this.registerFormRegistro.value.idalmacen === null || this.registerFormRegistro.value.idalmacen === 0)
+      if (this.registerFormRegistro.value.idcategoria === null || this.registerFormRegistro.value.idcategoria === '')
       {
-          this.errorMensaje="Seleccionar Almacen...!";
+          this.errorMensaje="Seleccionar Categoría...!";
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
-        {
-            this.errorMensaje="Ingresar Guia...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
+      //   {
+      //       this.errorMensaje="Ingresar Guia...!";
+      //       _error = true;
+      //   }
 
       // if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null))
       // {
@@ -343,17 +324,17 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
       //     _error = true;
       // }
 
-      // if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
-      // {
-      //     this.errorMensaje="Ingresar N° de Referencia...!";
-      //     _error = true;
-      // }
+      if (!_error && (this.registerFormRegistro.value.monto === 0 || this.registerFormRegistro.value.monto === '') )
+      {
+          this.errorMensaje="Ingresar Monto...!";
+          _error = true;
+      }
 
-      // if (!_error && this.registerFormRegistro.value.idmoneda === null)
-      // {
-      //       this.errorMensaje="Seleccionar Moneda...!";
-      //       _error = true;
-      // }
+      if (!_error && this.registerFormRegistro.value.idmoneda === null)
+      {
+            this.errorMensaje="Seleccionar Moneda...!";
+            _error = true;
+      }
 
       // if (!_error && this.registerFormRegistro.value.codformapago === null)
       // {

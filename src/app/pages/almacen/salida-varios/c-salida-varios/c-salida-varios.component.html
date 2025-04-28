@@ -44,6 +44,21 @@
                         N°
                     </div>
                 </th>
+                <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                       ENVIO <br> SUNAT  
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                       ESTADO <br> SUNAT  
+                    </div>
+                </th>
+                <th style="width: 80px;" class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        N° <br> DOCUMENTO
+                    </div>
+                </th>
                 <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         ID  
@@ -80,18 +95,37 @@
                     </div>
                 </th>
             </tr>
-            <tr >
+            <!-- <tr >
                 <th></th>
                 <th *ngFor="let col of cols">
                     <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
                 </th>
-            </tr>
+            </tr> -->
     
         </ng-template>
         <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
             <tr class="text-sm">
                 <td [ngStyle]="{'width':'10px'}">
                     {{rowIndex + 1}}
+                </td>
+                <td>
+                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
+                        <button *ngIf="data.estado === 'EMI' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3" pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom" pTooltip="Generar Documento" class="p-button-rounded p-button-text text-blue-500" (click)="emitirDocumento(data)"></button>
+                        <button *ngIf="data.ind_estado_fel === 1" pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom" pTooltip="Descargar Documento" class="p-button-rounded p-button-text text-green-500" (click)="verDocumento(data)"></button>
+                        <button *ngIf="data.ind_estado_fel != 0 && data.ind_estado_fel != 1" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenuSunat($event, data)"
+                         pTooltip="Transacciones Sunat" tooltipPosition="bottom"></button>
+                     <p-tieredMenu #menuSunat [model]="menuItemsSunat" appendTo="body" [popup]="true"></p-tieredMenu>
+                     </div>                    
+                </td>
+                <td>                       
+                    <div *ngIf="data.ind_estado_fel !== 0" [ngStyle]="{'width':'50px','text-align': 'center'}">
+                        <p-tag [value]="data.nomestadofel" [severity]="getSeverity(data.ind_estado_fel)"></p-tag>
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'50px'}">
+                        {{data.nrofactura }}
+                    </div>
                 </td>
                 <td >
                     <div [ngStyle]="{'width':'20px'}">

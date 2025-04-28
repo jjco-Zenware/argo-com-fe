@@ -37,30 +37,14 @@ export class CSalidaTrasladoComponent implements OnInit, OnDestroy{
     ordenCompra: any;
     menuItemsSunat: MenuItem[] = [];
     @ViewChild('menuSunat') menuSunat!: Menu;
-    lstAccionesSunat: any = [
+    lstAccionesSunat: any = [        
       {
-        operacion : 'consultar_comprobante',
+        operacion : 'consultar_guia',
         tipo_de_comprobante :'',
         serie :'',
         numero: '',
-        label:'Consultar'
-      },
-      {
-        operacion : 'generar_anulacion',
-        tipo_de_comprobante :'',
-        serie :'',
-        numero: '',
-        label:'Generar Anulación'
-      },    
-      {
-        operacion : 'consultar_anulacion',
-        tipo_de_comprobante :'',
-        serie :'',
-        numero: '',
-        label:'Consultar Anulación'
-      }
-  
-  
+        label:'Consultar Guia'
+      } 
   ]
 
     constructor(
@@ -334,14 +318,15 @@ export class CSalidaTrasladoComponent implements OnInit, OnDestroy{
                 next: (rpta: any) => {
                     console.log('emitirDocumento', rpta);
                     this.setSpinner(false);
-                    if (rpta.aceptada_por_sunat) {
-                      this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
-                      this.getListar();
-                      return;
-                    }else{
-                      this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
-                      return;
-                    }
+                    this.getListar();
+                    // if (rpta.aceptada_por_sunat) {
+                    //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
+                    //   this.getListar();
+                    //   return;
+                    // }else{
+                    //   this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                    //   return;
+                    // }
                    
                 },
                 error: (err) => {
@@ -367,6 +352,9 @@ export class CSalidaTrasladoComponent implements OnInit, OnDestroy{
                   color = 'success'
                   break;
                 case 2:
+                  color = 'danger'
+                break;
+                case 3:
                   color = 'warning'
                 break;
               }
@@ -463,5 +451,10 @@ export class CSalidaTrasladoComponent implements OnInit, OnDestroy{
                   }
                 });
               this.$listSubcription.push($operacionFel)
+            }
+
+
+            verDocumento(data: any){
+              window.open(data.enlaceFEL);
             }
 }

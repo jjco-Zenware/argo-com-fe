@@ -11,6 +11,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
+import { CMotivoComponent } from 'src/app/pages/facturacion/modalanular/c-modalanular.component';
 
 @Component({
   selector: 'app-c-listamovsal',
@@ -315,4 +316,6 @@ export class CSalidaOcReqComponent implements OnInit, OnDestroy{
             });
             this.$listSubcription.push($cargarOrdenC)
       }
+
+     
 }

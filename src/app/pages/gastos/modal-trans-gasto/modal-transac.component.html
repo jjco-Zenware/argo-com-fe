@@ -1,0 +1,15 @@
+
+<p-card class="m-2 gap-1">
+    <ng-template pTemplate="content">
+                    
+            <label class="font-semibold">COMENTARIO</label>
+            <textarea id="description" name="description" type="text" [(ngModel)]="descripcion" pInputTextarea [rows]="2" style="resize: none" 
+            class="w-full mt-1 p-inputtext-sm"></textarea>            
+        
+    </ng-template>
+    
+    <ng-template pTemplate="footer" class="h-3rem">
+        <button pButton [label]="btnTitleAccion" (click)="procesarTRX(btnIdAccion)" [className]="btnColor" type="submit" ></button>
+    </ng-template>
+    
+</p-card>

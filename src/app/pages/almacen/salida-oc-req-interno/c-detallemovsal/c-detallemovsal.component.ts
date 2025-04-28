@@ -14,6 +14,7 @@ import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { AlmacenService } from '../../service/almacenServices';
 import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
+import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 
 @Component({
   selector: 'app-c-detallemovsal',
@@ -52,7 +53,6 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
     { name: 'SERVICIO', code: 'OS' }
   ];
   lstTermino: any;
-  lstQuotes: any[]=[];
   verAdjunto: boolean = false;
   ExcelData: any;
   verImportar: boolean = true;
@@ -69,6 +69,7 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
   listadoArchivos: any[]=[];
   verbtnPreliminar: boolean = false;
   verOc: boolean = true;
+  lstTipoND: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -82,6 +83,7 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
     private ordencompraService: OrdencompraService,
     private comprasService: ComprasService,    
     private almacenService: AlmacenService, 
+    private contabilidadService: ContabilidadService,
   ) { }
 
   ngOnInit(): void {
@@ -166,6 +168,35 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
       idprod: [{ value: 0, disabled: false }],
       idcliente: [{ value: '', disabled: false }],
       label_resumen_alm:[{ value: '', disabled: false }],
+      alm_idalmacen_destino: [{ value: 0, disabled: false }],
+      gre_peso_bruto_total: [{ value: 0, disabled: false }],
+      gre_numero_de_bultos: [{ value: 0, disabled: false }],
+      gre_tipo_de_transporte: [{ value: '', disabled: false }],
+      gre_transportista_documento_tipo: [{ value: '1', disabled: false }],
+      gre_conductor_documento_tipo: [{ value: '1', disabled: false }],
+      gre_conductor_documento_numero: [{ value: '', disabled: false }],
+      gre_conductor_denominacion: [{ value: '', disabled: false }],
+      gre_punto_de_partida_ubigeo: [{ value: '', disabled: false }],
+      gre_punto_de_llegada_ubigeo: [{ value: '', disabled: false }],
+      gre_fec_ini_traslado: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
+      gre_ruc_emp_transporte: [{ value: '', disabled: false }],
+      gre_nom_emp_transporte: [{ value: '', disabled: false }],
+      gre_marca_placa_unid_transporte: [{ value: '', disabled: false }],
+      gre_punto_partida: [{ value: '', disabled: false }],
+      gre_punto_llegada: [{ value: '', disabled: false }],
+      gre_motivo_de_traslado: [{ value: '13', disabled: false }],
+      gre_guia_tipo: [{ value: '', disabled: false }],
+      gre_conductor_nombre: [{ value: '', disabled: false }],
+      gre_conductor_apellidos: [{ value: '', disabled: false }],
+      gre_conductor_numero_licencia: [{ value: '', disabled: false }],
+      tipo_igv: [{ value: 0, disabled: false }],
+      fel_codmotivo: [{ value: 0, disabled: false }],
+      fel_tiponotadebito: [{ value: 0, disabled: false }],
+      fel_tipoigv: [{ value: 0, disabled: false }],
+      nroserie_ctb:[{ value: '', disabled: false }],
+      nrodocumento_ctb:[{ value: '', disabled: false }],
+      fecemision: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
+      tipodoc_ctb: [{ value: 7, disabled: false }],
     });
   }
 
@@ -249,9 +280,6 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
             this.getOcproveedor(rpta.ordencompra[0].idproveedor);     
             if (rpta.ordencompra[0].items !== undefined) {
               this.lstItemOC = rpta.ordencompra[0].items;
-            }  
-            if (rpta.ordencompra[0].quotes !== undefined) {
-              this.lstQuotes =  rpta.ordencompra[0].quotes; 
             }   
             if (rpta.ordencompra[0].estado !== 'REG') {
               this.verOc =  false; 
@@ -264,6 +292,8 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
           // this.s_monto_total = rpta.ordencompra[0].s_monto_total; 
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
+
           this.cargarMenu(rpta.ordencompra[0].acciones);
           this.mostrarBotones(rpta.ordencompra[0].estado);                
         },
@@ -292,14 +322,25 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
     this.mensajeSpinner = 'Guardando...!';
     let fechaingreso;
     let fecentrega;
+    let gre_fec_ini_traslado;
+    let fecemision;
+
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecentrega = this.registerFormRegistro.value.fecentrega;
+    gre_fec_ini_traslado = this.registerFormRegistro.value.gre_fec_ini_traslado;
+    fecemision = this.registerFormRegistro.value.fecemision;    
 
     if (fechaingreso.toString().length === 10) {
       fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
     }
     if (fecentrega.toString().length === 10) {
       fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega)); 
+    } 
+    if (gre_fec_ini_traslado.toString().length === 10) {
+      gre_fec_ini_traslado = new Date(this.serviceUtilitario.formatFecha(gre_fec_ini_traslado)); 
+    } 
+    if (fecemision.toString().length === 10) {
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
     } 
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
@@ -316,7 +357,9 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
       items: this.lstItemOC,
       fechaingreso,
       fecentrega,
-      quotes: this.lstQuotes
+      gre_fec_ini_traslado,
+      fecemision,
+      tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
     }
 
     console.log('guardarOC...', objeto);
@@ -596,13 +639,26 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
     this.mensajeSpinner = 'Procesando...!';
     let fechaingreso;
     let fecentrega;
+    let gre_fec_ini_traslado;
+    let fecemision;
+
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecentrega = this.registerFormRegistro.value.fecentrega;
+    gre_fec_ini_traslado = this.registerFormRegistro.value.gre_fec_ini_traslado;
+    fecemision = this.registerFormRegistro.value.fecemision;    
 
-    if (this.idMovimiento > 0) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));   
-      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega));    
+    if (fechaingreso.toString().length === 10) {
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
     }
+    if (fecentrega.toString().length === 10) {
+      fecentrega = new Date(this.serviceUtilitario.formatFecha(fecentrega)); 
+    } 
+    if (gre_fec_ini_traslado.toString().length === 10) {
+      gre_fec_ini_traslado = new Date(this.serviceUtilitario.formatFecha(gre_fec_ini_traslado)); 
+    } 
+    if (fecemision.toString().length === 10) {
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
+    } 
 
     for (let i = 0; i < this.lstItemOC.length; i++) {      
       if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -618,7 +674,9 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
       items: this.lstItemOC,
       fechaingreso,
       fecentrega,
-      quotes: this.lstQuotes
+      gre_fec_ini_traslado,
+      fecemision,
+      tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
     }
 
     console.log('guardarOC...', objeto);
@@ -660,20 +718,6 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
   });
   }
 
-  getQuotes(dato: any){
-    let objeto = {
-      idcotiza: dato.idcotiza,
-      indseleccion: dato.indseleccion
-    }
-    if (dato.indseleccion) {
-      this.lstQuotes.push(objeto);
-    }else{
-      const _posAll: number = this.lstQuotes.findIndex(((x: { idcotiza: any; }) => x.idcotiza == dato.idcotiza))
-          if (_posAll != -1) {
-          this.lstQuotes.splice(_posAll, 1)
-        }
-    }    
-  } 
 
   validarDatos():boolean{
     let _error = false;
@@ -686,11 +730,11 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
-        {
-            this.errorMensaje="Ingresar Guia...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
+      //   {
+      //       this.errorMensaje="Ingresar Guia...!";
+      //       _error = true;
+      //   }
   
         if (!_error && this.registerFormRegistro.value.idproyecto === null)
           {
@@ -931,4 +975,5 @@ export class CDetalleOcReqComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($lstTransacciones);
 
   }
+   
 }

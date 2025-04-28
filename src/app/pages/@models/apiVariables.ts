@@ -18,6 +18,7 @@ const controllerAdministracion: string = webApi+'Administracion';
 const controllerMarketing: string = webApi +'Marketing'
 const controllerEventos: string = webApi +'Evento'
 const controllerIAServicio: string = webApi + 'IAServicio'
+const controllerEmail: string = webApi +'Email'
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -202,13 +203,13 @@ export const constantesApiWeb = {
     pagosProgramados: controllerComercial + '/pagosprogramados',
     exportarExcelpagosprogramados: controllerMain + '/exportarexcelpagosprogramados',
     obtenerToken: controllerEventos + '/obtenertoken',
-    enviarCorreo: controllerEventos + '/enviarcorreo',
+    //enviarCorreo: controllerEventos + '/enviarcorreo',
     listaritemTablaSunat: controllerContabilidad + '/listaritemtablasunat/',
     listarTipoTransporteTablaSunat: controllerContabilidad + '/listartipotransportetablasunat',
     listarMotivoTrasladoTablaSunat: controllerContabilidad + '/listarmotivotrasladotablasunat',
     listarTipoDocumentoTablaSunat: controllerContabilidad + '/listartipodocumentotablasunat/',
 
-    listarGastos: controllerMarketing + '/gastoslist',
+    listarGastos: controllerMarketing + '/listargastos',
     prcGastos: controllerMarketing + '/gastosprc',  
     gastosTraeruno: controllerMarketing + '/gastostraeruno/',
     
@@ -216,4 +217,7 @@ export const constantesApiWeb = {
     emitirDocumento: controllerContabilidad + '/comprobantefelprc',
     
     operacionFel: controllerContabilidad + '/operacionfel',
+
+    procesarTrxGasto: controllerMain + '/prctrxgasto',
+    enviarCorreo: controllerEventos + '/send',
 }

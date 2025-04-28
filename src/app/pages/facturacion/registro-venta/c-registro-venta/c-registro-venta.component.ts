@@ -406,6 +406,7 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
                 return;
               }else{
                 this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                this.getListar();
                 return;
               }
              
@@ -433,6 +434,9 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
             color = 'success'
             break;
           case 2:
+            color = 'danger'
+          break;
+          case 3:
             color = 'warning'
           break;
         }

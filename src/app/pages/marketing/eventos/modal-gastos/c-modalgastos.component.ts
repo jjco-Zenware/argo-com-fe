@@ -107,7 +107,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
       nomproyecto:[{ value: '', disabled: false }],
       nrodocumento:[{ value: '', disabled: false }],
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-      tc:[{ value: '', disabled: false }],
+      tc:[{ value: 0, disabled: false }],
       tipodoc_ctb:[{ value: '', disabled: false }],
       nroserie_ctb:[{ value: '', disabled: false }],
       nrodocumento_ctb:[{ value: '', disabled: false }],
@@ -211,7 +211,8 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
       fecemision,
       fecvencimiento,
       tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
-      cuotas: []
+      cuotas: [],
+      idproyecto:0
     }
 
     this.cerrar({...objeto})      

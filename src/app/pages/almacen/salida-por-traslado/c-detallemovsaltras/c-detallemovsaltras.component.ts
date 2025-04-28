@@ -12,9 +12,7 @@ import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/servic
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { AlmacenService } from '../../service/almacenServices';
-import { CItemOrdenesComponent } from '../../items-ordenes/c-items-ordenes.component';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
-import { CItemCotizacionComponent } from 'src/app/pages/compras/proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
 import { CBusquedaProductoComponent } from '../../busqueda-producto/c-busqueda-producto.component';
 import { CItemAlmacenComponent } from '../../c-item-almacen/c-item-almacen.component';
 import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
@@ -196,8 +194,8 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
       gre_marca_placa_unid_transporte: [{ value: '', disabled: false }],
       gre_punto_partida: [{ value: '', disabled: false }],
       gre_punto_llegada: [{ value: '', disabled: false }],
-      gre_motivo_de_traslado: [{ value: '', disabled: false }],
-      gre_guia_tipo: [{ value: '', disabled: false }],
+      gre_motivo_de_traslado: [{ value: '13', disabled: false }],
+      gre_guia_tipo: [{ value: 1, disabled: false }],
       gre_conductor_nombre: [{ value: '', disabled: false }],
       gre_conductor_apellidos: [{ value: '', disabled: false }],
       gre_conductor_numero_licencia: [{ value: '', disabled: false }],
@@ -208,7 +206,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
       nroserie_ctb:[{ value: '', disabled: false }],
       nrodocumento_ctb:[{ value: '', disabled: false }],
       fecemision: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
-      tipodoc_ctb: [{ value: 505, disabled: false }],
+      tipodoc_ctb: [{ value: 7, disabled: false }],
     });
   }
 
@@ -356,8 +354,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecentrega = this.registerFormRegistro.value.fecentrega;
     gre_fec_ini_traslado = this.registerFormRegistro.value.gre_fec_ini_traslado;
-    fecemision = this.registerFormRegistro.value.fecemision;
-    
+    fecemision = this.registerFormRegistro.value.fecemision;    
 
     if (fechaingreso.toString().length === 10) {
       fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
@@ -636,12 +633,6 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-      // if (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === '')
-      // {
-      //     this.errorMensaje="Ingresar Guia...!";
-      //     _error = true;
-      // }
-
       if (this.registerFormRegistro.value.idalmacen === 0 || this.registerFormRegistro.value.idalmacen === null)
                 {
             this.errorMensaje="Seleccionar Almacén Salida...!";
@@ -653,6 +644,101 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
           this.errorMensaje="Seleccionar Almacén Destino...!";
           _error = true;
       }
+
+      
+      if (!_error && (this.registerFormRegistro.value.gre_peso_bruto_total === null || this.registerFormRegistro.value.gre_peso_bruto_total === 0))
+        {
+            this.errorMensaje="Ingresar Peso Bruto...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_numero_de_bultos === null || this.registerFormRegistro.value.gre_numero_de_bultos === 0))
+        {
+            this.errorMensaje="Ingresar N° Bultos...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_tipo_de_transporte === null || this.registerFormRegistro.value.gre_tipo_de_transporte === ''))
+        {
+            this.errorMensaje="Seleccionar Tipo de Transporte...!";
+            _error = true;
+            }
+
+      if (!_error && (this.registerFormRegistro.value.gre_tipo_de_transporte === 0 || this.registerFormRegistro.value.gre_tipo_de_transporte === ''))
+      {
+          this.errorMensaje="Seleccionar Documento del Transporte...!";
+          _error = true;
+      }
+
+      if (!_error && (this.registerFormRegistro.value.gre_transportista_documento_tipo === 0 || this.registerFormRegistro.value.gre_transportista_documento_tipo === ''))
+        {
+            this.errorMensaje="Seleccionar Documento del Conductor...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_punto_de_partida_ubigeo === '' && this.registerFormRegistro.value.gre_punto_de_partida_ubigeo === null) )
+      {
+          this.errorMensaje="Ingresar Punto de Partida...!";
+          _error = true;
+      }
+
+      if (!_error && (this.registerFormRegistro.value.gre_punto_de_llegada_ubigeo === '' && this.registerFormRegistro.value.gre_punto_de_llegada_ubigeo === null) )
+        {
+            this.errorMensaje="Ingresar Punto de Llegada...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_ruc_emp_transporte === " " || this.registerFormRegistro.value.gre_ruc_emp_transporte === null))
+      {
+          this.errorMensaje="Ingresar Ruc Transportista...!";
+          _error = true;
+      }
+
+      if (!_error && (this.registerFormRegistro.value.gre_nom_emp_transporte === " " || this.registerFormRegistro.value.gre_nom_emp_transporte === null))
+        {
+            this.errorMensaje="Ingresar Nombre Transportista...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_marca_placa_unid_transporte === " " || this.registerFormRegistro.value.gre_marca_placa_unid_transporte === null))
+        {
+            this.errorMensaje="Ingresar Placa...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_punto_partida === " " || this.registerFormRegistro.value.gre_punto_partida === null))
+        {
+            this.errorMensaje="Ingresar Partida...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_punto_llegada === " " || this.registerFormRegistro.value.gre_punto_llegada === null))
+        {
+            this.errorMensaje="Ingresar Llegada...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_motivo_de_traslado === null || this.registerFormRegistro.value.gre_motivo_de_traslado === ''))
+        {
+            this.errorMensaje="Seleccionar Motivo...!";
+            _error = true;
+        }
+
+      if (!_error && (this.registerFormRegistro.value.gre_conductor_nombre === " " || this.registerFormRegistro.value.gre_conductor_nombre === null))
+        {
+            this.errorMensaje="Ingresar Nombre Conductor...!";
+            _error = true;
+        }
+      if (!_error && (this.registerFormRegistro.value.gre_conductor_apellidos === " " || this.registerFormRegistro.value.gre_conductor_apellidos === null))
+        {
+            this.errorMensaje="Ingresar Apellido Conductor...!";
+            _error = true;
+        }
+      if (!_error && (this.registerFormRegistro.value.gre_conductor_numero_licencia === " " || this.registerFormRegistro.value.gre_conductor_numero_licencia === null))
+        {
+            this.errorMensaje="Ingresar N° Licencia...!";
+            _error = true;
+        }
        return _error;
      }
      
@@ -750,6 +836,7 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
           }
         });
       }
+      
       validarAlmacen(valor:number){
         console.log('validarAlmacen', valor);
         console.log('this.registerFormRegistro.value.idalamacen', this.registerFormRegistro.value.idalmacen);
@@ -987,18 +1074,19 @@ listarItemsTablaSunat() {
     
       }
 
+
       listarItemsTablaComprobante() {
-        this.comprasService.obtenerItemsTabla(112).subscribe({
-            next: (rpta: any) => {
-              console.info('listarItemsTablaComprobante : ', rpta);
-                this.lstComprobante = rpta;
-            },
-            error: (err) => {
-            console.info('error : ', err);
-            this.serviceSharedApp.messageToast()
-            },
-            complete: () => {
-            },
-        });    
+        this.contabilidadService.listarItemsTablaSunat(2).subscribe({
+          next: (rpta: any) => {
+            console.info('listarItemsTablaComprobante : ', rpta);
+              this.lstComprobante = rpta;
+          },
+          error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+          },
+          complete: () => {
+          },
+      });     
       }
 }

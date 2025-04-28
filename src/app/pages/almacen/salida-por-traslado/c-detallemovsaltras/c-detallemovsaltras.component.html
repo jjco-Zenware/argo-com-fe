@@ -74,13 +74,13 @@
                         </span>
                     </div>
                 </ng-template>    
-                <!-- <app-guiaremision [IA_data]="dataGuia"></app-guiaremision>         -->
+                <!-- <app-guiaremision [IA_data]="dataGuia"></app-guiaremision> -->
                 <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">    
                     <div class="sm:col-4 lg:col-4 md:col-3 col-6 h-4rem field ">
                         <label class="block text-900 font-semibold mb-1">Tipo Documento<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb" placeholder="Seleccionar Origen" optionLabel="valoritem" 
-                            optionValue="iditem" readonly="true" class="p-inputtext-sm"></p-dropdown>
+                            <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb" placeholder="Seleccionar Origen" optionLabel="nomitemsunat" 
+                            optionValue="codsunat" readonly="true" class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div> 
                     <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field ">
@@ -143,19 +143,19 @@
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Denominac. Conduc. </label>
                         <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_denominacion"/>
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_denominacion" [readonly]=onlyRead/>
                         </span>
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Punto Partida</label>
                         <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_de_partida_ubigeo"/>
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_de_partida_ubigeo" [readonly]=onlyRead/>
                         </span>
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Punto LLegada</label>
                         <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_de_llegada_ubigeo"/>
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_de_llegada_ubigeo" [readonly]=onlyRead/>
                         </span>
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 h-4rem h-4rem field -mt-1">
@@ -184,19 +184,19 @@
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Placa</label>
                         <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_marca_placa_unid_transporte"/>
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_marca_placa_unid_transporte" [readonly]=onlyRead/>
                         </span>
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Partida</label>
                         <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_partida"/>
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_partida" [readonly]=onlyRead/>
                         </span>
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Llegada</label>
                         <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_llegada"/>
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_punto_llegada" [readonly]=onlyRead/>
                         </span>
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
@@ -205,60 +205,26 @@
                             <p-dropdown [options]="lstTipoMotivo" placeholder="Seleccionar..."  formControlName="gre_motivo_de_traslado" 
                             optionLabel="nomitemsunat" optionValue="codsunat" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
                         </span>
-                    </div>  
-                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 font-semibold mb-1">Tipo Guia</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_guia_tipo"/>
-                        </span>
-                    </div>  
+                    </div>   
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Nombre Conductor</label>
                         <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_nombre"/>
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_nombre" [readonly]=onlyRead/>
                         </span>
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Apellidos Conductor</label>
                         <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_apellidos"/>
+                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_apellidos" [readonly]=onlyRead/>
                         </span>
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">N° Licencia</label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_numero_licencia" 
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" />
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" [readonly]=onlyRead/>
                         </span>
-                    </div>  
-                    <!--<div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 font-semibold mb-1">Tipo IGV</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="tipo_igv"/>
-                        </span>
-                    </div>  
-                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 font-semibold mb-1">Motivo FE</label>
-                        <span>
-                            <p-dropdown [options]="lstTipoMotivo" placeholder="Seleccionar..."  formControlName="fel_codmotivo" 
-                            optionLabel="nomitemsunat" optionValue="codsunat" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
-                        </span>
-                    </div> 
-                    <div class="col-6 sm:col-5 lg:col-4 md:col-6 h-4rem field">                            
-                        <label class="block text-900 font-semibold mb-1">Tipo Nota Deb.<span class="text-red-500 font-bold"> * </span></label>                            
-                        <span>
-                            <p-dropdown [options]="lstTipoND" placeholder="Seleccionar..."  formControlName="fel_tiponotadebito" 
-                            optionLabel="nomitemsunat" optionValue="codsunat" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
-                        </span>
-                    </div> 
-                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 font-semibold mb-1">Fel Tipo IGV</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="fel_tipoigv"/>
-                        </span>
-                    </div>  -->
-                          
-                              
+                    </div>                             
                 </form>  
             </p-tabPanel>
             

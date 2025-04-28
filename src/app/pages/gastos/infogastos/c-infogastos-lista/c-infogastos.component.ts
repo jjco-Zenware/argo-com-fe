@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -9,6 +9,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 import { MarketingService } from 'src/app/pages/marketing/service/marketingServices';
+import { CModalTransacComponent } from '../../modal-trans-gasto/modal-transac.component';
 
 @Component({
   selector: 'app-c-infogastos',
@@ -49,24 +50,10 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
 
     createFrm(){
         this.frmDatos = this.fb.group({
-          fecini: [
-            {
-              value: this.utilitariosService.obtenerFechaInicioMes(),
-              disabled: false,
-            },
-          ],
-          fecfin: [
-            {
-              value: this.utilitariosService.obtenerFechaFinMes(),
-              disabled: false,
-            },
-          ],
-          idusuario: [
-            {
-              value: constantesLocalStorage.idusuario,
-              disabled: false,
-            },
-          ],
+          fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}],
+          fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],
+          idusuario: [{value: constantesLocalStorage.idusuario, disabled: false}],
+          idgasto: [{value: 0, disabled: false}],
         })
       }
 
@@ -83,7 +70,7 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
     getListar(){
       this.setSpinner(true);
       this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-      
+
       const objeto = {
         ...this.frmDatos.value
       }
@@ -92,8 +79,8 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
         .subscribe({
           next: (rpta:any) => {
               this.setSpinner(false);
-              console.log('rpta listarGastos', rpta);
-              //this.lstInfoGastos = rpta.ordenescompra
+              console.log('rpta listarGastos', rpta.registro);
+              this.lstInfoGastos = rpta.registro
           },
           error:(err)=>{
               this.setSpinner(false);
@@ -107,20 +94,21 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
     }
 
     onVer(dato: any) {
+      console.log('VER GASTO DE - ', dato);
      
-        this.tituloDetalle =  'VER GASTO DE - '+ dato.idordencompra;
+        this.tituloDetalle =  'VER GASTO DE - '+ dato.nomusuario;
         this.dataDet = {
-          idcodigo: dato.idordencompra,
+          idcodigo: dato.idgasto,
           paramReg:'V'
         } 
         this.vistaLista = false;
     }
 
     onEditar(dato: any) {
-      
-        this.tituloDetalle = 'VER GASTO DE - '+ dato.idordencompra;
+      console.log('EDITAR GASTO DE - ', dato);
+        this.tituloDetalle = 'EDITAR GASTO DE - '+ dato.nomusuario;
         this.dataDet = {
-          idcodigo: dato.idordencompra,
+          idcodigo: dato.idgasto,
           paramReg:'E'
         }
         this.vistaLista = false;
@@ -173,12 +161,12 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
 
         this.gasto.idtrx = item.idtrx;
         console.log('onAccion', item);
-        const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+        const ref = this.dialogService.open(CModalTransacComponent, {
             data: this.gasto,
             header: item.nomtrx ,
             closeOnEscape: false,
             styleClass: 'testDialog',
-            width: '40%'
+            width: '30%'
         });
     
         ref.onClose.subscribe(() => {

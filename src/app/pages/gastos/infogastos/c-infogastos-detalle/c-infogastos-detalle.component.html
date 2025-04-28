@@ -1,7 +1,7 @@
 <div class="p-fluid mt-1">
     <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
         <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem" (click)="guardar()"></button>
-        <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
+        <!-- <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton> -->
     </div>
     <div class="card p-2">
         <p-tabView [(activeIndex)]="activeIndex">
@@ -81,7 +81,7 @@
                         </span>
                     </div>
                 </ng-template>             
-                <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
+                <app-c-adjuntos [IA_data]="dataAdjunto" ></app-c-adjuntos>                
             </p-tabPanel>      
             
             <p-tabPanel [disabled]=visibleDocument>

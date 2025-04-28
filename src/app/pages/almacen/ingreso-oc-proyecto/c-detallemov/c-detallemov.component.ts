@@ -571,7 +571,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
     const objeto = {
       idoportunidad: 0,
       codtipoproc: 7 , 
-      idnroproceso: this.ordenCompra.idordencompra, 
+      idnroproceso: this.idMovimiento, 
     }
     console.log('this.objeto ...', objeto );
   

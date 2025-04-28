@@ -123,14 +123,14 @@ export class MarketingService {
         return this.http.get<any>(url)
     }
 
-    listarTrasacciones(objeto: any) {
-        const url = `${constantesApiWeb.listarTrasacciones}`;
-        return this.http.post<any>(url, objeto)
+    listarTrasacciones(codigo: any) {
+        const url = `${constantesApiWeb.listarTrasacciones}${codigo}`;
+        return this.http.get<any>(url)
     }
 
-    gastoTraeruno(objeto:any) {
-        const url = `${constantesApiWeb.gastosTraeruno}`;
-            return  this.http.post<any>(url, objeto)
+    gastoTraeruno(codigo:any) {
+        const url = `${constantesApiWeb.gastosTraeruno}${codigo}`;
+            return  this.http.get<any>(url)
     }
 
     gastoprc(objeto:any) {

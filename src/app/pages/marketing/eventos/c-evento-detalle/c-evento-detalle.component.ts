@@ -82,6 +82,13 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
     { codigo: 'URU', name: 'URUGUAY' },
   ];
   token: any;
+  lstClientes: any[]=[];
+  verCliente: boolean = false;
+  verUbicacion: boolean = false;
+  verPais: boolean = false;
+  verLugar: boolean = false;
+  verDireccion: boolean = false;
+  verOrganizador: boolean = false;
 
 constructor(
   private messageService: MessageService,
@@ -150,9 +157,11 @@ createForm() {
     lugarevento: [{ value: '', disabled: false }],
     idproyecto:[{ value: 0, disabled: false }],
     horafin: [{ value: '00:00', disabled: false }],
-    codcategoria:[{ value: 0, disabled: false }],
+    codcategoria:[{ value: 410, disabled: false }],
     codubicacion: [{ value: 'NAC', disabled: false }],
     codpais: [{ value: '', disabled: false }],
+    idproveedor: [{ value: '', disabled: false }],
+    direvento: [{ value: '', disabled: false }],
   });
   
 }
@@ -167,6 +176,7 @@ cargarData(){
   this.listaMonedas();
   this.listarItemsTabla()
   this.cargarProyectos(6);
+  this.listaClientes();
 
   if (this.idCliente > 0) {
     this.visibleDocument = false;
@@ -177,11 +187,13 @@ cargarData(){
     this.calculateProgress();
     this.visibleDocumentGasto = false; 
     this.getListarGasto();
+    this.mostrarBotones(this.IA_data.codcategoria);
     // if (this.IA_data.idlista > 8) {
     //   this.visibleDocumentGasto = false;      
     // }
   }else{
     this.addTaskNew();
+    this.mostrarBotones(410);
   }
   
 }
@@ -741,7 +753,7 @@ guardarGasto(objeto:any){
 
   const obj = {
     ...objeto,
-    idproyecto: this.registerForm.get('idproyecto').value,
+    idproyecto: 0, //this.registerForm.get('idproyecto').value,
     idtipodocprc: 7
   }
 
@@ -852,20 +864,20 @@ getListarGasto(){
           
           });
     }
+
     listarItemsTabla() {
-    this.comprasService.obtenerItemsTabla(127).subscribe({
-        next: (rpta: any) => {
-          console.info('listarItemsTabla : ', rpta);
-            this.lstCategoria = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });
-  
+      this.comprasService.obtenerItemsTabla(127).subscribe({
+          next: (rpta: any) => {
+            console.info('listarItemsTabla : ', rpta);
+              this.lstCategoria = rpta;
+          },
+          error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+          },
+          complete: () => {
+          },
+      });  
     }
 
     changeUbicacion(value:any){
@@ -905,8 +917,6 @@ getListarGasto(){
           this.$listSubcription.push($obtenerToken);
     }
 
-   
-    
     enviarCorreos(){
      
 
@@ -932,7 +942,75 @@ getListarGasto(){
           }
           });
           this.$listSubcription.push($obtenerToken);
+    }   
+
+    listaClientes() {
+      const $getClientes = this.marketingService.obtenerClientes('CLI').subscribe({
+        next: (rpta: any) => {
+          this.lstClientes = rpta;
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { },
+      });
+      this.$listSubcription.push($getClientes);
     }
 
-   
+    mostrarBotones(data:any){
+      console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
+      switch (data) {
+        case 410: //GENERACIÓN DE DEMANDA
+          this.verCliente = false;
+          this.verUbicacion = false;
+          this.verPais = false;
+          this.verLugar = true;
+          this.verDireccion = true;
+          this.verOrganizador = true;
+        break;
+        case 411: //CUSTOMER DAY
+          this.verCliente = true;
+          this.verUbicacion = false;
+          this.verPais = false;
+          this.verLugar = true;
+          this.verDireccion = true;
+          this.verOrganizador = false;
+        break;      
+        case 414://INTERNO 
+          this.verCliente = true;
+          this.verUbicacion = false;
+          this.verPais = false;
+          this.verLugar = true;
+          this.verDireccion = true;
+          this.verOrganizador = false;
+          
+        break;
+        case 415://WORKSHOP
+          this.verCliente = false;
+          this.verUbicacion = true;
+          this.verPais = true;
+          this.verLugar = false;
+          this.verDireccion = false;
+          this.verOrganizador = true;
+          
+        break;
+        case 416://EXTERIOR
+          this.verCliente = false;
+          this.verUbicacion = false;
+          this.verPais = true;
+          this.verLugar = true;
+          this.verDireccion = true;
+          this.verOrganizador = true;
+        break;
+        case 417://RESPONSABLE SOCIAL
+          this.verCliente = false;
+          this.verUbicacion = true;
+          this.verPais = false;
+          this.verLugar = true;
+          this.verDireccion = true;
+          this.verOrganizador = false;
+        break;
+      }
+      
+    }
 }

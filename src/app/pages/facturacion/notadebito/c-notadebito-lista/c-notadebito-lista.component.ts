@@ -11,6 +11,7 @@ import { Menu } from 'primeng/menu';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-registro/modal-transac.component';
+import { CMotivoComponent } from '../../modalanular/c-modalanular.component';
 
 @Component({
   selector: 'app-c-notadebito-lista',
@@ -373,6 +374,9 @@ export class CNotaDebitoComponent implements OnInit, OnDestroy{
           color = 'success'
           break;
         case 2:
+          color = 'danger'
+        break;
+        case 3:
           color = 'warning'
         break;
       }
@@ -418,6 +422,49 @@ export class CNotaDebitoComponent implements OnInit, OnDestroy{
         idordendocumento: this.ordenCompra.idordencompra
       }
       console.log('objeto', objeto);
+
+       if (item.operacion === "generar_anulacion") {
+                const ref = this.dialogService.open(CMotivoComponent, {
+                  data: this.ordenCompra,
+                  header: "Motivo de Anulación",
+                  closeOnEscape: false,
+                  styleClass: 'testDialog',
+                  width: '30%'
+                });
+            
+                ref.onClose.subscribe((rpta: any) => {
+                  this.setSpinner(false);
+                    console.log('onClose',rpta);
+                    const objeto2 = {
+                      operacion: item.operacion,
+                      tipo_de_comprobante: tipo_de_comprobante,
+                      serie : serie,
+                      numero : numero,
+                      idusuario: constantesLocalStorage.idusuario,
+                      idordendocumento: this.ordenCompra.idordencompra,
+                      motivo: rpta.data.descripcion
+                    }
+                    if (rpta != undefined) {
+                      const $operacionFel = this.proyectosService.operacionFel(objeto2)
+                      .subscribe({
+                        next: (rpta:any) => {
+                          console.log('operacionFel', rpta);
+                          this.getListar();
+                            this.setSpinner(false);
+                        },
+                        error:(err)=>{
+                            this.setSpinner(false);
+                            this.serviceSharedApp.messageToast()
+                        },
+                        complete:() => {
+                          this.setSpinner(false);
+                        }
+                      });
+                    this.$listSubcription.push($operacionFel)
+                    }
+                  });
+                return;
+             }
 
     const $operacionFel = this.proyectosService.operacionFel(objeto)
       .subscribe({

@@ -11,6 +11,7 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
+import { CMotivoComponent } from 'src/app/pages/facturacion/modalanular/c-modalanular.component';
 
 @Component({
   selector: 'app-c-listamovsal',
@@ -36,6 +37,17 @@ export class CSalidaOcProyectoComponent implements OnInit, OnDestroy{
     ordenCompra: any;
     lstProveedores: any[] = [];
     listadoArchivos: any[] = [];
+    menuItemsSunat: MenuItem[] = [];
+    @ViewChild('menuSunat') menuSunat!: Menu;
+    lstAccionesSunat: any = [        
+      {
+        operacion : 'consultar_guia',
+        tipo_de_comprobante :'',
+        serie :'',
+        numero: '',
+        label:'Consultar Guia'
+      } 
+  ]
 
     constructor(
         private fb: FormBuilder,
@@ -149,8 +161,6 @@ export class CSalidaOcProyectoComponent implements OnInit, OnDestroy{
         this.vistaLista = false;
     }
 
-  
-
     getDetalle(dato:boolean){
       this.vistaLista = true;
       this.visDetalle = false;
@@ -172,7 +182,6 @@ export class CSalidaOcProyectoComponent implements OnInit, OnDestroy{
       }
       this.vistaLista = false;
     }
-
 
     getExportarExcel(data :any) {
       this.lstExportar = [];
@@ -375,4 +384,159 @@ export class CSalidaOcProyectoComponent implements OnInit, OnDestroy{
         });
         this.$listSubcription.push($cargarOrdenC)
   }
+
+  emitirDocumento(data:any){
+        
+                this.setSpinner(true);
+                this.mensajeSpinner = "Enviando...!"
+        
+                const objeto = {
+                  codproceso: 0,
+                  idusuario: constantesLocalStorage.idusuario,
+                  idordendocumento: data.idordencompra,
+                }
+              
+              const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
+                  next: (rpta: any) => {
+                      console.log('emitirDocumento', rpta);
+                      this.setSpinner(false);
+                      this.getListar();
+                      // if (rpta.aceptada_por_sunat) {
+                      //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
+                      //   this.getListar();
+                      //   return;
+                      // }else{
+                      //   this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                      //   return;
+                      // }
+                     
+                  },
+                  error: (err) => {
+                    this.setSpinner(false);
+                      console.error('error : ', err);
+                      this.serviceSharedApp.messageToast();
+                  },
+                  complete: () => {
+                    this.setSpinner(false);
+                  },
+              });
+              this.$listSubcription.push($procesarTrx)
+              }
+        
+              getSeverity(data:any) {
+                console.log()
+                let color;
+                switch (data) {
+                  case 0:
+                    color = 'primary'
+                  break;      
+                  case 1:
+                    color = 'success'
+                    break;
+                  case 2:
+                    color = 'danger'
+                  break;
+                  case 3:
+                    color = 'warning'
+                  break;
+                }
+                return color;
+              }
+        
+              toggleMenuSunat(event: Event, data: any) {
+                if (data.acciones) {
+                    this.cargarMenuSunat(this.lstAccionesSunat);
+                    this.ordenCompra = data;
+                    this.menuSunat.toggle(event);
+                }
+            }
+          
+              cargarMenuSunat(data: any) {
+                this.menuItemsSunat = [];
+                data.forEach((item: any) => {
+                    this.menuItemsSunat.push({
+                        label: item.label,
+                        icon: 'pi pi-cog',
+                        command: () => this.onAccionSunat(item)
+                    })
+                });
+              }
+            
+              onAccionSunat(item: any) {
+                console.log('onAccionSunat', item);
+                console.log('this.ordenCompra', this.ordenCompra);
+               
+               let tipo_de_comprobante = parseInt(this.ordenCompra.tipodoc_ctb);
+               let serie = this.ordenCompra.nroserie_ctb;
+               let numero = parseInt(this.ordenCompra.nrodocumento_ctb);
+               
+        
+               this.setSpinner(true);
+                this.mensajeSpinner = "Consultando...!"
+                
+                const objeto = {
+                  operacion: item.operacion,
+                  tipo_de_comprobante: tipo_de_comprobante,
+                  serie : serie,
+                  numero : numero,
+                  idusuario: constantesLocalStorage.idusuario,
+                  idordendocumento: this.ordenCompra.idordencompra
+                }
+                console.log('objeto', objeto);
+        
+                if (item.operacion === "generar_anulacion") {
+                  const ref = this.dialogService.open(CMotivoComponent, {
+                    data: this.ordenCompra,
+                    header: "Motivo de Anulación",
+                    closeOnEscape: false,
+                    styleClass: 'testDialog',
+                    width: '30%'
+                  });
+              
+                  ref.onClose.subscribe((rpta: any) => {
+                      console.log('onClose',rpta);
+                      if (rpta != undefined) {
+                        const $operacionFel = this.proyectosService.operacionFel(objeto)
+                        .subscribe({
+                          next: (rpta:any) => {
+                            console.log('operacionFel', rpta);
+                            this.getListar();
+                              this.setSpinner(false);
+                          },
+                          error:(err)=>{
+                              this.setSpinner(false);
+                              this.serviceSharedApp.messageToast()
+                          },
+                          complete:() => {
+                            this.setSpinner(false);
+                          }
+                        });
+                      this.$listSubcription.push($operacionFel)
+                      }
+                    });
+                  return;
+               }
+        
+                const $operacionFel = this.proyectosService.operacionFel(objeto)
+                  .subscribe({
+                    next: (rpta:any) => {
+                      console.log('operacionFel', rpta);
+                      this.getListar();
+                        this.setSpinner(false);
+                    },
+                    error:(err)=>{
+                        this.setSpinner(false);
+                        this.serviceSharedApp.messageToast()
+                    },
+                    complete:() => {
+                      this.setSpinner(false);
+                    }
+                  });
+                this.$listSubcription.push($operacionFel)
+              }
+  
+  
+              verDocumento(data: any){
+                window.open(data.enlaceFEL);
+              }
 }

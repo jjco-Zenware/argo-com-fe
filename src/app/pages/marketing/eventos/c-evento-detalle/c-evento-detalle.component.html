@@ -16,14 +16,21 @@
 
                 <form [formGroup]="registerForm" class="p-fluid p-formgrid grid lg:col-5 text-sm p-2 m-2"> 
                     <div class="sm:col-6 lg:col-7 md:col-12 h-5rem">
-                        <label class="block text-900 font-semibold mb-1">Categoría <span class="text-red-500 font-bold"> * </span></label>
+                        <label class="block text-900 font-semibold mb-1">Categoría<span class="text-red-500 font-bold"> * </span></label>
                         <span>
                             <p-dropdown [options]="lstCategoria" formControlName="codcategoria" optionLabel="valoritem" placeholder="Seleccionar..."
-                            optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="mostrarBotones($event.value)"></p-dropdown>
+                        </span>
+                    </div>  
+                    <div *ngIf="verCliente" class="sm:col-6 lg:col-12 md:col-12 h-5rem">                            
+                        <label class="block text-900 font-semibold mb-1">Cliente</label>                            
+                        <span>
+                            <p-dropdown [options]="lstClientes" placeholder="Seleccionar...!"  formControlName="idcliente" class="p-inputtext-sm"
+                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead></p-dropdown>            
                         </span>
                     </div>           
                     <div class="sm:col-6 lg:col-12 md:col-3 h-5rem col-12">
-                        <label class="block text-900 font-semibold mb-1">Título <span class="text-red-500 font-bold"> * </span></label>                        
+                        <label class="block text-900 font-semibold mb-1">Título<span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
                             <textarea type="text" pInputTextarea [rows]="1" formControlName="title" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
                         </span>
@@ -56,31 +63,36 @@
                             class="p-inputtext-sm" appendTo="body" ></p-dropdown>
                         </span>
                     </div>
-                    <div class="sm:col-6 lg:col-4 md:col-12 h-5rem">
+                    <div *ngIf="verUbicacion" class="sm:col-6 lg:col-4 md:col-12 h-5rem">
                         <label class="block text-900 font-semibold mb-1">Ubicación<span class="text-red-500 font-bold"> * </span></label>
                         <span>
                             <p-dropdown [options]="lstUbicacion" formControlName="codubicacion" optionLabel="name" placeholder="Seleccionar..."
                             optionValue="codigo" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeUbicacion($event.value)"></p-dropdown>
                         </span>
                     </div>
-                    <div class="sm:col-6 lg:col-4 md:col-12 h-5rem">
+                    <div *ngIf="verPais" class="sm:col-6 lg:col-4 md:col-12 h-5rem">
                         <label class="block text-900 font-semibold mb-1">Pais<span class="text-red-500 font-bold"> * </span></label>
                         <span>
                             <p-dropdown [options]="lstPais" formControlName="codpais" optionLabel="name" placeholder="Seleccionar..."
                             optionValue="codigo" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
                         </span>
                     </div>
-                    <div class="sm:col-12 lg:col-12 md:col-3 col-12 h-6rem">
+                    <div *ngIf="verLugar" class="sm:col-12 lg:col-12 md:col-3 col-12 h-6rem">
                         <label class="block text-900 font-semibold mb-1">Lugar <span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
                             <textarea type="text" pInputTextarea [rows]="2" formControlName="lugarevento" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
                         </span>
                     </div>  
-                            
-                    <div class="sm:col-6 lg:col-12 md:col-12 h-5rem">                            
-                        <label class="block text-900 font-semibold mb-1">Organizador <span class="text-red-500 font-bold"> * </span></label>                            
+                    <div *ngIf="verDireccion" class="sm:col-12 lg:col-12 md:col-3 col-12 h-6rem">
+                        <label class="block text-900 font-semibold mb-1">Dirección <span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="2" formControlName="direvento" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                        </span>
+                    </div>    
+                    <div *ngIf="verOrganizador"  class="sm:col-6 lg:col-12 md:col-12 h-5rem">                            
+                        <label class="block text-900 font-semibold mb-1">Sponsor <span class="text-red-500 font-bold"> * </span></label>                            
                         <span>
-                            <p-dropdown [options]="lstProveedores" placeholder="Seleccionar...!"  formControlName="idcliente" class="p-inputtext-sm"
+                            <p-dropdown [options]="lstProveedores" placeholder="Seleccionar...!"  formControlName="idproveedor" class="p-inputtext-sm"
                             optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead></p-dropdown>            
                         </span>
                     </div>                         
@@ -115,62 +127,7 @@
                         </span>
                     </div>                                 
                 </form>            
-            </p-tabPanel>
-
-            <p-tabPanel >
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-users text-green-600"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Participantes
-                        </span>
-                    </div>
-                </ng-template>           
-                <div class="lg:col-9 gap-2">
-                    <div>
-                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3" pTooltip="Agregar Participante" 
-                            icon="pi pi-user" label="Agregar" (click)="agregarProveedor([],0)"></button>
-                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3 text-green-600 ml-3" pTooltip="Enviar Correo" 
-                            icon="pi pi-envelope" label="Email" (click)="obtenrToken()"></button>
-                    </div>
-                    
-                    <p-table [value]="lstParticipantes" class="ml-2 mt-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                        [scrollable]="true"  styleClass="p-datatable-sm " >
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
-                                <th class="bg-teal-50 border-1 text-600">CLIENTE</th>
-                                <th class="bg-teal-50 border-1 text-600">CONTACTO</th>
-                                <th class="bg-teal-50 border-1 text-600">CARGO</th>
-                                <th class="bg-teal-50 border-1 text-600">EMAIL</th> 
-                                <th class="bg-teal-50 border-1 text-600">TELEFONO</th> 
-                                <th class="bg-teal-50 border-1 text-600">USUARIO</th> 
-                                <th [ngStyle]="{'width':'60px'}" class="bg-teal-50 border-1 text-600">ACCIONES</th>
-                                <!-- <th class="bg-teal-50 border-1">WIN</th> -->
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                            <tr>      
-                                <td>{{rowIndex + 1}}</td>
-                                <td>{{ product.razonsocial }}</td>
-                                <td>{{ product.nombrecontacto }}</td>
-                                <td>{{ product.cargo }}</td>
-                                <td>{{ product.email}}</td>     
-                                <td>{{ product.telefono}}</td>  
-                                <td>{{ product.nomusuario}}</td>                         
-                                <td>
-                                    <div class="flex">                               
-                                            <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left"  class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarProveedor(product, rowIndex)"></button>
-                                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" class="p-button-text p-button-rounded text-900 text-red-600" (click)="eliminarCotizacion(product)"></button>
-                                        
-                                    </div>
-                                    
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>   
-                </div>
-            </p-tabPanel>
+            </p-tabPanel>           
 
             <p-tabPanel>
                 <ng-template pTemplate="header">
@@ -308,6 +265,61 @@
                         </div>
                     </div>
                 
+            </p-tabPanel>
+
+            <p-tabPanel >
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-users text-green-600"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Participantes
+                        </span>
+                    </div>
+                </ng-template>           
+                <div class="lg:col-9 gap-2">
+                    <div>
+                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3" pTooltip="Agregar Participante" 
+                            icon="pi pi-user" label="Agregar" (click)="agregarProveedor([],0)"></button>
+                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3 text-green-600 ml-3" pTooltip="Enviar Correo" 
+                            icon="pi pi-envelope" label="Email" (click)="obtenrToken()"></button>
+                    </div>
+                    
+                    <p-table [value]="lstParticipantes" class="ml-2 mt-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                        [scrollable]="true"  styleClass="p-datatable-sm " >
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
+                                <th class="bg-teal-50 border-1 text-600">CLIENTE</th>
+                                <th class="bg-teal-50 border-1 text-600">CONTACTO</th>
+                                <th class="bg-teal-50 border-1 text-600">CARGO</th>
+                                <th class="bg-teal-50 border-1 text-600">EMAIL</th> 
+                                <th class="bg-teal-50 border-1 text-600">TELEFONO</th> 
+                                <th class="bg-teal-50 border-1 text-600">USUARIO</th> 
+                                <th [ngStyle]="{'width':'60px'}" class="bg-teal-50 border-1 text-600">ACCIONES</th>
+                                <!-- <th class="bg-teal-50 border-1">WIN</th> -->
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                            <tr>      
+                                <td>{{rowIndex + 1}}</td>
+                                <td>{{ product.razonsocial }}</td>
+                                <td>{{ product.nombrecontacto }}</td>
+                                <td>{{ product.cargo }}</td>
+                                <td>{{ product.email}}</td>     
+                                <td>{{ product.telefono}}</td>  
+                                <td>{{ product.nomusuario}}</td>                         
+                                <td>
+                                    <div class="flex">                               
+                                            <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left"  class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarProveedor(product, rowIndex)"></button>
+                                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" class="p-button-text p-button-rounded text-900 text-red-600" (click)="eliminarCotizacion(product)"></button>
+                                        
+                                    </div>
+                                    
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>   
+                </div>
             </p-tabPanel>
 
             <p-tabPanel [disabled]=visibleDocumentGasto>

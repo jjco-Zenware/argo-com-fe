@@ -12,6 +12,7 @@ import { ComprasService } from '../../compras/Service/compraServices';
 import { AlmacenService } from '../service/almacenServices';
 import { CModalProductoComponent } from '../../compras/proyectos-ganados/modal-producto/c-modal-producto.component';
 import { CBusquedaProductoComponent } from '../busqueda-producto/c-busqueda-producto.component';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 @Component({
   selector: 'app-c-items-ordenes',
@@ -36,6 +37,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
   tagVisible: boolean = false;
   registerFormTag!: FormGroup; 
   verTag: boolean = true;
+  lstTipoND: any[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -48,7 +50,8 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
     private proyectosService: ProyectosService,
     private comprasService: ComprasService,
     public datepipe: DatePipe,
-    private almacenService: AlmacenService
+    private almacenService: AlmacenService,
+    private contabilidadService: ContabilidadService
   ) { }
 
   get formContacto() { return this.registerFormMarca.controls; }
@@ -64,7 +67,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
     //this.listarMarcas();
     this.listarItemsTabla();
     this.listarItemsTag();
-    
+    this.listarItemsTablaSunat();
 
     // if (this.param.idordencompra === 0) {
     // }else{
@@ -119,6 +122,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
       ref1: [{ value: '', disabled: false }],
       codproducto: [{ value: '', disabled: false }],
       despro: [{ value: '', disabled: false }],
+      tipoigv: [{ value: 1, disabled: false }],
     })
   }
 
@@ -489,4 +493,20 @@ createFormTag() {
         });
       this.$listSubcription.push($traerUno)
     }
+
+    listarItemsTablaSunat() {
+      this.contabilidadService.listarItemsTablaSunat(3).subscribe({
+          next: (rpta: any) => {
+            console.info('listarItemsTablaSunat : ', rpta);
+              this.lstTipoND = rpta;
+          },
+          error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+          },
+          complete: () => {
+          },
+      });
+    
+      }
 }

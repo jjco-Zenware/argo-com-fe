@@ -93,31 +93,31 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
     this.listaClientes();
     this.listaProveedores();
     this.listarItemsTabla(); 
-    this.getOcproveedor(0);     
+    //this.getOcproveedor(0);     
     
     if (this.idMovimiento > 0) {   
-      // if (this.IA_data.paramReg === 'V') {
-      //   this.dataAdjunto ={
-      //     idCliente: this.idMovimiento,
-      //     codtipoproc: 7,
-      //     veracciones: 1
-      //   }
-      // }  else{
-      //   this.dataAdjunto ={
-      //     idCliente: this.idMovimiento,
-      //     codtipoproc: 7,
-      //     veracciones: 0
-      //   }
-      // }     
+      if (this.IA_data.paramReg === 'V') {
+        this.dataAdjunto ={
+          idCliente: this.idMovimiento,
+          codtipoproc: 7,
+          veracciones: 1
+        }
+      }  else{
+        this.dataAdjunto ={
+          idCliente: this.idMovimiento,
+          codtipoproc: 7,
+          veracciones: 0
+        }
+      }     
       this.traerUnoOrdenC();
       this.listarTransacciones();
     }
     else{
-      // this.dataAdjunto ={
-      //   idCliente: 0,
-      //   codtipoproc: 7,
-      //   veracciones: 0
-      // }     
+      this.dataAdjunto ={
+        idCliente: 0,
+        codtipoproc: 7,
+        veracciones: 0
+      }     
       this.mostrarBotones('NVO');
       this.servicioGenerico();
     }   
@@ -257,6 +257,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
             this.setSpinner(false);
             this.ordenCompra = rpta.ordencompra[0]; 
+            
             if (rpta.ordencompra[0].items !== undefined) {
               this.lstItemOC = rpta.ordencompra[0].items;
             }  
@@ -267,10 +268,12 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
           this.cargarMenu(rpta.ordencompra[0].acciones);
-          this.mostrarBotones(rpta.ordencompra[0].estado);      
+          this.mostrarBotones(rpta.ordencompra[0].estado);   
+          this.getOcproveedor(rpta.ordencompra[0].idproveedor);   
+          
           
             this.dataAdjunto ={
-              idCliente: this.ordenCompra.alm_idordencompra,
+              idCliente: rpta.ordencompra[0].alm_idordencompra,
               codtipoproc: 7,
               veracciones: 0
             }            
@@ -496,6 +499,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
             this.setSpinner(false);
             console.info('next : ', rpta);
             this.lstOrdenC = rpta;
+            this.registerFormRegistro.get('alm_idordencompra')?.setValue(this.ordenCompra.alm_idordencompra); 
         },
         error: (err) => {
             this.setSpinner(false);
@@ -545,7 +549,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
     const objeto = {
       idoportunidad: 0,
       codtipoproc: 7 , 
-      idnroproceso: this.ordenCompra.idordencompra, 
+      idnroproceso: this.idMovimiento, 
     }
     console.log('this.objeto ...', objeto );
   
@@ -682,11 +686,11 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
-        {
-            this.errorMensaje="Ingresar Guia...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
+      //   {
+      //       this.errorMensaje="Ingresar Guia...!";
+      //       _error = true;
+      //   }
 
       if (!_error && (this.registerFormRegistro.value.alm_idordencompra === null || this.registerFormRegistro.value.alm_idordencompra === ''))
       {

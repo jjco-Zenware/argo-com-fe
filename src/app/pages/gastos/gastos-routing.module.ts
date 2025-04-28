@@ -7,11 +7,11 @@ const routes: Routes = [
     loadChildren: () => import('./infogastos/infogastos.module').then(m => m.InformeGastosModule),
     data: { breadcrumb: 'Informe de Gastos' }
   },
-//   {
-//     path: 'fondos',
-//     loadChildren: () => import('./fondos/fondo.module').then(m => m.FondosModule),
-//     data: { breadcrumb: 'Fondos' }
-//   },
+  {
+    path: 'misgastos',
+    loadChildren: () => import('./misgastos/misgastos.module').then(m => m.MisGastosModule),
+    data: { breadcrumb: 'Mis Gastos' }
+  },
 //   {
 //     path: 'RegistroParticipantes',
 //     loadChildren: () => import('./participantes/registroParticipantes.module').then(m => m.ParticipanteModule),
