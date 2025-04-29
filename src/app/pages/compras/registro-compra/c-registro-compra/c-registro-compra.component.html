@@ -65,6 +65,11 @@
                     </th> -->
                     <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
+                            N° OC
+                        </div>
+                    </th>
+                    <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
                             FECHA <br> EMISIÓN
                         </div>
                     </th>
@@ -148,12 +153,12 @@
                     </th>
                 </tr>
               
-                <tr>
+                <!-- <tr>
                     <th></th>
                     <th *ngFor="let col of cols">
                         <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
                     </th>
-                </tr>
+                </tr> -->
                
             </ng-template>
             <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
@@ -163,11 +168,11 @@
                             {{rowIndex + 1}}
                         </div>
                     </td>
-                    <!-- <td >
-                        <div [ngStyle]="{'width':'50px'}">
-                            {{data.idordencompra}}
+                    <td >
+                        <div [ngStyle]="{'width':'70px'}">
+                            {{data.codigonroorden_origen}}
                         </div>
-                    </td> -->
+                    </td>
                     <td >
                         <div [ngStyle]="{'width':'60px'}">
                             {{data.fecemision}}

@@ -1166,18 +1166,18 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   }
 
   listarItemsTablaComprobante() {
-    this.comprasService.obtenerItemsTabla(112).subscribe({
-        next: (rpta: any) => {
-          console.info('listarItemsTablaComprobante : ', rpta);
-            this.lstComprobante = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });    
+    this.ordencompraService.listarItemsTablaSunat(2).subscribe({
+      next: (rpta: any) => {
+        console.info('listarItemsTablaComprobante : ', rpta);
+          this.lstComprobante = rpta;
+      },
+      error: (err) => {
+      console.info('error : ', err);
+      this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+  });  
   }
 
   prcCuota(data:number)  {
