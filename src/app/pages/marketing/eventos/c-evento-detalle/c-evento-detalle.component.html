@@ -30,7 +30,7 @@
                         </span>
                     </div>           
                     <div class="sm:col-6 lg:col-12 md:col-3 h-5rem col-12">
-                        <label class="block text-900 font-semibold mb-1">Título<span class="text-red-500 font-bold"> * </span></label>                        
+                        <label class="block text-900 font-semibold mb-1">Nombre del Evento<span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
                             <textarea type="text" pInputTextarea [rows]="1" formControlName="title" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
                         </span>
@@ -217,7 +217,7 @@
                                 <div class="w-full flex-column" >
                                     <p-inplace [disabled]="task.completed" #inplace3 [closable]="true" closeIcon="pi pi-check" styleClass="h-3rem" (onActivate)="focus()" styleClass="white-space-nowrap">
                                         <ng-template pTemplate="display">
-                                            <span style="white-space: pre-line" pTooltip="Click para Editar" [ngClass]="{'text-600 line-through': task.completed, 'text-900': !task.completed}">
+                                            <span style="white-space: pre-line" pTooltip="Click para Editar" [ngClass]="{'text-600': task.completed, 'text-900': !task.completed}">
                                                 {{task.text}}
                                             </span>
                                         </ng-template>

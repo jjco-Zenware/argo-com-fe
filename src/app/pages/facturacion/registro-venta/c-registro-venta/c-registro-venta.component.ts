@@ -533,6 +533,10 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
               console.log('operacionFel', rpta);
               this.getListar();
                 this.setSpinner(false);
+                let mensaje = "El Documento Electrónico " + rpta.serie + "-" + rpta.numero + " ya ha sido ACEPTADA, verifique en el enlace de descarga.";
+                if (item.operacion === "consultar_comprobante" && rpta.estado === 1) {
+                  this.messageService.add({severity: 'info', summary: 'Info', detail: mensaje });
+                }
             },
             error:(err)=>{
                 this.setSpinner(false);

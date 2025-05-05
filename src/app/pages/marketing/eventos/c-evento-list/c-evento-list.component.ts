@@ -118,7 +118,7 @@ export class CEventoListComponent implements OnInit, OnDestroy{
                     const $procesarTrxEvento = this.marketingService.procesarTrxEvento(objeto).subscribe({
                         next: (rpta: any) => {
                             console.log('procesarTrxEvento', rpta);
-                            if (rpta.procesoSwitch == 1) {
+                            if (rpta.procesoSwitch === 0) {
                                 if (event.container.id === "9") {
                                     this.generarCodigo(event.container.data[0]);
                                 }

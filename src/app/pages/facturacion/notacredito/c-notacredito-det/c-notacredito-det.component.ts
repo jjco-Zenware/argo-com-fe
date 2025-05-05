@@ -174,7 +174,7 @@ createFormRegistro() {
     nrodocumento_ctb:[{ value: '', disabled: false }],
     fecvencimiento: [{ value: '', disabled: false, }],
     nrocuotas:[{ value: 1, disabled: false }],
-    porc_detraccion:[{ value: null, disabled: false }],
+    porc_detraccion:[{ value: 0, disabled: false }],
     s_monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
     s_monto_detraccion_CTB:[{ value: 0, disabled: false }],
     s_monto_valor_venta_CTB:[{ value: 0, disabled: false }],
@@ -748,13 +748,13 @@ createFormRegistro() {
             _error = true;
       }    
 
-      if (!_error && (this.registerFormRegistro.value.porc_detraccion === null 
-        || this.registerFormRegistro.value.porc_detraccion === ''
-        || this.registerFormRegistro.value.porc_detraccion === 0))
-        {
-              this.errorMensaje="Ingresar Porcentaje Detracción...!";
-              _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.porc_detraccion === null 
+      //   || this.registerFormRegistro.value.porc_detraccion === ''
+      //   || this.registerFormRegistro.value.porc_detraccion === 0))
+      //   {
+      //         this.errorMensaje="Ingresar Porcentaje Detracción...!";
+      //         _error = true;
+      //   }
 
       // if (this.idOrdenC > 0) {
       //   let total = this.listaCuotas.map(({monto}) => monto).reduce((acc, value) => acc + value, 0);

@@ -69,7 +69,7 @@ export class CModalProveedorComponent implements OnInit, OnDestroy {
     //Agregar validaciones de formulario
     this.registerFormProveedor = this.formBuilder.group({
         iditempostor: [{ value: 0, disabled: false }],
-        idpersona : [{ value: 0, disabled: false }],
+        idpersona : [{ value: '', disabled: false }],
         telefono: [{ value: '', disabled: false }],
         email: [{ value: null, disabled: false }],
         image: [{ value: '', disabled: false }],

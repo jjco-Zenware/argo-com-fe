@@ -51,7 +51,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   idEvento: any;
   filteredAssignees: Assignees[] = [];
   assignees: Assignees[] = [];
-  lstAssignees: Assignees[] = [];
+  lstAssignees: any[] = [];
   lstGastos: any[]=[];
   horas: any[] = [];
   lstMonedas: any;
@@ -160,29 +160,22 @@ cargarData(){
   this.cargarHoras();
   this.listaMonedas();
   this.listarItemsTabla()
-  this.cargarProyectos(6);
   this.listaClientes();
 
   if (this.idCodigo > 0) {
+    this.registerForm.patchValue(this.IA_data); 
+    this.taskList = this.IA_data.taskList;
+    this.lstAssignees = this.IA_data.assignees;
+    this.lstParticipantes = this.IA_data.contactos;
+    this.calculateProgress();    
+    this.mostrarBotones(this.IA_data.codcategoria);
     if (this.IA_data.idlista != 8) {
       this.visibleDocument = false;
       this.visibleDocumentGasto = false; 
       this.getListarGasto();
     }
-    
-    this.registerForm.patchValue(this.IA_data);  
-    this.taskList = this.IA_data.taskList;
-    this.lstAssignees = this.IA_data.assignees;
-    this.lstParticipantes = this.IA_data.contactos;
-    this.calculateProgress();
-    
-    
-    this.mostrarBotones(this.IA_data.codcategoria);
-    // if (this.IA_data.idlista > 8) {
-    //   this.visibleDocumentGasto = false;      
-    // }
   }else{
-    this.addTaskNew();
+    //this.addTaskNew();
     this.mostrarBotones(410);
   }
   
@@ -196,9 +189,17 @@ guardar() {
         return;
     }
 
-    if ((this.registerForm.value.codcategoria === 410 || this.registerForm.value.codcategoria === 415))
+    if (this.registerForm.value.codcategoria === 410 || this.registerForm.value.codcategoria === 416)
       {
           this.registerForm.get('idcliente')?.setValue(0);
+      }else{
+          this.registerForm.get('idproveedor')?.setValue(0);
+      }
+
+    if (this.registerForm.value.codcategoria === 417 )
+      {
+          this.registerForm.get('idcliente')?.setValue(0);
+          this.registerForm.get('idproveedor')?.setValue(0);
       }
 
     let startDate;
@@ -253,8 +254,8 @@ guardar() {
               console.log("rpta prcClientes : ", rpta);
               if (rpta.procesoSwitch === 0){
                   this.messageService.add({severity: 'success', detail: "Operación exitosa" });
-                  this.visibleDocument = false;
-                  this.visibleDocumentGasto = false; 
+                  //this.visibleDocument = false;
+                  //this.visibleDocumentGasto = false; 
                   //this.idCliente = rpta.resultProceso;
                   if (this.idCodigo === 0) {
                     this.comprasService.emitirEvento(rpta.resultProceso);
@@ -295,15 +296,19 @@ guardar() {
           _error = true;
       }
 
-      if (!_error && (this.registerForm.value.codcategoria != 410 || this.registerForm.value.codcategoria === 415))
-        {
-            this.errorMensaje="Seleccionar Cliente...!";
-            _error = true;
-        }
-
-    if (!_error && (this.registerForm.value.titulo === '' || this.registerForm.value.titulo === null))
+    if (!_error && (this.registerForm.value.codcategoria === 411 || this.registerForm.value.codcategoria === 415 || this.registerForm.value.codcategoria === 414)) 
       {
-          this.errorMensaje="Ingresar Título...!";
+                
+        if (this.registerForm.value.idcliente === '' || this.registerForm.value.idcliente === null)
+          {
+              this.errorMensaje="Seleccionar Cliente...!";
+              _error = true;
+          }
+      }
+
+    if (!_error && (this.registerForm.value.title === '' || this.registerForm.value.title === null))
+      {
+          this.errorMensaje="Ingresar Nombre del Evento...!";
           _error = true;
       }
 
@@ -337,11 +342,15 @@ guardar() {
           _error = true;
       }
 
-    if (!_error && (this.registerForm.value.idproveedor === '' || this.registerForm.value.idproveedor === null))
-    {
-        this.errorMensaje="Seleccionar Organizador...!";
-        _error = true;
-    }
+    if (!_error && (this.registerForm.value.codcategoria === 416 || this.registerForm.value.codcategoria === 410)) 
+      {            
+        if (this.registerForm.value.idproveedor === '' || this.registerForm.value.idproveedor === null)
+        {
+            this.errorMensaje="Seleccionar Organizador...!";
+            _error = true;
+        }
+      }
+    
 
     if (!_error && (this.registerForm.value.idresponsable === '' || this.registerForm.value.idresponsable === null))
     {
@@ -379,7 +388,7 @@ guardar() {
       const inroorden = this.taskList.tasks.length + 1;
 
       if (this.taskContent.trim().length > 10) {
-          this.newTask = { idtarea:0, sidtarea:'', text: this.taskContent, completed: false, fechafin: desdeStr,fechaini: desdeStr, nroorden:inroorden,  asignados: [ { idasignado: constantesLocalStorage.idusuario, name: constantesLocalStorage.nombreUsuario, image:constantesLocalStorage.imagen, idtarea:0 }] };
+          this.newTask = { idtarea:0, sidtarea:'', text: this.taskContent, completed: false, fechafin: desdeStr,fechaini: desdeStr, nroorden:inroorden,  asignados: [ ] };
           this.taskList.tasks.unshift(this.newTask);
           this.taskContent = '';
           this.calculateProgress();
@@ -472,9 +481,10 @@ aceptarAsignado()  {
 filterAsignadoTarea(event: any) {
   let filtered: TareaAsignado[] = [];
   let query = event.query;
+  //this.lstAssignees
 
-  for (let i = 0; i < this.assigneesTarea.length; i++) {
-      let asignadotar = this.assigneesTarea[i];
+  for (let i = 0; i < this.lstAssignees.length; i++) {
+      let asignadotar = this.lstAssignees[i];
       if (
           asignadotar.name &&
           asignadotar.name.toLowerCase().indexOf(query.toLowerCase()) == 0
@@ -719,31 +729,28 @@ listaMonedas() {
   this.$listSubcription.push($listaMonedas);
 }
 
-cargarProyectos(dato:any){
-  this.ordencompraService.portipoProyectoList(dato).subscribe({
-    next: (rpta: any) => {
-    this.lstProyectos = rpta;
-    const obj ={
-      idproyecto:0,
-      codproyecto:''
-    }
-    this.lstProyectos.unshift(obj);
-    console.log('cargarProyectos...',this.lstProyectos);
+// cargarProyectos(dato:any){
+//   this.ordencompraService.portipoProyectoList(dato).subscribe({
+//     next: (rpta: any) => {
+//     this.lstProyectos = rpta;
+//     this.registerForm.get('idproyecto').setValue(this.lstProyectos[0].idproyecto);
+  
+//     console.log('cargarProyectos...',this.lstProyectos);
 
-        },
+//         },
 
-    error: (err) => {
-    this.messageService.clear();
-    this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: mensajesQuestion.msgErrorGenerico,
-        });
-    },
-    complete: () => {
-    },
-});
-} 
+//     error: (err) => {
+//     this.messageService.clear();
+//     this.messageService.add({
+//         severity: 'error',
+//         summary: 'Error',
+//         detail: mensajesQuestion.msgErrorGenerico,
+//         });
+//     },
+//     complete: () => {
+//     },
+// });
+// } 
 
 guardarGasto(objeto:any){
 
@@ -753,7 +760,7 @@ guardarGasto(objeto:any){
 
   const obj = {
     ...objeto,
-    idproyecto: 0, //this.registerForm.get('idproyecto').value,
+    idproyecto: this.registerForm.get('idproyecto').value,
     idtipodocprc: 7
   }
 
@@ -986,12 +993,12 @@ getListarGasto(){
           
         break;
         case 415://WORKSHOP
-          this.verCliente = false;
-          this.verUbicacion = true;
-          this.verPais = true;
-          this.verLugar = false;
-          this.verDireccion = false;
-          this.verOrganizador = true;
+          this.verCliente = true;
+          this.verUbicacion = false;
+          this.verPais = false;
+          this.verLugar = true;
+          this.verDireccion = true;
+          this.verOrganizador = false;
           
         break;
         case 416://EXTERIOR
