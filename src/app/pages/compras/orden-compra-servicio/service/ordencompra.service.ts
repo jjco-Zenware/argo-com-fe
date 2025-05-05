@@ -210,4 +210,9 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.procesarTrxGasto}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    listarItemsTablaSunat(codigo: any) {
+        const url = `${constantesApiWeb.listaritemTablaSunat}${codigo}`;
+        return this.http.get<any>(url)
+    }
 }

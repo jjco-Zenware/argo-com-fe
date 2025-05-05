@@ -92,6 +92,15 @@
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
                 </div>
             </div>
+            <div class="flex grid">
+                <div class="sm:col-12 lg:col-8 md:col-12">
+                    <label class="block text-900 font-semibold mb-1">Tipo IGV</label>
+                <span>
+                    <p-dropdown [options]="lstTipoND" placeholder="Seleccionar..."  formControlName="tipoigv" 
+                    optionLabel="nomitemsunat" optionValue="codsunat" appendTo="body" class="p-inputtext-sm"></p-dropdown>            
+                </span>
+                </div> 
+            </div> 
             <div class="flex grid mt-1">
                 <div class="col-12 -mt-4 -mb-5">
                     <p-divider ></p-divider>

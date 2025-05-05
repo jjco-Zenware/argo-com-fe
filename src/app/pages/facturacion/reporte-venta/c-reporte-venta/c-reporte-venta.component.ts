@@ -72,6 +72,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy{
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     
+
     const objeto = {
       ...this.frmDatos.value,
       idtipodocprc: 6

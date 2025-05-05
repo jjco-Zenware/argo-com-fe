@@ -233,4 +233,14 @@ export class ProyectosService {
         const url = `${constantesApiWeb.operacionFel}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    gettipocambio(objeto:any) {
+        const url = `${constantesApiWeb.gettipocambio}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    gettipocambiodia(objeto:any) {
+        const url = `${constantesApiWeb.gettipocambiodia}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

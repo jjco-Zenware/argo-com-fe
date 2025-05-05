@@ -40,6 +40,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
   verporLicContrato  : boolean = false;
   verCondic: boolean = false;
   verMovAlmacen: boolean = true;
+  lstTipoND: any[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -67,7 +68,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
     this.listarMarcas();
     this.listarItemsTabla();
     this.listarItemsTag();
-    
+    this.listarItemsTablaSunat();
 
     // if (this.param.idordencompra === 0) {
     // }else{
@@ -133,6 +134,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       modelo: [{ value: '', disabled: false }],
       idubicacion: [{ value: 0, disabled: false }],
       rutaubicacion: [{ value: '', disabled: false }],
+      tipoigv: [{ value: 1, disabled: false }],
     })
   }
 
@@ -624,4 +626,20 @@ createFormTag() {
       });
     this.$listSubcription.push($traerUno)
   }
+
+  listarItemsTablaSunat() {
+    this.almacenService.listarItemsTablaSunat(3).subscribe({
+        next: (rpta: any) => {
+          console.info('listarItemsTablaSunat : ', rpta);
+            this.lstTipoND = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
+    }
 }

@@ -128,6 +128,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     }else{
       //this.verControles('NOA');
       this.cargarProyectos(1); 
+      this.gettipocambiodia();
       this.dataAdjunto ={
         idCliente: 0,
         codtipoproc: 7,
@@ -305,8 +306,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
             this.setSpinner(false);
             this.ordenCompra = rpta.ordencompra[0];
             //this.ordenCompra.codformapago = (rpta.ordencompra[0].codformapago).toString();
-            this.getContactos(rpta.ordencompra[0].idproveedor);      
-            this.changeMoneda(rpta.ordencompra[0].idmoneda );
+            this.getContactos(rpta.ordencompra[0].idproveedor);   
             if (rpta.ordencompra[0].items !== undefined) {
               this.lstItemOC = rpta.ordencompra[0].items;
               //this.calcularTotales();
@@ -1222,14 +1222,33 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
     });
     }
 
-    changeMoneda(value:any){
-      console.log('changeProyecto...', value);
-      if (value === 1) {
-        this.registerFormRegistro.get('tc')?.disable()
-        this.registerFormRegistro.get('tc')?.setValue(0);
-      }else{
-        this.registerFormRegistro.get('tc')?.enable();
+  
+    gettipocambiodia(){        
+
+      let fecha = new Date();
+        const objeto = {
+          anio: fecha.getFullYear(),
+          mes: fecha.getMonth()+1,
+          dia: fecha.getDate()
+        }
+    
+        const $gettipocambio = this.proyectosService.gettipocambiodia(objeto)
+          .subscribe({
+            next: (rpta:any) => {
+                this.setSpinner(false);
+                console.log('rpta gettipocambiodia', rpta);
+                console.log('rpta valTipo', rpta.valTipo);
+                this.registerFormRegistro.get('tc')?.setValue(parseFloat( rpta.valTipo));
+            },
+            error:(err)=>{
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast()
+            },
+            complete:() => {
+              this.setSpinner(false);
+            }
+          });
+        this.$listSubcription.push($gettipocambio)
+    
       }
-      
-    }
 }
