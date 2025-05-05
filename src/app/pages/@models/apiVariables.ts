@@ -220,4 +220,8 @@ export const constantesApiWeb = {
 
     procesarTrxGasto: controllerMain + '/prctrxgasto',
     enviarCorreo: controllerEventos + '/send',
+
+    gettipocambio: controllerContabilidad + '/gettipocambio/',
+    gettipocambiodia: controllerContabilidad + '/gettipocambiodia/',
+
 }

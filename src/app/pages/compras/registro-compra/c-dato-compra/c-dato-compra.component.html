@@ -91,15 +91,12 @@
                         <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeMoneda($event.value)"></p-dropdown>
+                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                         </span>                                      
                     </div> 
                     <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem -mt-1">
                         <label class="block text-900 font-semibold mb-1">Tipo Cambio<span class="text-red-500 font-bold"> * </span></label>                        
-                        <span class="p-fluid">
-                            <p-inputNumber class="mt-1" formControlName="tc" locale="es-PE" mode="decimal" [minFractionDigits]="4" name="tipocambio" 
-                            [min]="0" [max]="9" class="p-inputtext-sm" [readonly]=onlyRead></p-inputNumber>                                  
-                        </span>
+                        <input pInputText type="text" formControlName="tc" readonly=true class="p-inputtext-sm surface-100"/>
                     </div>       
                     <div class="sm:col-4 lg:col-3 md:col-3 col-6 -mt-1">
                         <label class="block text-900 font-semibold mb-1">Forma de Pago <span class="text-red-500 font-bold"> * </span></label>
@@ -148,7 +145,7 @@
                         <label class="block text-900 font-semibold mb-1">Origen</label>
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstOrigen" formControlName="codtipodoc" placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" 
-                            optionValue="codproceso" (onChange)="getOrigen($event.value)" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            optionValue="codproceso" (onChange)="getOrigen($event.value)" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div>  
                     <div class="lg:col-9"></div> 
@@ -156,15 +153,14 @@
                         <label class="block text-900 font-semibold mb-1">Proyecto<span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto..." optionLabel="s_nomproyecto" class="p-inputtext-sm"
-                            optionValue="idproyecto" appendTo="body" autoWidth="false" (onChange)="changeProyecto($event.value)" [readonly]=onlyRead></p-dropdown>
+                            optionValue="idproyecto" appendTo="body" autoWidth="false" [readonly]=onlyRead></p-dropdown>
                         </span>
                     </div>    
                     <div *ngIf="verProyecto" class="sm:col-6 lg:col-6 md:col-12 col-6 field h-4rem mt-1">
                         <label class="block text-900 font-semibold mb-1">Centro Costos</label>                        
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Centro Costos..." optionLabel="descentrocosto" 
-                            class="p-inputtext-sm " styleClass="surface-100" [dropdownIcon]="'none'"
-                            optionValue="idcentrocosto" appendTo="body" autoWidth="false" readonly="true"></p-dropdown>
+                            class="p-inputtext-sm" optionValue="idcentrocosto" appendTo="body" autoWidth="false" [readonly]=onlyRead></p-dropdown>
                         </span>
                     </div>   
                                                     

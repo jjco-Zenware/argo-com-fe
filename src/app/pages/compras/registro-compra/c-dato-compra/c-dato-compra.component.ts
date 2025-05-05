@@ -10,7 +10,6 @@ import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ComprasService } from '../../Service/compraServices';
-import * as  XLSX  from 'xlsx';
 import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
 import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 import { CModalPersonaComponent } from '../modalPersona/c-modalpersona.component';
@@ -153,6 +152,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     }else{
       //this.verControles('NOA');
       this.cargarProyectos(1); 
+      this.gettipocambiodia();
       this.dataAdjunto ={
         idCliente: 0,
         codtipoproc: 8,
@@ -220,7 +220,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       nrodocumento_ctb:[{ value: '', disabled: false }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       nrocuotas:[{ value: 0, disabled: false }],
-      porc_detraccion:[{ value: null, disabled: false }],
+      porc_detraccion:[{ value: 0, disabled: false }],
       s_monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
       s_monto_detraccion_CTB:[{ value: 0, disabled: false }],
       s_monto_valor_venta_CTB:[{ value: 0, disabled: false }],
@@ -352,8 +352,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             }   
 
             this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
-            this.changeMoneda(rpta.ordencompra[0].idmoneda );
-            
           this.visibleDocument = false; 
           this.visibleAsiento = false;
 
@@ -716,7 +714,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
    
   getOrigen(data:any){
     console.log('getOrigen...', data);
-    this.registerFormRegistro.get('idcentrocosto')?.setValue('');
+    //this.registerFormRegistro.get('idcentrocosto')?.setValue('');
     switch (data) {
       case 'OPO':
         this.cargarProyectos(1);
@@ -837,83 +835,12 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   });
   }
 
-  ReadExcel(event: any, fubauto: any){
-    this.lstItemOC = [];
-    let file = event.files[0];
-    let s_nombre = file.name.split('.').pop();  
-
-    if (s_nombre != "xlsx") {
-        this.messageService.add({severity: 'info', summary: 'Info', detail: "Archivo Incorrecto..." });
-        fubauto.clear();
-        return;
-    }
-
-    let fileReader = new FileReader();
-    fileReader.readAsBinaryString(file);
-
-    fileReader.onload = (e) =>{
-        var workBook = XLSX.read(fileReader.result,{type:'binary'});
-        var sheetNames = workBook.SheetNames;
-        this.ExcelData = XLSX.utils.sheet_to_json(workBook.Sheets[sheetNames[0]])
-        console.log(this.ExcelData);
-
-        const _nomtipoprod:string =this.lstTipoProducto.filter((x: { idtipoprod: any; })=>x.idtipoprod == this.idtipoprod)[0].nomtipoprod;
-        const _nommarca:string =this.lstMarcas.filter((x: { idmarca: any; })=>x.idmarca == this.idmarca)[0].nommarca;
-        const _nomunidad:string=this.lstUnidades.filter((x: { iditem: number; })=>x.iditem == 130)[0].valoritem;
-    
-        this.ExcelData.forEach((item: any) => {
-          console.log('ExcelData...', item);
-          console.log('Item...', item.Cantidad);
-          
-          item.items = item.Item === undefined ? 0 : item.Item,
-          item.idmarca = this.idmarca,
-          item.idtipoprod = this.idtipoprod,
-          item.nommarca  = _nommarca,
-          item.nomtipoprod  = _nomtipoprod,
-          item.coditem = '0',
-          item.descuento = 0,
-          item.fecact = new Date(),
-          item.fecfin = item.FechaFin === undefined ? null : item.FechaFin,
-          item.fecini = item.FechaInicio === undefined ? null : item.FechaInicio,
-          item.fecreg = new Date(),
-          item.idordencompra = 0,
-          item.idordencompraitem = 0,
-          item.idprod = 0,
-          item.idunidad = 130,
-          item.iduseract = 0,
-          item.iduserreg = 0,
-          item.indvig = true,
-          item.margen = 0,
-          item.nomprod = null,
-          item.nomproveedor = '',
-          item.nrocontrato = item.NroContrato === undefined ? '': item.NroContrato,
-          item.nromeses = 0,
-          item.preprofit = 0,
-          item.serialnumber = '',
-          item.sku = item.CodigoSKU === undefined ? '': item.CodigoSKU.toString(),
-          item.codunidad = 'UNID',
-          item.nomunidad = _nomunidad,
-          item.descripcion = item.Descripcion === undefined ? '': item.Descripcion,
-          item.codproveedor = item.CodProveedor === undefined ? '': item.CodProveedor,
-          item.cantidad = item.Cantidad === undefined ? '' : item.Cantidad,
-          item.preciocosto = item.PrecioUnitario === undefined ? '': item.PrecioUnitario,
-          item.preciocostototal = item.Total === undefined ? '' : item.Total,
-
-          this.lstItemOC.push(item)
-        });
-        console.log( 'listaitems...' ,this.lstItemOC);
-    }
-    fubauto.clear();
-    //this.calcularTotales();
-    this.itemVisible = false;
-  }
-
   cargarProyectos(dato:any){
     this.ordencompraService.portipoProyectoList(dato).subscribe({
       next: (rpta: any) => {
       this.lstProyectos = rpta;
       console.log('cargarProyectos...',this.lstProyectos);
-      this.changeProyecto(this.registerFormRegistro.value.idproyecto)
+      //this.changeProyecto(this.registerFormRegistro.value.idproyecto)
 
           },
 
@@ -1097,8 +1024,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
    
 
       if (!_error && (this.registerFormRegistro.value.porc_detraccion === null 
-        || this.registerFormRegistro.value.porc_detraccion === ''
-        || this.registerFormRegistro.value.porc_detraccion === 0))
+        || this.registerFormRegistro.value.porc_detraccion === ''))
         {
               this.errorMensaje="Ingresar Porcentaje Detracción...!";
               _error = true;
@@ -1350,13 +1276,13 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($getListarOrdenCompra)
   }
 
-  changeProyecto(value:any){
-    console.log('changeProyecto...', value);
-    console.log('this.lstProyectos...', this.lstProyectos);
-    let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
-    console.log('_codcentrocosto...', _codcentrocosto);
-    this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
-  }
+  // changeProyecto(value:any){
+  //   console.log('changeProyecto...', value);
+  //   console.log('this.lstProyectos...', this.lstProyectos);
+  //   let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
+  //   console.log('_codcentrocosto...', _codcentrocosto);
+  //   this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
+  // }
   
   recalcularRegistro(dato:any){
     
@@ -1418,15 +1344,34 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     }
   }
 
-  changeMoneda(value:any){
-    console.log('changeProyecto...', value);
-    if (value === 1) {
-      this.registerFormRegistro.get('tc')?.disable()
-      this.registerFormRegistro.get('tc')?.setValue(0);
-    }else{
-      this.registerFormRegistro.get('tc')?.enable();
+
+  gettipocambiodia(){        
+
+    let fecha = new Date();
+      const objeto = {
+        anio: fecha.getFullYear(),
+        mes: fecha.getMonth()+1,
+        dia: fecha.getDate()
+      }
+  
+      const $gettipocambio = this.proyectosService.gettipocambiodia(objeto)
+        .subscribe({
+          next: (rpta:any) => {
+              this.setSpinner(false);
+              console.log('rpta gettipocambiodia', rpta);
+              console.log('rpta valTipo', rpta.valTipo);
+              this.registerFormRegistro.get('tc')?.setValue(parseFloat( rpta.valTipo));
+          },
+          error:(err)=>{
+              this.setSpinner(false);
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+            this.setSpinner(false);
+          }
+        });
+      this.$listSubcription.push($gettipocambio)
+  
     }
-    
-  }
 
 }
