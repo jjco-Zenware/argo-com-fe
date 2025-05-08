@@ -64,7 +64,14 @@
                             optionValue="codsunat" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div> 
-                    <div class="lg:col-6"></div> 
+                    <div class="sm:col-12 lg:col-9 md:col-12 col-12 -mt-2">
+                        <label class="block text-900 font-semibold">Observación</label>                        
+                        <span class="p-fluid mb-1">
+                            <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
+                            class="w-full" id="observacion" [readonly]=onlyRead class="p-inputtext-sm"></textarea>
+                        </span>
+                    </div>  
+                    <div class="lg:col-3"></div> 
                     <p-divider class="sm:col-12 lg:col-9 md:col-6 col-12 -mb-4 -mt-3">                       
                     </p-divider>
                     <div class="lg:col-3"></div> 
@@ -81,6 +88,7 @@
                         </span>
                     </div>  
                     <button pButton icon="pi pi-search" label="Buscar" class="p-button-success w-auto h-2.5rem mt-5" (click)="buscarDocumento()"></button>
+                    <button *ngIf="verDocumentoEnlace" pButton icon="pi pi-window-maximize" class="w-auto h-2.5rem mt-5 ml-2" (click)="verDocumento()" tooltipPosition="bottom" pTooltip="Ver Documento"></button>
 
                     <div class="lg:col-8"></div>  
                     <p-divider class="sm:col-12 lg:col-9 md:col-6 col-12 -mt-6">                       
@@ -387,7 +395,7 @@
                     </p-table>  
                 </div>
                 
-                <!-- <div class="sm:col-12 lg:col-6 md:col-12 border-1 border-round surface-border ml-2 mt-2">                 
+                <div class="sm:col-12 lg:col-6 md:col-12 border-1 border-round surface-border ml-2 mt-2">                 
                     <div class="flex">
                         <div class="sm:col-6 lg:col-3 md:col-3 col-6 -ml-3">
                             <label class="block text-900 font-semibold mb-1">N° Cuotas<span class="text-red-500 font-bold"> * </span></label>
@@ -422,7 +430,7 @@
                             </tr>
                         </ng-template>
                     </p-table>                
-                </div>  -->
+                </div> 
             </p-tabPanel>
 
             <p-tabPanel >
@@ -468,13 +476,7 @@
                         </span>
                     </div>  
                     <div class="col-6"></div>             
-                    <div class="sm:col-12 lg:col-9 md:col-12 col-12 -mt-2">
-                        <label class="block text-900 font-semibold">Observación</label>                        
-                        <span class="p-fluid mb-1">
-                            <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 
-                            class="w-full" id="observacion" readonly="true" class="p-inputtext-sm surface-100"></textarea>
-                        </span>
-                    </div>       
+                         
                 </form>                         
             </p-tabPanel>
            

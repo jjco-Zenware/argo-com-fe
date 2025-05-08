@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
-import { MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
@@ -77,8 +77,9 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
     public dialogService: DialogService  ,
     private proyectosService: ProyectosService,     
     private serviceSharedApp: SharedAppService,
-        private ordencompraService: OrdencompraService,
-                    private messageService: MessageService,
+    private ordencompraService: OrdencompraService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
     ){
 
   }
@@ -387,40 +388,49 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
 
       emitirDocumento(data:any){
 
-        this.setSpinner(true);
-        this.mensajeSpinner = "Enviando...!"
+         this.confirmationService.confirm({
+                    key: 'confirm1',
+                    header: 'Confirmación',
+                    message: '¿Estás seguro de Enviar a SUNAT?...',
+                    accept: () => {
+                      this.setSpinner(true);
+                      this.mensajeSpinner = "Enviando...!"
+              
+                      const objeto = {
+                        codproceso: 0,
+                        idusuario: constantesLocalStorage.idusuario,
+                        idordendocumento: data.idordencompra,
+                      }
+                    
+                    const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
+                        next: (rpta: any) => {
+                            console.log('emitirDocumento', rpta);
+                            this.setSpinner(false);
+                            if (rpta.aceptada_por_sunat) {
+                              this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
+                              this.getListar();
+                              return;
+                            }else{
+                              this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                              this.getListar();
+                              return;
+                            }
+                           
+                        },
+                        error: (err) => {
+                          this.setSpinner(false);
+                            console.error('error : ', err);
+                            this.serviceSharedApp.messageToast();
+                        },
+                        complete: () => {
+                          this.setSpinner(false);
+                        },
+                    });
+                    this.$listSubcription.push($procesarTrx)
+                    }
+                });
 
-        const objeto = {
-          codproceso: 0,
-          idusuario: constantesLocalStorage.idusuario,
-          idordendocumento: data.idordencompra,
-        }
-      
-      const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
-          next: (rpta: any) => {
-              console.log('emitirDocumento', rpta);
-              this.setSpinner(false);
-              if (rpta.aceptada_por_sunat) {
-                this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
-                this.getListar();
-                return;
-              }else{
-                this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
-                this.getListar();
-                return;
-              }
-             
-          },
-          error: (err) => {
-            this.setSpinner(false);
-              console.error('error : ', err);
-              this.serviceSharedApp.messageToast();
-          },
-          complete: () => {
-            this.setSpinner(false);
-          },
-      });
-      this.$listSubcription.push($procesarTrx)
+       
       }
 
       getSeverity(data:any) {

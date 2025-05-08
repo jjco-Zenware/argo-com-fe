@@ -79,7 +79,7 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
         .subscribe({
           next: (rpta:any) => {
               this.setSpinner(false);
-              console.log('rpta listarGastos', rpta.registro);
+              console.log('rpta listarGastos', rpta);
               this.lstInfoGastos = rpta.registro
           },
           error:(err)=>{

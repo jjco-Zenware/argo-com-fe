@@ -18,6 +18,7 @@ import { RegistroProveedorModule } from '../../compras/registro-proveedor/regist
 import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
 import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
 import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
+import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,15 @@ import { ContabilidadService } from '../../contabilidad/service/contabilidad.ser
     TagModule,
     RegistroProveedorModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService, ContabilidadService]
+  providers: [
+    SharedAppService, 
+    DynamicDialogRef, 
+    DynamicDialogConfig, 
+    ProyectosService, 
+    OrdencompraService, 
+    AlmacenService, 
+    ContabilidadService,
+    ConfirmationService
+  ]
 })
 export class RegistroVentaModule { }

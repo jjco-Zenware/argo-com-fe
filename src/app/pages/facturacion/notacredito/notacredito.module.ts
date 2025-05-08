@@ -18,6 +18,7 @@ import { ContabilidadService } from '../../contabilidad/service/contabilidad.ser
 import { NotaCreditoRoutingModule } from './notacredito-routing.module';
 import { CNotaCreditoComponent } from './c-notacredito-lista/c-notacredito-lista.component';
 import { CNotaCreditoDetComponent } from './c-notacredito-det/c-notacredito-det.component';
+import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,6 @@ import { CNotaCreditoDetComponent } from './c-notacredito-det/c-notacredito-det.
     TagModule,
     RegistroProveedorModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService, ContabilidadService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService, ContabilidadService,ConfirmationService]
 })
 export class NotaCreditoModule { }

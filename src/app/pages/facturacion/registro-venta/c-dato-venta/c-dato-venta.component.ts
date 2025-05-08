@@ -96,6 +96,10 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
   s_monto!: number;
   s_igv!: number;
   lstSunatTrans:any[]=[];
+  lstTipoDetra: any[]=[];
+  lstTipoPagoDetra: any[]=[];
+  lstTipoRetencion: any[]=[];
+  onlyReadMonto: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -125,6 +129,10 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
     this.listarItemsTablaComprobante();
     this.listarCentroCosto();
     this.listarItemsTablaSunat();
+    this.listarTipoDetraccion();
+    this.listarTipoPagoDetraccion();
+    this.getMontoAnticipo(0);
+    this.listarTipoRetencion();
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -149,6 +157,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
       //this.verControles('NOA');
       this.cargarProyectos(1); 
       this.gettipocambiodia();
+      this.changeAplicaDetra(false);
       this.dataAdjunto ={
         idCliente: 0,
         codtipoproc: 8,
@@ -215,7 +224,7 @@ createFormRegistro() {
     fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
     nrocuotas:[{ value: 1, disabled: false }],
     porc_detraccion:[{ value: 0, disabled: false }],
-    s_monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
+    monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
     s_monto_detraccion_CTB:[{ value: 0, disabled: false }],
     s_monto_valor_venta_CTB:[{ value: 0, disabled: false }],
     s_monto_igv_CTB:[{ value: 0, disabled: false }],
@@ -232,9 +241,18 @@ createFormRegistro() {
     idcentrocosto:[{ value: 0, disabled: false }],
     s_monto_neto_CTB:[{ value: 0, disabled: false }],
     direccion:[{ value: null, disabled: false }],
-    fel_sunat_transaction:[{ value: null, disabled: false }],
+    fel_sunat_transaction:[{ value: 1, disabled: false }],
     tipo_de_nota_de_credito:[{ value: null, disabled: false }],
     tipo_de_nota_de_debito:[{ value: null, disabled: false }],
+    porcretencion:[{ value: 0, disabled: false }],
+    monto_retencion:[{ value: 0, disabled: false }],
+    detraccion_tipo:[{ value: null, disabled: false }],
+    detraccion_tipo_pago:[{ value: null, disabled: false }],
+    inddetraccion_ctb: [{ value: false, disabled: false }],
+    monto_anticipo:[{ value: 0, disabled: false }],
+    retencion_tipo:[{ value: 0, disabled: false }],
+    retencion_base_imponible:[{ value: 0, disabled: false }],
+    indmanualdetraccion:[{ value: false, disabled: false }],  
   });
 
   
@@ -366,7 +384,10 @@ createFormRegistro() {
           this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
           this.nrocuotas = rpta.ordencompra[0].nrocuotas 
           this.getBusquedaRUC();
+          this.changeAplicaDetra(rpta.ordencompra[0].inddetraccion_ctb);
+          this.getMontoAnticipo(rpta.ordencompra[0].monto_anticipo);
           this.setSpinner(false);       
+          this.changeEditaDetra(rpta.ordencompra[0].indmanualdetraccion);
          },
          error:(err)=>{
              this.setSpinner(false);
@@ -778,7 +799,7 @@ createFormRegistro() {
         this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(0);
         this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(0);
         this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(0);
-        this.registerFormRegistro.get('s_monto_detraccion_mn_CTB')?.setValue('');
+        this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue('');
         this.registerFormRegistro.get('monto_pen_pago')?.setValue(0);
 
         /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
@@ -835,7 +856,8 @@ createFormRegistro() {
        if (rpta != undefined) {
          this.listaClientes();
          this.registerFormRegistro.get('nrodocumento').setValue(parseInt(rpta.objeto.nrodocumento));
-         this.registerFormRegistro.get('idproveedor').setValue(parseInt(rpta.objeto.idpersona));          
+         this.registerFormRegistro.get('idproveedor').setValue(parseInt(rpta.objeto.idpersona));     
+         this.registerFormRegistro.get('direccion').setValue(rpta.objeto.direcresumen);           
        }
      });
    }
@@ -1009,13 +1031,40 @@ createFormRegistro() {
       {
             this.errorMensaje="Seleccionar Transacción...!";
             _error = true;
-      }    
-
-      if (!_error && (this.registerFormRegistro.value.porc_detraccion === null 
-        || this.registerFormRegistro.value.porc_detraccion === ''))
+      }   
+      
+      
+      if (!_error && this.registerFormRegistro.value.inddetraccion_ctb)
         {
-              this.errorMensaje="Ingresar Porcentaje Detracción...!";
-              _error = true;
+          if (!_error &&(this.registerFormRegistro.value.porc_detraccion === null 
+            || this.registerFormRegistro.value.porc_detraccion === '' 
+            || this.registerFormRegistro.value.porc_detraccion === 0))
+            {
+                  this.errorMensaje="Ingresar Porcentaje Detracción...!";
+                  _error = true;
+            }
+
+          if (!_error && (this.registerFormRegistro.value.detraccion_tipo === null || this.registerFormRegistro.value.detraccion_tipo === ''))
+            {
+                  this.errorMensaje="Seleccionar Tipo Detracción...!";
+                  _error = true;
+            }
+
+          if (!_error && (this.registerFormRegistro.value.detraccion_tipo_pago === null || this.registerFormRegistro.value.detraccion_tipo_pago === ''))
+            {
+                  this.errorMensaje="Seleccionar Tipo Pago...!";
+                  _error = true;
+            }
+        } 
+
+        if (!_error && this.registerFormRegistro.value.fel_sunat_transaction === 4) {
+          if (!_error && (this.registerFormRegistro.value.monto_anticipo === null 
+            || this.registerFormRegistro.value.monto_anticipo === ''
+            || this.registerFormRegistro.value.monto_anticipo === 0))
+            {
+                  this.errorMensaje="Ingresar Monto Anticipo...!";
+                  _error = true;
+            }
         }
 
       // if (this.idOrdenC > 0) {
@@ -1083,7 +1132,8 @@ createFormRegistro() {
     this.contabilidadService.listarItemsTablaSunat(2).subscribe({
       next: (rpta: any) => {
         console.info('listarItemsTablaComprobante : ', rpta);
-          this.lstComprobante = rpta;
+        this.lstComprobante  = rpta.filter((x: { codsunat: number; }) => (x.codsunat === 1 || x.codsunat === 2));
+          //this.lstComprobante = rpta;
       },
       error: (err) => {
       console.info('error : ', err);
@@ -1294,7 +1344,7 @@ createFormRegistro() {
             this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(rpta[0].s_monto_valor_venta_CTB);
             this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(rpta[0].s_monto_igv_CTB);
             this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(rpta[0].s_monto_total_CTB);
-            this.registerFormRegistro.get('s_monto_detraccion_mn_CTB')?.setValue(rpta[0].s_monto_detraccion_mn_CTB);
+            this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(rpta[0].monto_detraccion_mn_CTB);
             this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta[0].s_monto_neto_CTB);
 
             /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
@@ -1334,7 +1384,14 @@ createFormRegistro() {
     this.contabilidadService.listarItemsTablaSunat(1).subscribe({
         next: (rpta: any) => {
           console.info('listarItemsTablaSunat : ', rpta);
-            this.lstSunatTrans = rpta;
+          if (this.registerFormRegistro.get('inddetraccion_ctb')?.value === true) {
+            this.lstSunatTrans = rpta.filter((x: { codsunat: number; }) => (x.codsunat === 30 || x.codsunat === 31 || x.codsunat === 32|| x.codsunat === 33));
+            this.registerFormRegistro.get('fel_sunat_transaction')?.setValue(30);
+          }else{
+            this.lstSunatTrans = rpta.filter((x: { codsunat: number; }) => (x.codsunat === 1 || x.codsunat === 2 || x.codsunat === 4|| x.codsunat === 29 || x.codsunat === 34|| x.codsunat === 35));
+            this.registerFormRegistro.get('fel_sunat_transaction')?.setValue(1);
+          }
+            
         },
         error: (err) => {
         console.info('error : ', err);
@@ -1374,4 +1431,94 @@ createFormRegistro() {
         this.$listSubcription.push($gettipocambio)
     
       }
+
+    listarTipoDetraccion() {
+      this.contabilidadService.listarItemsTablaSunat(6).subscribe({
+        next: (rpta: any) => {
+          console.info('listarTipoDetraccion : ', rpta);
+            this.lstTipoDetra = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });     
+    }
+
+    listarTipoPagoDetraccion() {
+      this.contabilidadService.listarItemsTablaSunat(7).subscribe({
+        next: (rpta: any) => {
+          console.info('listarTipoPagoDetraccion : ', rpta);
+            this.lstTipoPagoDetra = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });     
+    }
+
+    changeAplicaDetra(value:any){
+      console.log('changeAplicaDetra...', value);
+      this.listarItemsTablaSunat();
+      if (!value) {
+        this.registerFormRegistro.get('porc_detraccion').disable();
+        this.registerFormRegistro.get('monto_detraccion_mn_CTB').disable();
+        this.registerFormRegistro.get('indmanualdetraccion').disable();
+
+        this.registerFormRegistro.get('retencion_tipo').enable();
+        this.registerFormRegistro.get('monto_retencion').enable();
+        this.registerFormRegistro.get('retencion_base_imponible').enable();
+
+        this.registerFormRegistro.get('porc_detraccion')?.setValue(0);
+        this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(0);
+      }else{
+        this.registerFormRegistro.get('porc_detraccion').enable();
+        this.registerFormRegistro.get('monto_detraccion_mn_CTB').enable();
+        this.registerFormRegistro.get('indmanualdetraccion').enable();
+        this.registerFormRegistro.get('retencion_tipo').disable();
+        this.registerFormRegistro.get('monto_retencion').disable();
+        this.registerFormRegistro.get('retencion_base_imponible').disable();
+
+        this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
+        this.registerFormRegistro.get('monto_retencion')?.setValue(0);
+        this.registerFormRegistro.get('retencion_base_imponible')?.setValue(0);
+      }
+      
+    }
+
+    getMontoAnticipo(value:any){
+      if (value === 4) {
+        this.registerFormRegistro.get('monto_anticipo').enable();
+      }else{
+        this.registerFormRegistro.get('monto_anticipo').disable();
+      }
+     }
+
+     listarTipoRetencion() {
+      this.contabilidadService.listarItemsTablaSunat(8).subscribe({
+        next: (rpta: any) => {
+          console.info('listarTipo : ', rpta);
+            this.lstTipoRetencion = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });     
+    }
+
+    changeEditaDetra(value:any){  
+      if (value) {
+        this.onlyReadMonto = false;
+      }else{
+        this.onlyReadMonto = true;
+      }
+    }
 }

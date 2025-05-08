@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
-import { MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
@@ -70,8 +70,9 @@ export class CNotaCreditoComponent implements OnInit, OnDestroy{
     public dialogService: DialogService  ,
     private proyectosService: ProyectosService,     
     private serviceSharedApp: SharedAppService,
-        private ordencompraService: OrdencompraService,
-                    private messageService: MessageService,
+    private ordencompraService: OrdencompraService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService,
     ){
 
   }
@@ -328,40 +329,51 @@ export class CNotaCreditoComponent implements OnInit, OnDestroy{
 
     emitirDocumento(data:any){
 
-      this.setSpinner(true);
-      this.mensajeSpinner = "Enviando...!"
-
-      const objeto = {
-        codproceso: 0,
-        idusuario: constantesLocalStorage.idusuario,
-        idordendocumento: data.idordencompra,
-      }
-    
-    const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
-        next: (rpta: any) => {
-            console.log('emitirDocumento', rpta);
-            this.setSpinner(false);
-            if (rpta.aceptada_por_sunat) {
-              this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
-              this.getListar();
-              return;
-            }else{
-              this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
-              return;
-            }
+      this.confirmationService.confirm({
+                 key: 'confirm1',
+                 header: 'Confirmación',
+                 message: '¿Estás seguro de Enviar a SUNAT?...',
+                 accept: () => {
+                   this.setSpinner(true);
+                   this.mensajeSpinner = "Enviando...!"
            
-        },
-        error: (err) => {
-          this.setSpinner(false);
-            console.error('error : ', err);
-            this.serviceSharedApp.messageToast();
-        },
-        complete: () => {
-          this.setSpinner(false);
-        },
-    });
-    this.$listSubcription.push($procesarTrx)
-    }
+                   const objeto = {
+                     codproceso: 0,
+                     idusuario: constantesLocalStorage.idusuario,
+                     idordendocumento: data.idordencompra,
+                   }
+                 
+                 const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
+                     next: (rpta: any) => {
+                         console.log('emitirDocumento', rpta);
+                         this.setSpinner(false);
+                         if (rpta.aceptada_por_sunat) {
+                           this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
+                           this.getListar();
+                           return;
+                         }else{
+                           this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                           this.getListar();
+                           return;
+                         }
+                        
+                     },
+                     error: (err) => {
+                       this.setSpinner(false);
+                         console.error('error : ', err);
+                         this.serviceSharedApp.messageToast();
+                     },
+                     complete: () => {
+                       this.setSpinner(false);
+                     },
+                 });
+                 this.$listSubcription.push($procesarTrx)
+                 }
+             });
+
+    
+   }
+
 
     getSeverity(data:any) {
       console.log()
@@ -472,6 +484,10 @@ export class CNotaCreditoComponent implements OnInit, OnDestroy{
         console.log('operacionFel', rpta);
         this.getListar();
           this.setSpinner(false);
+          let mensaje = "El Documento Electrónico " + rpta.serie + "-" + rpta.numero + " ya ha sido ACEPTADA, verifique en el enlace de descarga.";
+                if (item.operacion === "consultar_comprobante" && rpta.estado === 1) {
+                  this.messageService.add({severity: 'info', summary: 'Info', detail: mensaje });
+                }
       },
       error:(err)=>{
           this.setSpinner(false);

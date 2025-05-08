@@ -82,6 +82,7 @@ export class CNotaDebitoDetComponent implements OnInit, OnDestroy{
   s_igv!: number;
   lstSunatTrans:any[]=[];
   lstTipoNota:any[]=[];
+  verDocumentoEnlace: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -177,7 +178,7 @@ createFormRegistro() {
     nrodocumento_ctb:[{ value: '', disabled: false }],
     fecvencimiento: [{ value: '', disabled: false, }],
     nrocuotas:[{ value: 1, disabled: false }],
-    porc_detraccion:[{ value: null, disabled: false }],
+    porc_detraccion:[{ value: 0, disabled: false }],
     s_monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
     s_monto_detraccion_CTB:[{ value: 0, disabled: false }],
     s_monto_valor_venta_CTB:[{ value: 0, disabled: false }],
@@ -204,6 +205,7 @@ createFormRegistro() {
     tipodoc_ctb_origen:[{ value: null, disabled: false }],
     nroserie_ctb_origen:[{ value: null, disabled: false }],
     nrodocumento_ctb_origen:[{ value: null, disabled: false }],
+    enlaceFEL:[{ value: null, disabled: false }],
   });
 
   
@@ -290,7 +292,8 @@ createFormRegistro() {
      const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
        .subscribe({
          next: (rpta:any) => {
-           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+           console.log('rpta.ordencompra[0]', rpta);
+       
              this.ordenCompra = rpta.ordencompra[0];     
              //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
              if (rpta.ordencompra[0].items !== undefined) {
@@ -315,7 +318,8 @@ createFormRegistro() {
           this.registerFormRegistro.get('serie')?.setValue(rpta.ordencompra[0].nroserie_ctb_origen);
           this.registerFormRegistro.get('nnumero')?.setValue(rpta.ordencompra[0].nrodocumento_ctb_origen);
           this.mostrarBotones(rpta.ordencompra[0].estado); 
-          this.getBusquedaRUC();
+          this.getBusquedaRUC();          
+          this.verDocumentoEnlace = true;
           this.setSpinner(false);       
          },
          error:(err)=>{
@@ -752,8 +756,7 @@ createFormRegistro() {
       }    
 
       if (!_error && (this.registerFormRegistro.value.porc_detraccion === null 
-        || this.registerFormRegistro.value.porc_detraccion === ''
-        || this.registerFormRegistro.value.porc_detraccion === 0))
+        || this.registerFormRegistro.value.porc_detraccion === ''))
         {
               this.errorMensaje="Ingresar Porcentaje Detracción...!";
               _error = true;
@@ -873,6 +876,13 @@ createFormRegistro() {
     }
  
     buscarDocumento(){
+      if (this.registerFormRegistro.value.serie === '' 
+        || this.registerFormRegistro.value.serie === null 
+        || this.registerFormRegistro.value.nnumero === '' 
+        || this.registerFormRegistro.value.nnumero === null) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Ingresar Serie y Número de Documento...' });
+          return;
+        }
       this.setSpinner(true);
      this.mensajeSpinner = 'Cargando...!';
 
@@ -885,7 +895,16 @@ createFormRegistro() {
       const $cargarOrdenC = this.proyectosService.ordenCompraTraerunoNroDoc(objeto)
         .subscribe({
           next: (rpta:any) => {
-            console.log('ordenCompraTraerunoNroDoc', rpta.ordencompra[0]);
+            console.log('ordenCompraTraerunoNroDoc', rpta);
+            if (rpta.length === 0) {
+              this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Documento no encontrado...' });
+              this.verDocumentoEnlace = false;
+              this.setSpinner(false);
+              this.limpirarCampos();
+              return;              
+            }else{
+              this.verDocumentoEnlace = true;
+            }
               this.ordenCompra = rpta.ordencompra[0];     
               //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
               if (rpta.ordencompra[0].items !== undefined) {
@@ -943,6 +962,38 @@ createFormRegistro() {
       this.$listSubcription.push($cargarOrdenC)
     }
 
+    limpirarCampos(){
+      this.registerFormRegistro.get('nrodocumento')?.setValue(''); 
+      this.registerFormRegistro.get('idproveedor')?.setValue(''); 
+      this.registerFormRegistro.get('direccion')?.setValue('');
+      this.registerFormRegistro.get('tipodoc_ctb_origen')?.setValue(''); 
+      this.registerFormRegistro.get('nroserie_ctb_origen')?.setValue('');       
+      this.registerFormRegistro.get('nrodocumento_ctb_origen')?.setValue(''); 
+      this.registerFormRegistro.get('idmoneda')?.setValue(''); 
+      this.registerFormRegistro.get('tc')?.setValue(''); 
+      this.registerFormRegistro.get('codformapago')?.setValue(''); 
+      this.registerFormRegistro.get('fecemision')?.setValue(''); 
+      this.registerFormRegistro.get('fecvencimiento')?.setValue('');       
+      this.registerFormRegistro.get('nrodias')?.setValue(''); 
+      this.registerFormRegistro.get('fel_sunat_transaction')?.setValue(''); 
+      this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(''); 
+      this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(''); 
+      this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(''); 
+      this.registerFormRegistro.get('porc_detraccion')?.setValue(''); 
+      this.registerFormRegistro.get('s_monto_detraccion_mn_CTB')?.setValue(''); 
+      this.registerFormRegistro.get('monto_pen_pago')?.setValue(''); 
+      this.lstItemOC = [];
+      this.registerFormRegistro.get('nrocontrato_ctb')?.setValue(''); 
+      this.registerFormRegistro.get('idordencompra_origen_ctb')?.setValue(''); 
+      this.registerFormRegistro.get('nroexpediente_ctb')?.setValue(''); 
+      this.registerFormRegistro.get('codunidadejecutora_ctb')?.setValue(''); 
+      this.registerFormRegistro.get('nroprocesoseleccion_ctb')?.setValue(''); 
+      this.registerFormRegistro.get('observacion')?.setValue('');       
+      this.s_monto = 0; 
+      this.s_igv = 0;
+      this.montoTotal = 0;
+    }
+
     listarItemsTablaTipoNota() {
       this.contabilidadService.listarItemsTablaSunat(5).subscribe({
         next: (rpta: any) => {
@@ -956,6 +1007,11 @@ createFormRegistro() {
         complete: () => {
         },
     });  
+    }
+
+    verDocumento(){
+      let enlace = this.registerFormRegistro.value.enlaceFEL;
+      window.open(enlace);
     }
  
 }

@@ -746,7 +746,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
 
   NuevoPersona(){
     const objet = {
-      idrolpersona:'PRO'
+      idrolpersona:'CLI'
           }
     const refItem = this.dialogService.open(CModalPersonaComponent, {
       data: objet,
@@ -761,7 +761,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       if (rpta != undefined) {
         this.listaProveedores();
         this.registerFormRegistro.get('nrodocumento')?.setValue(parseInt(rpta.objeto.nrodocumento));
-        this.registerFormRegistro.get('idproveedor')?.setValue(parseInt(rpta.objeto.idpersona));          
+        this.registerFormRegistro.get('idproveedor')?.setValue(parseInt(rpta.objeto.idpersona));      
+        this.registerFormRegistro.get('direccion')?.setValue(rpta.objeto.direcresumen);                  
       }
     });
   }
@@ -1075,7 +1076,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           return;
         }
         this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
-        this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);
+        this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);   
       },
       error: (err) => {
         this.setSpinner(false);

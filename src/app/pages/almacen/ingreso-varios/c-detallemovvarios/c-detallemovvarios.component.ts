@@ -726,11 +726,11 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
-        {
-            this.errorMensaje="Ingresar Guia...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
+      //   {
+      //       this.errorMensaje="Ingresar Guia...!";
+      //       _error = true;
+      //   }
 
       // if (!_error && this.registerFormRegistro.value.idproveedor === null)
       // {
