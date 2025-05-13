@@ -63,4 +63,9 @@ export class ContabilidadService {
         const url = `${constantesApiWeb.listarTipoDocumentoTablaSunat}${codigo}`;
         return this.http.get<any>(url)
     }
+
+    plancontablePrc(objeto: any) {
+        const url = `${constantesApiWeb.plancontablePrc}`;
+        return this.http.post<any>(url, objeto)
+    }
 }

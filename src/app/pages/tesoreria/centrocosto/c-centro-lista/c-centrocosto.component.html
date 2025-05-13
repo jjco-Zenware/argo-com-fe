@@ -41,6 +41,11 @@
                             DESCRIPCIÓN 
                         </div>
                     </th>
+                    <th style="width: 40px;" class="bg-teal-50 border-1">
+                        <div class="flex justify-content-between align-items-center">
+                            CTA CONTABLE 
+                        </div>
+                    </th>
                     <th style="width: 50px;" class="bg-teal-50 border-1">
                         <div class="flex justify-content-between align-items-center">
                             ACCIONES
@@ -68,6 +73,9 @@
                     </td>
                     <td>
                         {{data.descentrocosto | uppercase}}
+                    </td>
+                    <td>
+                        {{data.codctactble}}
                     </td>
                     <td style="text-align: start;">
                         <button pButton pRipple type="button" icon="pi pi-pencil" pTooltip="Editar" tooltipPosition="left" (click)="editarCentroCosto(data)" class="p-button-rounded p-button-text mr-2 -mt-2"></button>

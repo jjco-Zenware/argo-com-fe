@@ -7,6 +7,7 @@ import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dy
 import { SharedAppService } from '@sharedAppService';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TesoreriaService } from '../../service/tesoreriaServices';
+import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 
 @Component({
   selector: 'app-c-centrocosto-det',
@@ -25,6 +26,8 @@ export class CCentroCostoDetComponent implements OnInit, OnDestroy{
   headerTitle!: string;
   errorMensaje: string = "";
   IdCentroCosto: number = 0;
+  lstCtaCtble: any[] = [];
+    filteredCtaCtble!:  any[];
 
   constructor(
       private fb: FormBuilder,
@@ -34,12 +37,14 @@ export class CCentroCostoDetComponent implements OnInit, OnDestroy{
       private serviceSharedApp: SharedAppService,
       private messageService: MessageService,
       private tesoreriaService: TesoreriaService, 
+      private contabilidadService: ContabilidadService,
     ){    
       
   }
 
   ngOnInit(): void{
     this.createFrm();
+    this.listarPlanContable();
     console.log('mostrarBotones', this.IA_data);
     this.IdCentroCosto = this.IA_data.idcentrocosto;
     this.mostrarRegistro();
@@ -52,6 +57,7 @@ export class CCentroCostoDetComponent implements OnInit, OnDestroy{
         idcentrocosto: [{ value: this.IdCentroCosto, disabled: true }],
         codcentrocosto: [{ value: '', disabled: false }],
         descentrocosto: [{ value: '', disabled: false }],
+        codctactble: [{ value: '', disabled: false }],
       })
     }
 
@@ -69,6 +75,7 @@ export class CCentroCostoDetComponent implements OnInit, OnDestroy{
     let _idcentrocosto = this.IA_data.idcentrocosto;
     if (_idcentrocosto > 0) {
       this.registerFormRegistro.patchValue(this.IA_data);
+      this.registerFormRegistro.get('codctactble')?.setValue(this.IA_data.codctactble);
     }
   }
   
@@ -129,4 +136,42 @@ export class CCentroCostoDetComponent implements OnInit, OnDestroy{
 
        return _error;
      }
+
+     filterCtaCtble(event: any) {
+      let filtered: any[] = [];
+      let query = event.query;
+  
+      for (let i = 0; i < (this.lstCtaCtble as any[]).length; i++) {
+          let codigo = (this.lstCtaCtble as any[])[i];
+          if ( codigo.s_desctactble && codigo.s_desctactble.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+              filtered.push(codigo);
+          }
+      }
+      console.log('filtered', filtered);
+      this.filteredCtaCtble = filtered;
+  }
+
+     listarPlanContable(){          
+      const $listarPlanContable = this.contabilidadService.listarPlanContable()
+      .subscribe({
+          next: (rpta:any) => {
+              this.setSpinner(false);
+              console.log('getListar', rpta);
+              this.lstCtaCtble = rpta;
+          },
+          error:(err)=>{
+              this.setSpinner(false);
+              this.serviceSharedApp.messageToast()
+          },
+          complete:() => {
+          this.setSpinner(false);
+          }
+      });
+      this.$listSubcription.push($listarPlanContable)
+  }
+
+  selectCuenta(data : any){
+      console.log('selectCuenta', data.codctactble);
+      this.registerFormRegistro.value.codctactble = data.codctactble;
+  }
 }

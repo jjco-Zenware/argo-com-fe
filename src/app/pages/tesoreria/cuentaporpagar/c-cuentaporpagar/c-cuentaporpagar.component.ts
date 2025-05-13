@@ -188,6 +188,11 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     }
     
     onPagar(data :any) {
+      if (data.fecprogramacion === null || data.fecprogramacion === undefined || data.fecprogramacion === '') {
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Ingresar Fecha de Pago..' });
+          return;        
+      }
+
       data.tipodeuda = 1;
       const refItem = this.dialogService.open(CModalRegPAgosComponent, {
             data: data,

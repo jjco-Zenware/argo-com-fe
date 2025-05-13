@@ -8,10 +8,12 @@ import { SharedAppService } from '@sharedAppService';
 import { AlmacenService } from '../../almacen/service/almacenServices';
 import { CPlanContableComponent } from './c-plancontable/c-plancontable.component';
 import { PlanContableRoutingModule } from './plancontable-routing.module';
+import { ModalPlanComponent } from './modal-plan/modal-plan.component';
 
 @NgModule({
   declarations: [
-    CPlanContableComponent
+    CPlanContableComponent,
+    ModalPlanComponent
   ],
   imports: [
     CommonModule,

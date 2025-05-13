@@ -44,6 +44,7 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
   @ViewChild('menuSunat') menuSunat!: Menu;
   ordenCompra: any;
   lstMonedas: Moneda[] = [];
+  lstAccionesSunatMostrar: any[] = [];
 
   lstAccionesSunat: any = [
     {
@@ -67,7 +68,7 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
       numero: '',
       label:'Consultar Anulación'
     }
-
+   
 
 ]
 
@@ -293,32 +294,32 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
               }
           }
         
-            cargarMenu(data: any) {
-              this.menuItems = [];
-              data.forEach((item: any) => {
-                  this.menuItems.push({
-                      label: item.nomtrx,
-                      icon: 'pi pi-cog',
-                      command: () => this.onAccion(item)
-                  })
-              });
-            }
-          
-            onAccion(item: any) {
-              this.ordenCompra.idtrx = item.idtrx;
-              console.log('onAccion', item);
-              const ref = this.dialogService.open(CModalTransacComponent, {
-                  data: this.ordenCompra,
-                  header: item.nomtrx,
-                  closeOnEscape: false,
-                  styleClass: 'testDialog',
-                  width: '40%'
-              });
-          
-              ref.onClose.subscribe(() => {
-                  this.getListar();
-                });
-            }
+      cargarMenu(data: any) {
+        this.menuItems = [];
+        data.forEach((item: any) => {
+            this.menuItems.push({
+                label: item.nomtrx,
+                icon: 'pi pi-cog',
+                command: () => this.onAccion(item)
+            })
+        });
+      }
+    
+      onAccion(item: any) {
+        this.ordenCompra.idtrx = item.idtrx;
+        console.log('onAccion', item);
+        const ref = this.dialogService.open(CModalTransacComponent, {
+            data: this.ordenCompra,
+            header: item.nomtrx,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '40%'
+        });
+    
+        ref.onClose.subscribe(() => {
+            this.getListar();
+          });
+      }
 
     getExportarExcel(data :any) {
           this.lstExportar = [];
@@ -389,46 +390,46 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
       emitirDocumento(data:any){
 
          this.confirmationService.confirm({
-                    key: 'confirm1',
-                    header: 'Confirmación',
-                    message: '¿Estás seguro de Enviar a SUNAT?...',
-                    accept: () => {
-                      this.setSpinner(true);
-                      this.mensajeSpinner = "Enviando...!"
-              
-                      const objeto = {
-                        codproceso: 0,
-                        idusuario: constantesLocalStorage.idusuario,
-                        idordendocumento: data.idordencompra,
-                      }
-                    
-                    const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
-                        next: (rpta: any) => {
-                            console.log('emitirDocumento', rpta);
-                            this.setSpinner(false);
-                            if (rpta.aceptada_por_sunat) {
-                              this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
-                              this.getListar();
-                              return;
-                            }else{
-                              this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
-                              this.getListar();
-                              return;
-                            }
-                           
-                        },
-                        error: (err) => {
-                          this.setSpinner(false);
-                            console.error('error : ', err);
-                            this.serviceSharedApp.messageToast();
-                        },
-                        complete: () => {
-                          this.setSpinner(false);
-                        },
-                    });
-                    this.$listSubcription.push($procesarTrx)
+            key: 'confirm1',
+            header: 'Confirmación',
+            message: '¿Estás seguro de Enviar a SUNAT?...',
+            accept: () => {
+              this.setSpinner(true);
+              this.mensajeSpinner = "Enviando...!"
+      
+              const objeto = {
+                codproceso: 0,
+                idusuario: constantesLocalStorage.idusuario,
+                idordendocumento: data.idordencompra,
+              }
+            
+            const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
+                next: (rpta: any) => {
+                    console.log('emitirDocumento', rpta);
+                    this.setSpinner(false);
+                    if (rpta.aceptada_por_sunat) {
+                      this.messageService.add({severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
+                      this.getListar();
+                      return;
+                    }else{
+                      this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                      this.getListar();
+                      return;
                     }
-                });
+                    
+                },
+                error: (err) => {
+                  this.setSpinner(false);
+                    console.error('error : ', err);
+                    this.serviceSharedApp.messageToast();
+                },
+                complete: () => {
+                  this.setSpinner(false);
+                },
+            });
+            this.$listSubcription.push($procesarTrx)
+            }
+        });
 
        
       }
@@ -454,8 +455,27 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
       }
 
       toggleMenuSunat(event: Event, data: any) {
+        console.log('toggleMenuSunat', data);
+        switch (data.ind_estado_fel) {
+          //APROBADO
+          case 1:
+            console.log('ENTRO 1');
+              let lista = this.lstAccionesSunat.filter((item:any) => item.operacion !== 'consultar_comprobante' && item.operacion !== 'consultar_anulacion');
+              this.lstAccionesSunatMostrar = lista;            
+            break;
+          //PROCESO 
+          case 3:
+            console.log('ENTRO 2');
+            let lista3 = this.lstAccionesSunat.filter((item:any) => item.operacion !== 'generar_anulacion');
+            this.lstAccionesSunatMostrar = lista3;            
+          break;
+        
+          default:
+            break;
+        } 
+        
         if (data.acciones) {
-            this.cargarMenuSunat(this.lstAccionesSunat);
+            this.cargarMenuSunat(this.lstAccionesSunatMostrar);
             this.ordenCompra = data;
             this.menuSunat.toggle(event);
         }
@@ -558,4 +578,6 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
           });
         this.$listSubcription.push($operacionFel)
       }
+
+      
 }

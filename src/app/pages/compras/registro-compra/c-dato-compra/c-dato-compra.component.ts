@@ -221,7 +221,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       nrocuotas:[{ value: 0, disabled: false }],
       porc_detraccion:[{ value: 0, disabled: false }],
-      s_monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
+      monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
       s_monto_detraccion_CTB:[{ value: 0, disabled: false }],
       s_monto_valor_venta_CTB:[{ value: 0, disabled: false }],
       s_monto_igv_CTB:[{ value: 0, disabled: false }],
@@ -238,6 +238,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       idcentrocosto:[{ value: 0, disabled: false }],
       s_monto_neto_CTB:[{ value: 0, disabled: false }],
       direccion:[{ value: null, disabled: false }],
+      indmanualdetraccion:[{ value: false, disabled: false }], 
+      codctactble:[{ value: null, disabled: false }],
     });
 
     
@@ -352,6 +354,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             }   
 
             this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
+            this.changeCC(rpta.ordencompra[0].idcentrocosto);
           this.visibleDocument = false; 
           this.visibleAsiento = false;
 
@@ -367,7 +370,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
           this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
           this.nrocuotas = rpta.ordencompra[0].nrocuotas
-          
+          this.getBusquedaRUC();
           this.setSpinner(false);
         },
         error:(err)=>{
@@ -375,7 +378,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             this.serviceSharedApp.messageToast()
         },
         complete:() => {
-          this.getBusquedaRUC();
+          //this.getBusquedaRUC();
         }
       });
     this.$listSubcription.push($cargarOrdenC)
@@ -465,15 +468,15 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             this.traerUno2();             
             
             //preguntar si desea emitir el documento con una cuota
-            this.confirmationService.confirm({
-              key: 'confirm1',
-              header: 'Confirmación',
-              message:  '¿Desea Emitir el Documento con una Cuota...?' ,
-              accept: () => {
-                this.guardarOC();
-                this.procesarTRX();
-                }
-            });
+            // this.confirmationService.confirm({
+            //   key: 'confirm1',
+            //   header: 'Confirmación',
+            //   message:  '¿Desea Emitir el Documento con una Cuota...?' ,
+            //   accept: () => {
+            //     this.guardarOC();
+            //     this.procesarTRX();
+            //     }
+            // });
 
           }else{
             this.traerUno();
@@ -501,8 +504,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   }
 
   traerUno2(){
-    this.setSpinner(true);
-    this.mensajeSpinner = 'Cargando...!';
+    // this.setSpinner(true);
+    // this.mensajeSpinner = 'Cargando...!';
     const objeto ={
       idordencompra: this.idOrdenC,
       idusuario: constantesLocalStorage.idusuario
@@ -714,33 +717,28 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
    
   getOrigen(data:any){
     console.log('getOrigen...', data);
-    //this.registerFormRegistro.get('idcentrocosto')?.setValue('');
+    this.registerFormRegistro.get('idcentrocosto')?.setValue('');
+    this.registerFormRegistro.get('codctactble')?.setValue('');
     switch (data) {
       case 'OPO':
         this.cargarProyectos(1);
         //this.verReferencia = false;
         this.verProyecto = true;
+        //this.registerFormRegistro.get('idcentrocosto')?.disable();
         break;
       case 'REQ':
         this.cargarProyectos(4);
         //this.verReferencia = true;
         this.verProyecto = true;
+        //this.registerFormRegistro.get('idcentrocosto')?.disable();
         break;        
       case 'OTR':
-        this.cargarProyectos(4);
+        this.cargarProyectos(0);
         //this.verReferencia = false;
         this.verProyecto = true;
+        //this.registerFormRegistro.get('idcentrocosto')?.enable();
         break;
-      // case 'VED':
-      //   this.cargarProyectos(3);
-      //   break;
-      // case 'NOA':
-      //   this.registerFormRegistro.get('idproyecto').setValue(0);
-      //   break;
     }    
-    //this.registerFormRegistro.get('sustentodoc').setValue('');  
-    
-    //this.verControles(data);
 
   }
 
@@ -762,7 +760,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.listaProveedores();
         this.registerFormRegistro.get('nrodocumento')?.setValue(parseInt(rpta.objeto.nrodocumento));
         this.registerFormRegistro.get('idproveedor')?.setValue(parseInt(rpta.objeto.idpersona));      
-        this.registerFormRegistro.get('direccion')?.setValue(rpta.objeto.direcresumen);                  
+        this.registerFormRegistro.get('direccion')?.setValue(rpta.objeto.direcresumen);           
+        this.registerFormRegistro.get('razonsocial')?.setValue(rpta.objeto.razonsocial);                       
       }
     });
   }
@@ -820,7 +819,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
         this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(0);
         this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(0);
         this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(0);
-        this.registerFormRegistro.get('s_monto_detraccion_mn_CTB')?.setValue('');
+        this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue('');
         this.registerFormRegistro.get('monto_pen_pago')?.setValue(0);
 
         /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
@@ -1177,6 +1176,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       idcuotadoc:0
     }  
     this.listaCuotas.push(objet);
+
+    this.guardarOC();
   }
   
 
@@ -1250,7 +1251,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
 
     console.log('nro dias', diff/(1000*60*60*24));
     console.log('changeFechaHasta diff', diff);
-    let numerDiff = diff/(1000*60*60*24);
+    let numerDiff = diff/(1000*60*60*24) + 1;
     this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
 
     //this.registerFormRegistro.get('nrodias')?.setValue( diff/(1000*60*60*24) );
@@ -1277,13 +1278,14 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($getListarOrdenCompra)
   }
 
-  // changeProyecto(value:any){
-  //   console.log('changeProyecto...', value);
-  //   console.log('this.lstProyectos...', this.lstProyectos);
-  //   let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
-  //   console.log('_codcentrocosto...', _codcentrocosto);
-  //   this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
-  // }
+  changeProyecto(value:any){
+    console.log('changeProyecto...', value);
+    console.log('this.lstProyectos...', this.lstProyectos);
+    let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
+    console.log('_codcentrocosto...', _codcentrocosto);
+    this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
+    this.changeCC(_codcentrocosto[0].idcentrocosto);
+  }
   
   recalcularRegistro(dato:any){
     
@@ -1309,7 +1311,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(rpta[0].s_monto_valor_venta_CTB);
             this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(rpta[0].s_monto_igv_CTB);
             this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(rpta[0].s_monto_total_CTB);
-            this.registerFormRegistro.get('s_monto_detraccion_mn_CTB')?.setValue(rpta[0].s_monto_detraccion_mn_CTB);
+            this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(rpta[0].monto_detraccion_mn_CTB);
             this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta[0].s_monto_neto_CTB);
 
             /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
@@ -1375,4 +1377,11 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   
     }
 
+    changeCC(value:any){
+      console.log('changeProyecto...', value);
+      // console.log('this.lstProyectos...', this.lstProyectos);
+      let _ctctble = this.lstCentroCosto.filter((x: { idcentrocosto: number; }) => x.idcentrocosto === value);
+      console.log('_ctctble...', _ctctble);
+      this.registerFormRegistro.get('codctactble')?.setValue(_ctctble[0].codctactble);
+    }
 }

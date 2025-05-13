@@ -66,14 +66,15 @@ export class CModalRegPAgosComponent implements OnInit, OnDestroy {
         this.registerForm.get('monto')?.setValue(this.param.s_monto_detraccion_mn_CTB);
       this.registerForm.get('montopago')?.setValue(this.param.s_monto_detraccion_mn_CTB);
       }      
-      this.registerForm.get('idbanco')?.setValue(4);
+      //this.registerForm.get('monto')?.setValue(this.param.monto);
+      //this.registerForm.get('idbanco')?.setValue(4);
 
       this.registerForm.get('monto')?.disable();
-      this.registerForm.get('idbanco')?.disable();
+      //this.registerForm.get('idbanco')?.disable();
       this.registerForm.get('idmoneda')?.disable();
       this.verTC = false;
 
-      this.changeBanco(4);
+      //this.changeBanco(4);
     }
     // else{
     //   this.param.idmoneda = this.param.idmoneda;
@@ -263,6 +264,7 @@ this.$listSubcription.push($traerUno)
     const $listaBanco = this.ordencompraService.listarBanco()
       .subscribe({
         next: (rpta:any) => {
+          console.log('rpta listaBanco', rpta);
             this.lstBancos = rpta;
         },
         error:(err)=>{
@@ -374,7 +376,13 @@ this.$listSubcription.push($traerUno)
           this.setSpinner(false);
           console.log('lstCuentas...', rpta);
 
-          this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
+          if (this.param.tipodeuda === 2) {
+            this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
+          }else{
+            this.lstCuentas= rpta; 
+          }
+
+          //this.lstCuentas= rpta;          //.filter((item:any) => item.idbanco === data);
           
         },
         error: (err) => {

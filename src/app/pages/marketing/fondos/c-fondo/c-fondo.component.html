@@ -154,7 +154,7 @@
                 </td>
                 <td>
                     <div [ngStyle]="{'width':'70px'}">
-                        {{data.monto }}
+                        {{data.monto | number: '0.2-2'}}
                     </div>
                 </td>
                 <td>
@@ -164,7 +164,7 @@
                 </td>
                 <td>
                     <div [ngStyle]="{'width':'70px'}">
-                        {{data.saldomonto}}
+                        {{data.saldomonto | number: '0.2-2'}}
                     </div>
                 </td>
                 <td>

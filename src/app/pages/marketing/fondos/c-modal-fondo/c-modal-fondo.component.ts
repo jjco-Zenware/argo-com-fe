@@ -22,7 +22,6 @@ export class CModalFondoComponent implements OnInit, OnDestroy {
     registerForm!: FormGroup;
     lstProveedores: any[]=[];
     errorMensaje: string = "";
-    listaPostores: any[] = []; 
     lstContacto: any[] = [];  
     lstMonedas: any[] = []; 
 
@@ -33,6 +32,7 @@ export class CModalFondoComponent implements OnInit, OnDestroy {
         { id: 3, desQ: 'Q3' },
         { id: 4, desQ: 'Q4' }
     ];
+  idCodigo: number = 0;
 
   constructor(
     public refDatoItem: DynamicDialogRef,
@@ -48,14 +48,14 @@ export class CModalFondoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.param = this.config.data;
-    console.log('this.param Postores...', this.param);    
-    this.listaPostores = this.param.lista;
+    console.log('this.param Postores...', this.param);
+    this.idCodigo = this.param.idfondotrim;   
     this.createForm();
     this.listaProveedores();  
     this.listaMonedas();  
 
-    if (this.param.iditempostor > 0) {
-      this.getContactos(this.param.idpersona);    
+    if (this.param.idfondotrim > 0) {
+      this.getContactos(this.param.idproveedor);    
       this.registerForm.patchValue(this.param);        
     }
   }
@@ -69,7 +69,7 @@ export class CModalFondoComponent implements OnInit, OnDestroy {
   createForm() {
     //Agregar validaciones de formulario
     this.registerForm = this.formBuilder.group({
-        idfondotrimes: [{ value: 0, disabled: false }],
+        idfondotrim: [{ value: this.param.idfondotrim, disabled: false }],
         idq: [{ value: 0, disabled: false }],
         fecactivoini : [{ value: this.utilitariosService.obtenerFechaInicioMes(), disabled: false }],
         fecactivofin : [{ value: this.utilitariosService.obtenerFechaFinMes(), disabled: false }],
@@ -106,9 +106,33 @@ listaMonedas() {
         return;
     }
 
-    const $guardar = this.marketingService.prcFondosTrimestrales(this.registerForm.getRawValue()).subscribe({
+    let fecactivoini;
+    let fecactivofin;
+    fecactivoini = this.registerForm.value.fecactivoini;
+    fecactivofin = this.registerForm.value.fecactivofin;
+
+    if (this.idCodigo > 0) {
+      if (fecactivoini.toString().length === 10) {
+        fecactivoini = new Date(this.utilitariosService.formatFecha(fecactivoini)); 
+      }   
+      
+      if (fecactivofin.toString().length === 10) {
+        fecactivofin = new Date(this.utilitariosService.formatFecha(fecactivofin)); 
+      } 
+    }
+
+    const objeto = {
+      ...this.registerForm.getRawValue(),
+      fecactivoini: fecactivoini, 
+      fecactivofin: fecactivofin,
+    }
+
+
+
+    const $guardar = this.marketingService.prcFondosTrimestrales(objeto).subscribe({
       next: (rpta: any) => {
         if (rpta.procesoSwitch === 0){
+          this.cerrar({...this.registerForm.getRawValue()})  
           this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });    
         }else{
         this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
@@ -124,7 +148,7 @@ listaMonedas() {
     this.$listSubcription.push($guardar);
 
 
-    this.cerrar({...this.registerForm.getRawValue()})      
+       
   }
 
   cerrar(data:any) {
@@ -216,5 +240,8 @@ listaMonedas() {
     
         return _error;
         }
- 
+    
+        onValueChange(event:any){
+          this.registerForm.get('saldomonto')?.setValue(event);
+        }
 }

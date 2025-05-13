@@ -116,7 +116,7 @@ export class CFondoComponent implements OnInit, OnDestroy{
         }        
         //this.vistaLista = false;
         const refItem = this.dialogService.open(CModalFondoComponent, {
-          data: this.data,
+          data: dato,
           header: "Editar Registro" ,
           closeOnEscape: false,
           styleClass: 'testDialog',

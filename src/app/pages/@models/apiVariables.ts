@@ -223,5 +223,5 @@ export const constantesApiWeb = {
 
     gettipocambio: controllerContabilidad + '/gettipocambio/',
     gettipocambiodia: controllerContabilidad + '/gettipocambiodia/',
-
+    plancontablePrc: controllerContabilidad + '/plancontableprc',
 }

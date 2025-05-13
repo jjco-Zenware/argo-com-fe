@@ -44,7 +44,7 @@ export class CGrupoComponent implements OnInit, OnDestroy{
         private messageService: MessageService,
         private almacenService: AlmacenService, 
         private proyectosService: ProyectosService,      
-                private contabilidadService: ContabilidadService,   
+        private contabilidadService: ContabilidadService,   
       ){    
         
     }

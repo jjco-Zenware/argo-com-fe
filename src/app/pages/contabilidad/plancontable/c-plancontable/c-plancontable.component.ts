@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { ContabilidadService } from '../../service/contabilidad.services';
+import { ModalPlanComponent } from '../modal-plan/modal-plan.component';
 
 @Component({
   selector: 'app-c-plancontable',
@@ -85,12 +86,19 @@ export class CPlanContableComponent implements OnInit, OnDestroy{
     }
 
     onEditar(dato: any) {
-      this.tituloDetalle = dato.razonsocial;
-      this.dataDet = {
-        idcodigo: dato.idbanco,
-        paramReg:'E'
-      }
-      this.vistaLista = false;
+      //this.tituloDetalle = "NUEVO REGISTRO";
+      dato.parmctactble = 1;
+      const ref = this.dialogService.open(ModalPlanComponent, {
+          data: dato,
+          header: "EDITAR REGISTRO ",
+          styleClass: 'testDialog',
+          closeOnEscape: false,
+          closable: true,
+          width: '30%'
+      });
+      ref.onClose.subscribe((rpta: any) => {
+        this.getListar()
+      });
     } 
 
     getDetalle(dato:boolean){
@@ -105,13 +113,21 @@ export class CPlanContableComponent implements OnInit, OnDestroy{
       this.getListar();
     }
 
-    onNuevo() {        
-      this.tituloDetalle = "NUEVO REGISTRO";
-      this.dataDet = {
-        idcodigo: 0,
-        paramReg:'N'
+    onNuevo(data:any) {        
+      const objeto ={
+        parmctactble : 0
       }
-      this.vistaLista = false;
+      const ref = this.dialogService.open(ModalPlanComponent, {
+          data: objeto,
+          header: "NUEVO REGISTRO ",
+          styleClass: 'testDialog',
+          closeOnEscape: false,
+          closable: true,
+          width: '30%'
+      });
+      ref.onClose.subscribe((rpta: any) => {
+        this.getListar()
+      });
     }
    
 }

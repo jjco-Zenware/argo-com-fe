@@ -43,7 +43,8 @@ export class CCentroCostoComponent implements OnInit, OnDestroy{
     this.cols = [
       { field: 'idcentrocosto', header: 'ID' },
       { field: 'codcentrocosto', header: 'CODIGO ' },
-      { field: 'descentrocosto', header: 'DESCRIPCION' }        
+      { field: 'descentrocosto', header: 'DESCRIPCION' }        ,
+      { field: 'codctactble', header: 'codctactble' }   
     ];
   }
 

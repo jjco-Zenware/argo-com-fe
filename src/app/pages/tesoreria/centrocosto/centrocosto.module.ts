@@ -10,6 +10,7 @@ import { ProyectosService } from '../../compras/proyectos-ganados/service/proyec
 import { CCentroCostoComponent } from './c-centro-lista/c-centrocosto.component';
 import { CCentroCostoDetComponent } from './c-centro-det/c-centrocostodet.component';
 import { CentroCostoRoutingModule } from './centrocosto-routing.module';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 
 
@@ -26,6 +27,6 @@ import { CentroCostoRoutingModule } from './centrocosto-routing.module';
     ReactiveFormsModule,
     CentroCostoRoutingModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService, ContabilidadService]
 })
 export class CentroCostoModule { }
