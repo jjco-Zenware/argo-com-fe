@@ -20,6 +20,7 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ComprasService } from '../../compras/Service/compraServices';
 import { CModalTransacComponent } from '../modal-trans-gasto/modal-transac.component';
 import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
+import { AutoComplete } from 'primeng/autocomplete';
 
 
 @NgModule({
@@ -41,6 +42,14 @@ import { OrdencompraService } from '../../compras/orden-compra-servicio/service/
     SelectButtonModule ,
     TagModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, MarketingService, MessageService, UtilitariosService, ComprasService ,OrdencompraService]
+  providers: [SharedAppService, 
+    DynamicDialogRef, 
+    DynamicDialogConfig,
+     MarketingService,
+      MessageService, 
+      UtilitariosService, 
+      ComprasService ,
+      OrdencompraService,
+      AutoComplete]
 })
 export class InformeGastosModule { }

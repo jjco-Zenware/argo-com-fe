@@ -412,7 +412,7 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
                       this.getListar();
                       return;
                     }else{
-                      this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                      this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.sunat_description });
                       this.getListar();
                       return;
                     }
@@ -540,8 +540,10 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
                 .subscribe({
                   next: (rpta:any) => {
                     console.log('operacionFel', rpta);
+                    this.messageService.add({severity: 'info', summary: 'Info', detail: rpta.sunat_description });
                     this.getListar();
-                      this.setSpinner(false);
+                    this.setSpinner(false);
+                    return;
                   },
                   error:(err)=>{
                       this.setSpinner(false);
@@ -561,8 +563,11 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
           .subscribe({
             next: (rpta:any) => {
               console.log('operacionFel', rpta);
-              this.getListar();
-                this.setSpinner(false);
+              this.messageService.add({severity: 'info', summary: 'Info', detail: rpta.sunat_description });
+                    this.getListar();
+                    this.setSpinner(false);
+              // this.getListar();
+              //   this.setSpinner(false);
                 let mensaje = "El Documento Electrónico " + rpta.serie + "-" + rpta.numero + " ya ha sido ACEPTADA, verifique en el enlace de descarga.";
                 if (item.operacion === "consultar_comprobante" && rpta.estado === 1) {
                   this.messageService.add({severity: 'info', summary: 'Info', detail: mensaje });

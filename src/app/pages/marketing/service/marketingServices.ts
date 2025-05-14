@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { constantesApiWeb } from '@apiVariables';
-import { tap } from 'rxjs';
+import { map, tap } from 'rxjs';
 
 @Injectable()
 export class MarketingService {
@@ -136,5 +136,36 @@ export class MarketingService {
     gastoprc(objeto:any) {
         const url = `${constantesApiWeb.prcGastos}`;
         return  this.http.post<any>(url, objeto)
+    }
+
+    exportarexcelgastos(data: any) {
+        const url = `${constantesApiWeb.exportarexcelgastos}`;
+        return this.http
+            .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+            .pipe(
+            map((resp: Blob) => resp));
+    }
+
+    pdfDocumentoEvento(objeto:any) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=utf-8',
+        });
+
+            const url = `${constantesApiWeb.pdfDocumentoEvento}`;
+            return this.http.post(url,objeto, {
+            headers: headers,
+            observe: 'response',
+            responseType: 'blob'
+        })
+    }
+
+    listarPlanContable() {
+        const url = `${constantesApiWeb.listarPlanContable}`;
+        return this.http.get<any>(url)
+    }
+
+    listarCentroCosto() {
+        const url = `${constantesApiWeb.listarCentroCosto}`;
+        return this.http.get<any>(url)
     }
 }

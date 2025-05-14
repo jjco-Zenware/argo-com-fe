@@ -100,6 +100,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
   lstTipoPagoDetra: any[]=[];
   lstTipoRetencion: any[]=[];
   onlyReadMonto: boolean = true;
+  lstOrdenC: any;
 
   constructor(
     private fb: FormBuilder,
@@ -815,6 +816,8 @@ createFormRegistro() {
   }
 
   cargarProyectos(dato:any){
+    let idcliente = this.registerFormRegistro.value.idproveedor;
+    console.log('dato...',dato,idcliente);
     this.ordencompraService.portipoProyectoList(dato).subscribe({
       next: (rpta: any) => {
       this.lstProyectos = rpta;
@@ -1110,7 +1113,7 @@ createFormRegistro() {
         if(rpta.length === 0){
           this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Cliente no encontrado...' });
           return;
-        }
+        }        
         this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
         this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);
       },
@@ -1318,7 +1321,24 @@ createFormRegistro() {
     let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
     console.log('_codcentrocosto...', _codcentrocosto);
     this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
+    
+    this.cargarOrdenCompra();
+  }
 
+  cargarOrdenCompra(){
+    let id = this.registerFormRegistro.get('idproyecto')?.value;
+    this.ordencompraService.ordenCompraProyectoList(id).subscribe({
+      next: (rpta: any) => {
+        console.info('lstOrdenC : ', rpta.ordenescompra);
+          this.lstOrdenC = rpta.ordenescompra;
+      },
+      error: (err) => {
+      console.info('error : ', err);
+      this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+  }); 
   }
 
   recalcularRegistro(dato:any){    

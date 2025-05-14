@@ -215,4 +215,15 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.listaritemTablaSunat}${codigo}`;
         return this.http.get<any>(url)
     }
+
+    portipoProyectoClienteList(codigo:any, cliente:any) {
+        const url = `${constantesApiWeb.portipoProyectoClienteList}${codigo}/${cliente}`;
+        console.log("url : ", url);
+        return this.http.get<any>(url);
+    } 
+
+    ordenCompraProyectoList(codigo: any) {
+        const url = `${constantesApiWeb.ordenCompraProyectoList}${codigo}`;
+        return this.http.get<any>(url)
+    }
 }

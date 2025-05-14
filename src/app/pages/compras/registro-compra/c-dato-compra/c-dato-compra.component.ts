@@ -340,7 +340,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
       .subscribe({
         next: (rpta:any) => {
-          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+          console.log('traerUno', rpta.ordencompra[0]);
             this.ordenCompra = rpta.ordencompra[0];     
             //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
             if (rpta.ordencompra[0].items !== undefined) {
@@ -354,7 +354,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             }   
 
             this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
-            this.changeCC(rpta.ordencompra[0].idcentrocosto);
+            //this.changeCC(rpta.ordencompra[0].idcentrocosto);
           this.visibleDocument = false; 
           this.visibleAsiento = false;
 
@@ -370,7 +370,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
           this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
           this.nrocuotas = rpta.ordencompra[0].nrocuotas
-          this.getBusquedaRUC();
+          //this.getBusquedaRUC();
           this.setSpinner(false);
         },
         error:(err)=>{
@@ -378,7 +378,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
             this.serviceSharedApp.messageToast()
         },
         complete:() => {
-          //this.getBusquedaRUC();
+          this.getBusquedaRUC();
         }
       });
     this.$listSubcription.push($cargarOrdenC)

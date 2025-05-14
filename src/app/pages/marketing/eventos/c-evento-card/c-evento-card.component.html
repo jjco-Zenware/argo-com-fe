@@ -11,10 +11,10 @@
     <div class="col-8 h-full p-0">
         <div class="flex justify-content-between align-items-center mt-2">
             <span class="text-800 font-semibold">{{card.id + ' - ' + card.title}}</span>
-            <!-- <div>
-                <button pButton pRipple type="button" icon="pi pi-ellipsis-v text-700" class="p-button-rounded p-button-text p-button-secondary p-trigger" (click)="menu.toggle($event)"></button>
-                <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
-            </div> -->
+            <div>
+                <button pButton pRipple type="button" icon="pi pi-file-pdf text-red-500" class="p-button-rounded p-button-text p-button-secondary p-trigger"
+                 (click)="verDocumento(card)"></button>
+            </div> 
         </div>
         <div class="flex flex-column md:flex-row gap-4 md:gap-2 mt-2">
             <i class="pi pi-map-marker font-semibold text-orange-500"></i>
@@ -47,7 +47,7 @@
                 <span class="text-900 font-semibold" pTooltip="Tareas" tooltipPosition="bottom"><i class="pi pi-check-square text-700 mr-2"></i>{{generateTaskInfo()}}</span>
                 <span class="text-900 font-semibold" pTooltip="Adjuntos" tooltipPosition="bottom"><i class="pi pi-paperclip text-700 mr-2"></i>{{card.nroadjuntos}}</span>
                 <!-- <span class="text-blue-900 font-semibold"><i class="pi pi-clock text-green-400 mr-2"></i>{{parseDate(card.startDate)}}</span> -->
-    
+                
             </div>
         </div>
 

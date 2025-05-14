@@ -461,12 +461,21 @@
                             <input pInputText type="text" formControlName="nrocontrato_ctb" [readonly]=onlyRead class="p-inputtext-sm"/>
                         </span>
                     </div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field ">
+                    <!-- <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field ">
                         <label class="block text-900 mb-1">N° Orden Compra</label>                        
                         <span class="p-fluid">
                             <input pInputText type="text" formControlName="idordencompra_origen_ctb" [readonly]=onlyRead class="p-inputtext-sm"/>
                         </span>
-                    </div>                    
+                    </div>    -->
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+                        <div class="flex">
+                            <label class="block text-900 font-semibold mb-1">N° Orden Compra </label>
+                        </div>                            
+                        <span >
+                            <p-dropdown [options]="lstOrdenC" formControlName="idordencompra_origen_ctb" placeholder="Seleccionar Orden" optionLabel="codigonroorden" 
+                            optionValue="idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div>                  
                     <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field ">
                         <label class="block text-900 mb-1">N° Expediente</label>                        
                         <span class="p-fluid">

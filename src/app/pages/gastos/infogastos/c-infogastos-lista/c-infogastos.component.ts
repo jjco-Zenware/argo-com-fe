@@ -174,4 +174,33 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
           });
       }
 
+       getExportarExcel() {
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+
+    const objeto = {
+      ...this.frmDatos.value,
+      //idtipodocprc: 18,
+      // saldo_documento_sol:this.saldo_documento_sol,
+      // saldo_documento_dol:this.saldo_documento_dol,
+      // s_monto_recaudado_sol: this.s_monto_recaudado_sol,
+      // s_monto_recaudado_dol: this.s_monto_recaudado_dol,
+    }
+
+    const $getListar = this.marketingService.exportarexcelgastos(objeto)
+    .subscribe({
+      next: (rpta:any) => {
+          this.setSpinner(false);
+          this.utilitariosService.descargarExcel(rpta, 'Gastos');
+      },
+      error:(err)=>{
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+      },
+      complete:() => {
+        this.setSpinner(false);
+      }
+    });
+  this.$listSubcription.push($getListar)
+  }
 }

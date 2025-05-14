@@ -3,7 +3,7 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 //import { KanbanCard } from 'src/app/demo/api/kanban';
 import { Subscription } from 'rxjs';
 import { eventoCard } from '@interfaces';
-import { mensajesQuestion } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { MarketingService } from '../../service/marketingServices';
 
 @Component({
@@ -16,6 +16,8 @@ export class CEventoCardComponent implements OnInit, OnDestroy {
     @Input() card!: any;
     @Input() listId!: string;
     menuItems: MenuItem[] = [];
+    blockedDocument: boolean = false;
+  mensajeSpinner: string = "";
 
     //subscription!: Subscription;
     //@Output() actualizarKanbanList = new EventEmitter<string>();
@@ -34,6 +36,10 @@ export class CEventoCardComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {}
+
+    setSpinner(valor: boolean) {
+        this.blockedDocument = valor;
+      }
 
     ngOnDestroy() {
         if (this.$listSubcription != undefined) {
@@ -120,5 +126,57 @@ export class CEventoCardComponent implements OnInit, OnDestroy {
         ).length;
         return `${completed} / ${total}`;
     }
+
+    verDocumento(data: any) {
+        console.log('onVerDetalle...', data);
+            
+        //     this.setSpinner(true);
+        //   this.mensajeSpinner = 'Descargando Detalle...!';
+      
+        //   const objeto = {
+        //     idusuario : constantesLocalStorage.idusuario,
+        //     iddocumentoprc: data.idordencompra,
+        //     codtipoprc: 7,
+        //     idplantilla: 0
+        //   }
+      
+        //   const $cargarOrdenC = this.marketingService.pdfDocumentoEvento(objeto).subscribe({
+        //     next: (rpta: any) => {
+        //       this.setSpinner(false);      
+              
+        //       const mediaType = 'application/pdf';
+        //         const blob = new Blob([rpta.body], { type: mediaType });
+        //         const filename = 'DET_FACT_COMPRA_' + data.nrofactura;
+        
+        //         const url = window.URL.createObjectURL(blob);
+        //         const a = document.createElement('a');
+        //         a.href = url;
+        //         a.download = filename;
+        //         document.body.appendChild(a);
+        //         a.target = '_blank';
+        //         a.click();
+      
+        //         window.open(url);
+      
+        //         setTimeout(() => {
+        //             document.body.removeChild(a);
+        //             window.URL.revokeObjectURL(url);
+        //         }, 100);
+        //     },
+        //         error: (err) => {
+        //           this.setSpinner(false);
+        //         this.messageService.clear();
+        //         this.messageService.add({
+        //             severity: 'error',
+        //             summary: 'Error',
+        //             detail: mensajesQuestion.msgErrorGenerico,
+        //         });
+        //     },
+        //         complete: () => {
+        //     },
+        //   });
+        //   this.$listSubcription.push($cargarOrdenC)
+    }
+    
 
 }

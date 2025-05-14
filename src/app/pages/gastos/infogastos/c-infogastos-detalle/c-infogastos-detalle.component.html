@@ -17,7 +17,7 @@
                 <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid p-formgrid grid lg:col-6 col-12 m-2">  
                     <div class="sm:col-6 lg:col-3 md:col-12 h-4rem field ">
                         <div class="flex mb-1">
-                            <label class="block text-900 font-semibold">Fecha</label>    
+                            <label class="text-900">Fecha</label>    
                             <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
                         </div>
                         <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
@@ -27,21 +27,21 @@
                     </div> 
                     <div class="lg:col-6"></div> 
                     <div class="sm:col-6 lg:col-3 md:col-12 col-6 field">
-                        <label class="block text-900 font-semibold mb-1">ID </label>
+                        <label class="text-900 mb-1">ID </label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="p-inputtext-sm surface-200" formControlName="idgasto"
                              readonly="true"/>
                         </span>
                     </div>      
                     <div class="col-6 sm:col-6 lg:col-6 md:col-6 -mt-5">                            
-                        <label class="block text-900 font-semibold mb-1">Categoría<span class="text-red-500 font-bold"> * </span></label>                            
+                        <label class=" text-900 mb-1">Categoría<span class="text-red-500 font-bold"> * </span></label>                            
                         <span>
                             <p-dropdown [options]="lstcategoria" placeholder="Seleccionar..."  formControlName="idcategoria" 
                             optionLabel="valoritem" optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
                         </span>
                     </div>  
                     <div class="col-6 sm:col-6 lg:col-6 md:col-6 -mt-5">                            
-                        <label class="block text-900 font-semibold">Pagado por<span class="text-red-500 font-bold"> * </span></label>                            
+                        <label class=" text-900 ">Pagado por<span class="text-red-500 font-bold"> * </span></label>                            
                         <span>                
                             <p-selectButton [options]="stateOptions" formControlName="pagadopor" 
                             optionLabel="label" optionValue="value" class="p-inputtext-sm bg-blue-50" />                  
@@ -49,21 +49,36 @@
 
                     </div>   
                     <div class="sm:col-6 lg:col-3 md:col-3 col-6 -mt-3">
-                        <label class="block text-900 font-semibold mb-1">Monto <span class="text-red-500 font-bold"> * </span></label>                        
+                        <label class=" text-900 mb-1">Monto <span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
                             <p-inputNumber class="mt-1" formControlName="monto" locale="es-PE" mode="decimal" [minFractionDigits]="2" name="monto" 
                             [min]="0" class="p-inputtext-sm" ></p-inputNumber>
                         </span>
                     </div>   
                     <div class="sm:col-6 lg:col-4 md:col-3 col-6 -mt-3">
-                        <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                        <label class="text-900  mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
                             optionValue="idmoneda" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
                         </span>                                      
-                    </div>       
+                    </div>  
+                    <div class="lg:col-5"></div>    
+                    <div class="sm:col-12 lg:col-7 md:col-12">
+                        <label class="text-900">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
+                        <span class="p-fluid">
+                            <p-autoComplete formControlName="codctactble" [dropdown]="true" [suggestions]="filteredCtaCtble" (completeMethod)="filterCtaCtble($event)" 
+                            field="s_desctactble" appendTo="body" class="p-inputtext-sm" (onSelect)="selectCuenta($event)" [readonly]=onlyRead #autoItems></p-autoComplete>
+                        </span> 
+                    </div> 
+                    <div class="sm:col-6 lg:col-5 md:col-12 col-6 field">
+                        <label class=" text-900 -mb-1">Centro Costos</label>                        
+                        <span class="p-fluid">
+                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Centro Costos..." optionLabel="descentrocosto" 
+                            class="p-inputtext-sm" optionValue="idcentrocosto" appendTo="body" autoWidth="false" [readonly]=onlyRead ></p-dropdown>
+                        </span>
+                    </div>  
                     <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-3">
-                        <label class="block text-900 font-semibold">Descripción</label>                        
+                        <label class=" text-900 ">Descripción</label>                        
                         <span class="p-fluid">
                             <textarea type="text" pInputTextarea [rows]="2" formControlName="desgasto" style="resize: none" 
                             class="p-inputtext-sm w-full" [readonly]=onlyRead></textarea>
@@ -84,7 +99,7 @@
                 <app-c-adjuntos [IA_data]="dataAdjunto" ></app-c-adjuntos>                
             </p-tabPanel>      
             
-            <p-tabPanel [disabled]=visibleDocument>
+            <!-- <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-cog"></i>
@@ -123,7 +138,7 @@
                         </tr>
                     </ng-template>
                 </p-table>                         
-            </p-tabPanel>
+            </p-tabPanel> -->
                   
         </p-tabView> 
     </div>

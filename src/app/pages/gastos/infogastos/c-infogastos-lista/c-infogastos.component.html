@@ -28,8 +28,8 @@
             <div class="field col-6 md:col-2 -mt-4 gap-2">
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                     class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                <!-- <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
-                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button> -->
+                <button pButton type="button" (click)="getExportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
             </div>
         </form> 
 
@@ -77,6 +77,16 @@
                 <th style="width: 30px" class="bg-teal-50 border-1" >
                     <div [ngStyle]="{'width':'30px','text-align':'center'}">
                         MONEDA
+                    </div>
+                </th>
+                <th style="width: 30px" class="bg-teal-50 border-1" >
+                    <div [ngStyle]="{'width':'30px','text-align':'center'}">
+                        CENTRO COSTO
+                    </div>
+                </th>
+                <th style="width: 30px" class="bg-teal-50 border-1" >
+                    <div [ngStyle]="{'width':'30px','text-align':'center'}">
+                        CTA CTBLE
                     </div>
                 </th>
                 <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
@@ -129,21 +139,31 @@
                </td>
                <td>
                   <div [ngStyle]="{'width':'60px'}">
-                      {{data.monto }}
+                      {{data.monto | number: '0.2-2' }}
                   </div>
               </td>
               <td>
-                 <div [ngStyle]="{'width':'60px'}">
+                 <div >
                      {{data.desmoneda }}
                  </div>
              </td>
+             <td>
+                <div [ngStyle]="{'width':'60px'}">
+                    {{data.descentrocosto }}
+                </div>
+            </td>
+            <td>
+               <div [ngStyle]="{'width':'60px'}">
+                   {{data.codctactble }}
+               </div>
+           </td>
               <td>
-                  <div [ngStyle]="{'width':'70px'}">
+                  <div >
                       {{data.desgasto | uppercase}}
                   </div>
               </td>
                 <td>                       
-                    <div [ngStyle]="{'width':'40px','text-align': 'center'}">
+                    <div [ngStyle]="{'width':'60px','text-align': 'center'}">
                         <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                     </div>
                 </td>

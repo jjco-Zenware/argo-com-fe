@@ -76,6 +76,11 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   verDireccion: boolean = false;
   verOrganizador: boolean = false;
 
+  destinatario = 'correo@dominio.com';
+  asunto = 'Consulta';
+  mensaje = 'Hola, quisiera más información.';
+
+
 constructor(
   private messageService: MessageService,
   private formBuilder: FormBuilder,
@@ -128,7 +133,7 @@ createForm() {
     idcliente: [{ value: '', disabled: false }],
     title: [{ value: '', disabled: false }],
     description: [{ value: '', disabled: false }],
-    idresponsable: [{ value: 34, disabled: false }],
+    idresponsable: [{ value: 38, disabled: false }],
     progreso: [{ value: 0, disabled: false }],
     indcompleto: [{ value: false, disabled: false }],
     startDate: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
@@ -926,29 +931,35 @@ getListarGasto(){
 
     enviarCorreos(){
      
+      if (this.lstParticipantes.length === 0) {
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'No hay Participantes para enviar el correo'});
+        return;
+      }
 
-      const $obtenerToken = this.marketingService.enviarCorreo()
-          .subscribe({
-          next: (rpta:any) => {
-            this.setSpinner(false);
-              console.log("rpta enviarCorreos : ", rpta);
+      this.mailtoLink;
+
+      // const $obtenerToken = this.marketingService.enviarCorreo()
+      //     .subscribe({
+      //     next: (rpta:any) => {
+      //       this.setSpinner(false);
+      //         console.log("rpta enviarCorreos : ", rpta);
               
-          },
-          error:(err)=>{
-            this.setSpinner(false);
-              console.error('error : ',err)
-              this.messageService.clear();
-              this.messageService.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: mensajesQuestion.msgErrorGenerico
-              })
-          },
-          complete:() => {
-            this.setSpinner(false);
-          }
-          });
-          this.$listSubcription.push($obtenerToken);
+      //     },
+      //     error:(err)=>{
+      //       this.setSpinner(false);
+      //         console.error('error : ',err)
+      //         this.messageService.clear();
+      //         this.messageService.add({
+      //             severity: 'error',
+      //             summary: 'Error',
+      //             detail: mensajesQuestion.msgErrorGenerico
+      //         })
+      //     },
+      //     complete:() => {
+      //       this.setSpinner(false);
+      //     }
+      //     });
+      //     this.$listSubcription.push($obtenerToken);
     }   
 
     listaClientes() {
@@ -1020,4 +1031,13 @@ getListarGasto(){
       }
       
     }
+
+    get mailtoLink() {
+      // if (this.lstParticipantes.length === 0) {
+      //     this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'No hay Participantes para enviar el correo'});
+      //     return;
+      //   }
+      return `mailto:${this.destinatario}?subject=${encodeURIComponent(this.asunto)}&body=${encodeURIComponent(this.mensaje)}`;
+    }
+  
 }

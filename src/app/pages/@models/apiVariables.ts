@@ -17,8 +17,7 @@ const controllerContabilidad: string = webApi+'Contabilidad';
 const controllerAdministracion: string = webApi+'Administracion';
 const controllerMarketing: string = webApi +'Marketing'
 const controllerEventos: string = webApi +'Evento'
-const controllerIAServicio: string = webApi + 'IAServicio'
-const controllerEmail: string = webApi +'Email'
+const controllerLogger: string = webApi + 'Logger'
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -214,9 +213,10 @@ export const constantesApiWeb = {
     gastosTraeruno: controllerMarketing + '/gastostraeruno/',
     
     ordenCompraTraerunoNroDoc: controllerComercial + '/ordendocumentotrearunonrodoc',
-    emitirDocumento: controllerContabilidad + '/comprobantefelprc',
+    emitirDocumento: controllerLogger + '/comprobantefelprc',
     
-    operacionFel: controllerContabilidad + '/operacionfel',
+    operacionFel: controllerLogger + '/operacionfel',
+    //operacionFel: controllerContabilidad + '/operacionfel',
 
     procesarTrxGasto: controllerMain + '/prctrxgasto',
     enviarCorreo: controllerEventos + '/send',
@@ -224,4 +224,7 @@ export const constantesApiWeb = {
     gettipocambio: controllerContabilidad + '/gettipocambio/',
     gettipocambiodia: controllerContabilidad + '/gettipocambiodia/',
     plancontablePrc: controllerContabilidad + '/plancontableprc',
+    exportarexcelgastos: controllerMarketing + '/exportarexcelgastos',
+    pdfDocumentoEvento: controllerMain + '/pdfdocumentoevento',
+    portipoProyectoClienteList: controllerComercial + '/proyectolist03/',
 }
