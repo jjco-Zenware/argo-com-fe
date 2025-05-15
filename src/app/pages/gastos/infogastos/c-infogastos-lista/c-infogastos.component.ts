@@ -31,6 +31,8 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
     @ViewChild('menu') menu!: Menu;
     gasto: any;
     listadoArchivos: any[]=[];
+    totaldolares: number = 0;
+    totalsoles: number = 0;
 
     constructor(
         private fb: FormBuilder,
@@ -88,6 +90,8 @@ export class CInformeGastosComponent implements OnInit, OnDestroy{
           },
           complete:() => {
             this.setSpinner(false);
+            this.totalsoles = this.lstInfoGastos.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.monto, 0);
+          this.totaldolares = this.lstInfoGastos.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.monto, 0);
           }
         });
       this.$listSubcription.push($listarGastos)

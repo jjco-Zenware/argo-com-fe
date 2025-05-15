@@ -13,6 +13,7 @@ import { ComprasService } from '../../Service/compraServices';
 import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
 import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 import { CModalPersonaComponent } from '../modalPersona/c-modalpersona.component';
+import { MarketingService } from 'src/app/pages/marketing/service/marketingServices';
 
 @Component({
   selector: 'app-c-dato-compra',
@@ -71,8 +72,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   lstTipoProducto:any;
   verImportar: boolean = true;
   onlyRead: boolean = false;
-  //verReferencia: boolean = false;
-  verProyecto: boolean = true;
   lstUnidades:any;
   errorMensaje: string = "";
   lstComprobante:any;
@@ -99,6 +98,10 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
   nrocuotas!:number;
   s_monto!:number;
   s_igv!:number;
+  filteredCtaCtble!:  any[];
+  codctactble: string = "";    
+  lstCtaCtble: any[] = [];
+  s_desctactble!: any[];
 
   constructor(
     private fb: FormBuilder,
@@ -111,6 +114,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     private confirmationService: ConfirmationService,
     private ordencompraService: OrdencompraService,
     private comprasService: ComprasService,
+    private marketingService: MarketingService
   ) { }
 
   ngOnInit(): void {
@@ -129,6 +133,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     this.listarItemsTablaUnidad() ;
     this.listarItemsTablaComprobante() ;
     this.listarCentroCosto();
+    this.listarPlanContable();
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -137,7 +142,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       if (this.IA_data.paramReg === 'V') {
         this.dataAdjunto ={
           idCliente: this.idOrdenC,
-          codtipoproc: 8, //adjuntos compras
+          codtipoproc: 8, //adjuntos 
           veracciones: 1
         }
       }  else{
@@ -150,7 +155,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       this.verAdjunto = true;      
       this.traerUno();
     }else{
-      //this.verControles('NOA');
       this.cargarProyectos(1); 
       this.gettipocambiodia();
       this.dataAdjunto ={
@@ -160,11 +164,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       }     
       this.mostrarBotones('NVO');
       this.getOrigen('OPO');
-      
-
-    //   const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), 30);
-    // this.registerFormRegistro.get('fecvencimiento')?.setValue(newDate);
-      //this.servicioGenerico();
     }   
     
   }
@@ -359,6 +358,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
           this.visibleAsiento = false;
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this.codctactble  = rpta.ordencompra[0].codctactble;
+          //this.registerFormRegistro.get('codctactble')?.setValue(this.lstCtaCtble.filter((x) => x.codctactble === this.codctactble));
           this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
           //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
           this.s_monto = rpta.ordencompra[0].s_monto;
@@ -441,7 +442,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       fecvencimiento,
       tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
       cuotas: this.listaCuotas,
-      nrocuotas: this.nrocuotas 
+      nrocuotas: this.nrocuotas ,
+      codctactble : this.codctactble
     }
 
     console.log('guardarOC...', objeto);
@@ -722,21 +724,12 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
     switch (data) {
       case 'OPO':
         this.cargarProyectos(1);
-        //this.verReferencia = false;
-        this.verProyecto = true;
-        //this.registerFormRegistro.get('idcentrocosto')?.disable();
         break;
       case 'REQ':
         this.cargarProyectos(4);
-        //this.verReferencia = true;
-        this.verProyecto = true;
-        //this.registerFormRegistro.get('idcentrocosto')?.disable();
         break;        
       case 'OTR':
         this.cargarProyectos(0);
-        //this.verReferencia = false;
-        this.verProyecto = true;
-        //this.registerFormRegistro.get('idcentrocosto')?.enable();
         break;
     }    
 
@@ -1384,4 +1377,46 @@ export class DatoCompraComponent implements OnInit, OnDestroy{
       console.log('_ctctble...', _ctctble);
       this.registerFormRegistro.get('codctactble')?.setValue(_ctctble[0].codctactble);
     }
+
+    filterCtaCtble(event: any) {
+      let filtered: any[] = [];
+      let query = event.query;
+  
+      for (let i = 0; i < (this.lstCtaCtble as any[]).length; i++) {
+          let codigo = (this.lstCtaCtble as any[])[i];
+          if ( codigo.s_desctactble && codigo.s_desctactble.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+              filtered.push(codigo);
+          }
+      }
+      console.log('filtered', filtered);
+      this.filteredCtaCtble = filtered;
+  }
+  
+  listarPlanContable(){          
+    const $listarPlanContable = this.marketingService.listarPlanContable()
+    .subscribe({
+        next: (rpta:any) => {
+            this.setSpinner(false);
+            this.lstCtaCtble = rpta;
+            // if (this.codctactble !== '') {
+            //   const cuenta = this.lstCtaCtble.find((x:any) => x.codctactble === this.codctactble);
+            //   if (cuenta) {
+            //     this.registerFormRegistro.get('codctactble')?.setValue(cuenta);
+            //   }
+            // }
+        },
+        error:(err)=>{
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+        }
+    });
+    this.$listSubcription.push($listarPlanContable)
+}
+
+selectCuenta(data : any){
+    console.log('selectCuenta', data.codctactble);
+    this.codctactble = data.codctactble;
+}
 }

@@ -11,10 +11,11 @@
     <div class="col-8 h-full p-0">
         <div class="flex justify-content-between align-items-center mt-2">
             <span class="text-800 font-semibold">{{card.id + ' - ' + card.title}}</span>
-            <div>
+            <!-- <div>
                 <button pButton pRipple type="button" icon="pi pi-file-pdf text-red-500" class="p-button-rounded p-button-text p-button-secondary p-trigger"
-                 (click)="verDocumento(card)"></button>
-            </div> 
+                (click)="toggleMenu($event, card)"></button>
+                 <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
+            </div>  -->
         </div>
         <div class="flex flex-column md:flex-row gap-4 md:gap-2 mt-2">
             <i class="pi pi-map-marker font-semibold text-orange-500"></i>

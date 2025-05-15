@@ -20,7 +20,6 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ComprasService } from '../../compras/Service/compraServices';
 import { CModalTransacComponent } from '../modal-trans-gasto/modal-transac.component';
 import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
-import { AutoComplete } from 'primeng/autocomplete';
 
 
 @NgModule({
@@ -50,6 +49,6 @@ import { AutoComplete } from 'primeng/autocomplete';
       UtilitariosService, 
       ComprasService ,
       OrdencompraService,
-      AutoComplete]
+      ]
 })
 export class InformeGastosModule { }

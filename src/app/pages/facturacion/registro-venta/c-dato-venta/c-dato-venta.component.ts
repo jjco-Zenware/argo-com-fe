@@ -101,6 +101,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
   lstTipoRetencion: any[]=[];
   onlyReadMonto: boolean = true;
   lstOrdenC: any;
+  verDetraccion: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -247,8 +248,8 @@ createFormRegistro() {
     tipo_de_nota_de_debito:[{ value: null, disabled: false }],
     porcretencion:[{ value: 0, disabled: false }],
     monto_retencion:[{ value: 0, disabled: false }],
-    detraccion_tipo:[{ value: null, disabled: false }],
-    detraccion_tipo_pago:[{ value: null, disabled: false }],
+    detraccion_tipo:[{ value: 0, disabled: false }],
+    detraccion_tipo_pago:[{ value: 0, disabled: false }],
     inddetraccion_ctb: [{ value: false, disabled: false }],
     monto_anticipo:[{ value: 0, disabled: false }],
     retencion_tipo:[{ value: 0, disabled: false }],
@@ -694,7 +695,7 @@ createFormRegistro() {
   listaProyectoTipo(){
     this.ordencompraService.tipoProyectoList().subscribe({
       next: (rpta: any) => {
-      this.lstOrigen = rpta;
+      this.lstOrigen = rpta.filter((x: { idtipoproyecto: number; }) => x.idtipoproyecto === 1);
       const objeto = {
         idtipoproyecto: 4,
         nomtipoproyecto: 'Otros',
@@ -717,7 +718,7 @@ createFormRegistro() {
    
   getOrigen(data:any){
     console.log('getOrigen...', data);
-    this.registerFormRegistro.get('idcentrocosto')?.setValue('');
+    //this.registerFormRegistro.get('idcentrocosto')?.setValue('');
     switch (data) {
       case 'OPO':
         this.cargarProyectos(1);
@@ -730,7 +731,7 @@ createFormRegistro() {
         this.verProyecto = true;
         break;        
       case 'OTR':
-        this.cargarProyectos(4);
+        this.cargarProyectos(0);
         //this.verReferencia = false;
         this.verProyecto = true;
         break;
@@ -822,7 +823,7 @@ createFormRegistro() {
       next: (rpta: any) => {
       this.lstProyectos = rpta;
       console.log('cargarProyectos...',this.lstProyectos);
-      this.changeProyecto(this.registerFormRegistro.value.idproyecto)
+      //this.changeProyecto(this.registerFormRegistro.value.idproyecto)
 
           },
 
@@ -1047,13 +1048,13 @@ createFormRegistro() {
                   _error = true;
             }
 
-          if (!_error && (this.registerFormRegistro.value.detraccion_tipo === null || this.registerFormRegistro.value.detraccion_tipo === ''))
+          if (!_error && (this.registerFormRegistro.value.detraccion_tipo === null || this.registerFormRegistro.value.detraccion_tipo === 0))
             {
                   this.errorMensaje="Seleccionar Tipo Detracción...!";
                   _error = true;
             }
 
-          if (!_error && (this.registerFormRegistro.value.detraccion_tipo_pago === null || this.registerFormRegistro.value.detraccion_tipo_pago === ''))
+          if (!_error && (this.registerFormRegistro.value.detraccion_tipo_pago === null || this.registerFormRegistro.value.detraccion_tipo_pago === 0))
             {
                   this.errorMensaje="Seleccionar Tipo Pago...!";
                   _error = true;
@@ -1318,9 +1319,9 @@ createFormRegistro() {
   changeProyecto(value:any){
     console.log('changeProyecto...', value);
     console.log('this.lstProyectos...', this.lstProyectos);
-    let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
-    console.log('_codcentrocosto...', _codcentrocosto);
-    this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
+    //let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
+    //console.log('_codcentrocosto...', _codcentrocosto);
+    //this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
     
     this.cargarOrdenCompra();
   }
@@ -1486,9 +1487,12 @@ createFormRegistro() {
       console.log('changeAplicaDetra...', value);
       this.listarItemsTablaSunat();
       if (!value) {
+        this.verDetraccion = false;
         this.registerFormRegistro.get('porc_detraccion').disable();
         this.registerFormRegistro.get('monto_detraccion_mn_CTB').disable();
         this.registerFormRegistro.get('indmanualdetraccion').disable();
+        this.registerFormRegistro.get('detraccion_tipo').disable();
+        this.registerFormRegistro.get('detraccion_tipo_pago').disable();
 
         this.registerFormRegistro.get('retencion_tipo').enable();
         this.registerFormRegistro.get('monto_retencion').enable();
@@ -1497,9 +1501,13 @@ createFormRegistro() {
         this.registerFormRegistro.get('porc_detraccion')?.setValue(0);
         this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(0);
       }else{
+        this.verDetraccion = true;
         this.registerFormRegistro.get('porc_detraccion').enable();
         this.registerFormRegistro.get('monto_detraccion_mn_CTB').enable();
         this.registerFormRegistro.get('indmanualdetraccion').enable();
+        this.registerFormRegistro.get('detraccion_tipo').enable();
+        this.registerFormRegistro.get('detraccion_tipo_pago').enable();
+
         this.registerFormRegistro.get('retencion_tipo').disable();
         this.registerFormRegistro.get('monto_retencion').disable();
         this.registerFormRegistro.get('retencion_base_imponible').disable();

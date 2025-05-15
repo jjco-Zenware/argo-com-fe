@@ -227,4 +227,5 @@ export const constantesApiWeb = {
     exportarexcelgastos: controllerMarketing + '/exportarexcelgastos',
     pdfDocumentoEvento: controllerMain + '/pdfdocumentoevento',
     portipoProyectoClienteList: controllerComercial + '/proyectolist03/',
+    listarTrasaccionesGastos: controllerMain + '/trxmovimientolist03/',
 }

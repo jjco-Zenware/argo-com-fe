@@ -148,26 +148,37 @@
                         </span>
                     </div>  
                     <div class="lg:col-9"></div> 
-                    <div *ngIf="verProyecto" class="sm:col-6 lg:col-9 md:col-12 col-6 field h-4rem mt-1">
+                    <div class="sm:col-6 lg:col-9 md:col-12 col-6 field h-4rem mt-1">
                         <label class="block text-900  mb-1">Proyecto<span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto..." optionLabel="s_nomproyecto" class="p-inputtext-sm"
                             optionValue="idproyecto" appendTo="body" autoWidth="false" [readonly]=onlyRead ></p-dropdown>
                         </span>
                     </div>    
-                    <div *ngIf="verProyecto" class="sm:col-6 lg:col-5 md:col-12 col-6 field h-4rem mt-1">
+                    <div class="sm:col-12 lg:col-5 md:col-12 field h-4rem mt-1">
+                        <label class="text-900  mb-1">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
+                        <!-- <span class="p-fluid mt-1">
+                            <p-autoComplete formControlName="codctactble" [dropdown]="true" [suggestions]="filteredCtaCtble" (completeMethod)="filterCtaCtble($event)" 
+                            field="s_desctactble" appendTo="body" class="p-inputtext-sm" (onSelect)="selectCuenta($event)" [readonly]=onlyRead ></p-autoComplete>
+                        </span>  -->
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstCtaCtble" formControlName="codctactble" placeholder="Seleccionar..." optionLabel="s_desctactble" 
+                            class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false" [readonly]=onlyRead  ></p-dropdown>
+                        </span>
+                    </div> 
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 field h-4rem mt-1">
                         <label class="block text-900  mb-1">Centro Costos</label>                        
                         <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Centro Costos..." optionLabel="descentrocosto" 
+                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Seleccionar..." optionLabel="descentrocosto" 
                             class="p-inputtext-sm" optionValue="idcentrocosto" appendTo="body" autoWidth="false" [readonly]=onlyRead (onChange)="changeCC($event.value)"></p-dropdown>
                         </span>
                     </div>   
-                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
+                    <!-- <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900  mb-1">Cuenta Contable</label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="surface-300 p-inputtext-sm" formControlName="codctactble" readonly="true"/>
                         </span>
-                    </div>                                  
+                    </div> -->
                 </form>                
                 
             </p-tabPanel>             

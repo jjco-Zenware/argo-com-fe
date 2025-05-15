@@ -71,7 +71,7 @@
                         </span> 
                     </div> 
                     <div class="sm:col-6 lg:col-5 md:col-12 col-6 field">
-                        <label class=" text-900 -mb-1">Centro Costos</label>                        
+                        <label class=" text-900 -mb-1">Centro Costos<span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid">
                             <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Centro Costos..." optionLabel="descentrocosto" 
                             class="p-inputtext-sm" optionValue="idcentrocosto" appendTo="body" autoWidth="false" [readonly]=onlyRead ></p-dropdown>
@@ -99,7 +99,7 @@
                 <app-c-adjuntos [IA_data]="dataAdjunto" ></app-c-adjuntos>                
             </p-tabPanel>      
             
-            <!-- <p-tabPanel [disabled]=visibleDocument>
+            <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-cog"></i>
@@ -138,7 +138,7 @@
                         </tr>
                     </ng-template>
                 </p-table>                         
-            </p-tabPanel> -->
+            </p-tabPanel>
                   
         </p-tabView> 
     </div>

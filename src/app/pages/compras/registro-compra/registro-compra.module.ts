@@ -19,6 +19,8 @@ import { RegistroProveedorModule } from '../registro-proveedor/registro-proveedo
 import { CModalPersonaComponent } from './modalPersona/c-modalpersona.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { LibroDiarioModule } from '../../contabilidad/librodiario/librodiario.module';
+import { MarketingService } from '../../marketing/service/marketingServices';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,8 @@ import { LibroDiarioModule } from '../../contabilidad/librodiario/librodiario.mo
     TagModule,
     RegistroProveedorModule,
     LibroDiarioModule,
+    DropdownModule 
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService, MarketingService]
 })
 export class RegistroCompraModule { }

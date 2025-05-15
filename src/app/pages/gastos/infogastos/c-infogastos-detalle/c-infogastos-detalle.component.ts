@@ -9,7 +9,6 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CModalExcAlmacenComponent } from 'src/app/pages/compras/orden-compra-servicio/modal-exc-almacen/modal-exc-almacen.component';
 import { MarketingService } from 'src/app/pages/marketing/service/marketingServices';
-import { AutoComplete } from 'primeng/autocomplete';
 
 @Component({
   selector: 'app-c-infogastos-detalle',
@@ -41,7 +40,6 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
   lstCtaCtble: any[] = [];
     filteredCtaCtble!:  any[];
     codctactble: string = "";
-    @ViewChild('autoItems', { static: true }) 
    
   stateOptions: any[] = [
     { label: 'Empleado', value: true },
@@ -56,8 +54,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
     private serviceUtilitario: UtilitariosService,
     public dialogService: DialogService,
     private confirmationService: ConfirmationService,   
-      private marketingService: MarketingService,
-      public autoItems: AutoComplete
+      private marketingService: MarketingService
   ) { }
 
   ngOnInit(): void {
@@ -175,7 +172,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
       .subscribe({
         next: (rpta:any) => {
           console.log('rpta traerUno', rpta.registro[0]);
-            this.setSpinner(false);
+            //this.setSpinner(false);
             this.gasto = rpta.registro[0];            
                          
           this.visibleDocument = false;
@@ -185,13 +182,13 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
           //this.cargarMenu(rpta.registro[0].acciones);
           this.mostrarBotones(rpta.registro[0].estado);  
           this.listarTransacciones(); 
-          this.setAutoValue();             
         },
         error:(err)=>{
             this.setSpinner(false);
             this.serviceSharedApp.messageToast()
         },
         complete:() => {
+          //this.setAutoValue();
           this.setSpinner(false);
           
           
@@ -399,13 +396,18 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
           next: (rpta:any) => {
               this.setSpinner(false);
               this.lstCtaCtble = rpta;
+              // if (this.codctactble !== '') {
+              //   const cuenta = this.lstCtaCtble.find((x:any) => x.codctactble === this.codctactble);
+              //   if (cuenta) {
+              //     this.registerFormRegistro.get('codctactble')?.setValue(cuenta);
+              //   }
+              // }
           },
           error:(err)=>{
               this.setSpinner(false);
               this.serviceSharedApp.messageToast()
           },
           complete:() => {
-            this.setAutoValue();
           }
       });
       this.$listSubcription.push($listarPlanContable)
@@ -437,11 +439,5 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($getListarOrdenCompra)
   }
 
-  setAutoValue() {
-    console.log('this.lstCtaCtble', this.lstCtaCtble);
-    let selectedValue = this.lstCtaCtble.filter((item:any) => item.codctactble === this.codctactble); 
-    console.log('selectedValue', selectedValue);
-    this.autoItems.inputEL.nativeElement.value = selectedValue[0].s_desctactble; 
-  }
 
 }

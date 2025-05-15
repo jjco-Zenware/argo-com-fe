@@ -75,8 +75,10 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   verLugar: boolean = false;
   verDireccion: boolean = false;
   verOrganizador: boolean = false;
+  verbtnPreliminar: boolean = false;
 
-  destinatario = 'correo@dominio.com';
+  destinatario = constantesLocalStorage.nombreUsuario;
+  cco: string[] = [] ;
   asunto = 'Consulta';
   mensaje = 'Hola, quisiera más información.';
 
@@ -168,6 +170,7 @@ cargarData(){
   this.listaClientes();
 
   if (this.idCodigo > 0) {
+    console.log('this.constantesLocalStorage', constantesLocalStorage);
     this.registerForm.patchValue(this.IA_data); 
     this.taskList = this.IA_data.taskList;
     this.lstAssignees = this.IA_data.assignees;
@@ -179,6 +182,10 @@ cargarData(){
       this.visibleDocumentGasto = false; 
       this.getListarGasto();
     }
+    this.verbtnPreliminar = true;
+    this.lstParticipantes.forEach(element => {
+      this.cco.push(element.email);
+    });
   }else{
     //this.addTaskNew();
     this.mostrarBotones(410);
@@ -545,6 +552,11 @@ setFechaMaxTarea(event: Date){
         }
       this.lstParticipantes.push(rpta.objeto);
       console.log('this.lstParticipantes',this.lstParticipantes);
+      this.cco = [];
+      
+      this.lstParticipantes.forEach(element => {
+        this.cco.push(element.email);
+      });
     }
   });
 
@@ -1037,7 +1049,58 @@ getListarGasto(){
       //     this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'No hay Participantes para enviar el correo'});
       //     return;
       //   }
-      return `mailto:${this.destinatario}?subject=${encodeURIComponent(this.asunto)}&body=${encodeURIComponent(this.mensaje)}`;
+      return `mailto:${this.destinatario}?bcc=${this.cco}&subject=${encodeURIComponent(this.asunto)}&body=${encodeURIComponent(this.mensaje)}`;
     }
   
+  vistaPreliminar(){
+
+    console.info('listarItemsTabla : ', this.idCodigo);
+    // this.setSpinner(true);
+    // this.mensajeSpinner = 'Descargando Vista Preliminar...!';
+
+    // const objeto = {
+    //   idusuario : constantesLocalStorage.idusuario,
+    //   iddocumentoprc: this.idOrdenC,
+    //   codtipoprc: 7,
+    //   idplantilla: 0
+    // }
+
+    // const $cargarOrdenC = this.ordencompraService.prcDocumentoDet(objeto).subscribe({
+    //   next: (rpta: any) => {
+    //     this.setSpinner(false);      
+        
+    //     const mediaType = 'application/pdf';
+    //       const blob = new Blob([rpta.body], { type: mediaType });
+    //       const filename = 'DET_FACT_COMPRA_' + this.registerFormRegistro.value.nrofactura;
+  
+    //       const url = window.URL.createObjectURL(blob);
+    //       const a = document.createElement('a');
+    //       a.href = url;
+    //       a.download = filename;
+    //       document.body.appendChild(a);
+    //       a.target = '_blank';
+    //       a.click();
+
+    //       window.open(url);
+
+    //       setTimeout(() => {
+    //           document.body.removeChild(a);
+    //           window.URL.revokeObjectURL(url);
+    //       }, 100);
+    //   },
+    //       error: (err) => {
+    //         this.setSpinner(false);
+    //       this.messageService.clear();
+    //       this.messageService.add({
+    //           severity: 'error',
+    //           summary: 'Error',
+    //           detail: mensajesQuestion.msgErrorGenerico,
+    //       });
+    //   },
+    //       complete: () => {
+    //   },
+    // });
+    // this.$listSubcription.push($cargarOrdenC)
+  }
+
 }

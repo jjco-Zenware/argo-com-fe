@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 //import { KanbanCard } from 'src/app/demo/api/kanban';
 import { Subscription } from 'rxjs';
 import { eventoCard } from '@interfaces';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { MarketingService } from '../../service/marketingServices';
+import { Menu } from 'primeng/menu';
 
 @Component({
     selector: 'c-evento-card',
@@ -18,6 +19,7 @@ export class CEventoCardComponent implements OnInit, OnDestroy {
     menuItems: MenuItem[] = [];
     blockedDocument: boolean = false;
   mensajeSpinner: string = "";
+  @ViewChild('menu') menu!: Menu;
 
     //subscription!: Subscription;
     //@Output() actualizarKanbanList = new EventEmitter<string>();
@@ -111,13 +113,7 @@ export class CEventoCardComponent implements OnInit, OnDestroy {
         //this.kanbanService.moveCard(this.card, listId, this.listId);
     }
 
-    generateMenu(subMenu: any) {
-        this.menuItems = [
-            { label: 'Copiar Oportunidad', command: () => this.onCopy() },
-            //{ label: 'Mover Oportunidad', items: subMenu },
-            { label: 'Eliminar Oportunidad', command: () => this.eliminarCard() },
-        ];
-    }
+    
     generateTaskInfo() {
         let total =this.card.taskList.tasks.length;
         //let completed = 3;
@@ -178,5 +174,15 @@ export class CEventoCardComponent implements OnInit, OnDestroy {
         //   this.$listSubcription.push($cargarOrdenC)
     }
     
-
+  toggleMenu(event: Event, data: any) {
+        this.menuItems.push({
+            label: 'Ver PDF',
+            icon: 'pi pi-file-pdf',
+            command: () => this.verDocumento(data)
+        })
+        this.menu.toggle(event);
+      
+    }
+  
+      
 }
