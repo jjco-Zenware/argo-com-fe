@@ -254,7 +254,8 @@ createFormRegistro() {
     monto_anticipo:[{ value: 0, disabled: false }],
     retencion_tipo:[{ value: 0, disabled: false }],
     retencion_base_imponible:[{ value: 0, disabled: false }],
-    indmanualdetraccion:[{ value: false, disabled: false }],  
+    indmanualdetraccion:[{ value: false, disabled: false }], 
+    //codctactble:[{ value: '0', disabled: false }],  
   });
 
   
@@ -1498,6 +1499,7 @@ createFormRegistro() {
         this.registerFormRegistro.get('monto_retencion').enable();
         this.registerFormRegistro.get('retencion_base_imponible').enable();
 
+        this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
         this.registerFormRegistro.get('porc_detraccion')?.setValue(0);
         this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(0);
       }else{
