@@ -28,7 +28,7 @@
                         <label class="block text-900 font-semibold mb-1">Cliente</label>                            
                         <span>
                             <p-dropdown [options]="lstClientes" placeholder="Seleccionar...!"  formControlName="idcliente" class="p-inputtext-sm"
-                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead></p-dropdown>            
+                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead ></p-dropdown>            
                         </span>
                     </div>           
                     <div class="sm:col-6 lg:col-12 md:col-3 h-5rem col-12">
@@ -320,6 +320,88 @@
                                     </div>
                                     
                                 </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>   
+                </div>
+                <div class="lg:col-9 gap-2">
+                    <p-divider></p-divider>
+                    <span class="text-lg text-600 font-semibold">Speakers</span>
+                    
+                    <div class="mt-2">
+                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3" pTooltip="Agregar Participantes Externos" 
+                            icon="pi pi-user" label="Agregar" (click)="agregarProveedorExt([],0)"></button>
+
+                    </div>
+                    
+                    <p-table [value]="lstParticipantesext" class="ml-2 mt-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                        [scrollable]="true"  styleClass="p-datatable-sm " >
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
+                                <th class="bg-teal-50 border-1 text-600">CLIENTE</th>
+                                <th class="bg-teal-50 border-1 text-600">CONTACTO</th>
+                                <th class="bg-teal-50 border-1 text-600">CARGO</th>
+                                <th class="bg-teal-50 border-1 text-600">EMAIL</th> 
+                                <th class="bg-teal-50 border-1 text-600">TELEFONO</th> 
+                                <th class="bg-teal-50 border-1 text-600">USUARIO</th> 
+                                <th [ngStyle]="{'width':'60px'}" class="bg-teal-50 border-1 text-600">ACCIONES</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                            <tr>      
+                                <td>{{rowIndex + 1}}</td>
+                                <td>{{ product.razonsocial }}</td>
+                                <td>{{ product.nombrecontacto }}</td>
+                                <td>{{ product.cargo }}</td>
+                                <td>{{ product.email}}</td>     
+                                <td>{{ product.telefono}}</td>  
+                                <td>{{ product.nomusuario}}</td>                         
+                                <td>
+                                    <div class="flex">                               
+                                            <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar...!" tooltipPosition="left"  class="p-button-text p-button-rounded text-900 text-blue-600" (click)="agregarProveedorExt(product, rowIndex)"></button>
+                                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar...!" tooltipPosition="left" class="p-button-text p-button-rounded text-900 text-red-600" (click)="eliminarCotizacionExt(product)"></button>
+                                        
+                                    </div>
+                                    
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>   
+                </div>
+            </p-tabPanel>
+
+            <p-tabPanel [disabled]=visibleDocumentGasto>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-users text-green-600"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Confirmados
+                        </span>
+                    </div>
+                </ng-template>           
+                <div class="lg:col-9 gap-2">
+                    
+                    <p-table [value]="lstConfirmados" class="ml-2 mt-2" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                        [scrollable]="true"  styleClass="p-datatable-sm " >
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
+                                <!-- <th class="bg-teal-50 border-1 text-600">CLIENTE</th> -->
+                                <th class="bg-teal-50 border-1 text-600">CONTACTO</th>
+                                <th class="bg-teal-50 border-1 text-600">CARGO</th>
+                                <th class="bg-teal-50 border-1 text-600">EMAIL</th> 
+                                <th class="bg-teal-50 border-1 text-600">TELEFONO</th> 
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                            <tr>      
+                                <td>{{rowIndex + 1}}</td>
+                                <!-- <td>{{ product.razonsocial }}</td> -->
+                                <td>{{ product.nombrecontacto }}</td>
+                                <td>{{ product.cargo }}</td>
+                                <td>{{ product.email}}</td>     
+                                <td>{{ product.telefono}}</td>  
                             </tr>
                         </ng-template>
                     </p-table>   

@@ -169,4 +169,16 @@ export class MarketingService {
         return this.http.get<any>(url)
     }
     
+    obtenerConfirmados(idEvento:any) {
+        const url = `${constantesApiWeb.obtenerConfirmados}${idEvento}`;
+        return this.http.get<any>(url);
+    }
+
+    exportarExcelEvento(data: any) {
+        const url = `${constantesApiWeb.exportarexcelevento}`;
+        return this.http
+            .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+            .pipe(
+            map((resp: Blob) => resp));
+    }
 }

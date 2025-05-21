@@ -1,5 +1,5 @@
 <div [id]="card.idevento" class="flex surface-card w-full border-1 surface-border p-1 gap-2 hover:surface-ground cursor-pointer border-round">
-    <div class="col-3 bg-blue-400 flex flex-column align-items-center justify-content-center p-0 gap-2 text-white border-round">
+    <div [style.backgroundColor]="card.bgcolor" class="col-3 flex flex-column align-items-center justify-content-center p-0 gap-2 text-white border-round">
         <span class="text-2xl">{{parseDia(card.startDate) }}</span>
         <span class="font-semibold text-sm">{{parseDate(card.startDate) }}</span>
         <span class="font-semibold text-sm">{{card.horareg }}</span>
@@ -21,7 +21,8 @@
             <i class="pi pi-map-marker font-semibold text-orange-500"></i>
             <span class="font-semibold text-800 ml-2">{{card.lugarevento }}</span>
         </div>
-        <span class="text-500 font-semibold">{{card.razonsocial}}</span>
+        <span *ngIf="card.idcliente > 0" class="text-500 font-semibold">{{card.razonsocial}}</span>
+        <span *ngIf="card.idproveedor > 0" class="text-500 font-semibold">{{card.nomproveedor}}</span>
 
         <div class="flex flex-column md:flex-row gap-4 md:gap-2 h-2rem mt-2 text-blue-800">
             <i class="pi pi-users font-semibold"></i>
@@ -31,7 +32,7 @@
         <div class="flex flex-column md:flex-row gap-4 md:gap-2 h-2rem text-green-800">
             <i class="pi pi-users font-semibold"></i>
             <span class="font-semibold ">Confirmados:</span>
-            <span class="font-semibold ml-2">0</span>
+            <span class="font-semibold ml-2">{{card.nroconfirmados}}</span>
             <!-- <span class="font-semibold ml-2">{{card.nrocontactos}}</span> -->
         </div>
 

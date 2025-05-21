@@ -49,52 +49,7 @@ export class CEventoListComponent implements OnInit, OnDestroy{
         console.log('onCardClick...', card);
         this.verEventos.emit(card);
         const eventTarget = event.target as HTMLElement;
-        // if (!(eventTarget.classList.contains('p-button-icon') || eventTarget.classList.contains('p-trigger'))) {
-        //     if (card.id == "0") {
-        //         if (this.list.listId) {
-        //             this.kanbanService.onCardSelect(card, this.list.listId);
-        //         }
-        //         this.parent.sidebarVisible = true;
-        //     }else{
-        //         if (this.list.listId) {
-        //             this.setSpinner(true);
-        //             this.mensajeSpinner = mensajesSpinner.msjRecuperaRegistro
-        //             let idoportunidad = card.id;
-        //             this.kanbanService.onCardSeleccionar(idoportunidad, this.list.listId).subscribe({
-        //                 next: (rpta: any) => {
-        //                     this.setSpinner(false);
-        //                 this.parent.sidebarVisible = true;
-        //                 },
-        //                     error: (err) => {
-        //                         this.setSpinner(false);
-        //                     console.info('error : ', err);
-        //                     this.messageService.clear();
-        //                     this.messageService.add({
-        //                         severity: 'error',
-        //                         summary: 'Error',
-        //                         detail: mensajesQuestion.msgErrorGenerico,
-        //                     });
-        //                 },
-        //                     complete: () => {
-        //                 },
-        //             });
-        //         }
-        //     }
-
-        // }
-    }
-
-    insertCard() {
-        // if (this.list.listId) {
-        //     //console.log('Insertar...', this.list);
-        //     this.kanbanService.addCard(this.list.listId);
-        //     this.parent.sidebarVisible = true;
-        // }
-    }
-
-    mostrarCard(){
-        // this.kanbanService.addCard(this.list.listId);
-        // this.parent.sidebarVisible = true;
+        
     }
 
     dropCard(event: CdkDragDrop<any[]>): void {
@@ -114,7 +69,8 @@ export class CEventoListComponent implements OnInit, OnDestroy{
                         idlistadestino: event.container.id,
                         idevento: lstData[i].id
                     }
-
+                console.log('event.objeto', objeto);
+                console.log('event.lstData[i]', lstData[i]);
                     const $procesarTrxEvento = this.marketingService.procesarTrxEvento(objeto).subscribe({
                         next: (rpta: any) => {
                             console.log('procesarTrxEvento', rpta);
@@ -122,8 +78,8 @@ export class CEventoListComponent implements OnInit, OnDestroy{
                                 if (event.container.id === "9") {
                                     this.generarCodigo(event.container.data[0]);
                                 }
-                                this.actualizarEvento.emit();
                             }
+                                this.actualizarEvento.emit();
 
                             this.serviceSharedApp.messageToast({
                                 severity: rpta.procesoSwitch == "0" ? 'success' : 'warn',
@@ -165,12 +121,13 @@ export class CEventoListComponent implements OnInit, OnDestroy{
     generarCodigo(data: any){
         const objeto = {
             idtipoproyecto: 6,
-            idoportunidad: data.id,
+            idoportunidad: 0,
             idrequerimiento: 0,
             nomproyecto: data.title,
             descripcion: data.razonsocial,
             idusuario: constantesLocalStorage.idusuario,
-            idcentrocosto: 325
+            idcentrocosto: 0,
+            idevento:data.id
         }
         console.log('objeto...', objeto);
         this.marketingService.newProyecto(objeto).subscribe({

@@ -44,8 +44,8 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private proyectosService: ProyectosService,
     private serviceUtilitario: UtilitariosService,
-        private ordencompraService: OrdencompraService,
-            private comprasService: ComprasService,
+    private ordencompraService: OrdencompraService,
+    private comprasService: ComprasService,
   ) { }
 
 
@@ -212,7 +212,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
       fecvencimiento,
       tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
       cuotas: [],
-      idproyecto:0
+      idproyecto:this.param.idproyecto
     }
 
     this.cerrar({...objeto})      

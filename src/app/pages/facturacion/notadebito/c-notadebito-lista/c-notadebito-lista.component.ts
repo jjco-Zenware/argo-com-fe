@@ -63,6 +63,7 @@ export class CNotaDebitoComponent implements OnInit, OnDestroy{
     }]
     menuItemsSunat: MenuItem[] = [];
   @ViewChild('menuSunat') menuSunat!: Menu;
+  lstAccionesSunatMostrar: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -375,29 +376,57 @@ export class CNotaDebitoComponent implements OnInit, OnDestroy{
    }
 
 
-    getSeverity(data:any) {
-      console.log()
-      let color;
-      switch (data) {
-        case 0:
-          color = 'primary'
-        break;      
-        case 1:
-          color = 'success'
+      getSeverity(data:any) {
+        console.log()
+        let color;
+        switch (data) {
+          case 0:
+            color = 'primary'
+          break;      
+          case 1:
+            color = 'success'
+            break;
+          case 2:
+            color = 'danger'
           break;
-        case 2:
-          color = 'danger'
-        break;
-        case 3:
-          color = 'warning'
-        break;
+          case 3:
+            color = 'warning'
+          break;
+          case 4:
+            color = 'danger'
+          break;
+          case 5:
+            color = 'warning'
+          break;
+        }
+        return color;
       }
-      return color;
-    }
 
     toggleMenuSunat(event: Event, data: any) {
+        switch (data.ind_estado_fel) {
+          //APROBADO
+          case 1:
+            console.log('ENTRO 1');
+              let lista = this.lstAccionesSunat.filter((item:any) => item.operacion !== 'consultar_comprobante' && item.operacion !== 'consultar_anulacion');
+              this.lstAccionesSunatMostrar = lista;            
+            break;
+          //PROCESO 
+          case 3:
+            console.log('ENTRO 2');
+            let lista3 = this.lstAccionesSunat.filter((item:any) => item.operacion !== 'generar_anulacion');
+            this.lstAccionesSunatMostrar = lista3;            
+          break;
+        //PROCESO  
+          case 5:
+            console.log('ENTRO 3');
+            let lista5 = this.lstAccionesSunat.filter((item:any) => item.operacion === 'consultar_anulacion');
+            this.lstAccionesSunatMostrar = lista5;            
+          break;
+          default:
+            break;
+        } 
       if (data.acciones) {
-          this.cargarMenuSunat(this.lstAccionesSunat);
+          this.cargarMenuSunat(this.lstAccionesSunatMostrar);
           this.ordenCompra = data;
           this.menuSunat.toggle(event);
       }

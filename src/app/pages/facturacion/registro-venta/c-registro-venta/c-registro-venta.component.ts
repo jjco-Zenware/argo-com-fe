@@ -412,7 +412,7 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
                       this.getListar();
                       return;
                     }else{
-                      this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.sunat_description });
+                      this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
                       this.getListar();
                       return;
                     }
@@ -450,6 +450,12 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
           case 3:
             color = 'warning'
           break;
+          case 4:
+            color = 'danger'
+          break;
+          case 5:
+            color = 'warning'
+          break;
         }
         return color;
       }
@@ -469,7 +475,12 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
             let lista3 = this.lstAccionesSunat.filter((item:any) => item.operacion !== 'generar_anulacion');
             this.lstAccionesSunatMostrar = lista3;            
           break;
-        
+        //PROCESO  
+          case 5:
+            console.log('ENTRO 3');
+            let lista5 = this.lstAccionesSunat.filter((item:any) => item.operacion === 'consultar_anulacion');
+            this.lstAccionesSunatMostrar = lista5;            
+          break;
           default:
             break;
         } 
@@ -540,7 +551,12 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
                 .subscribe({
                   next: (rpta:any) => {
                     console.log('operacionFel', rpta);
-                    this.messageService.add({severity: 'info', summary: 'Info', detail: rpta.sunat_description });
+                    if (rpta.estado === 2) {
+                      this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                    }else{
+                      this.messageService.add({severity: 'info', summary: 'Info', detail: rpta.sunat_description });
+                    
+                    }
                     this.getListar();
                     this.setSpinner(false);
                     return;

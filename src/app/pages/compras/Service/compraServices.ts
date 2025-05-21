@@ -232,4 +232,17 @@ export class ComprasService {
             responseType: 'blob'
           })
     }
+
+    descargarInformeEvento(objeto:any) {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=utf-8',
+          });
+
+          const url = `${constantesApiWeb.descargarInformeEvento}`;
+          return this.http.post(url,objeto, {
+            headers: headers,
+            observe: 'response',
+            responseType: 'blob'
+          })
+    }
 }

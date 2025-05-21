@@ -33,8 +33,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   mensajeSpinner: string = "";
   idCodigo: number = 0;
   lstTipoDocumento: TablaDetalle[] = []; 
-  visibleDocument: boolean = true;
-  visibleDocumentGasto: boolean = true;
+  visibleDocument: boolean = false;
+  visibleDocumentGasto: boolean = false;
   errorMensaje!: string;
   verAdjunto: boolean = true;
   dataAdjunto: any;
@@ -65,6 +65,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   headerTarea!: string;
   filteredAsignadosTareas: TareaAsignado[] = [];
   assigneesTarea: TareaAsignado[] = [];
+  lstConfirmados: any[]=[];
+  lstParticipantesext: any[]=[];
+  tipoparticipante!: string;
 
 
   token: any;
@@ -171,17 +174,22 @@ cargarData(){
 
   if (this.idCodigo > 0) {
     console.log('this.constantesLocalStorage', constantesLocalStorage);
+    this.mostrarBotones(this.IA_data.codcategoria);
     this.registerForm.patchValue(this.IA_data); 
     this.taskList = this.IA_data.taskList;
     this.lstAssignees = this.IA_data.assignees;
-    this.lstParticipantes = this.IA_data.contactos;
+    this.lstParticipantes = this.IA_data.contactos.filter((x: { tipocontacto: string; }) => x.tipocontacto == 'C');
+    this.lstParticipantesext = this.IA_data.contactos.filter((x: { tipocontacto: string; }) => x.tipocontacto == 'E');
+
     this.calculateProgress();    
-    this.mostrarBotones(this.IA_data.codcategoria);
-    if (this.IA_data.idlista != 8) {
-      this.visibleDocument = false;
-      this.visibleDocumentGasto = false; 
-      this.getListarGasto();
-    }
+    // if (this.IA_data.idlista != 8) {
+    //   this.visibleDocument = false;
+    //   this.visibleDocumentGasto = false; 
+    //   this.getListarGasto();
+    //   this.getListarConfirmados();
+    // }
+    this.getListarGasto();
+      this.getListarConfirmados();
     this.verbtnPreliminar = true;
     this.lstParticipantes.forEach(element => {
       this.cco.push(element.email);
@@ -239,6 +247,9 @@ guardar() {
     this.taskList.tasks[i].nroorden = i + 1;
 }
 
+let listaConcatena = this.lstParticipantes.concat(this.lstParticipantesext);
+    console.log('this.listaConcatena', listaConcatena);
+
   const objeto = {
     ...this.registerForm.getRawValue(),
     progress: this.progress,
@@ -247,7 +258,7 @@ guardar() {
     priority:objectPriority,
     taskList:this.taskList,
     assignees: this.lstAssignees,
-    contactos: this.lstParticipantes
+    contactos: listaConcatena
   };  
 
   const _objeto={
@@ -532,8 +543,15 @@ setFechaMaxTarea(event: Date){
 }
 
  agregarProveedor(data: any,index: number){
+  if (this.verCliente && this.registerForm.get('idcliente').value == 0) {
+    this.messageService.add({severity: 'info', detail: "Seleccionar Cliente...!" });
+    return;
+    
+  }
     data.nroindex = index;
+    data.idcliente = this.registerForm.get('idcliente').value;
     data.idordencompra = this.idEvento;
+    data.tipocontacto = "C";
     data.lista =  this.lstParticipantes;
     const refMensaje = this.dialogService.open(CModalProveedorComponent, {
       data: data,
@@ -559,13 +577,6 @@ setFechaMaxTarea(event: Date){
       });
     }
   });
-
-  // refMensaje.onClose.subscribe((rpta: any) => {
-  //   console.log('onClose mensajeCoti',rpta);
-  //   if (rpta != undefined) {
-  //     //this.traerUno();
-  //   }
-  // });
   }
 
   eliminarCotizacion(data: any) {
@@ -586,6 +597,76 @@ setFechaMaxTarea(event: Date){
           this.lstParticipantes.splice(_posAll, 1)
           }
       }
+      this.cco = [];
+      
+      this.lstParticipantes.forEach(element => {
+        this.cco.push(element.email);
+      });
+      }
+  });
+  }
+
+  agregarProveedorExt(data: any,index: number){
+  if (this.verCliente && this.registerForm.get('idcliente').value == 0) {
+    this.messageService.add({severity: 'info', detail: "Seleccionar Cliente...!" });
+    return;
+    
+  }
+    data.nroindex = index;
+    data.idcliente = this.registerForm.get('idcliente').value;
+    data.idordencompra = this.idEvento;
+    data.tipocontacto = "E";
+    data.lista =  this.lstParticipantesext;
+    const refMensaje = this.dialogService.open(CModalProveedorComponent, {
+      data: data,
+      header: data.length == 0 ? "Agregar Participante Externo" : "Editar Participante Externo- " + data.nomcomercial, //'Selección de Cotización de ' +  data.nomcomercial,
+      styleClass: 'testDialog',
+      closeOnEscape: false,
+      closable: true,
+      width: '30%'
+  });
+  refMensaje.onClose.subscribe((rpta: any) => {
+    console.log('onClose index',index);
+    if (rpta != undefined) {
+        const _posAll: number = this.lstParticipantesext.findIndex(((x: { nroindex: number; }) => x.nroindex == index))
+        if (_posAll != -1) {
+          this.lstParticipantesext.splice(_posAll, 1)
+        }
+      this.lstParticipantesext.push(rpta.objeto);
+      console.log('this.lstParticipantesext',this.lstParticipantesext);
+      this.cco = [];
+      
+      this.lstParticipantesext.forEach(element => {
+        this.cco.push(element.email);
+      });
+    }
+  });
+
+  }
+
+  eliminarCotizacionExt(data: any) {
+    console.log('onClose data',data);
+    this.confirmationService.confirm({
+      key: 'confirm1',
+      header: 'Confirmación',
+      message:  '¿Desea Eliminar Item ' + '<b>' + data.nomcomercial + '</b>' + '?' ,
+      accept: () => {
+        if (data.iditempostor > 0) {
+          const _posAll: number = this.lstParticipantesext.findIndex(((x: { iditempostor: any; }) => x.iditempostor == data.iditempostor))
+          if (_posAll != -1) {
+          this.lstParticipantesext.splice(_posAll, 1)
+          }
+      }else{
+          const _posAll: number = this.lstParticipantesext.findIndex(((x: { idcontacto: any; }) => x.idcontacto == data.idcontacto))
+          if (_posAll != -1) {
+          this.lstParticipantesext.splice(_posAll, 1)
+          }
+      }
+       this.cco = [];
+      
+      this.lstParticipantesext.forEach(element => {
+        this.cco.push(element.email);
+      });
       //this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
       }
   });
@@ -632,6 +713,7 @@ listaAsignados() {
 
 agregarGastos(data: any,index: number){
   data.nroindex = index;
+  data.idproyecto = this.registerForm.get('idproyecto').value;
   //data.idordencompra = this.idEvento;
   const refMensaje = this.dialogService.open(CModalGastosComponent, {
     data: data,
@@ -977,7 +1059,7 @@ getListarGasto(){
     listaClientes() {
       const $getClientes = this.marketingService.obtenerClientes('CLI').subscribe({
         next: (rpta: any) => {
-          this.lstClientes = rpta;
+          this.lstClientes = rpta.filter((x: { idcliente: number; }) => x.idcliente != 0);
         },
         error: (err) => {
           this.serviceSharedApp.messageToast()
@@ -989,6 +1071,7 @@ getListarGasto(){
 
     mostrarBotones(data:any){
       console.log( '..mostrarBotones...', data);
+      this.registerForm.get('idcliente')?.setValue(0);
       switch (data) {
         case 410: //GENERACIÓN DE DEMANDA
           this.verCliente = false;
@@ -1055,52 +1138,66 @@ getListarGasto(){
   vistaPreliminar(){
 
     console.info('listarItemsTabla : ', this.idCodigo);
-    // this.setSpinner(true);
-    // this.mensajeSpinner = 'Descargando Vista Preliminar...!';
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Descargando Detalle...!';
 
-    // const objeto = {
-    //   idusuario : constantesLocalStorage.idusuario,
-    //   iddocumentoprc: this.idOrdenC,
-    //   codtipoprc: 7,
-    //   idplantilla: 0
-    // }
+    const objeto = {
+      idEvento: this.idCodigo,
+      idproyecto: this.IA_data.idproyecto,  
+      idtipodocprc: 7,
+      idusuario: constantesLocalStorage.idusuario
+    }
 
-    // const $cargarOrdenC = this.ordencompraService.prcDocumentoDet(objeto).subscribe({
-    //   next: (rpta: any) => {
-    //     this.setSpinner(false);      
+    const $cargarOrdenC = this.comprasService.descargarInformeEvento(objeto).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);      
         
-    //     const mediaType = 'application/pdf';
-    //       const blob = new Blob([rpta.body], { type: mediaType });
-    //       const filename = 'DET_FACT_COMPRA_' + this.registerFormRegistro.value.nrofactura;
+        const mediaType = 'application/pdf';
+          const blob = new Blob([rpta.body], { type: mediaType });
+          const filename = 'EVENTO-' + this.idCodigo;
   
-    //       const url = window.URL.createObjectURL(blob);
-    //       const a = document.createElement('a');
-    //       a.href = url;
-    //       a.download = filename;
-    //       document.body.appendChild(a);
-    //       a.target = '_blank';
-    //       a.click();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.target = '_blank';
+          a.click();
 
-    //       window.open(url);
+          window.open(url);
 
-    //       setTimeout(() => {
-    //           document.body.removeChild(a);
-    //           window.URL.revokeObjectURL(url);
-    //       }, 100);
-    //   },
-    //       error: (err) => {
-    //         this.setSpinner(false);
-    //       this.messageService.clear();
-    //       this.messageService.add({
-    //           severity: 'error',
-    //           summary: 'Error',
-    //           detail: mensajesQuestion.msgErrorGenerico,
-    //       });
-    //   },
-    //       complete: () => {
-    //   },
-    // });
-    // this.$listSubcription.push($cargarOrdenC)
+          setTimeout(() => {
+              document.body.removeChild(a);
+              window.URL.revokeObjectURL(url);
+          }, 100);
+      },
+          error: (err) => {
+            this.setSpinner(false);
+          this.messageService.clear();
+          this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico,
+          });
+      },
+          complete: () => {
+      },
+    });
+    this.$listSubcription.push($cargarOrdenC)
   }
+
+  getListarConfirmados() {
+      const $getClientes = this.marketingService.obtenerConfirmados(this.idCodigo).subscribe({
+        next: (rpta: any) => {
+          console.log('this.lstConfirmados...', rpta);
+          this.lstConfirmados = rpta;
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { },
+      });
+      this.$listSubcription.push($getClientes);
+    }
 
 }

@@ -252,29 +252,29 @@ listaProveedores() {
 
 }
 
-getExportarExcel() {
-//   this.setSpinner(true);
-//   this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+  getExportarExcel() {
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
 
-//   const objeto = {
-//     ...this.frmDatos.value,
-//   }
+    const objeto = {
+      ...this.frmDatos.value,
+    }
 
-//   const $getListar = this.marketingService.exportarexcelgastos(objeto)
-//   .subscribe({
-//     next: (rpta:any) => {
-//         this.setSpinner(false);
-//         this.utilitariosService.descargarExcel(rpta, 'Gastos');
-//     },
-//     error:(err)=>{
-//         this.setSpinner(false);
-//         this.serviceSharedApp.messageToast()
-//     },
-//     complete:() => {
-//       this.setSpinner(false);
-//     }
-//   });
-// this.$listSubcription.push($getListar)
-}
+    const $getListar = this.marketingService.exportarExcelEvento(objeto)
+    .subscribe({
+      next: (rpta:any) => {
+          this.setSpinner(false);
+          this.utilitariosService.descargarExcel(rpta, 'Eventos');
+      },
+      error:(err)=>{
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+      },
+      complete:() => {
+        this.setSpinner(false);
+      }
+    });
+    this.$listSubcription.push($getListar)
+  }
 }
   

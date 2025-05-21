@@ -43,11 +43,12 @@ export class CModalProveedorComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.listaProveedores();  
     this.createFormCliente();
     this.createFormContacto();
     this.param = this.config.data;
     console.log('this.param Postores...', this.param);  
-    this.listaProveedores();      
+        
     if (this.param.idcontacto > 0) {
       this.getContactos(this.param.idpersona);    
       this.registerFormProveedor.patchValue(this.param);        
@@ -83,7 +84,7 @@ export class CModalProveedorComponent implements OnInit, OnDestroy {
         nrodocumento: [{ value: null, disabled: false }],
         snombrecontacto: [{ value: null, disabled: false }],
         nombrecontacto: [{ value: null, disabled: false }],
-        nomusuario: [{ value: '', disabled: false }]
+        nomusuario: [{ value: '', disabled: false }],
     });
 }
 
@@ -97,12 +98,13 @@ get formContacto() { return this.registerFormContacto.controls; }
       telf1: ['', [Validators.required]],
       cargo: [{ value: '', disabled: false }, [Validators.required]],
       tiporol: [{ value: 0, disabled: false }],
-      indvig: [{ value: true, disabled: false }]
+      indvig: [{ value: true, disabled: false }],
+        
     });
 }
 
   guardarCliente() {       
-    console.log('guardarCliente...', this.registerFormProveedor.getRawValue());
+    //console.log('guardarCliente...', this.registerFormProveedor.getRawValue());
     if (this.validarDatos())
     {
         this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
@@ -136,7 +138,13 @@ get formContacto() { return this.registerFormContacto.controls; }
     const email_ = this.lstContacto.filter(x=>x.idcontacto === this.registerFormProveedor.get('idcontacto')?.value)[0].email;
     this.registerFormProveedor.get('email')?.setValue(email_);
 
-    this.cerrar({...this.registerFormProveedor.getRawValue()})      
+    const objetoCont = {
+      ...this.registerFormProveedor.getRawValue(),
+        tipocontacto: this.param.tipocontacto
+    }
+    console.log('objetoCont...', objetoCont);
+
+    this.cerrar({...objetoCont})      
   }
 
   cerrar(data:any) {
@@ -149,7 +157,15 @@ get formContacto() { return this.registerFormContacto.controls; }
   listaProveedores() {
     const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
       next: (rpta: any) => {
+        if (this.param.idcliente == 0) {
         this.lstProveedores = rpta;
+          
+        }else{
+          this.lstProveedores = rpta.filter((x: { idcliente: any; })=>x.idcliente === this.param.idcliente);
+          this.registerFormProveedor.get('idpersona')?.setValue(this.param.idcliente);
+          this.getContactos(this.param.idcliente); 
+        }
+        
       },
       error: (err) => {
         this.serviceSharedApp.messageToast()
@@ -162,7 +178,7 @@ get formContacto() { return this.registerFormContacto.controls; }
   validarDatos():boolean{
     let _error = false;
     this.errorMensaje="";
-    console.log('this.formValue...', this.registerFormProveedor.value);
+    //console.log('this.formValue...', this.registerFormProveedor.value);
 
     if (this.registerFormProveedor.value.idpersona === '' || this.registerFormProveedor.value.idpersona === null)
       {
@@ -229,6 +245,7 @@ get formContacto() { return this.registerFormContacto.controls; }
               ...this.registerFormContacto.getRawValue(),
               idcontacto: 0,
               idpersona: this.registerFormProveedor.get('idpersona')?.value ,
+              tipocontacto: this.param.tipocontacto
           }
           console.log('objeto', objeto);
   

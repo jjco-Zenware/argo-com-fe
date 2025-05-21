@@ -228,4 +228,7 @@ export const constantesApiWeb = {
     pdfDocumentoEvento: controllerMain + '/pdfdocumentoevento',
     portipoProyectoClienteList: controllerComercial + '/proyectolist03/',
     listarTrasaccionesGastos: controllerMain + '/trxmovimientolist03/',
+    descargarInformeEvento: controllerMain + '/descargarinfoevento',
+    obtenerConfirmados: controllerEventos + '/confirmadoseventolist/',
+    exportarexcelevento: controllerMarketing + '/exportarexcelevento',
 }
