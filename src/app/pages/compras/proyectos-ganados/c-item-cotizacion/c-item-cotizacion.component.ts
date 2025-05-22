@@ -135,6 +135,7 @@ export class CItemCotizacionComponent implements OnInit, OnDestroy {
       idubicacion: [{ value: 0, disabled: false }],
       rutaubicacion: [{ value: '', disabled: false }],
       tipoigv: [{ value: 1, disabled: false }],
+      mtodescuento: [{ value: 0, disabled: false }],
     })
   }
 
@@ -232,16 +233,23 @@ createFormTag() {
 
   calcularBCQ(event: any) {
     if (event.value > 0) {
-      const total = event.value * this.frmDatosItem.get('preciocosto')?.value;
+      const total = (event.value * this.frmDatosItem.get('preciocosto')?.value) - this.frmDatosItem.get('mtodescuento')?.value;
       this.frmDatosItem.get('preciocostototal')?.setValue(total);
     }
   }
 
   calcularBCPu(event: any) {
     if (event.value > 0) {
-      const total = event.value * this.frmDatosItem.get('cantidad')?.value;
+      const total = (event.value * this.frmDatosItem.get('cantidad')?.value)- this.frmDatosItem.get('mtodescuento')?.value;
       this.frmDatosItem.get('preciocostototal')?.setValue(total);
     }
+  }
+
+  calcularDesc(event: any) {
+    
+      const total = (this.frmDatosItem.get('cantidad')?.value * this.frmDatosItem.get('preciocosto')?.value ) - event.value ;
+      this.frmDatosItem.get('preciocostototal')?.setValue(total);
+    
   }
 
   guardarItem() {

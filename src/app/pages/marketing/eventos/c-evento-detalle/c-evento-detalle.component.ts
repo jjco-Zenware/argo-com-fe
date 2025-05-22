@@ -34,7 +34,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   idCodigo: number = 0;
   lstTipoDocumento: TablaDetalle[] = []; 
   visibleDocument: boolean = false;
-  visibleDocumentGasto: boolean = false;
+  visibleDocumentGasto: boolean = true;
   errorMensaje!: string;
   verAdjunto: boolean = true;
   dataAdjunto: any;
@@ -79,11 +79,16 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   verDireccion: boolean = false;
   verOrganizador: boolean = false;
   verbtnPreliminar: boolean = false;
+  verExterior: boolean = true;
+
+
+  //url = 'http://localhost:51202/auth/';
+  url = 'https://sigzenware.com/evento/auth/';
 
   destinatario = constantesLocalStorage.nombreUsuario;
   cco: string[] = [] ;
-  asunto = 'Consulta';
-  mensaje = 'Hola, quisiera más información.';
+  asunto = '';
+  mensaje = '';
 
 
 constructor(
@@ -180,20 +185,19 @@ cargarData(){
     this.lstAssignees = this.IA_data.assignees;
     this.lstParticipantes = this.IA_data.contactos.filter((x: { tipocontacto: string; }) => x.tipocontacto == 'C');
     this.lstParticipantesext = this.IA_data.contactos.filter((x: { tipocontacto: string; }) => x.tipocontacto == 'E');
+    this.asunto = this.IA_data.title;
 
     this.calculateProgress();    
-    // if (this.IA_data.idlista != 8) {
-    //   this.visibleDocument = false;
-    //   this.visibleDocumentGasto = false; 
-    //   this.getListarGasto();
-    //   this.getListarConfirmados();
-    // }
+    if (this.IA_data.idlista != 8) {
+      this.visibleDocumentGasto = false;
+    }
     this.getListarGasto();
       this.getListarConfirmados();
     this.verbtnPreliminar = true;
     this.lstParticipantes.forEach(element => {
       this.cco.push(element.email);
     });
+    this.mensaje = this.url + this.idCodigo;
   }else{
     //this.addTaskNew();
     this.mostrarBotones(410);
@@ -1080,6 +1084,7 @@ getListarGasto(){
           this.verLugar = true;
           this.verDireccion = true;
           this.verOrganizador = true;
+          this.verExterior = true;
         break;
         case 411: //CUSTOMER DAY
           this.verCliente = true;
@@ -1088,6 +1093,7 @@ getListarGasto(){
           this.verLugar = true;
           this.verDireccion = true;
           this.verOrganizador = false;
+          this.verExterior = true;
         break;      
         case 414://INTERNO 
           this.verCliente = true;
@@ -1096,6 +1102,7 @@ getListarGasto(){
           this.verLugar = true;
           this.verDireccion = true;
           this.verOrganizador = false;
+          this.verExterior = true;
           
         break;
         case 415://WORKSHOP
@@ -1105,6 +1112,7 @@ getListarGasto(){
           this.verLugar = true;
           this.verDireccion = true;
           this.verOrganizador = false;
+          this.verExterior = true;
           
         break;
         case 416://EXTERIOR
@@ -1114,6 +1122,7 @@ getListarGasto(){
           this.verLugar = true;
           this.verDireccion = true;
           this.verOrganizador = true;
+          this.verExterior = false
         break;
         case 417://RESPONSABLE SOCIAL
           this.verCliente = false;
@@ -1122,16 +1131,14 @@ getListarGasto(){
           this.verLugar = true;
           this.verDireccion = true;
           this.verOrganizador = false;
+          this.verExterior = true;
         break;
       }
       
     }
 
     get mailtoLink() {
-      // if (this.lstParticipantes.length === 0) {
-      //     this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'No hay Participantes para enviar el correo'});
-      //     return;
-      //   }
+      
       return `mailto:${this.destinatario}?bcc=${this.cco}&subject=${encodeURIComponent(this.asunto)}&body=${encodeURIComponent(this.mensaje)}`;
     }
   

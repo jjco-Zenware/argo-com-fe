@@ -178,7 +178,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       idcontacto: [{ value: 0, disabled: false }],
       codtipodoc: [{ value: 'OPO', disabled: false }],
       tiempoentrega: [{ value: 0, disabled: false }],
-      codformapago: [{ value: 118, disabled: false }],
+      codformapago: [{ value: 0, disabled: false }],
       validezoferta: [{ value: 0, disabled: false }],
       lugarentrega: [{ value: '', disabled: false }],
       garantia: [{ value: 0, disabled: false }],
@@ -305,7 +305,6 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
             this.setSpinner(false);
             this.ordenCompra = rpta.ordencompra[0];
-            //this.ordenCompra.codformapago = (rpta.ordencompra[0].codformapago).toString();
             this.getContactos(rpta.ordencompra[0].idproveedor);   
             if (rpta.ordencompra[0].items !== undefined) {
               this.lstItemOC = rpta.ordencompra[0].items;
@@ -323,6 +322,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
           this.s_monto_total = rpta.ordencompra[0].s_monto_total; 
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this.ordenCompra.codformapago = (rpta.ordencompra[0].codformapago).toString();
           this.cargarMenu(rpta.ordencompra[0].acciones);
           this.mostrarBotones(rpta.ordencompra[0].estado);
           // const nomproyecto = this.lstProyectos.filter((x: { idproyecto: any; })=>x.idproyecto == this.registerFormRegistro.get('idproyecto').value)[0].nomproyecto;
@@ -1207,7 +1207,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       this.comprasService.personaTraerUno(objeto).subscribe({
         next: (rpta: any) => {
           console.log('personaTraerUno', rpta);
-          this.registerFormRegistro.get('codformapago')?.setValue(rpta[0].terminopago);
+          //this.registerFormRegistro.get('codformapago')?.setValue(rpta[0].terminopago);
         },
         error: (err) => {
         this.messageService.clear();

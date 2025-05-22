@@ -44,21 +44,21 @@
                             inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
                         </span>
                     </div>            
-                    <div class="col-4 sm:col-6 lg:col-3 md:col-12 justify-content-end h-5rem">
+                    <div *ngIf="verExterior" class="col-4 sm:col-6 lg:col-3 md:col-12 justify-content-end h-5rem">
                         <label class="block text-900 font-semibold mb-1">Fecha Fin<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-input-icon-left w-auto p-fluid" style="height: 3rem;" >
                             <p-calendar formControlName="dueDate" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" 
                             inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" ></p-calendar>
                         </span>
                     </div>
-                    <div class="sm:col-6 lg:col-3 md:col-2 h-5rem">                    
+                    <div *ngIf="verExterior" class="sm:col-6 lg:col-3 md:col-2 h-5rem">                    
                         <label class="block text-900 font-bold mb-1">Hora Inicio<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-input-icon-left w-auto p-fluid " style="height: 2.5rem;">
                             <p-dropdown [options]="horas" formControlName="horareg" optionLabel="name" optionValue="name" 
                             class="p-inputtext-sm" appendTo="body" ></p-dropdown>
                         </span>
                     </div>
-                    <div class="sm:col-6 lg:col-3 md:col-2 h-5rem">                    
+                    <div *ngIf="verExterior" class="sm:col-6 lg:col-3 md:col-2 h-5rem">                    
                         <label class="block text-900 font-bold mb-1">Hora fin<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-input-icon-left w-auto p-fluid " style="height: 2.5rem;">
                             <p-dropdown [options]="horas" formControlName="horafin" optionLabel="name" optionValue="name" 
@@ -371,12 +371,12 @@
                 </div>
             </p-tabPanel>
 
-            <p-tabPanel [disabled]=visibleDocumentGasto>
+            <p-tabPanel >
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-users text-green-600"></i>
                         <span class="font-bold white-space-nowrap m-0">
-                            Confirmados
+                            Confirmados 
                         </span>
                     </div>
                 </ng-template>           
@@ -391,6 +391,8 @@
                                 <th class="bg-teal-50 border-1 text-600">CONTACTO</th>
                                 <th class="bg-teal-50 border-1 text-600">CARGO</th>
                                 <th class="bg-teal-50 border-1 text-600">EMAIL</th> 
+                                <th class="bg-teal-50 border-1 text-600">TIPO DOC</th>
+                                <th class="bg-teal-50 border-1 text-600">N° DOC</th>
                                 <th class="bg-teal-50 border-1 text-600">TELEFONO</th> 
                             </tr>
                         </ng-template>
@@ -401,6 +403,8 @@
                                 <td>{{ product.nombrecontacto }}</td>
                                 <td>{{ product.cargo }}</td>
                                 <td>{{ product.email}}</td>     
+                                <td>{{ product.idtipodoc}}</td>   
+                                <td>{{ product.nrodocumento}}</td>   
                                 <td>{{ product.telefono}}</td>  
                             </tr>
                         </ng-template>

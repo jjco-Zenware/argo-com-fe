@@ -57,6 +57,10 @@
                     <label class="font-semibold">P. Unitario</label>
                     <p-inputNumber (onInput)="calcularBCPu($event)" class="p-inputtext-sm" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
                 </div>
+                <!-- <div *ngIf="verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12 ">
+                    <label class="font-semibold">Descuento</label>
+                    <p-inputNumber (onInput)="calcularDesc($event)" class="p-inputtext-sm" formControlName="mtodescuento" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
+                </div> -->
                 <div *ngIf="verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Total</label>
                     <p-inputNumber class="surface-100 font-bold" class="p-inputtext-sm" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>

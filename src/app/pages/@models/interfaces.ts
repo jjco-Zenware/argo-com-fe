@@ -443,6 +443,7 @@ export interface OrdenCompraItem{
     rutaubicacion: string;
     coptipoexistencia: string;
     nomtipoexistencia: string;
+    mtodescuento?: number;
 }
 
 export interface OrdenCompra {
