@@ -109,7 +109,12 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         next: (rpta:any) => {
             this.setSpinner(false);
             console.log('rpta getListar', rpta);
-            this.lstCompras = rpta.ordenescompra
+            let lista = rpta.ordenescompra;
+            //this.lstCompras = lista.filter((idproveedor: any) => { idproveedor !== 0 });
+            this.lstCompras = lista.filter(
+                    (x: { idproveedor: any }) =>
+                        x.idproveedor !== 0
+                );
         },
         error:(err)=>{
             this.setSpinner(false);

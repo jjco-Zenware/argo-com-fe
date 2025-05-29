@@ -498,7 +498,12 @@ createFormTag() {
       this.contabilidadService.listarItemsTablaSunat(3).subscribe({
           next: (rpta: any) => {
             console.info('listarItemsTablaSunat : ', rpta);
-              this.lstTipoND = rpta;
+
+            if (this.param.origenreg === 'RC') {
+              this.lstTipoND = rpta.filter((x: { codsunat: number; }) => x.codsunat === 1 || x.codsunat === 9);
+            }else{
+              this.lstTipoND = rpta.filter((x: { codsunat: number; }) => x.codsunat === 1 || x.codsunat === 8 || x.codsunat === 9);
+            }
           },
           error: (err) => {
           console.info('error : ', err);

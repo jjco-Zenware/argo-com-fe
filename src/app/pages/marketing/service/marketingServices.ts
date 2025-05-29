@@ -124,7 +124,7 @@ export class MarketingService {
     }
 
     listarTrasacciones(codigo: any) {
-        const url = `${constantesApiWeb.listarTrasaccionesGastos}${codigo}`;
+        const url = `${constantesApiWeb.listarTrasacciones}${codigo}`;
         return this.http.get<any>(url)
     }
 

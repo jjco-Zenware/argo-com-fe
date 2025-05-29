@@ -73,10 +73,10 @@
                         </span>
                     </div>
                     <div *ngIf="verPais" class="sm:col-6 lg:col-4 md:col-12 h-5rem">
-                        <label class="block text-900 font-semibold mb-1">Pais<span class="text-red-500 font-bold"> * </span></label>
+                        <label class="block text-900 font-semibold mb-1">Pais</label>
                         <span>
                             <p-dropdown [options]="lstPais" formControlName="codpais" optionLabel="name" placeholder="Seleccionar..."
-                            optionValue="codigo" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                            optionValue="id" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
                         </span>
                     </div>
                     <div *ngIf="verLugar" class="sm:col-12 lg:col-12 md:col-3 col-12 h-6rem">
@@ -284,7 +284,7 @@
                             icon="pi pi-user" label="Agregar" (click)="agregarProveedor([],0)"></button>
                         <!-- <button pButton class="font-semibold p-button-outlined w-auto h-2rem mb-3 text-green-600 ml-3" pTooltip="Enviar Correo" 
                             icon="pi pi-envelope" label="Email" (click)="enviarCorreos()"></button> -->
-                            <a icon="pi pi-envelope" class="font-semibold p-button bg-green-500 w-auto h-2rem mb-3 ml-3" [href]="mailtoLink">Enviar Correo</a>
+                            <a *ngIf="verbtnEmail" icon="pi pi-envelope" class="font-semibold p-button bg-green-500 w-auto h-2rem mb-3 ml-3" [href]="mailtoLink">Enviar Correo</a>
 
                     </div>
                     

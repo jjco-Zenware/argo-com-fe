@@ -69,8 +69,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   lstParticipantesext: any[]=[];
   tipoparticipante!: string;
 
-
-  token: any;
   lstClientes: any[]=[];
   verCliente: boolean = false;
   verUbicacion: boolean = false;
@@ -80,15 +78,36 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   verOrganizador: boolean = false;
   verbtnPreliminar: boolean = false;
   verExterior: boolean = true;
+  verbtnEmail: boolean = false;
+  lstPais: any[]=[
+    { id: 'PER', name: 'PERU' },
+    { id: 'ECU', name: 'ECUADOR' },
+    { id: 'COL', name: 'COLOMBIA' },
+    { id: 'BOL', name: 'BOLIVIA' },
+    { id: 'ARG', name: 'ARGENTINA' },
+    { id: 'CHI', name: 'CHILE' },
+    { id: 'PAR', name: 'PARAGUAY' },
+    { id: 'URU', name: 'URUGUAY' },
+    { id: 'BRA', name: 'BRASIL' },
+    { id: 'VEN', name: 'VENEZUELA' },
+    { id: 'PAN', name: 'PANAMA' },
+    { id: 'CRI', name: 'COSTA RICA' },
+    { id: 'HND', name: 'HONDURAS' },
+    { id: 'NIC', name: 'NICARAGUA' },
+    { id: 'SAL', name: 'EL SALVADOR' },
+    { id: 'GUA', name: 'GUATEMALA' },
+    { id: 'MEX', name: 'MEXICO' },
+    { id: 'USA', name: 'ESTADOS UNIDOS' }
+  ];
 
 
-  //url = 'http://localhost:51202/auth/';
-  url = 'https://sigzenware.com/evento/auth/';
+  url = 'http://localhost:58329/auth/';
+  //url = 'https://sigzenware.com/evento/auth/';
 
   destinatario = constantesLocalStorage.nombreUsuario;
   cco: string[] = [] ;
   asunto = '';
-  mensaje = '';
+  cuerpo = '';
 
 
 constructor(
@@ -190,6 +209,7 @@ cargarData(){
     this.calculateProgress();    
     if (this.IA_data.idlista != 8) {
       this.visibleDocumentGasto = false;
+      this.verbtnEmail = true;
     }
     this.getListarGasto();
       this.getListarConfirmados();
@@ -197,7 +217,7 @@ cargarData(){
     this.lstParticipantes.forEach(element => {
       this.cco.push(element.email);
     });
-    this.mensaje = this.url + this.idCodigo;
+    this.cuerpo = this.url + this.idCodigo;
   }else{
     //this.addTaskNew();
     this.mostrarBotones(410);
@@ -351,17 +371,17 @@ let listaConcatena = this.lstParticipantes.concat(this.lstParticipantesext);
         _error = true;
     }
 
-    if (!_error && (this.registerForm.value.horareg === null || this.registerForm.value.horareg === '' || this.registerForm.value.horareg === '00:00'))
-      {
-          this.errorMensaje="Ingresar Hora Inicial...!";
-          _error = true;
-      }
+    // if (!_error && (this.registerForm.value.horareg === null || this.registerForm.value.horareg === '' || this.registerForm.value.horareg === '00:00'))
+    //   {
+    //       this.errorMensaje="Ingresar Hora Inicial...!";
+    //       _error = true;
+    //   }
 
-      if (!_error && (this.registerForm.value.horafin === null || this.registerForm.value.horafin === '' || this.registerForm.value.horafin === '00:00'))
-        {
-            this.errorMensaje="Ingresar Hora Final...!";
-            _error = true;
-        }
+    //   if (!_error && (this.registerForm.value.horafin === null || this.registerForm.value.horafin === '' || this.registerForm.value.horafin === '00:00'))
+    //     {
+    //         this.errorMensaje="Ingresar Hora Final...!";
+    //         _error = true;
+    //     }
 
     if (!_error && (this.registerForm.value.lugarevento === '' || this.registerForm.value.lugarevento === null))
       {
@@ -396,11 +416,11 @@ let listaConcatena = this.lstParticipantes.concat(this.lstParticipantesext);
         _error = true;
     }
   
-    if (!_error && (this.registerForm.value.descripcion === '' || this.registerForm.value.descripcion === null))
-    {
-        this.errorMensaje="Ingresar Descripción...!";
-        _error = true;
-    }       
+    // if (!_error && (this.registerForm.value.descripcion === '' || this.registerForm.value.descripcion === null))
+    // {
+    //     this.errorMensaje="Ingresar Descripción...!";
+    //     _error = true;
+    // }       
 
     return _error;
     }
@@ -671,7 +691,6 @@ setFechaMaxTarea(event: Date){
       this.lstParticipantesext.forEach(element => {
         this.cco.push(element.email);
       });
-      //this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
       }
   });
   }
@@ -718,10 +737,9 @@ listaAsignados() {
 agregarGastos(data: any,index: number){
   data.nroindex = index;
   data.idproyecto = this.registerForm.get('idproyecto').value;
-  //data.idordencompra = this.idEvento;
   const refMensaje = this.dialogService.open(CModalGastosComponent, {
     data: data,
-    header: data.length == 0 ? "Agregar Gasto" : "Editar Gasto", //'Selección de Cotización de ' +  data.nomcomercial,
+    header: data.length == 0 ? "Agregar Gasto" : "Editar Gasto", 
     styleClass: 'testDialog',
     closeOnEscape: false,
     closable: true,
@@ -730,23 +748,11 @@ agregarGastos(data: any,index: number){
 refMensaje.onClose.subscribe((rpta: any) => {
   console.log('onClose index',index);
   if (rpta != undefined) {
-    //   const _posAll: number = this.lstGastos.findIndex(((x: { nroindex: number; }) => x.nroindex == index))
-    //   if (_posAll != -1) {
-    //     this.lstGastos.splice(_posAll, 1)
-    //   }
-    // this.lstGastos.push(rpta.objeto);
-    // console.log('this.lstGastos',this.lstGastos);
 
     this.guardarGasto(rpta.objeto);
   }
 });
 
-// refMensaje.onClose.subscribe((rpta: any) => {
-//   console.log('onClose mensajeCoti',rpta);
-//   if (rpta != undefined) {
-//     //this.traerUno();
-//   }
-// });
 }
 
 eliminarGastos(data: any) {
@@ -1001,65 +1007,6 @@ getListarGasto(){
       
     }
 
-    obtenrToken(){
-      const $obtenerToken = this.marketingService.obtenerToken()
-          .subscribe({
-          next: (rpta:any) => {
-            this.setSpinner(false);
-              console.log("rpta obtenerToken : ", rpta.access_token);
-              this.token = rpta.access_token;
-              this.enviarCorreos();
-          },
-          error:(err)=>{
-            this.setSpinner(false);
-              console.error('error : ',err)
-              this.messageService.clear();
-              this.messageService.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: mensajesQuestion.msgErrorGenerico
-              })
-          },
-          complete:() => {
-            this.setSpinner(false);
-          }
-          });
-          this.$listSubcription.push($obtenerToken);
-    }
-
-    enviarCorreos(){
-     
-      if (this.lstParticipantes.length === 0) {
-        this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'No hay Participantes para enviar el correo'});
-        return;
-      }
-
-      this.mailtoLink;
-
-      // const $obtenerToken = this.marketingService.enviarCorreo()
-      //     .subscribe({
-      //     next: (rpta:any) => {
-      //       this.setSpinner(false);
-      //         console.log("rpta enviarCorreos : ", rpta);
-              
-      //     },
-      //     error:(err)=>{
-      //       this.setSpinner(false);
-      //         console.error('error : ',err)
-      //         this.messageService.clear();
-      //         this.messageService.add({
-      //             severity: 'error',
-      //             summary: 'Error',
-      //             detail: mensajesQuestion.msgErrorGenerico
-      //         })
-      //     },
-      //     complete:() => {
-      //       this.setSpinner(false);
-      //     }
-      //     });
-      //     this.$listSubcription.push($obtenerToken);
-    }   
-
     listaClientes() {
       const $getClientes = this.marketingService.obtenerClientes('CLI').subscribe({
         next: (rpta: any) => {
@@ -1137,9 +1084,8 @@ getListarGasto(){
       
     }
 
-    get mailtoLink() {
-      
-      return `mailto:${this.destinatario}?bcc=${this.cco}&subject=${encodeURIComponent(this.asunto)}&body=${encodeURIComponent(this.mensaje)}`;
+    get mailtoLink() {      
+      return `mailto:${this.destinatario}?bcc=${this.cco}&subject=${encodeURIComponent(this.asunto)}&body=${encodeURIComponent(this.cuerpo)}`;
     }
   
   vistaPreliminar(){

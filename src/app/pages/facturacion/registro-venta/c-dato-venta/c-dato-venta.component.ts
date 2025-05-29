@@ -391,6 +391,7 @@ createFormRegistro() {
           this.getMontoAnticipo(rpta.ordencompra[0].monto_anticipo);
           this.setSpinner(false);       
           this.changeEditaDetra(rpta.ordencompra[0].indmanualdetraccion);
+          this.changeProyecto(rpta.ordencompra[0].idproyecto);
          },
          error:(err)=>{
              this.setSpinner(false);

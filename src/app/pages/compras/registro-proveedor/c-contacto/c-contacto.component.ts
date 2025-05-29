@@ -52,6 +52,7 @@ export class CContactoComponent {
       telefono: ['', [Validators.required]],
       cargo: ['', [Validators.required]],
       tiporol: ['', [Validators.required]],
+      tipocontacto: [{ value: 'C', disabled: false }],
       });
   }
 

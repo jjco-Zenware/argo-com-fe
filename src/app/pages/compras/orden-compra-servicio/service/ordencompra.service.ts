@@ -226,4 +226,9 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.ordenCompraProyectoList}${codigo}`;
         return this.http.get<any>(url)
     }
+
+    ListarAdjuntoProc(objeto: any) {
+        const url = `${constantesApiWeb.listarAdjuntoProc}`;
+        return this.http.post<any>(url, objeto);
+    }
 }

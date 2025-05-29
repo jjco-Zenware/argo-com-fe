@@ -23,7 +23,8 @@ export class CModalTransacComponent {
     descripcion: string = "";
     btnIconAccion!: string;
     btnColor!: string;
-
+    blockedDocument: boolean = false;
+    mensajeSpinner: string = "";
 
 
   constructor(
@@ -49,6 +50,11 @@ export class CModalTransacComponent {
       this.btnColor = this._transaccion[0].clasebtn;    
     }
 
+     setSpinner(valor: boolean) {
+      this.blockedDocument = valor;
+    }
+
+
     procesarTRX(codigo: number) {
       if (this.validarDatos()) {
           console.log("errorMensaje : ", this.errorMensaje);
@@ -56,20 +62,23 @@ export class CModalTransacComponent {
           return;
       }
 
+      this.setSpinner(true);
+          this.mensajeSpinner = "Procesando Transacción...";
+
       const objeto = {
           idtrx: codigo,
           idusuario: constantesLocalStorage.idusuario,
           descripcion: this.descripcion,
-          idgasto: this.gasto.idgasto,
+          iddocumentoprc: this.gasto.idordencompra,
       }
 
-      const $procesarTrx = this.ordencompraService.procesarTrxGasto(objeto).subscribe({
+      const $procesarTrx = this.ordencompraService.procesarTrx(objeto).subscribe({
           next: (rpta: any) => {
               console.log('prcReunion', rpta);
               if (rpta.procesoSwitch === 0) {
                   this.cerrar(objeto)
               }
-
+this.setSpinner(false);
               this.serviceSharedApp.messageToast({
                   severity: rpta.procesoSwitch === "0" ? 'success' : 'info',
                   summary: rpta.procesoSwitch === "0" ? 'Exito' : 'Validación...!',
@@ -77,10 +86,11 @@ export class CModalTransacComponent {
               });
           },
           error: (err) => {
+            this.setSpinner(false);
               console.error('error : ', err);
               this.serviceSharedApp.messageToast();
           },
-          complete: () => {},
+          complete: () => {this.setSpinner(false);},
       });
       this.$listSubcription.push($procesarTrx)
   }

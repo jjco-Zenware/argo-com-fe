@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
@@ -20,6 +20,8 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ComprasService } from '../../compras/Service/compraServices';
 import { CModalTransacComponent } from '../modal-trans-gasto/modal-transac.component';
 import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
+import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 
 @NgModule({
@@ -48,7 +50,7 @@ import { OrdencompraService } from '../../compras/orden-compra-servicio/service/
       MessageService, 
       UtilitariosService, 
       ComprasService ,
-      OrdencompraService,
+      OrdencompraService,ProyectosService,ContabilidadService,DatePipe
       ]
 })
 export class InformeGastosModule { }

@@ -22,6 +22,7 @@ import { CModalGastosComponent } from './modal-gastos/c-modalgastos.component';
 import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
 import { CModalPersonaComponent } from './modalPersona/c-modalpersona.component';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     AutoCompleteModule 
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, MarketingService,
-     ComprasService, ProyectosService, OrdencompraService, ComprasService, DatePipe ]
+     ComprasService, ProyectosService, OrdencompraService, ComprasService, DatePipe, ContabilidadService ]
 })
 export class EventoModule { }

@@ -68,4 +68,9 @@ export class ContabilidadService {
         const url = `${constantesApiWeb.plancontablePrc}`;
         return this.http.post<any>(url, objeto)
     }
+    
+    listarItemsTabla(codigo: any) {
+        const url = `${constantesApiWeb.lstItemsTabla}${codigo}`;
+        return this.http.get<any>(url)
+    }
 }
