@@ -870,7 +870,9 @@ guardarGasto(objeto:any){
   const obj = {
     ...objeto,
     idproyecto: this.registerForm.get('idproyecto').value,
-    idtipodocprc: 7
+    idtipodocprc: 7,
+    iddocumentoprc_origen:0,
+    codtipodoc:'OPO'
   }
 
   console.log('guardarOC...', obj);
@@ -915,7 +917,8 @@ getListarGasto(){
       //...this.frmDatos.value,
       idproyecto: this.registerForm.get('idproyecto').value,
       idtipodocprc: 7,
-      idusuario: constantesLocalStorage.idusuario
+      idusuario: constantesLocalStorage.idusuario,
+      iddocumentoprc_origen:0
     }
 
     const $getListarOrdenCompra = this.proyectosService.ordenCompraListGasto(objeto)
@@ -924,6 +927,7 @@ getListarGasto(){
             this.setSpinner(false);
             console.log('rpta getListar', rpta);
             this.lstGastos = rpta.ordenescompra
+            console.log('rpta this.lstGastos', this.lstGastos);
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -1089,6 +1093,12 @@ getListarGasto(){
     }
   
   vistaPreliminar(){
+console.info('lstGastos : ', this.lstGastos);
+    if (this.lstGastos === undefined) {
+      this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe agregar al menos un Gasto para generar el Informe.' });
+      return;
+      
+    }
 
     console.info('listarItemsTabla : ', this.idCodigo);
     this.setSpinner(true);
