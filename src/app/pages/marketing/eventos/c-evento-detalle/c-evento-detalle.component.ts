@@ -102,8 +102,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   ];
 
 
-  url = 'http://localhost:58329/auth/';
-  //url = 'https://sigzenware.com/evento/auth/';
+  //url = 'http://localhost:58329/auth/';
+  url = 'https://sigzenware.com/evento/auth/';
 
   destinatario = constantesLocalStorage.nombreUsuario;
   cco: string[] = [] ;
