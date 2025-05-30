@@ -77,8 +77,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy{
   verDireccion: boolean = false;
   verOrganizador: boolean = false;
   verbtnPreliminar: boolean = false;
-  verExterior: boolean = true;
+  verFechaFin: boolean = true;
   verbtnEmail: boolean = false;
+  verHora: boolean = true;
   lstPais: any[]=[
     { id: 'PER', name: 'PERU' },
     { id: 'ECU', name: 'ECUADOR' },
@@ -1035,7 +1036,8 @@ getListarGasto(){
           this.verLugar = true;
           this.verDireccion = true;
           this.verOrganizador = true;
-          this.verExterior = true;
+          this.verFechaFin = false;
+          this.verHora = true;
         break;
         case 411: //CUSTOMER DAY
           this.verCliente = true;
@@ -1043,8 +1045,9 @@ getListarGasto(){
           this.verPais = false;
           this.verLugar = true;
           this.verDireccion = true;
-          this.verOrganizador = false;
-          this.verExterior = true;
+          this.verOrganizador = false;          
+          this.verFechaFin = false;
+          this.verHora = true;
         break;      
         case 414://INTERNO 
           this.verCliente = true;
@@ -1052,8 +1055,9 @@ getListarGasto(){
           this.verPais = false;
           this.verLugar = true;
           this.verDireccion = true;
-          this.verOrganizador = false;
-          this.verExterior = true;
+          this.verOrganizador = false;          
+          this.verFechaFin = false;
+          this.verHora = true;
           
         break;
         case 415://WORKSHOP
@@ -1062,8 +1066,9 @@ getListarGasto(){
           this.verPais = false;
           this.verLugar = true;
           this.verDireccion = true;
-          this.verOrganizador = false;
-          this.verExterior = true;
+          this.verOrganizador = false;          
+          this.verFechaFin = false;
+          this.verHora = true;
           
         break;
         case 416://EXTERIOR
@@ -1072,8 +1077,9 @@ getListarGasto(){
           this.verPais = true;
           this.verLugar = true;
           this.verDireccion = true;
-          this.verOrganizador = true;
-          this.verExterior = false
+          this.verOrganizador = true;          
+          this.verFechaFin = true;
+          this.verHora = false;
         break;
         case 417://RESPONSABLE SOCIAL
           this.verCliente = false;
@@ -1082,7 +1088,8 @@ getListarGasto(){
           this.verLugar = true;
           this.verDireccion = true;
           this.verOrganizador = false;
-          this.verExterior = true;
+          this.verFechaFin = false;
+          this.verHora = true;
         break;
       }
       
