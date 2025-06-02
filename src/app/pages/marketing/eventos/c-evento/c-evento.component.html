@@ -62,7 +62,7 @@
 
 <ng-template #visSecciones>
 
-    <div class="p-fluid p-3 mb-1 card m-4" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
+    <div class="p-fluid p-3 mb-1 card m-4" *ngIf="visDetalle" >
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem">
@@ -75,7 +75,7 @@
                 
             </div>
         </div>
-        <app-c-evento-detalle [IA_data]="dataCT"></app-c-evento-detalle>
+        <app-c-evento-detalle [IA_data]="dataCT" (OB_back)="getDetalle($event)"></app-c-evento-detalle>
     </div>
 
 </ng-template>

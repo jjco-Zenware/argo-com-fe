@@ -110,6 +110,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     filteredCtaCtble!: any[];
     lstCtaCtble: any[] = [];
     s_desctactble!: any[];
+  lstOrdenC: any;
 
     constructor(
         private fb: FormBuilder,
@@ -410,6 +411,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     //this.getBusquedaRUC();
                     this.setSpinner(false);
                     this.gettipocambiodia(new Date(this.serviceUtilitario.formatFecha(rpta.ordencompra[0].fecemision)));
+                    this.changeProyecto(rpta.ordencompra[0].idproyecto);
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -1442,18 +1444,28 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.$listSubcription.push($getListarOrdenCompra);
     }
 
-    changeProyecto(value: any) {
-        console.log('changeProyecto...', value);
-        console.log('this.lstProyectos...', this.lstProyectos);
-        let _codcentrocosto = this.lstProyectos.filter(
-            (x: { idproyecto: number }) => x.idproyecto === value
-        );
-        console.log('_codcentrocosto...', _codcentrocosto);
-        this.registerFormRegistro
-            .get('idcentrocosto')
-            ?.setValue(_codcentrocosto[0].idcentrocosto);
-        this.changeCC(_codcentrocosto[0].idcentrocosto);
-    }
+    // changeProyecto(value: any) {
+    //     console.log('changeProyecto...', value);
+    //     console.log('this.lstProyectos...', this.lstProyectos);
+    //     let _codcentrocosto = this.lstProyectos.filter(
+    //         (x: { idproyecto: number }) => x.idproyecto === value
+    //     );
+    //     console.log('_codcentrocosto...', _codcentrocosto);
+    //     this.registerFormRegistro
+    //         .get('idcentrocosto')
+    //         ?.setValue(_codcentrocosto[0].idcentrocosto);
+    //     this.changeCC(_codcentrocosto[0].idcentrocosto);
+    // }
+
+    changeProyecto(value:any){
+    console.log('changeProyecto...', value);
+    console.log('this.lstProyectos...', this.lstProyectos);
+    //let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
+    //console.log('_codcentrocosto...', _codcentrocosto);
+    //this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
+    
+    this.cargarOrdenCompra();
+  }
 
     recalcularRegistro(dato: any) {
         console.log('recalcularRegistro...', dato);
@@ -1611,4 +1623,19 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     //     console.log('selectCuenta', data.codctactble);
     //     this.codctactble = data.codctactble;
     // }
+     cargarOrdenCompra(){
+    let id = this.registerFormRegistro.get('idproyecto')?.value;
+    this.ordencompraService.ordenCompraProyectoList(id).subscribe({
+      next: (rpta: any) => {
+        console.info('lstOrdenC : ', rpta.ordenescompra);
+          this.lstOrdenC = rpta.ordenescompra;
+      },
+      error: (err) => {
+      console.info('error : ', err);
+      this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+  }); 
+  }
 }

@@ -131,7 +131,7 @@
                 </form>            
             </p-tabPanel>           
 
-            <p-tabPanel>
+            <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-users"></i>
@@ -184,7 +184,7 @@
                 </div>
             </p-tabPanel>
 
-            <p-tabPanel>
+            <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-check-square"></i>
@@ -239,7 +239,7 @@
                             <div class="flex gap-3 justify-content-between">
                                 <div ></div>
                                 <p-avatarGroup>
-                                    <p-avatar *ngFor="let assignee of this.taskList.tasks[i].asignados | slice:0:3" image="{{assignee.image}}" shape="circle" styleClass="border-2 surface-border"></p-avatar>
+                                    <p-avatar *ngFor="let assignee of this.taskList.tasks[i].asignados | slice:0:3" image="{{assignee.image}}" shape="circle" styleClass="border-2 surface-border" pTooltip="Asignados de Tarea" tooltipPosition="left"></p-avatar>
                                     <p-avatar *ngIf="this.taskList.tasks[i].asignados && this.taskList.tasks[i].asignados.length > 3" label="+ {{this.taskList.tasks[i].asignados.length - 1}}" shape="circle" styleClass="border-2 surface-border mb-1 surface-ground"></p-avatar>
                                 </p-avatarGroup>
                                 <div class="justify-content-end flex gap-5">
@@ -260,7 +260,6 @@
                                         </span>
                                     </div>
                                 </div>
-
                             </div>
 
 
@@ -269,7 +268,7 @@
                 
             </p-tabPanel>
 
-            <p-tabPanel >
+            <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-users text-green-600"></i>
@@ -371,7 +370,7 @@
                 </div>
             </p-tabPanel>
 
-            <p-tabPanel >
+            <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-users text-green-600"></i>
@@ -412,7 +411,7 @@
                 </div>
             </p-tabPanel>
 
-            <p-tabPanel [disabled]=visibleDocumentGasto>
+            <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-dollar"></i>
