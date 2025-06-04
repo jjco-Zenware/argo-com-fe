@@ -137,6 +137,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
     lstAssigneesOrigen: any[] = [];
     lstParticipantesOrigen: any[] = [];
     lstParticipantesextOrigen: any[] = [];
+    lstAssigneescomparar: any[] = [];
+    activeIndex: number = 0;
+    verbtnContactos: boolean = true;
 
     //url = 'http://localhost:58329/auth/';
     url = 'https://sigzenware.com/evento/auth/';
@@ -179,10 +182,13 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         // Escuchar cualquier cambio en el formulario
         this.registerForm.valueChanges.subscribe((valor: any) => {
             console.log('Formulario modificado:', valor);
-            if (this.registerForm) {
-              
+            if (this.idCodigo > 0) {
+                const objeto = {
+                    valor: true,
+                    msj: 'Hay cambios en Datos Generales, Desea continuar sin guardar?',
+                };
+                this.OB_back.emit(objeto);
             }
-            this.OB_back.emit(true);
         });
     }
 
@@ -270,8 +276,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             this.visibleDocument = false;
 
             //seteando valores de listas para validar si hay cambios
-            this.taskListOrigen = this.IA_data.taskList;
+            //this.taskListOrigen = this.IA_data.taskList;
             this.lstAssigneesOrigen = this.IA_data.assignees;
+            this.lstAssigneescomparar = this.IA_data.assignees;
             this.lstParticipantesOrigen = this.IA_data.contactos.filter(
                 (x: { tipocontacto: string }) => x.tipocontacto == 'C'
             );
@@ -280,19 +287,38 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             );
 
             this.calculateProgress();
-            if (this.IA_data.idlista != 8) {
+           
+            if (this.IA_data.idlista === 9) {
+                this.activeIndex = 3;
                 this.verbtnEmail = true;
+            } else {
+                this.activeIndex = 0;
+                this.verbtnEmail = false;
             }
+
+            if (this.IA_data.idlista > 9) {
+                this.verbtnContactos = false;
+            }
+
+            
+
             this.getListarGasto();
             this.getListarConfirmados();
             this.verbtnPreliminar = true;
             this.lstParticipantes.forEach((element) => {
-                this.cco.push(element.email);
+                if (element.indenvio) {
+                    this.cco.push(element.email);
+                }
             });
             this.cuerpo = this.url + this.idCodigo;
         } else {
             //this.addTaskNew();
             this.mostrarBotones(410);
+            const objeto = {
+                valor: false,
+                msj: '',
+            };
+            this.OB_back.emit(objeto);
         }
     }
 
@@ -390,12 +416,18 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                         detail: 'Operación exitosa',
                     });
                     this.visibleDocument = false;
+                    this.verbtnPreliminar = true;
                     //this.idCliente = rpta.resultProceso;
                     if (this.idCodigo === 0) {
                         this.comprasService.emitirEvento(rpta.resultProceso);
                     }
 
-                    this.OB_back.emit(false);
+                    console.log('No hay cambios ');
+                    const objeto = {
+                        valor: false,
+                        msj: '',
+                    };
+                    this.OB_back.emit(objeto);
                 } else {
                     this.messageService.add({
                         severity: 'error',
@@ -566,6 +598,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 asignados: [],
             };
             this.taskList.tasks.unshift(this.newTask);
+            this.taskListOrigen.tasks.unshift(this.newTask);
             this.taskContent = '';
             this.calculateProgress();
         } else {
@@ -575,12 +608,16 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             });
         }
 
-        console.log('this.taskList.tasks...', this.taskList);
-        console.log('this.taskListOrigen.tasks...', this.taskListOrigen);
+        console.log('this.taskList.tasks...', this.taskList.tasks);
+        console.log('this.taskListOrigen.tasks...', this.taskListOrigen.tasks);
 
         if (this.taskList.tasks != this.taskListOrigen.tasks) {
             console.log('Hay cambios en la lista de Tareas');
-            this.OB_back.emit(true);
+            const objeto = {
+                valor: true,
+                msj: 'Hay cambios en la lista de Tareas, Desea continuar sin guardar?',
+            };
+            this.OB_back.emit(objeto);
         }
     }
 
@@ -615,7 +652,18 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
 
     removeTask(index: number) {
         this.taskList.tasks.splice(index, 1);
+        this.taskListOrigen.tasks.splice(index, 1);
+        console.log('this.taskList.tasks...', this.taskList.tasks);
+        console.log('this.taskListOrigen.tasks...', this.taskListOrigen.tasks);
         //this.taskList.tasks.emit(lstTareas);
+        if (this.taskList.tasks != this.taskListOrigen.tasks) {
+            console.log('Hay cambios en la lista de Tareas');
+            const objeto = {
+                valor: false,
+                msj: '',
+            };
+            this.OB_back.emit(objeto);
+        }
         this.calculateProgress();
     }
 
@@ -766,12 +814,18 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.cco = [];
 
                 this.lstParticipantes.forEach((element) => {
-                    this.cco.push(element.email);
+                    if (element.indenvio) {
+                        this.cco.push(element.email);
+                    }
                 });
 
                 if (this.lstParticipantes !== this.lstParticipantesOrigen) {
                     console.log('Hay cambios en la lista de Participantes');
-                    this.OB_back.emit(true);
+                    const objeto = {
+                        valor: true,
+                        msj: 'Hay cambios en la lista de Participantes, Desea continuar sin guardar?',
+                    };
+                    this.OB_back.emit(objeto);
                 }
             }
         });
@@ -809,12 +863,18 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.cco = [];
 
                 this.lstParticipantes.forEach((element) => {
-                    this.cco.push(element.email);
+                    if (element.indenvio) {
+                        this.cco.push(element.email);
+                    }
                 });
 
                 if (this.lstParticipantes !== this.lstParticipantesOrigen) {
                     console.log('Hay cambios en la lista de Participantes');
-                    this.OB_back.emit(true);
+                    const objeto = {
+                        valor: true,
+                        msj: 'Hay cambios en la lista de Participantes, Desea continuar sin guardar?',
+                    };
+                    this.OB_back.emit(objeto);
                 }
             },
         });
@@ -868,7 +928,11 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                     this.lstParticipantesext !== this.lstParticipantesextOrigen
                 ) {
                     console.log('Hay cambios en la lista de Participantes');
-                    this.OB_back.emit(true);
+                    const objeto = {
+                        valor: true,
+                        msj: 'Hay cambios en la lista de Speakers, Desea continuar sin guardar?',
+                    };
+                    this.OB_back.emit(objeto);
                 }
             }
         });
@@ -903,17 +967,21 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                         this.lstParticipantesext.splice(_posAll, 1);
                     }
                 }
-                this.cco = [];
+                // this.cco = [];
 
-                this.lstParticipantesext.forEach((element) => {
-                    this.cco.push(element.email);
-                });
+                // this.lstParticipantesext.forEach((element) => {
+                //     this.cco.push(element.email);
+                // });
 
                 if (
                     this.lstParticipantesext !== this.lstParticipantesextOrigen
                 ) {
                     console.log('Hay cambios en la lista de Participantes');
-                    this.OB_back.emit(true);
+                    const objeto = {
+                        valor: true,
+                        msj: 'Hay cambios en la lista de Speakers, Desea continuar sin guardar?',
+                    };
+                    this.OB_back.emit(objeto);
                 }
             },
         });
@@ -934,6 +1002,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         }
 
         this.filteredAssignees = filtered;
+        console.log('lstAssignees...', this.lstAssignees);
     }
 
     listaAsignados() {
@@ -1027,12 +1096,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
 
     cargarHoras() {
         const arrHoras = [];
-        // for (let i = 0; i <= 49; i++) {
-        //   const hora = Math.floor(i / 2);
-        //   const minuto = i % 2 === 0 ? '00' : '30';
-        //   const tiempo = `${hora.toString().padStart(2, '0')}:${minuto}`;
-        //   arrHoras.push({ name: tiempo });
-        // }
         for (let i = 0; i <= 96; i++) {
             const hora = Math.floor(i / 4);
             let minuto;
@@ -1067,29 +1130,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         });
         this.$listSubcription.push($listaMonedas);
     }
-
-    // cargarProyectos(dato:any){
-    //   this.ordencompraService.portipoProyectoList(dato).subscribe({
-    //     next: (rpta: any) => {
-    //     this.lstProyectos = rpta;
-    //     this.registerForm.get('idproyecto').setValue(this.lstProyectos[0].idproyecto);
-
-    //     console.log('cargarProyectos...',this.lstProyectos);
-
-    //         },
-
-    //     error: (err) => {
-    //     this.messageService.clear();
-    //     this.messageService.add({
-    //         severity: 'error',
-    //         summary: 'Error',
-    //         detail: mensajesQuestion.msgErrorGenerico,
-    //         });
-    //     },
-    //     complete: () => {
-    //     },
-    // });
-    // }
 
     guardarGasto(objeto: any) {
         this.setSpinner(true);
@@ -1419,5 +1459,50 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 complete: () => {},
             });
         this.$listSubcription.push($getClientes);
+    }
+
+    onSelect(event: any) {
+        console.log('lstAssigneesOrigen', this.lstAssigneesOrigen);
+        console.log(event);
+        //this.lstAssigneescomparar.unshift(event);
+        console.log('lstAssigneescomparar', this.lstAssigneescomparar);
+        console.log('lstAssignees', this.lstAssignees);
+
+        if (this.lstAssigneesOrigen !== this.lstAssignees) {
+            console.log('Hay cambios ');
+            const objeto = {
+                valor: true,
+                msj: 'Hay cambios en la lista de Asignados, Desea continuar sin guardar?',
+            };
+            this.OB_back.emit(objeto);
+        } else {
+            console.log('No hay cambios ');
+            const objeto = {
+                valor: false,
+                msj: '',
+            };
+            this.OB_back.emit(objeto);
+        }
+    }
+
+    checkValue(event: any, contacto: any) {
+        console.log('Hay cambios ', event);
+        console.log('Hay contacto ', contacto);
+
+        this.lstParticipantes.forEach((element) => {
+            if (element.idcontacto == contacto) {
+                element.indenvio = event;
+                if (event) {
+                    this.cco.push(element.email);
+                } else {
+                    //this.cco.splice(index, 1);
+                    this.cco.forEach((item, index) => {
+                        if (item === element.email) this.cco.splice(index, 1);
+                    });
+                }
+            }
+        });
+        console.log('this.lstParticipantes...', this.lstParticipantes);
+        console.log('cco...', this.cco);
     }
 }

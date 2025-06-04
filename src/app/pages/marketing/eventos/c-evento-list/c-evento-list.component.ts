@@ -42,13 +42,13 @@ export class CEventoListComponent implements OnInit, OnDestroy{
         }
 
     ngOnInit(): void {
-        
+        console.log('ngOnInit list...', this.list);
     }
 
-    onCardClick(event: Event, card: eventoCard) {
+    onCardClick(card: any) {
         console.log('onCardClick...', card);
         this.verEventos.emit(card);
-        const eventTarget = event.target as HTMLElement;
+        //const eventTarget = event.target as HTMLElement;
         
     }
 

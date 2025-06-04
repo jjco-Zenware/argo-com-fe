@@ -471,13 +471,13 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
             break;
           //PROCESO 
           case 3:
-            console.log('ENTRO 2');
-            let lista3 = this.lstAccionesSunat.filter((item:any) => item.operacion !== 'generar_anulacion');
+            console.log('ENTRO 3');
+            let lista3 = this.lstAccionesSunat.filter((item:any) => item.operacion !== 'generar_anulacion'  && item.operacion !== 'consultar_anulacion');
             this.lstAccionesSunatMostrar = lista3;            
           break;
         //PROCESO  
           case 5:
-            console.log('ENTRO 3');
+            console.log('ENTRO 5');
             let lista5 = this.lstAccionesSunat.filter((item:any) => item.operacion === 'consultar_anulacion');
             this.lstAccionesSunatMostrar = lista5;            
           break;

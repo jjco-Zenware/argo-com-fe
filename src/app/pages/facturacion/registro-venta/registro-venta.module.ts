@@ -19,6 +19,7 @@ import { ProyectosService } from '../../compras/proyectos-ganados/service/proyec
 import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
 import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 import { ConfirmationService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { ConfirmationService } from 'primeng/api';
     AlmacenModule,
     InputNumberModule ,
     TagModule,
-    RegistroProveedorModule
+    RegistroProveedorModule,
+    DropdownModule 
   ],
   providers: [
     SharedAppService, 

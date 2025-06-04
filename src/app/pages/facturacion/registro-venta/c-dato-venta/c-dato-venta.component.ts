@@ -158,7 +158,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
     }else{
       //this.verControles('NOA');
       this.cargarProyectos(1); 
-      this.gettipocambiodia();
+      this.gettipocambiodia(new Date);
       this.changeAplicaDetra(false);
       this.dataAdjunto ={
         idCliente: 0,
@@ -392,6 +392,7 @@ createFormRegistro() {
           this.setSpinner(false);       
           this.changeEditaDetra(rpta.ordencompra[0].indmanualdetraccion);
           this.changeProyecto(rpta.ordencompra[0].idproyecto);
+          this.gettipocambiodia(new Date(this.serviceUtilitario.formatFecha(rpta.ordencompra[0].fecemision)));
          },
          error:(err)=>{
              this.setSpinner(false);
@@ -1213,13 +1214,21 @@ createFormRegistro() {
 
   prcCuota2(data:number)  {    
     this.nrocuotas = data;
+    console.log('monto_pen_pago...', this.registerFormRegistro.value.monto_pen_pago);
     this.listaCuotas=[];
     const _monto = this.registerFormRegistro.value.monto_pen_pago/data;
     console.log('_monto...', _monto);
     let tot_dia = this.registerFormRegistro.value.nrodias
     console.log('tot_dia...', tot_dia);
 
-    const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), tot_dia );
+     let fecemision;
+    fecemision = this.registerFormRegistro.value.fecemision;
+
+    if (fecemision.toString().length === 10) {
+        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision)); 
+      }
+
+    const newDate = this.addDays(fecemision, tot_dia);
     const objet = {
       fechacuota: newDate,
       monto: _monto,
@@ -1239,6 +1248,7 @@ createFormRegistro() {
   }
 
   changeFechaDesde(event: Date) {
+    this.gettipocambiodia(event);
     this.minimaFechaHasta = event;
     let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
     let vencimiento = new Date(this.registerFormRegistro.get('fecvencimiento')?.value);
@@ -1426,14 +1436,19 @@ createFormRegistro() {
   
     }
  
-    gettipocambiodia(){        
+    gettipocambiodia(fecha:any){     
+       const objeto = {
+            anio: fecha.getFullYear(),
+            mes: fecha.getMonth() + 1,
+            dia: fecha.getDate(),
+        };   
 
-      let fecha = new Date();
-        const objeto = {
-          anio: fecha.getFullYear(),
-          mes: fecha.getMonth()+1,
-          dia: fecha.getDate()
-        }
+      // let fecha = new Date();
+      //   const objeto = {
+      //     anio: fecha.getFullYear(),
+      //     mes: fecha.getMonth()+1,
+      //     dia: fecha.getDate()
+      //   }
     
         const $gettipocambio = this.proyectosService.gettipocambiodia(objeto)
           .subscribe({

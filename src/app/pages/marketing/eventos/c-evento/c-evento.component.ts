@@ -39,6 +39,7 @@ export class CEventoComponent implements OnInit, OnDestroy {
     listIds: string[] = [];
     lstProveedores: any[] = [];
     existChange: boolean = false;
+    existMsj: string = '';
 
     constructor(
         private fb: FormBuilder,
@@ -128,6 +129,7 @@ export class CEventoComponent implements OnInit, OnDestroy {
     }
 
     EditarCliente(data: any) {
+        console.log('EditarCliente : ', data);
         this.tituloDetalle = data.title;
         this.vistaLista = false;
         this.visDetalle = true;
@@ -144,7 +146,8 @@ export class CEventoComponent implements OnInit, OnDestroy {
 
     getDetalle(dato: any) {
         console.log('getBack : ', dato);
-        this.existChange = dato;
+        this.existMsj = dato.msj;
+        this.existChange = dato.valor;
     }
 
     getBack() {
@@ -152,7 +155,7 @@ export class CEventoComponent implements OnInit, OnDestroy {
             this.confirmationService.confirm({
             key: 'confirm1',
             header: 'Confirmación',
-            message:  'Tiene cambios pendientes, Desea continuar sin guardar?' ,
+            message:  this.existMsj ,
             accept: () => {
               this.existChange = false;
               this.vistaLista = true;
@@ -244,9 +247,12 @@ export class CEventoComponent implements OnInit, OnDestroy {
             .kanbanEventoList(objeto)
             .subscribe({
                 next: (rpta: any) => {
+                    console.log('kanbanEventoList : ', rpta);
                     this.setSpinner(false);
                     this.lists = rpta.listas;
                     this.listIds = this.lists.map((l) => l.listId || '');
+                    console.log('lists : ', this.lists);
+                    console.log('listIds : ', this.listIds);
                 },
                 error: (err) => {
                     this.setSpinner(false);

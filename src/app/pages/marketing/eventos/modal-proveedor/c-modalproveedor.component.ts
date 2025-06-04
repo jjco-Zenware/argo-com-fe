@@ -85,6 +85,7 @@ export class CModalProveedorComponent implements OnInit, OnDestroy {
         snombrecontacto: [{ value: null, disabled: false }],
         nombrecontacto: [{ value: null, disabled: false }],
         nomusuario: [{ value: '', disabled: false }],
+        indenvio: [{ value: false, disabled: false }],
     });
 }
 

@@ -15,7 +15,7 @@
         <div [id]="list.listId" class="flex flex-column gap-5 overflow-y-auto mb-6 mt-2 scrollable kanban-list" cdkDropList (cdkDropListDropped)="dropCard($event)"
             (cdkDropListEntered)="insertHeight($event)" (cdkDropListExited)="removeHeight($event)" [cdkDropListData]="list.cards" [cdkDropListConnectedTo]="listIds"
                 #listEl style="min-height:2rem">
-            <c-evento-card *ngFor="let card of list.cards" [card]="card" [listId]="list.listId" (click)="onCardClick($event, card)" cdkDrag cdkDragHandle [cdkDragDisabled]="isMobileDevice"></c-evento-card>
+            <c-evento-card *ngFor="let card of list.cards" [card]="card" [listId]="list.listId" (click)="onCardClick(card)" cdkDrag cdkDragHandle [cdkDragDisabled]="isMobileDevice"></c-evento-card>
         </div>
     </div>
 </div>
