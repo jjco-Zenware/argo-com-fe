@@ -181,4 +181,9 @@ export class MarketingService {
             .pipe(
             map((resp: Blob) => resp));
     }
+
+    ConfirmadoseventoAsiste(objeto:any) {
+        const url = `${constantesApiWeb.ConfirmadoseventoAsiste}`;
+        return  this.http.post<any>(url, objeto)
+    }
 }

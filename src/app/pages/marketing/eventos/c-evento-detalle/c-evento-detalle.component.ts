@@ -1505,4 +1505,34 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         console.log('this.lstParticipantes...', this.lstParticipantes);
         console.log('cco...', this.cco);
     }
+
+    checkValueConfirmado(event: any, contacto: any) {
+        console.log('event...', event);
+        console.log('contacto...', contacto);
+
+const objeto = {
+    idevento : this.idCodigo,
+    idcontacto : contacto,
+    indasiste : event
+}
+
+        this.marketingService.ConfirmadoseventoAsiste(objeto)
+               .subscribe({
+               next: (rpta:any) => {
+                   console.log("rpta checkValueConfirmado : ", rpta);
+                   
+               },
+               error:(err)=>{
+                   console.error('error : ',err)
+                   this.messageService.clear();
+                   this.messageService.add({
+                       severity: 'error',
+                       summary: 'Error',
+                       detail: mensajesQuestion.msgErrorGenerico
+                   })
+               },
+               complete:() => {}
+               });
+        
+    }
 }

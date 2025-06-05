@@ -231,4 +231,6 @@ export const constantesApiWeb = {
     descargarInformeEvento: controllerMain + '/descargarinfoevento',
     obtenerConfirmados: controllerEventos + '/confirmadoseventolist/',
     exportarexcelevento: controllerMarketing + '/exportarexcelevento',
+
+    ConfirmadoseventoAsiste: controllerEventos + '/confirmadosasistencia',
 }

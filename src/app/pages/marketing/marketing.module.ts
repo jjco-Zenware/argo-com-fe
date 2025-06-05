@@ -8,6 +8,7 @@ import { ToastModule } from 'primeng/toast';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MarketingRoutingModule } from './marketing-routing.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { MarketingRoutingModule } from './marketing-routing.module';
     FormsModule,
     ReactiveFormsModule,
     MarketingRoutingModule,
-    ToastModule
+    ToastModule,
+    DragDropModule
   ],  
   providers : [ SharedAppService, DynamicDialogRef, DynamicDialogConfig]
 })

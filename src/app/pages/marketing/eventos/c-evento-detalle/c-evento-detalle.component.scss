@@ -1,5 +1,7 @@
 
-::ng-deep .testDialog {
+:host ::ng-deep {
+
+ .testDialog {
     .p-dialog-header{
         background:#0288d1;
         height: 3.5rem;
@@ -17,5 +19,25 @@
       background:#0288d1;
       color: #ffffff;
     }
+
+    div.my-drop {
+        border: 1px solid green;
+        height: 70vh;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    div.compo {
+        border: 1px dotted peru;
+        height: 200px;
+        width: 200px;
+        margin: 0.5em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    [pDraggable] {
+        cursor: move;
+    }
   
-      
+  } 

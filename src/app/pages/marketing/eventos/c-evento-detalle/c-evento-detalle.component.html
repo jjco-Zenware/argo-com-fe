@@ -231,7 +231,9 @@
                         </span>
                     </div>
                 </ng-template>
-                <div class="lg:col-5 flex flex-column ">
+
+                <ng-template pTemplate="content">
+<div class="lg:col-5 flex flex-column ">
                     <div class="flex justify-content-between mb-3">
                         <span class="text-900 font-semibold">Progreso</span>
                         <span class="text-900 font-semibold">{{progress}}%</span>
@@ -246,8 +248,8 @@
                         (keydown.enter)="addTask($event)"></textarea>
 
                     <div class="w-full align-items-start gap-3 surface-border border-1 border-round p-2 mt-2 bg-blue-50 h-8rem"
-                        *ngFor="let task of this.taskList.tasks;let i=index" (onDragStart)="dragStart(task, i)"
-                        (onDragEnd)="dragEnd()" pDroppable="ouch" (onDrop)="drop($event, i)">
+                        *ngFor="let task of this.taskList.tasks;let i=index" (onDragStart)="dragStart(task, i)" (onDragEnd)="dragEnd()"
+                        pDraggable="ouch" pDroppable="ouch" (onDrop)="drop($event, i)"> 
 
                         <div class="justify-content-between flex field gap-5">
                             <!-- *ngIf="task.asignados.length > 0 && task.idtarea !== 0" -->
@@ -331,6 +333,8 @@
 
                     </div>
                 </div>
+                </ng-template>
+                
 
             </p-tabPanel>
 
@@ -498,6 +502,12 @@
                                 <td>{{ product.idtipodoc}}</td>
                                 <td>{{ product.nrodocumento}}</td>
                                 <td>{{ product.telefono}}</td>
+                                <td>
+                                    <input type="checkbox" [(ngModel)]="product.indasiste"
+                                        [ngModelOptions]="{standalone: true}"
+                                        style="width:15px; height:15px; cursor:pointer"
+                                        (ngModelChange)="checkValueConfirmado($event, product.idcontacto)">
+                                </td>
                             </tr>
                         </ng-template>
                     </p-table>
