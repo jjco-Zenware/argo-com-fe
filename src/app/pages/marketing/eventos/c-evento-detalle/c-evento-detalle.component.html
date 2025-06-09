@@ -33,7 +33,7 @@
                         <span>
                             <p-dropdown [options]="lstClientes" placeholder="Seleccionar...!"
                                 formControlName="idcliente" class="p-inputtext-sm" optionLabel="razonsocial"
-                                optionValue="idcliente" appendTo="body" [readonly]=onlyRead></p-dropdown>
+                                optionValue="idcliente" appendTo="body" [readonly]=onlyRead [filter]="true"></p-dropdown>
                         </span>
                     </div>
                     <div class="sm:col-6 lg:col-12 md:col-3 h-5rem col-12">
@@ -67,7 +67,7 @@
                             </span></label>
                         <span class="p-input-icon-left w-auto p-fluid " style="height: 2.5rem;">
                             <p-dropdown [options]="horas" formControlName="horareg" optionLabel="name"
-                                optionValue="name" class="p-inputtext-sm" appendTo="body"></p-dropdown>
+                                optionValue="name" class="p-inputtext-sm" appendTo="body" (onChange)="changeHora()"></p-dropdown>
                         </span>
                     </div>
                     <div *ngIf="verHora" class="sm:col-6 lg:col-3 md:col-2 h-5rem">
@@ -75,7 +75,7 @@
                             </span></label>
                         <span class="p-input-icon-left w-auto p-fluid " style="height: 2.5rem;">
                             <p-dropdown [options]="horas" formControlName="horafin" optionLabel="name"
-                                optionValue="name" class="p-inputtext-sm" appendTo="body"></p-dropdown>
+                                optionValue="name" class="p-inputtext-sm" appendTo="body" (onChange)="changeHora()"></p-dropdown>
                         </span>
                     </div>
                     <div *ngIf="verUbicacion" class="sm:col-6 lg:col-4 md:col-12 h-5rem">
@@ -117,7 +117,7 @@
                         <span>
                             <p-dropdown [options]="lstProveedores" placeholder="Seleccionar...!"
                                 formControlName="idproveedor" class="p-inputtext-sm" optionLabel="razonsocial"
-                                optionValue="idcliente" appendTo="body" [readonly]=onlyRead></p-dropdown>
+                                optionValue="idcliente" appendTo="body" [readonly]=onlyRead [filter]="true"></p-dropdown>
                         </span>
                     </div>
                     <div class="sm:col-6 lg:col-7 md:col-3 col-8 h-5rem">
@@ -128,7 +128,7 @@
                         <span>
                             <p-dropdown [options]="lstResponsable" formControlName="idresponsable"
                                 placeholder="Seleccionar...!" optionLabel="nomUsuario" optionValue="codigoUsuario"
-                                appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true"></p-dropdown>
                         </span>
                     </div>
                     <div class="lg:col-5"></div>
@@ -233,7 +233,7 @@
                 </ng-template>
 
                 <ng-template pTemplate="content">
-<div class="lg:col-5 flex flex-column ">
+                <div class="lg:col-5 flex flex-column ">
                     <div class="flex justify-content-between mb-3">
                         <span class="text-900 font-semibold">Progreso</span>
                         <span class="text-900 font-semibold">{{progress}}%</span>
@@ -249,7 +249,7 @@
 
                     <div class="w-full align-items-start gap-3 surface-border border-1 border-round p-2 mt-2 bg-blue-50 h-8rem"
                         *ngFor="let task of this.taskList.tasks;let i=index" (onDragStart)="dragStart(task, i)" (onDragEnd)="dragEnd()"
-                        pDraggable="ouch" pDroppable="ouch" (onDrop)="drop($event, i)"> 
+                         pDroppable="ouch" (onDrop)="drop($event, i)"> 
 
                         <div class="justify-content-between flex field gap-5">
                             <!-- *ngIf="task.asignados.length > 0 && task.idtarea !== 0" -->
@@ -292,7 +292,7 @@
                             <p-avatarGroup>
                                 <p-avatar *ngFor="let assignee of this.taskList.tasks[i].asignados | slice:0:3"
                                     image="{{assignee.image}}" shape="circle" styleClass="border-2 surface-border"
-                                    pTooltip="Asignados de Tarea" tooltipPosition="left"></p-avatar>
+                                    pTooltip="{{this.taskList.tasks[i].asignados_str | uppercase}}" tooltipPosition="left"></p-avatar>
                                 <p-avatar
                                     *ngIf="this.taskList.tasks[i].asignados && this.taskList.tasks[i].asignados.length > 3"
                                     label="+ {{this.taskList.tasks[i].asignados.length - 1}}" shape="circle"
@@ -360,13 +360,18 @@
 
                     </div>
 
-                    <p-table [value]="lstParticipantes" class="ml-2 mt-2" responsiveLayout="stack"
+                    <p-table [value]="lstParticipantes" class="ml-2 mt-2" responsiveLayout="stack" 
                         [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}" [scrollable]="true"
                         styleClass="p-datatable-sm ">
                         <ng-template pTemplate="header">
                             <tr>
                                 <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1 text-600">N°</th>
-                                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1 text-600">ENVIAR</th>
+                                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1 text-600">
+                                    <input [disabled]="!verbtnContactos" type="checkbox" 
+                                        [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="checkAllHead" (ngModelChange)="checkValueHead($event)"
+                                        style="width:15px; height:15px; cursor:pointer">
+                                </th>
                                 <th class="bg-teal-50 border-1 text-600">CLIENTE</th>
                                 <th class="bg-teal-50 border-1 text-600">CONTACTO</th>
                                 <th class="bg-teal-50 border-1 text-600">CARGO</th>

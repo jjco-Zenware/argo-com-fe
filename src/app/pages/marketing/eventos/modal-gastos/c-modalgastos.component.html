@@ -109,7 +109,7 @@
                         <label class="text-900  mb-1">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstCtaCtble" formControlName="codctactble" placeholder="Seleccionar..." optionLabel="s_desctactble" 
-                            class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false"  ></p-dropdown>
+                            class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false" [filter]="true"  ></p-dropdown>
                         </span>
                     </div> 
                     <div class="sm:col-6 lg:col-5 md:col-12 col-6 field h-4rem -mt-1">

@@ -148,6 +148,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
     cco: string[] = [];
     asunto = '';
     cuerpo = '';
+    checkAllHead!: boolean ;
 
     constructor(
         private messageService: MessageService,
@@ -180,16 +181,18 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         this.cargarData();
 
         // Escuchar cualquier cambio en el formulario
-        this.registerForm.valueChanges.subscribe((valor: any) => {
-            console.log('Formulario modificado:', valor);
-            if (this.idCodigo > 0) {
-                const objeto = {
-                    valor: true,
-                    msj: 'Hay cambios en Datos Generales, Desea continuar sin guardar?',
-                };
-                this.OB_back.emit(objeto);
-            }
-        });
+        if (this.idCodigo > 0) {
+            this.registerForm.valueChanges.subscribe((valor: any) => {
+                console.log('Formulario modificado:', valor);
+                
+                    const objeto = {
+                        valor: true,
+                        msj: 'Hay cambios en Datos Generales, Desea continuar sin guardar?',
+                    };
+                    this.OB_back.emit(objeto);
+                
+            });
+        }
     }
 
     setSpinner(valor: boolean) {
@@ -217,7 +220,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             idcliente: [{ value: '', disabled: false }],
             title: [{ value: '', disabled: false }],
             description: [{ value: '', disabled: false }],
-            idresponsable: [{ value: 38, disabled: false }],
+            idresponsable: [{ value: 39, disabled: false }],
             progreso: [{ value: 0, disabled: false }],
             indcompleto: [{ value: false, disabled: false }],
             startDate: [
@@ -262,8 +265,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
 
         if (this.idCodigo > 0) {
             console.log('this.constantesLocalStorage', constantesLocalStorage);
-            this.mostrarBotones(this.IA_data.codcategoria);
             this.registerForm.patchValue(this.IA_data);
+            this.mostrarBotones(this.IA_data.codcategoria);
             this.taskList = this.IA_data.taskList;
             this.lstAssignees = this.IA_data.assignees;
             this.lstParticipantes = this.IA_data.contactos.filter(
@@ -311,6 +314,14 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 }
             });
             this.cuerpo = this.url + this.idCodigo;
+
+            if (this.lstParticipantes.length === this.cco.length) {
+                this.checkAllHead = true;
+                console.log('verdadero...');
+            }else{
+                this.checkAllHead = false;
+                console.log('falso...');
+            }
         } else {
             //this.addTaskNew();
             this.mostrarBotones(410);
@@ -409,8 +420,10 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         const $guardar = this.marketingService.prcEventos(_objeto).subscribe({
             next: (rpta: any) => {
                 this.setSpinner(false);
-                console.log('rpta prcClientes : ', rpta);
+                console.log('rpta prcEventos : ', rpta);
                 if (rpta.procesoSwitch === 0) {
+
+                    this.registerForm.get('id').setValue(rpta.resultProceso);
                     this.messageService.add({
                         severity: 'success',
                         detail: 'Operación exitosa',
@@ -419,7 +432,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                     this.verbtnPreliminar = true;
                     //this.idCliente = rpta.resultProceso;
                     if (this.idCodigo === 0) {
-                        this.comprasService.emitirEvento(rpta.resultProceso);
+                        this.idCodigo = rpta.resultProceso
+                        //this.comprasService.emitirEvento(rpta.resultProceso);
                     }
 
                     console.log('No hay cambios ');
@@ -568,6 +582,21 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             _error = true;
         }
 
+        if (this.registerForm.value.codcategoria !== 416) {
+            let horaInicio = this.registerForm.get('horareg')?.value;
+            let horaFin = this.registerForm.get('horafin')?.value;
+            if (!_error && (horaInicio > horaFin)) {     
+                this.errorMensaje = 'La Hora de Inicio no puede ser mayor a la Hora de Fin...!';
+                _error = true;
+            }
+
+            if (!_error && (horaInicio === horaFin)) {     
+                this.errorMensaje = 'La Horas no pueden se riguales...!';
+                _error = true;
+            }
+        }
+
+        
         // if (!_error && (this.registerForm.value.descripcion === '' || this.registerForm.value.descripcion === null))
         // {
         //     this.errorMensaje="Ingresar Descripción...!";
@@ -1320,6 +1349,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = true;
                 this.verFechaFin = false;
                 this.verHora = true;
+        this.registerForm.get('idcliente')?.setValue(3324);
                 break;
             case 411: //CUSTOMER DAY
                 this.verCliente = true;
@@ -1340,6 +1370,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
+        this.registerForm.get('idcliente')?.setValue(3324);
 
                 break;
             case 415: //WORKSHOP
@@ -1362,16 +1393,18 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = true;
                 this.verFechaFin = true;
                 this.verHora = false;
+        this.registerForm.get('idcliente')?.setValue(3324);
                 break;
             case 417: //RESPONSABLE SOCIAL
                 this.verCliente = false;
-                this.verUbicacion = true;
+                this.verUbicacion = false;
                 this.verPais = false;
                 this.verLugar = true;
                 this.verDireccion = true;
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
+        this.registerForm.get('idcliente')?.setValue(3324);
                 break;
         }
     }
@@ -1386,14 +1419,14 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
 
     vistaPreliminar() {
         console.info('lstGastos : ', this.lstGastos);
-        if (this.lstGastos === undefined) {
-            this.messageService.add({
-                severity: 'info',
-                summary: 'Aviso',
-                detail: 'Debe agregar al menos un Gasto para generar el Informe.',
-            });
-            return;
-        }
+        // if (this.lstGastos === undefined) {
+        //     this.messageService.add({
+        //         severity: 'info',
+        //         summary: 'Aviso',
+        //         detail: 'Debe agregar al menos un Gasto para generar el Informe.',
+        //     });
+        //     return;
+        // }
 
         console.info('listarItemsTabla : ', this.idCodigo);
         this.setSpinner(true);
@@ -1504,6 +1537,17 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         });
         console.log('this.lstParticipantes...', this.lstParticipantes);
         console.log('cco...', this.cco);
+        
+        console.log('this.lstParticipantes.length', this.lstParticipantes.length);
+        console.log('this.cco.length...', this.cco.length);
+
+        if (this.lstParticipantes.length === this.cco.length) {
+            this.checkAllHead = true;
+            console.log('verdadero...');
+        }else{
+            this.checkAllHead = false;
+            console.log('falso...');
+        }
     }
 
     checkValueConfirmado(event: any, contacto: any) {
@@ -1534,5 +1578,47 @@ const objeto = {
                complete:() => {}
                });
         
+    }
+
+    changeHora() {
+        let horaInicio = this.registerForm.get('horareg')?.value;
+        let horaFin = this.registerForm.get('horafin')?.value;
+        console.log('horaInicio...', horaInicio);
+        console.log('horaFin...', horaFin);
+      if (horaInicio > horaFin) {
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Información',
+                detail: 'La Hora de Inicio no puede ser mayor a la Hora de Fin.',
+            });        
+      }
+      if (horaInicio === horaFin) {
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Información',
+                detail: 'La Horas no pueden ser iguales.',
+            });        
+      }
+    }
+
+    checkValueHead(event: any) {
+        if (event) {
+            this.cco = [];
+            this.lstParticipantes.forEach((element) => {
+                element.indenvio = event;
+                this.cco.push(element.email);
+            });
+        }else{
+            this.lstParticipantes.forEach((element) => {
+                element.indenvio = false;
+                this.cco = [];
+            });
+        }
+        console.log('this.cco  ', this.cco );
+        if (this.lstParticipantes.length === this.cco.length) {
+            this.checkAllHead = true;
+        }else{
+            this.checkAllHead = false;
+        }
     }
 }
