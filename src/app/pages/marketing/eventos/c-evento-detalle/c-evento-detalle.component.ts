@@ -265,8 +265,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
 
         if (this.idCodigo > 0) {
             console.log('this.constantesLocalStorage', constantesLocalStorage);
-            this.registerForm.patchValue(this.IA_data);
             this.mostrarBotones(this.IA_data.codcategoria);
+            this.registerForm.patchValue(this.IA_data);
             this.taskList = this.IA_data.taskList;
             this.lstAssignees = this.IA_data.assignees;
             this.lstParticipantes = this.IA_data.contactos.filter(
@@ -1349,7 +1349,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = true;
                 this.verFechaFin = false;
                 this.verHora = true;
-        this.registerForm.get('idcliente')?.setValue(3324);
                 break;
             case 411: //CUSTOMER DAY
                 this.verCliente = true;
@@ -1370,7 +1369,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
-        this.registerForm.get('idcliente')?.setValue(3324);
 
                 break;
             case 415: //WORKSHOP
@@ -1382,7 +1380,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
-
                 break;
             case 416: //EXTERIOR
                 this.verCliente = false;
@@ -1393,7 +1390,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = true;
                 this.verFechaFin = true;
                 this.verHora = false;
-        this.registerForm.get('idcliente')?.setValue(3324);
                 break;
             case 417: //RESPONSABLE SOCIAL
                 this.verCliente = false;
@@ -1404,7 +1400,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
-        this.registerForm.get('idcliente')?.setValue(3324);
                 break;
         }
     }
