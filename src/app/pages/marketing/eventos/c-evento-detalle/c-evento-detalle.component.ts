@@ -149,6 +149,12 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
     asunto = '';
     cuerpo = '';
     checkAllHead!: boolean ;
+    monto_sol: number = 0;
+    monto_dol: number = 0;
+    minimaFechaDesde!: Date;
+    maximaFechaDesde!: Date;
+    minimaFechaHasta!: Date;
+    maximaFechaHasta: Date = this.serviceUtilitario.obtenerFechaFinMesTotal();
 
     constructor(
         private messageService: MessageService,
@@ -162,7 +168,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         private ordencompraService: OrdencompraService,
         private proyectosService: ProyectosService
     ) {
-        this.comprasService.emitirEvento(0);
+        //this.comprasService.emitirEvento(0);
     }
 
     ngOnInit(): void {
@@ -181,18 +187,19 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         this.cargarData();
 
         // Escuchar cualquier cambio en el formulario
-        if (this.idCodigo > 0) {
-            this.registerForm.valueChanges.subscribe((valor: any) => {
-                console.log('Formulario modificado:', valor);
+        // if (this.idCodigo > 0) {
+        //     this.registerForm.valueChanges.subscribe((valor: any) => {
+        //         this.registerForm.get('id')?.setValue(this.idCodigo);
+        //         console.log('Formulario modificado:', valor);
                 
-                    const objeto = {
-                        valor: true,
-                        msj: 'Hay cambios en Datos Generales, Desea continuar sin guardar?',
-                    };
-                    this.OB_back.emit(objeto);
+        //             const objeto = {
+        //                 valor: true,
+        //                 msj: 'Hay cambios en Datos Generales, Desea continuar sin guardar?',
+        //             };
+        //             this.OB_back.emit(objeto);
                 
-            });
-        }
+        //     });
+        // }
     }
 
     setSpinner(valor: boolean) {
@@ -322,6 +329,12 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.checkAllHead = false;
                 console.log('falso...');
             }
+
+            if (this.lstParticipantes.length === 0) {
+                this.checkAllHead = false;
+            }
+
+            
         } else {
             //this.addTaskNew();
             this.mostrarBotones(410);
@@ -331,6 +344,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             };
             this.OB_back.emit(objeto);
         }
+        
     }
 
     guardar() {
@@ -433,6 +447,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                     //this.idCliente = rpta.resultProceso;
                     if (this.idCodigo === 0) {
                         this.idCodigo = rpta.resultProceso
+                        this.registerForm.get('id').setValue(rpta.resultProceso);
+                        this.generarCodigo();
                         //this.comprasService.emitirEvento(rpta.resultProceso);
                     }
 
@@ -613,6 +629,10 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         console.log('this.minDateValueTarea...', this.minDateValueTarea);
         console.log('desdeStr...', desdeStr);
 
+        if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
+
         const inroorden = this.taskList.tasks.length + 1;
 
         if (this.taskContent.trim().length > 10) {
@@ -723,6 +743,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             //console.log('tareas...' ,this.formValue.taskList.tasks.length);
             //console.log('Cálculo...' , completed / this.formValue.taskList.tasks.length);
         }
+        if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
     }
 
     AsignarTarea(task: Tasks) {
@@ -734,6 +757,10 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         this.headerTitle = 'Asignados de la Tarea';
         this.headerTarea = 'Tarea: ' + task.text;
         this.asignadosTareaVisible = true;
+
+        if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
     }
 
     aceptarAsignado() {
@@ -801,9 +828,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         this.taskList.tasks.splice(i, 0, this.draggedBlock);
     }
 
-    setFechaMaxTarea(event: Date) {
-        this.minDateValueTarea = event;
-    }
+    // setFechaMaxTarea(event: Date) {
+    //     this.minDateValueTarea = event;
+    // }
 
     agregarProveedor(data: any, index: number) {
         if (this.verCliente && this.registerForm.get('idcliente').value == 0) {
@@ -857,6 +884,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                     this.OB_back.emit(objeto);
                 }
             }
+            if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
         });
     }
 
@@ -905,8 +935,15 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                     };
                     this.OB_back.emit(objeto);
                 }
-            },
+
+                
+            }
+            
+            
         });
+        if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
     }
 
     agregarProveedorExt(data: any, index: number) {
@@ -922,6 +959,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         data.idordencompra = this.idEvento;
         data.tipocontacto = 'E';
         data.lista = this.lstParticipantesext;
+        data.codcategoria = this.registerForm.get('codcategoria').value;
         const refMensaje = this.dialogService.open(CModalProveedorComponent, {
             data: data,
             header:
@@ -964,6 +1002,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                     this.OB_back.emit(objeto);
                 }
             }
+            if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
         });
     }
 
@@ -1014,6 +1055,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 }
             },
         });
+        if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
     }
 
     filterAssignees(event: any) {
@@ -1084,6 +1128,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.estadoGasto(data);
             },
         });
+        if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
     }
 
     listaProveedores() {
@@ -1168,7 +1215,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             ...objeto,
             idproyecto: this.registerForm.get('idproyecto').value,
             idtipodocprc: 7,
-            iddocumentoprc_origen: 0,
+            iddocumentoprc_origen: this.idCodigo,
             codtipodoc: 'OPO',
         };
 
@@ -1197,6 +1244,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                         detail: rpta.mensaje,
                     });
                 }
+                if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
             },
             error: (err) => {
                 this.setSpinner(false);
@@ -1220,7 +1270,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             idproyecto: this.registerForm.get('idproyecto').value,
             idtipodocprc: 7,
             idusuario: constantesLocalStorage.idusuario,
-            iddocumentoprc_origen: 0,
+            iddocumentoprc_origen: this.idCodigo,
         };
 
         const $getListarOrdenCompra = this.proyectosService
@@ -1238,6 +1288,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 },
                 complete: () => {
                     this.setSpinner(false);
+                    this.monto_sol = this.lstGastos.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.monto, 0);
+                    this.monto_dol = this.lstGastos.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.monto, 0);
                 },
             });
         this.$listSubcription.push($getListarOrdenCompra);
@@ -1349,6 +1401,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = true;
                 this.verFechaFin = false;
                 this.verHora = true;
+                this.maximaFechaDesde = new Date(8640000000000000);
                 break;
             case 411: //CUSTOMER DAY
                 this.verCliente = true;
@@ -1359,6 +1412,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
+                this.maximaFechaDesde = new Date(8640000000000000);
                 break;
             case 414: //INTERNO
                 this.verCliente = false;
@@ -1369,7 +1423,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
-
+                this.maximaFechaDesde = new Date(8640000000000000);
                 break;
             case 415: //WORKSHOP
                 this.verCliente = true;
@@ -1380,6 +1434,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
+                this.maximaFechaDesde = new Date(8640000000000000);
                 break;
             case 416: //EXTERIOR
                 this.verCliente = false;
@@ -1390,6 +1445,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = true;
                 this.verFechaFin = true;
                 this.verHora = false;
+                this.minimaFechaHasta = this.registerForm.value.startDate;
+                this.maximaFechaDesde = this.registerForm.value.dueDate;
                 break;
             case 417: //RESPONSABLE SOCIAL
                 this.verCliente = false;
@@ -1400,6 +1457,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 this.verOrganizador = false;
                 this.verFechaFin = false;
                 this.verHora = true;
+                this.maximaFechaDesde = new Date(8640000000000000);
                 break;
         }
     }
@@ -1495,6 +1553,10 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         //this.lstAssigneescomparar.unshift(event);
         console.log('lstAssigneescomparar', this.lstAssigneescomparar);
         console.log('lstAssignees', this.lstAssignees);
+
+        if (this.idCodigo > 0) {
+            this.registerForm.get('id')?.setValue(this.idCodigo);
+        }
 
         if (this.lstAssigneesOrigen !== this.lstAssignees) {
             console.log('Hay cambios ');
@@ -1616,4 +1678,45 @@ const objeto = {
             this.checkAllHead = false;
         }
     }
+
+    generarCodigo(){
+        const objeto = {
+            idtipoproyecto: 6,
+            idoportunidad: 0,
+            idrequerimiento: 0,
+            nomproyecto: this.registerForm.value.title,
+            descripcion: this.registerForm.value.descripcion,
+            idusuario: constantesLocalStorage.idusuario,
+            idcentrocosto: 0,
+            idevento:this.idCodigo
+        }
+        console.log('objeto...', objeto);
+        this.marketingService.newProyecto(objeto).subscribe({
+            next: (rpta: any) => {
+                console.log('generarCodigo...', rpta);
+                this.registerForm.get('idproyecto')?.setValue(rpta.resultProceso);
+                // if (rpta.procesoSwitch === 0){
+                //     this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje }); 
+                    
+                //   }else{
+                //   this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+                //   }
+            },
+            error: (err) => {
+            console.info('error : ', err);
+            this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+        });
+    }
+
+     changeFechaDesde(event: Date) {
+    this.minimaFechaHasta = event;
+  }
+
+  changeFechaHasta(event: Date) {
+    
+    this.maximaFechaDesde = event;
+  }
 }

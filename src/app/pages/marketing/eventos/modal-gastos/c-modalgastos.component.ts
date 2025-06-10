@@ -475,13 +475,13 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                 this.listaProveedores();
                 this.registerFormRegistro
                     .get('nrodocumento')
-                    ?.setValue(parseInt(rpta.objeto.nrodocumento));
+                    ?.setValue(rpta.objeto.nrodocumento);
                 this.registerFormRegistro
                     .get('idproveedor')
                     ?.setValue(parseInt(rpta.objeto.idpersona));
                 this.registerFormRegistro
                     .get('direccion')
-                    ?.setValue(parseInt(rpta.objeto.direcresumen));
+                    ?.setValue(rpta.objeto.direcresumen);
             }
         });
     }
@@ -730,4 +730,6 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             this.verTipoDco = true;
         }
     }
+
+     
 }

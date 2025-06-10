@@ -74,11 +74,6 @@ export class CEventoListComponent implements OnInit, OnDestroy{
                     const $procesarTrxEvento = this.marketingService.procesarTrxEvento(objeto).subscribe({
                         next: (rpta: any) => {
                             console.log('procesarTrxEvento', rpta);
-                            if (rpta.procesoSwitch === 0) {
-                                if (event.container.id === "9") {
-                                    this.generarCodigo(event.container.data[0]);
-                                }
-                            }
                                 this.actualizarEvento.emit();
 
                             this.serviceSharedApp.messageToast({
@@ -116,37 +111,6 @@ export class CEventoListComponent implements OnInit, OnDestroy{
         if (this.$listSubcription != undefined) {
             this.$listSubcription.forEach((sub) => sub.unsubscribe());
         }
-    }
-
-    generarCodigo(data: any){
-        const objeto = {
-            idtipoproyecto: 6,
-            idoportunidad: 0,
-            idrequerimiento: 0,
-            nomproyecto: data.title,
-            descripcion: data.razonsocial,
-            idusuario: constantesLocalStorage.idusuario,
-            idcentrocosto: 0,
-            idevento:data.id
-        }
-        console.log('objeto...', objeto);
-        this.marketingService.newProyecto(objeto).subscribe({
-            next: (rpta: any) => {
-                console.log('generarCodigo...', rpta);
-                // if (rpta.procesoSwitch === 0){
-                //     this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje }); 
-                    
-                //   }else{
-                //   this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
-                //   }
-            },
-            error: (err) => {
-            console.info('error : ', err);
-            this.serviceSharedApp.messageToast()
-            },
-            complete: () => {
-            },
-        });
     }
 
 }
