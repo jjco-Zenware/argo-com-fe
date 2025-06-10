@@ -170,18 +170,12 @@ get formContacto() { return this.registerFormContacto.controls; }
               break;
           
             default:
-              this.lstProveedores = rpta.filter((x: { idcliente: any; })=>x.idcliente === this.param.idcliente);
-              this.registerFormProveedor.get('idpersona')?.setValue(this.param.idcliente);
-              this.getContactos(this.param.idcliente); 
+              // this.lstProveedores = rpta.filter((x: { idcliente: any; })=>x.idcliente === this.param.idcliente);
+              // this.registerFormProveedor.get('idpersona')?.setValue(this.param.idcliente);
+              // this.getContactos(this.param.idcliente); 
+              this.lstProveedores = rpta;
               break;
-          }
-          // if (this.param.codcategoria === 410 || this.param.codcategoria === 411) {
-          //         this.lstProveedores = rpta;    
-          // }else{
-          //   this.lstProveedores = rpta.filter((x: { idcliente: any; })=>x.idcliente === this.param.idcliente);
-          //   this.registerFormProveedor.get('idpersona')?.setValue(this.param.idcliente);
-          //   this.getContactos(this.param.idcliente); 
-          // }          
+          }        
         }        
       },
       error: (err) => {
