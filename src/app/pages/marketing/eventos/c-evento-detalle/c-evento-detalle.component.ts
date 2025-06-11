@@ -219,7 +219,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
     createForm() {
         //Agregar validaciones de formulario
         this.registerForm = this.formBuilder.group({
-            id: [{ value: '0', disabled: false }],
+            //id: [{ value: '0', disabled: false }],
             idlista: [{ value: 8, disabled: false }],
             idusuario: [
                 { value: constantesLocalStorage.idusuario, disabled: false },
@@ -413,20 +413,13 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
             taskList: this.taskList,
             assignees: this.lstAssignees,
             contactos: listaConcatena,
+            id: this.idCodigo.toString(),
         };
 
         const _objeto = {
             evento: objeto,
             idusuario: constantesLocalStorage.idusuario,
         };
-
-        // if (JSON.stringify(this.IA_data) !== JSON.stringify(objeto)) {
-        //   console.log('Modificado');
-        //   console.log('IA_data', this.IA_data);
-        //   console.log('_objeto',objeto);
-        //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'se han realizado cambios.' });
-        //   return;
-        // }
 
         this.setSpinner(true);
         this.mensajeSpinner = 'Guardando...!';
@@ -437,19 +430,16 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                 console.log('rpta prcEventos : ', rpta);
                 if (rpta.procesoSwitch === 0) {
 
-                    this.registerForm.get('id').setValue(rpta.resultProceso);
                     this.messageService.add({
                         severity: 'success',
                         detail: 'Operación exitosa',
                     });
                     this.visibleDocument = false;
                     this.verbtnPreliminar = true;
-                    //this.idCliente = rpta.resultProceso;
+                    
                     if (this.idCodigo === 0) {
                         this.idCodigo = rpta.resultProceso
-                        this.registerForm.get('id').setValue(rpta.resultProceso);
                         this.generarCodigo();
-                        //this.comprasService.emitirEvento(rpta.resultProceso);
                     }
 
                     console.log('No hay cambios ');
@@ -827,10 +817,6 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         this.taskList.tasks.splice(this.starter, 1);
         this.taskList.tasks.splice(i, 0, this.draggedBlock);
     }
-
-    // setFechaMaxTarea(event: Date) {
-    //     this.minDateValueTarea = event;
-    // }
 
     agregarProveedor(data: any, index: number) {
         if (this.verCliente && this.registerForm.get('idcliente').value == 0) {
