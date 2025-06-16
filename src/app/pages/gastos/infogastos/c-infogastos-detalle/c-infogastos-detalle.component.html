@@ -37,11 +37,11 @@
                     </div>              -->
                     <div class="sm:col-12 lg:col-5 md:col-12 col-8 h-4rem field">
                         <div class="flex">
-                            <label class="block text-900 mb-1">Usuario <span class="text-red-500 font-bold"> * </span></label>
+                            <label class="block text-900 mb-1">Beneficiario <span class="text-red-500 font-bold"> * </span></label>
                         </div>                            
                         <span>
                             <p-dropdown [options]="lstResponsable" formControlName="idusersolicita" placeholder="Seleccionar...!" optionLabel="nomUsuario" 
-                            optionValue="codigoUsuario" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            optionValue="codigoUsuario" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true"></p-dropdown>
                         </span>
                     </div> 
                     <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field">
@@ -108,7 +108,7 @@
                         </div>                  
                         <span>
                             <p-dropdown [options]="lstCliente" placeholder="Cliente..."  formControlName="idproveedor" class="p-inputtext-sm" 
-                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead ></p-dropdown>            
+                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead [filter]="true" (onChange)="getOportunidades($event.value)"></p-dropdown>            
                         </span>
                     </div>  
                     
@@ -120,13 +120,21 @@
                         </span>
                     </div>  
                     <div class="lg:col-3"></div> 
-                    <div class="sm:col-6 lg:col-9 md:col-12 col-6 field h-4rem mt-1">
+                    <div *ngIf="verProyecto" class="sm:col-6 lg:col-9 md:col-12 col-6 field h-4rem mt-1">
                         <label class="block text-900  mb-1">Proyecto<span class="text-red-500 font-bold"> * </span></label>                        
                         <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto..." optionLabel="s_nomproyecto" class="p-inputtext-sm"
-                            optionValue="idproyecto" appendTo="body" autoWidth="false" [readonly]=onlyRead ></p-dropdown>
+                            <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar..." optionLabel="s_nomproyecto" class="p-inputtext-sm"
+                            optionValue="idproyecto" appendTo="body" autoWidth="false" [readonly]=onlyRead [filter]="true"></p-dropdown>
                         </span>
                     </div>    
+
+                    <div *ngIf="verOportunidad" class="sm:col-6 lg:col-9 md:col-12 col-6 field h-4rem mt-1">
+                        <label class="block text-900  mb-1">Oportunidad<span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstOportunidades" formControlName="ref01" placeholder="Seleccionar..." optionLabel="titulo" class="p-inputtext-sm"
+                            optionValue="id" appendTo="body" autoWidth="false" [readonly]=onlyRead [filter]="true"></p-dropdown>
+                        </span>
+                    </div> 
                     <!-- <div class="sm:col-12 lg:col-5 md:col-12 field h-4rem mt-1">
                         <label class="text-900  mb-1">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
                         
@@ -144,6 +152,19 @@
                     </div>    -->
                 </form> 
             </p-tabPanel>      
+
+            <p-tabPanel [disabled]=visibleDocument>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-cog"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Deposito  
+                        </span>
+                    </div>
+                </ng-template>    
+                
+                                        
+            </p-tabPanel>
             
              <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">

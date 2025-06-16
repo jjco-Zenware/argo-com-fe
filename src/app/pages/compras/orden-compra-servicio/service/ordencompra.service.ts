@@ -231,4 +231,9 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.listarAdjuntoProc}`;
         return this.http.post<any>(url, objeto);
     }
+
+    getOportunidades(objeto:any) {
+        const url = `${constantesApiWeb.getOportunidades}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

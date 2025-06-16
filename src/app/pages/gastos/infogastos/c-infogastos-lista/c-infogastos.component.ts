@@ -118,9 +118,9 @@ export class CInformeGastosComponent implements OnInit, OnDestroy {
     }
 
     onVer(dato: any) {
-        console.log('VER GASTO DE - ', dato);
+        console.log('VER RENDICIÓN DE GASTO ', );
 
-        this.tituloDetalle = 'VER GASTO DE - ' + dato.nomusuario;
+        this.tituloDetalle = 'VER RENDICIÓN DE GASTO';
         this.dataDet = {
             idcodigo: dato.idordencompra,
             paramReg: 'V',
@@ -129,8 +129,8 @@ export class CInformeGastosComponent implements OnInit, OnDestroy {
     }
 
     onEditar(dato: any) {
-        console.log('EDITAR GASTO DE - ', dato);
-        this.tituloDetalle = 'EDITAR GASTO DE - ' + dato.nomusuario;
+        console.log('EDITAR RENDICIÓN DE GASTO');
+        this.tituloDetalle = 'EDITAR RENDICIÓN DE GASTO' ;
         this.dataDet = {
             idcodigo: dato.idordencompra,
             paramReg: 'E',
@@ -151,7 +151,7 @@ export class CInformeGastosComponent implements OnInit, OnDestroy {
     }
 
     onNuevo() {
-        this.tituloDetalle = 'REGISTRAR LIQUIDACIÓN DE GASTOS';
+        this.tituloDetalle = 'REGISTRAR RENDICIÓN DE GASTOS';
         this.dataDet = {
             idcodigo: 0,
             paramReg: 'N',

@@ -62,6 +62,9 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
     s_monto: number = 0;
     s_igv: number = 0;
     s_montoTotal: number = 0;
+    lstOportunidades: any;
+    verProyecto: boolean = false;
+    verOportunidad: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -277,6 +280,11 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                     this.listarTransacciones();
                     this.cargarMenu(rpta.ordencompra[0].acciones);
                     this.changeMoneda(rpta.ordencompra[0].idmoneda);
+                    this.getOportunidades(rpta.ordencompra[0].idproveedor);
+
+                    this.registerFormRegistro
+                        .get('ref01')
+                        ?.setValue(rpta.ordencompra[0].ref01);
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -731,16 +739,28 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
         //this.registerFormRegistro.get('codctactble')?.setValue('');
         switch (data) {
             case 'OPO':
+                this.verOportunidad = false;
+                this.verProyecto = true;
                 this.cargarProyectos(1);
                 break;
             case 'REQ':
+                this.verOportunidad = false;
+                this.verProyecto = true;
                 this.cargarProyectos(4);
                 break;
             case 'OTR':
+                this.verOportunidad = false;
+                this.verProyecto = true;
                 this.cargarProyectos(0);
                 break;
             case 'MKT':
+                this.verOportunidad = false;
+                this.verProyecto = true;
                 this.cargarProyectos(6);
+                break;
+            case 'OPR':
+                this.verOportunidad = true;
+                this.verProyecto = false;
                 break;
         }
     }
@@ -894,5 +914,26 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
           this.registerFormRegistro.get('montoalcambio')?.setValue(this.registerFormRegistro.value.monto);
         }        
      
+    }
+
+    getOportunidades(event:any){
+        const objeto = {
+            idcliente :event
+        }
+        this.ordencompraService.getOportunidades(objeto).subscribe({
+            next: (rpta: any) => {
+                this.lstOportunidades = rpta;
+            },
+            error: (err) => {
+                this.messageService.clear();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: mensajesQuestion.msgErrorGenerico,
+                });
+            },
+            complete: () => {
+            },
+        });
     }
 }

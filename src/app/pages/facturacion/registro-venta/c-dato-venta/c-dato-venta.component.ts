@@ -454,6 +454,15 @@ createFormRegistro() {
       }
     }
 
+    let retencion_tipo = this.registerFormRegistro.value.retencion_tipo;
+    //let detraccion_tipo = this.registerFormRegistro.value.detraccion_tipo;
+    //let detraccion_tipo_pago = this.registerFormRegistro.value.detraccion_tipo_pago;
+    if (!this.registerFormRegistro.value.inddetraccion_ctb) {
+      retencion_tipo = 0;
+      //detraccion_tipo = 0;
+      //detraccion_tipo_pago = 0;
+    }
+
     const objeto = {
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
@@ -462,7 +471,10 @@ createFormRegistro() {
       fecvencimiento,
       tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
       cuotas: this.listaCuotas,
-      nrocuotas: this.nrocuotas 
+      nrocuotas: this.nrocuotas ,
+      retencion_tipo : retencion_tipo,
+      //detraccion_tipo : detraccion_tipo,
+      //detraccion_tipo_pago : detraccion_tipo_pago
     }
 
     console.log('guardarOC...', objeto);
@@ -1504,6 +1516,7 @@ createFormRegistro() {
       console.log('changeAplicaDetra...', value);
       this.listarItemsTablaSunat();
       if (!value) {
+      console.log('entro...', value);
         this.verDetraccion = false;
         this.registerFormRegistro.get('porc_detraccion').disable();
         this.registerFormRegistro.get('monto_detraccion_mn_CTB').disable();
@@ -1519,6 +1532,7 @@ createFormRegistro() {
         this.registerFormRegistro.get('porc_detraccion')?.setValue(0);
         this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(0);
       }else{
+      console.log('false...', value);
         this.verDetraccion = true;
         this.registerFormRegistro.get('porc_detraccion').enable();
         this.registerFormRegistro.get('monto_detraccion_mn_CTB').enable();
