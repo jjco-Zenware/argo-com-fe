@@ -29,19 +29,13 @@
                         </span>
                     </div> 
                     <div class="lg:col-9"></div>   
-                    <!-- <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900  mb-1">ID Registro</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" class=" surface-300 p-inputtext-sm" formControlName="idordencompra" readonly="true"/>
-                        </span>
-                    </div>              -->
                     <div class="sm:col-12 lg:col-5 md:col-12 col-8 h-4rem field">
                         <div class="flex">
                             <label class="block text-900 mb-1">Beneficiario <span class="text-red-500 font-bold"> * </span></label>
                         </div>                            
                         <span>
                             <p-dropdown [options]="lstResponsable" formControlName="idusersolicita" placeholder="Seleccionar...!" optionLabel="nomUsuario" 
-                            optionValue="codigoUsuario" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true"></p-dropdown>
+                            optionValue="codigoUsuario" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true" (onChange)="changeBeneficiario($event.value)"></p-dropdown>
                         </span>
                     </div> 
                     <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field">
@@ -80,27 +74,6 @@
                     </div>        
                          
                     <div class="lg:col-3"></div>     
-                    <!-- <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field">
-                        <div class="flex mb-1">
-                            <label class="block text-900 ">Fec. Aprobación</label>    
-                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
-                        </div>
-                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
-                            <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
-                            inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true"></p-calendar>
-                        </span>
-                    </div>     
-                    <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field ">
-                        <div class="flex mb-1">
-                            <label class="block text-900 ">Fec. Liquidación</label>    
-                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
-                        </div>
-                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
-                            <p-calendar formControlName="fecvencimiento" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
-                            inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"  [readonlyInput]="true" ></p-calendar>
-                        </span>
-                    </div> 
-                    <div class="lg:col-6"></div>   -->
                     
                      <div class="col-4 sm:col-6 lg:col-6 md:col-6 col-6 h-4rem field">    
                         <div class="flex">
@@ -156,22 +129,101 @@
             <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
-                        <i class="pi pi-cog"></i>
+                        <i class="pi pi-money-bill"></i>
                         <span class="font-bold white-space-nowrap m-0">
                             Deposito  
                         </span>
                     </div>
                 </ng-template>    
-                
+                <form [formGroup]="registerFormRegistro" class="p-fluid grid lg:col-7 col-12 border-1 border-round surface-border m-2">      
+                                   
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field">
+                        <label class="text-900 mb-1">Banco</label>  
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstBancos" formControlName="gas_idbancobco" placeholder="Seleccionar..." optionLabel="razonsocial" 
+                            optionValue="idpersona" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeBanco($event.value)"></p-dropdown>
+                        </span>                                      
+                    </div> 
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field">
+                        <label class="text-900 mb-1">Tipo Cuenta</label>  
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstTipocuenta" formControlName="gas_codtipocuenta" placeholder="Seleccionar..." optionLabel="valoritem" 
+                            optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>                                      
+                    </div>
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field">
+                        <label class="text-900 mb-1">Cuenta Origen</label>  
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstCuentas" formControlName="gas_idcuentaprovbco" placeholder="Seleccionar..." optionLabel="nrocuenta" 
+                            optionValue="idcuentaprov" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>                                      
+                    </div> 
+                    <div class="lg:col-3 "></div>
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field ">
+                        <label class="text-900 mb-1">Moneda</label>  
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstMonedas" formControlName="gas_idmonedabco" placeholder="Seleccionar..." optionLabel="desmoneda" 
+                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                        </span>                                      
+                    </div> 
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem field">
+                        <label class="text-900 mb-1">Monto</label>                        
+                        <span class="p-fluid">
+                            <p-inputNumber class="mt-1" formControlName="gas_montobco" locale="es-PE" mode="decimal" [minFractionDigits]="2" 
+                            [min]="0" class="p-inputtext-sm" [readonly]=onlyRead></p-inputNumber>
+                        </span>
+                    </div>  
+                    <div class="col-6"></div>
+                     <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+                        <div class="flex mb-1">
+                            <label class="block text-900 ">Fecha Operación</label>    
+                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
+                        </div>
+                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
+                            <p-calendar formControlName="gas_fecoperacion" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
+                        </span>
+                    </div> 
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+                        <label class="text-900 mb-1">N° Operación</label>
+                        <span class="p-fluid">
+                        <input pInputText type="text" class="font-semibold" formControlName="gas_nrooperacionbco" class="p-inputtext-sm"/>
+                        </span>
+                    </div>      
+                    <div class="lg:col-6"></div>   
+                    <div class="sm:col-12 lg:col-5 md:col-12 col-8 h-4rem field">
+                        <div class="flex">
+                            <label class="text-900 mb-1">Beneficiario</label>
+                        </div>                            
+                        <span>
+                            <p-dropdown [options]="lstResponsable" formControlName="gas_iduserdestino" placeholder="Seleccionar...!" optionLabel="nomUsuario" 
+                            optionValue="codigoUsuario" appendTo="body" readonly="true" class="p-inputtext-sm" styleClass="surface-100"
+                            [dropdownIcon]="'none'"></p-dropdown>
+                        </span>
+                    </div>  
+                    <div class="sm:col-4 lg:col-4 md:col-3 col-6 h-4rem field">
+                        <label class="block text-900  mb-1">Cuenta Beneficiario</label>                        
+                        <input pInputText type="text" formControlName="gas_ctabeneficiario" readonly=true class="p-inputtext-sm surface-100"/>
+                    </div>
+                    <div class="lg:col-3 "></div> 
+                    <div class="sm:col-6 lg:col-9 md:col-3 col-12 -mt-1">
+                        <label class="text-900 ">Descripción</label>                        
+                        <span class="p-fluid ">
+                            <textarea type="text" pInputTextarea [rows]="3" formControlName="gas_observacionbco" style="resize: none" class="w-full" id="observacion"
+                                [readonly]=onlyRead class="p-inputtext-sm"></textarea>
+                        </span>
+                    </div> 
+
+                </form> 
                                         
             </p-tabPanel>
             
              <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
-                        <i class="pi pi-building"></i>
+                        <i class="pi pi-list"></i>
                         <span class="font-bold white-space-nowrap m-0">
-                            Detalles
+                            Liquidar
                         </span>
                     </div>
                 </ng-template>
@@ -207,6 +259,7 @@
                         <ng-template pTemplate="header">
                             <tr>
                                 <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                                <th [ngStyle]="{'width':'30px'}" class="bg-teal-50 border-1 text-600"></th>
                                 <th class="bg-teal-50 border-1">PROVEEDOR</th> 
                                 <th class="bg-teal-50 border-1">FECHA</th>
                                 <th class="bg-teal-50 border-1">TIPO DOC</th>
@@ -223,6 +276,12 @@
                         <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
                             <tr>      
                                 <td>{{rowIndex + 1}}</td>
+                                 <td>
+                                    <input [disabled]="!verbtnGrabar" type="checkbox" [(ngModel)]="product.gas_indsuma"
+                                        [ngModelOptions]="{standalone: true}"
+                                        style="width:15px; height:15px; cursor:pointer"
+                                        (ngModelChange)="checkValueSuma($event, product)">
+                                </td>
                                 <td>{{ product.nomempresa }}</td>
                                 <td>{{ product.fecemision }}</td>
                                 <td>{{ product.destipodoc }}</td>
@@ -247,7 +306,7 @@
                         </ng-template>
                         <ng-template pTemplate="footer">
                             <tr>
-                                <td colspan="10" class="text-right">Base Imponible: </td>
+                                <td colspan="11" class="text-right">Base Imponible: </td>
                                 <td>
                                     <div [ngStyle]="{'text-align':'right'}">
                                         {{s_monto | number: '0.2-2'}}
@@ -255,7 +314,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="10" class="text-right">IGV: </td>
+                                <td colspan="11" class="text-right">IGV: </td>
                                 <td>
                                     <div [ngStyle]="{'text-align':'right'}">
                                         {{s_igv | number: '0.2-2'}}
@@ -263,7 +322,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="10" class="text-right">Total: </td>
+                                <td colspan="11" class="text-right">Total: </td>
                                 <td>
                                     <div [ngStyle]="{'text-align':'right'}">
                                         {{s_montoTotal | number: '0.2-2'}}
@@ -276,7 +335,7 @@
                 
             </p-tabPanel> 
 
-            <!-- <p-tabPanel [disabled]=visibleDocument>
+            <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-paperclip"></i>
@@ -285,8 +344,8 @@
                         </span>
                     </div>
                 </ng-template>             
-                <app-c-adjuntos [IA_data]="dataAdjunto" ></app-c-adjuntos>                
-            </p-tabPanel>       -->
+                <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto" ></app-c-adjuntos>                
+            </p-tabPanel>      
             
             <p-tabPanel [disabled]=visibleDocument>
                 <ng-template pTemplate="header">

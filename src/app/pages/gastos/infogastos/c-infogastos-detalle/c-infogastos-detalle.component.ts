@@ -26,7 +26,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
     @Input() IA_data: any;
     $listSubcription: Subscription[] = [];
     visibleDocument: boolean = true;
-    // dataAdjunto: any;
+    dataAdjunto: any;
     registerFormRegistro!: FormGroup;
     headerTitle: string = '';
     lstMonedas: any[] = [];
@@ -57,7 +57,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
     lstCentroCosto: any[] = [];
     lstProyectos: any;
     ordenCompra: any;
-    //verAdjunto: boolean = true;
+    verAdjunto: boolean = true;
     lstCliente: any;
     s_monto: number = 0;
     s_igv: number = 0;
@@ -65,6 +65,9 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
     lstOportunidades: any;
     verProyecto: boolean = false;
     verOportunidad: boolean = false;
+    lstBancos: any;
+    lstCuentas: any;
+    lstTipocuenta: any;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -88,13 +91,34 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
         this.listaUsuarios();
         this.listarCentroCosto();
         this.listaClientes();
+        this.listaBanco();
+        this.listaTipoCuenta();
 
         if (this.idOrdenC > 0) {
+             if (this.IA_data.paramReg === 'V') {
+                this.dataAdjunto = {
+                    idCliente: this.idOrdenC,
+                    codtipoproc: 8, //adjuntos
+                    veracciones: 1,
+                };
+            } else {
+                this.dataAdjunto = {
+                    idCliente: this.idOrdenC,
+                    codtipoproc: 8,
+                    veracciones: 0,
+                };
+            }
+            this.verAdjunto = true;
             this.traerUno();
         } else {
             this.getOrigen('OTR');
             this.gettipocambiodia();
             this.mostrarBotones('NVO');
+            this.dataAdjunto = {
+                idCliente: 0,
+                codtipoproc: 8,
+                veracciones: 0,
+            };
         }
     }
 
@@ -150,7 +174,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                 },
             ],
             tc: [{ value: '', disabled: false }],
-            tipodoc_ctb: [{ value: '', disabled: false }],
+            tipodoc_ctb: [{ value: '0', disabled: false }],
             nroserie_ctb: [{ value: '', disabled: false }],
             nrodocumento_ctb: [{ value: '', disabled: false }],
             fecvencimiento: [
@@ -187,6 +211,17 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
             montoalcambio: [{ value: 0, disabled: false }],
             mtoutilizado: [{ value: 0, disabled: false }],
             mtodiferencia: [{ value: 0, disabled: false }],
+            
+            gas_idbancobco: [{ value: 0, disabled: false }],
+            gas_idcuentaprovbco: [{ value: 0, disabled: false }],
+            gas_montobco: [{ value: 0, disabled: false }],
+            gas_idmonedabco: [{ value: 0, disabled: false }],
+            gas_nrooperacionbco: [{ value: '', disabled: false }],
+            gas_observacionbco: [{ value: '', disabled: false }],
+            gas_codtipocuenta: [{ value: 0, disabled: false }],
+            gas_fecoperacion: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
+            gas_iduserdestino: [{ value: null, disabled: false }],
+            gas_ctabeneficiario: [{ value: constantesLocalStorage.idusuario, disabled: false }]
         });
     }
 
@@ -281,10 +316,16 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                     this.cargarMenu(rpta.ordencompra[0].acciones);
                     this.changeMoneda(rpta.ordencompra[0].idmoneda);
                     this.getOportunidades(rpta.ordencompra[0].idproveedor);
+                    this.changeBanco(rpta.ordencompra[0].gas_idbancobco);
+                    this.changeBeneficiario(rpta.ordencompra[0].idusersolicita);
 
                     this.registerFormRegistro
                         .get('ref01')
                         ?.setValue(rpta.ordencompra[0].ref01);
+
+                    this.registerFormRegistro
+                        .get('gas_idcuentaprovbco')
+                        ?.setValue(rpta.ordencompra[0].gas_idcuentaprovbco);
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -365,7 +406,12 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                         this.registerFormRegistro
                             .get('codigonroorden')
                             ?.setValue(rpta.resultProceso);
-                        //this.verAdjunto = true;
+                        this.dataAdjunto = {
+                            idCliente: this.idOrdenC,
+                            codtipoproc: 8,
+                            veracciones: 0,
+                        };
+                        this.verAdjunto = true;
                     this.verbtnPreliminar = true;
                     this.verbtnAcciones = true;
                     } else {
@@ -634,8 +680,11 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
 
                     let asigando = this.registerFormRegistro.get('montoalcambio')?.value;
 
-                    this.registerFormRegistro.get('mtoutilizado')?.setValue(this.s_montoTotal);
-                    this.registerFormRegistro.get('mtodiferencia')?.setValue(asigando - this.s_montoTotal);
+                    let lista = this.lstGastos.filter((item:any) => item.gas_indsuma === true);
+                    let mtoutilizado = lista.reduce((acc:any, item:any) => acc + item.mtototal, 0)
+
+                    this.registerFormRegistro.get('mtoutilizado')?.setValue(mtoutilizado);
+                    this.registerFormRegistro.get('mtodiferencia')?.setValue(asigando - mtoutilizado);
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -766,11 +815,20 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
     }
 
     cargarProyectos(dato: any) {
-        this.ordencompraService.portipoProyectoList(dato).subscribe({
+        let cliente = this.registerFormRegistro.value.idproveedor;
+        this.ordencompraService.portipoProyectoClienteList(dato, cliente).subscribe({
             next: (rpta: any) => {
                 this.lstProyectos = rpta;
                 console.log('cargarProyectos...', this.lstProyectos);
-                //this.changeProyecto(this.registerFormRegistro.value.idproyecto)
+                if (this.lstProyectos.length === 0) {
+                    
+                    const objeto = {
+                        idproyecto: 100,    
+                        codigoproyecto:'NO APLICA',
+                        s_nomproyecto: 'NO APLICA',
+                    }
+                    this.lstProyectos.push(objeto);
+                }
             },
 
             error: (err) => {
@@ -917,6 +975,8 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
     }
 
     getOportunidades(event:any){
+        let origen = this.registerFormRegistro.value.codtipodoc;
+        this.getOrigen(origen);
         const objeto = {
             idcliente :event
         }
@@ -935,5 +995,116 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
             complete: () => {
             },
         });
+    }
+
+    listaBanco(){    
+    const $listaBanco = this.ordencompraService.listarBanco()
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta listaBanco', rpta);
+            this.lstBancos = rpta;
+        },
+        error:(err)=>{
+          this.messageService.clear();
+          this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico
+          })
+        },
+        complete:() => {
+        }
+      });
+    this.$listSubcription.push($listaBanco)
+  }
+
+    changeBanco(data:any){
+      console.log('changeBanco...', data);
+      const $personaProveedorlist = this.ordencompraService.listaPersonaLinea(3324).subscribe({
+        next: (rpta: any) => {
+          this.setSpinner(false);
+          console.log('lstCuentas...', rpta);
+
+           this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
+          
+        },
+        error: (err) => {
+          this.messageService.clear();
+          this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico
+          })
+        },
+        complete: () => {
+          this.setSpinner(false);
+        },
+      });
+      this.$listSubcription.push($personaProveedorlist);
+    }
+
+      onValueChangeBco(event:any){
+      console.log('changeMoneda...', event);
+     
+        if (this.registerFormRegistro.get('idmonedabco')?.value === 2) {
+          this.registerFormRegistro.get('montoalcambio')?.setValue(this.registerFormRegistro.value.tc * event);
+        }else{
+          this.registerFormRegistro.get('montoalcambio')?.setValue(event );
+        }        
+      
+    }
+
+    checkValueSuma(event: any, dato: any) {
+        console.log('event...', event);
+        console.log('dato...', dato);
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Actualizando...!';
+    
+        const objeto = {
+            idordencompra : dato.idordencompra,
+            gas_indsuma : event
+        }
+    
+            this.proyectosService.ordenCompraUpdSuma(objeto)
+                   .subscribe({
+                   next: (rpta:any) => {
+                    this.setSpinner(false);
+                       console.log("rpta ordenCompraUpdSuma : ", rpta);
+                       this.getListarGasto();
+                   },
+                   error:(err)=>{
+                    this.setSpinner(false);
+                       console.error('error : ',err)
+                       this.messageService.clear();
+                       this.messageService.add({
+                           severity: 'error',
+                           summary: 'Error',
+                           detail: mensajesQuestion.msgErrorGenerico
+                       })
+                   },
+                   complete:() => {}
+                   });
+            
+        }
+
+    listaTipoCuenta() {
+        const $listaTipo = this.ordencompraService.obtenerTipoDocumento(106).subscribe({
+            next: (rpta: any) => {
+            this.lstTipocuenta = rpta;
+            },
+            error: (err) => {
+            this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+        });
+        this.$listSubcription.push($listaTipo);
+    }
+
+
+    changeBeneficiario(event: any){
+      console.log('changeBeneficiario...', event);
+      this.registerFormRegistro.get('gas_iduserdestino')?.setValue(event);
+      this.registerFormRegistro.get('gas_ctabeneficiario')?.setValue('150-65654465655-0');
     }
 }

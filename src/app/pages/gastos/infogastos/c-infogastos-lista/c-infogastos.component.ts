@@ -180,7 +180,23 @@ export class CInformeGastosComponent implements OnInit, OnDestroy {
 
     onAccion(item: any) {
         console.log('onAccion', item);
-        this.getListarGasto(item);
+        this.gasto.idtrx = item.idtrx;
+        console.log('onAccion', item);
+        const ref = this.dialogService.open(
+            CModalTransacComponent,
+            {
+                data: this.gasto,
+                header: item.nomtrx,
+                closeOnEscape: false,
+                styleClass: 'testDialog',
+                width: '40%',
+            }
+        );
+
+        ref.onClose.subscribe(() => {
+            this.getListar();
+        });
+        //this.getListarGasto(item);
     }
 
     getExportarExcel() {
@@ -336,4 +352,6 @@ export class CInformeGastosComponent implements OnInit, OnDestroy {
             });
         this.$listSubcription.push($getListarOrdenCompra);
     }
+
+    
 }

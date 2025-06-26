@@ -236,4 +236,13 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.getOportunidades}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    listaPersonaLinea(codigo: any) {
+        const url = `${constantesApiWeb.personacuentalist}${codigo}`;
+        return this.http.get<any>(url);
+    }
+    obtenerTipoDocumento(idtabla: number) {
+        const url = `${constantesApiWeb.listaTipoDocumento}${idtabla}`;
+        return this.http.get<any>(url);
+    }
 }

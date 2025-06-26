@@ -234,4 +234,7 @@ export const constantesApiWeb = {
 
     ConfirmadoseventoAsiste: controllerEventos + '/confirmadosasistencia',
     getOportunidades: controllerCRM + '/oportunidadporcliente/',
+    ordenCompraUpdSuma: controllerComercial + '/ordendocumentoupdsuma',
+
+     ordenDocumentoResultado: controllerComercial + '/ordendocumentoresultados',
 }

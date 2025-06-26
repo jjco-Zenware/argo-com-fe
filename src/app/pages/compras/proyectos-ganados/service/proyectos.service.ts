@@ -243,4 +243,14 @@ export class ProyectosService {
         const url = `${constantesApiWeb.gettipocambiodia}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    ordenCompraUpdSuma(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompraUpdSuma}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    ordenDocumentoResultado(objeto:any) {
+        const url = `${constantesApiWeb.ordenDocumentoResultado}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

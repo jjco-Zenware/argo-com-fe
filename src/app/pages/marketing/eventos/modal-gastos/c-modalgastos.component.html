@@ -48,21 +48,21 @@
                         <input pInputText type="text" formControlName="direccion" readonly=true class="p-inputtext-sm surface-100"/>
                     </span>
                 </div>
-                
-                <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
-                    <label class="block text-900 font-semibold mb-1">Monto<span class="text-red-500 font-bold"> * </span></label>
-                    <span class="p-fluid">
-                        <p-inputNumber  mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm" inputStyleClass="text-right"
-                        formControlName="monto" ></p-inputNumber>
-                    </span>
-                </div>                 
+                <div *ngIf="!verTipoDco" class="col-8"></div>
                 <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
                     <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
                     <span class="p-fluid mt-1">
                         <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
                         optionValue="idmoneda" appendTo="body"  class="p-inputtext-sm"></p-dropdown>
                     </span>                                      
-                </div> 
+                </div>
+                <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
+                    <label class="block text-900 font-semibold mb-1">Monto<span class="text-red-500 font-bold"> * </span></label>
+                    <span class="p-fluid">
+                        <p-inputNumber  mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm" inputStyleClass="text-right"
+                        formControlName="monto" ></p-inputNumber>
+                    </span>
+                </div>      
                 <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem -mt-1">
                     <label class="block text-900 font-semibold mb-1">Tipo Cambio<span class="text-red-500 font-bold"> * </span></label>                        
                     <span class="p-fluid">
@@ -99,28 +99,49 @@
                     </span>
                 </div>
                 <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900  mb-1">Tipo Gasto <span class="text-red-500 font-bold"> * </span></label>
-                        <span>
-                            <p-dropdown [options]="lstcategoria" formControlName="idcategoria" optionLabel="valoritem" placeholder="Seleccionar..."
-                            optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                        </span>
-                    </div> 
+                    <label class="text-900 font-semibold mb-1">Tipo<span class="text-red-500 font-bold"> * </span></label>
+                    <span>
+                        <p-dropdown [options]="lstcategoriaFinal" formControlName="idcategoria" optionLabel="valoritem" placeholder="Seleccionar..."
+                        optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeTipo($event)"></p-dropdown>
+                    </span>
+                </div> 
                 <div class="sm:col-12 lg:col-8 md:col-12 field h-4rem -mt-1">
-                        <label class="text-900  mb-1">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstCtaCtble" formControlName="codctactble" placeholder="Seleccionar..." optionLabel="s_desctactble" 
-                            class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false" [filter]="true"  ></p-dropdown>
-                        </span>
-                    </div> 
-                    <div class="sm:col-6 lg:col-5 md:col-12 col-6 field h-4rem -mt-1">
-                        <label class="block text-900  mb-1">Centro Costos</label>                        
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Seleccionar..." optionLabel="descentrocosto" 
-                            class="p-inputtext-sm" optionValue="idcentrocosto" appendTo="body" autoWidth="false" ></p-dropdown>
-                        </span>
-                    </div> 
+                    <label class="text-900 font-semibold mb-1">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstCtaCtble" formControlName="codctactble" placeholder="Seleccionar..." optionLabel="s_desctactble" 
+                        class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false" [filter]="true"  ></p-dropdown>
+                    </span>
+                </div> 
+                <div *ngIf="verTipo" class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field">
+                    <label class="text-900 font-semibold mb-1">Banco<span class="text-red-500 font-bold"> * </span></label>  
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstBancos" formControlName="gas_idbancobco" placeholder="Seleccionar..." optionLabel="razonsocial" 
+                        optionValue="idpersona" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeBanco($event.value)"></p-dropdown>
+                    </span>                                      
+                </div> 
+                <div *ngIf="verTipo" class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field">
+                    <label class="text-900 font-semibold mb-1">Tipo Cuenta<span class="text-red-500 font-bold"> * </span></label>  
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstTipocuenta" formControlName="gas_codtipocuenta" placeholder="Seleccionar..." optionLabel="valoritem" 
+                        optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                    </span>                                      
+                </div>
+                <div *ngIf="verTipo" class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field">
+                    <label class="text-900 font-semibold mb-1">Cuenta Origen<span class="text-red-500 font-bold"> * </span></label>  
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstCuentas" formControlName="gas_idcuentaprovbco" placeholder="Seleccionar..." optionLabel="nrocuenta" 
+                        optionValue="idcuentaprov" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                    </span>                                      
+                </div>
+                <div class="sm:col-6 lg:col-5 md:col-12 col-6 field h-4rem -mt-1">
+                    <label class="text-900 font-semibold mb-1">Centro Costos</label>                        
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Seleccionar..." optionLabel="descentrocosto" 
+                        class="p-inputtext-sm" optionValue="idcentrocosto" appendTo="body" autoWidth="false" ></p-dropdown>
+                    </span>
+                </div> 
                 <div class="sm:col-12 lg:col-12 md:col-12 col-12 h-8rem field">
-                    <label class="block text-900 font-semibold">Observación</label>                        
+                    <label class="text-900 font-semibold">Descripción</label>                        
                     <span class="p-fluid mb-1">
                         <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion"
                             [readonly]=onlyRead class="p-inputtext-sm"></textarea>

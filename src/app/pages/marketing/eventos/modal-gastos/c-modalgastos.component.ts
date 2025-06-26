@@ -42,6 +42,11 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
     lstCentroCosto: any[] = [];
     lstcategoria: any[] = [];
     lstItemOC: any[] = [];
+    lstTipocuenta: any[] = [];
+    lstCuentas: any[] = [];
+    lstBancos: any[] = [];
+    verTipo: boolean = false;
+    lstcategoriaFinal: any[] = [];
 
     constructor(
         public refDatoItem: DynamicDialogRef,
@@ -69,6 +74,8 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
         this.listarCentroCosto();
         this.listarPlanContable();
         this.listarTipoGasto();
+        this.listaTipoCuenta();
+        this.listaBanco();
         if (this.param.idordencompra > 0) {
             this.traerUno();
         }
@@ -166,6 +173,16 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             estado: [{ value: 'PEN', disabled: false }],
             codctactble: [{ value: '', disabled: false }],
             idcategoria: [{ value: 0, disabled: false }],
+            gas_idbancobco: [{ value: 0, disabled: false }],
+            gas_idcuentaprovbco: [{ value: 0, disabled: false }],
+            gas_montobco: [{ value: 0, disabled: false }],
+            gas_idmonedabco: [{ value: 0, disabled: false }],
+            gas_nrooperacionbco: [{ value: '', disabled: false }],
+            gas_observacionbco: [{ value: '', disabled: false }],
+            gas_codtipocuenta: [{ value: 0, disabled: false }],
+            gas_fecoperacion: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
+            gas_iduserdestino: [{ value: null, disabled: false }],
+            gas_ctabeneficiario: [{ value: constantesLocalStorage.idusuario, disabled: false }]
         });
     }
 
@@ -195,6 +212,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                     );
                     this.getBusquedaRUC();
                     this.changeTipoDoc2(parseInt(rpta.ordencompra[0].tipodoc_ctb));
+                    this.changeBanco(rpta.ordencompra[0].gas_idbancobco);
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -382,7 +400,41 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             _error = true;
         }
 
-        if (
+      
+
+        if (this.verTipo) {
+            if (
+                !_error &&
+                (this.registerFormRegistro.value.gas_idbancobco === '' ||
+                    this.registerFormRegistro.value.gas_idbancobco === null||
+                    this.registerFormRegistro.value.gas_idbancobco === 0)
+            ) {
+                this.errorMensaje = 'Seleccionar Banco...!';
+                _error = true;
+            }
+
+            if (
+                !_error &&
+                (this.registerFormRegistro.value.gas_codtipocuenta === '' ||
+                    this.registerFormRegistro.value.gas_codtipocuenta === null||
+                    this.registerFormRegistro.value.gas_codtipocuenta === 0)
+            ) {
+                this.errorMensaje = 'Seleccionat Tipo de Cuenta...!';
+                _error = true;
+            }
+
+            if (
+                !_error &&
+                (this.registerFormRegistro.value.gas_idcuentaprovbco === '' ||
+                    this.registerFormRegistro.value.gas_idcuentaprovbco === null||
+                    this.registerFormRegistro.value.gas_idcuentaprovbco === 0)
+            ) {
+                this.errorMensaje = 'Seleccionat Cuenta...!';
+                _error = true;
+            }
+        }
+
+          if (
             !_error &&
             (this.registerFormRegistro.value.idcentrocosto === '' ||
                 this.registerFormRegistro.value.idcentrocosto === null||
@@ -653,12 +705,17 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                 .get('nrodocumento')
                 ?.setValue('00000000000');
             this.getBusquedaRUC();
+            this.lstcategoriaFinal = this.lstcategoria;
         } else {
             this.verTipoDco = true;
             this.registerFormRegistro.get('nrodocumento')?.setValue('');
             this.registerFormRegistro.get('idproveedor')?.setValue('');
             this.registerFormRegistro.get('direccion')?.setValue('');
+
+            let lista = this.lstcategoria.filter((x: { coditem: any; codlabel: any }) => x.coditem === '2' && x.codlabel !== '0');
+            this.lstcategoriaFinal = lista;
         }
+        this.verTipo = false;
     }
 
     listarPlanContable() {
@@ -709,6 +766,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                     (x: { coditem: any }) =>
                         x.coditem !== '1'
                 );
+                this.lstcategoriaFinal = this.lstcategoria
             },
             error: (err) => {
                 console.info('error : ', err);
@@ -731,5 +789,86 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
         }
     }
 
+    changeTipo(item: any) {
+        console.log('changeTipo...', item); 
+        let motivo = '';
+        let tipo = '';
+
+        const motivoArr = this.lstcategoria.filter(
+                    (x: { iditem: any }) =>
+                        x.iditem  == item.value
+                );
+        console.log('motivoArr...', motivoArr);
+        motivo = motivoArr.length > 0 ? motivoArr[0].valoritem || '' : '';
+        tipo = motivoArr.length > 0 ? motivoArr[0].codlabel || '' : '';
+        console.log('motivo...', motivo); 
+        console.log('tipo...', tipo); 
+
+        this.registerFormRegistro.get('observacion')?.setValue(motivo);
+        if (tipo === '0') {
+            this.verTipo = true;
+        }else{
+            this.verTipo = false;
+        }
+    }
      
+    listaTipoCuenta() {
+        const $listaTipo = this.ordencompraService.obtenerTipoDocumento(106).subscribe({
+            next: (rpta: any) => {
+            this.lstTipocuenta = rpta;
+            },
+            error: (err) => {
+            this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+        });
+        this.$listSubcription.push($listaTipo);
+    }
+
+    changeBanco(data:any){
+      console.log('changeBanco...', data);
+      const $personaProveedorlist = this.ordencompraService.listaPersonaLinea(3324).subscribe({
+        next: (rpta: any) => {
+          this.setSpinner(false);
+          console.log('lstCuentas...', rpta);
+
+           this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
+          
+        },
+        error: (err) => {
+          this.messageService.clear();
+          this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico
+          })
+        },
+        complete: () => {
+          this.setSpinner(false);
+        },
+      });
+      this.$listSubcription.push($personaProveedorlist);
+    }
+
+    listaBanco(){    
+    const $listaBanco = this.ordencompraService.listarBanco()
+      .subscribe({
+        next: (rpta:any) => {
+          console.log('rpta listaBanco', rpta);
+            this.lstBancos = rpta;
+        },
+        error:(err)=>{
+          this.messageService.clear();
+          this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico
+          })
+        },
+        complete:() => {
+        }
+      });
+    this.$listSubcription.push($listaBanco)
+  }
 }

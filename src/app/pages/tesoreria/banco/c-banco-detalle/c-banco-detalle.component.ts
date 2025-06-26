@@ -100,7 +100,6 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
       
       idbanco:[{ value: 0, disabled: true }],
       tipobanco: [{ value: null, disabled: false }, [Validators.required]],
-      idtipodoc_banco: [{ value: null, disabled: false }, [Validators.required]],
       nrodoc: [{ value: '', disabled: false }, [Validators.required]],
       codigobcr:[{ value: '', disabled: false }],
       codbancosbs:[{ value: '', disabled: false }],
@@ -173,6 +172,7 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
             this.setSpinner(false);   
 
           this.registerFormRegistro.patchValue(rpta[0]); 
+          this.registerFormRegistro.get('tipobanco').setValue(parseInt(rpta[0].tipobanco));
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -203,7 +203,7 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
       ...this.registerFormRegistro.getRawValue(),
       nrodocumento: this.registerFormRegistro.value.nrodoc,
       tipobanco: this.registerFormRegistro.value.tipobanco.toString(),
-      idtipodoc:  this.registerFormRegistro.value.idtipodoc_banco,
+      idtipodoc:  this.registerFormRegistro.value.idtipodoc,
     }
 
     console.log('guardarOC...', objeto);
@@ -254,7 +254,7 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-    if (!_error && (this.registerFormRegistro.value.idtipodoc_banco === '' || this.registerFormRegistro.value.idtipodoc_banco === null))
+    if (!_error && (this.registerFormRegistro.value.idtipodoc === '' || this.registerFormRegistro.value.idtipodoc === null))
       {
           this.errorMensaje="Seleccionar Tipo de Documento...!";
           _error = true;
