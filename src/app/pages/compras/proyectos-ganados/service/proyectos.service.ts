@@ -253,4 +253,19 @@ export class ProyectosService {
         const url = `${constantesApiWeb.ordenDocumentoResultado}`;
             return  this.http.post<any>(url, objeto)
     }
+
+     ordenCompralistargastos(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompralistargastos}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    ListaProveedores(objeto: any) {
+        const url = `${constantesApiWeb.ListaProveedores}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    ordenCompraTraerItems(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompraTraerItems}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

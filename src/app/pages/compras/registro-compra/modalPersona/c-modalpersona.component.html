@@ -76,13 +76,17 @@
                 <!-- <p class="p-error" *ngIf="submitted && formCliente.direcresumen.errors">Dirección es requerido.</p> -->
             </div>
         
-            <div class="lg:col-6 col-12 field -mt-5">
+            <div class="lg:col-4 col-12 field -mt-5">
                 <label  class="font-semibold">Email</label>
                 <input pInputText type="email" formControlName="email" class="p-inputtext-sm">
             </div> 
-            <div class="lg:col-6 col-12 field -mt-5" >
+            <div class="lg:col-4 col-12 field -mt-5" >
                 <label  class="font-semibold">Telefono</label>
-                <input pInputText type="text" formControlName="telefresumen" class="p-inputtext-sm"/>
+                <input pInputText type="text" formControlName="telefresumen" class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+            </div>
+            <div class="lg:col-4 col-12 field -mt-5" >
+                <label  class="font-semibold">Movil</label>
+                <input pInputText type="text" formControlName="telefmovil" class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
             </div>
             <!-- <div class="lg:col-4 col-12 field -mt-5">
                 <label  class="font-semibold">Pagina Web</label>

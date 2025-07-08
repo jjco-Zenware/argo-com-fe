@@ -444,6 +444,7 @@ export interface OrdenCompraItem{
     coptipoexistencia: string;
     nomtipoexistencia: string;
     mtodescuento?: number;
+    gas_indsuma? :boolean
 }
 
 export interface OrdenCompra {

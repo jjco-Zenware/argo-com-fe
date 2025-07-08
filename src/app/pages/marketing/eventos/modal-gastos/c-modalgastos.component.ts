@@ -41,7 +41,47 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
     lstCtaCtble: any[] = [];
     lstCentroCosto: any[] = [];
     lstcategoria: any[] = [];
-    lstItemOC: any[] = [];
+    lstItemOC: any[] = [{        
+          idordencompraitem: 0,
+          idordencompra: 0,
+          idtipoprod: 0,
+          idprod: 100,
+          descripcion: 'OTROS GASTOS',
+          cantidad: 1,
+          codunidad: 'UNID',
+          preciocosto: 0,
+          descuento: 0,
+          margen: 0,
+          precioventa: 0,
+          indvig: true,
+          iduserreg: 0,
+          fecreg :this.serviceUtilitario.obtenerFechaActual(),
+          iduseract: 0,
+          fecact: this.serviceUtilitario.obtenerFechaActual(),
+          coditem:  '0',
+          idmarca: 109,
+          nomprod: '',
+          nommarca: '',
+          preciocostototal: 0,
+          precioventatotal: 0,
+          preprofit: 0,
+          nomtipoprod: '',
+          nomproveedor: '',
+          serialnumber: '',
+          sku: '',
+          nrocontrato: '',
+          nromeses: 0,
+          fecini: null,
+          fecfin: null,
+          idunidad: 130,
+          nomunidad: '', 
+          valor: '', 
+          ref1: '', 
+          codproducto: '', 
+          despro: '',
+          tipoigv: 1,
+      }
+];
     lstTipocuenta: any[] = [];
     lstCuentas: any[] = [];
     lstBancos: any[] = [];
@@ -182,7 +222,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             gas_codtipocuenta: [{ value: 0, disabled: false }],
             gas_fecoperacion: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
             gas_iduserdestino: [{ value: null, disabled: false }],
-            gas_ctabeneficiario: [{ value: constantesLocalStorage.idusuario, disabled: false }]
+            gas_ctabeneficiario: [{ value: '', disabled: false }]
         });
     }
 
@@ -239,6 +279,8 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
         let fechaingreso;
         let fecemision;
         let fecvencimiento;
+        let gas_fecoperacion;
+        gas_fecoperacion = this.registerFormRegistro.value.gas_fecoperacion;
         fechaingreso = this.registerFormRegistro.value.fechaingreso;
         fecemision = this.registerFormRegistro.value.fecemision;
         fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
@@ -259,14 +301,26 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                     this.serviceUtilitario.formatFecha(fecvencimiento)
                 );
             }
+            if (gas_fecoperacion.toString().length === 10) {
+            gas_fecoperacion = new Date(
+                this.serviceUtilitario.formatFecha(gas_fecoperacion)
+            );
         }
+        }
+        let monto =  (this.registerFormRegistro.value.monto * 100)/118;
+
+        this.lstItemOC.map((item: any) => {
+            item.preciocosto = monto;
+            item.precioventa = monto;
+        });
 
         const objeto = {
             ...this.registerFormRegistro.getRawValue(),
-            items: [],
+            items: this.lstItemOC,
             fechaingreso,
             fecemision,
             fecvencimiento,
+            gas_fecoperacion,
             tipodoc_ctb: this.registerFormRegistro.value.tipodoc_ctb.toString(),
             cuotas: [],
             idproyecto: this.param.idproyecto,
@@ -379,26 +433,9 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
         ) {
             this.errorMensaje = 'Ingresar Forma de Pago...!';
             _error = true;
-        }
+        }        
 
-        if (
-            !_error &&
-            (this.registerFormRegistro.value.idcategoria === '' ||
-                this.registerFormRegistro.value.idcategoria === null||
-                this.registerFormRegistro.value.idcategoria === 0)
-        ) {
-            this.errorMensaje = 'Seleccionar Tipo Gasto...!';
-            _error = true;
-        }
-
-        if (
-            !_error &&
-            (this.registerFormRegistro.value.codctactble === '' ||
-                this.registerFormRegistro.value.codctactble === null)
-        ) {
-            this.errorMensaje = 'Ingresar Cuenta...!';
-            _error = true;
-        }
+       
 
       
 
@@ -429,10 +466,30 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                     this.registerFormRegistro.value.gas_idcuentaprovbco === null||
                     this.registerFormRegistro.value.gas_idcuentaprovbco === 0)
             ) {
-                this.errorMensaje = 'Seleccionat Cuenta...!';
+                this.errorMensaje = 'Seleccionar Cuenta...!';
                 _error = true;
             }
+        }else{
+ if (
+            !_error &&
+            (this.registerFormRegistro.value.idcategoria === '' ||
+                this.registerFormRegistro.value.idcategoria === null||
+                this.registerFormRegistro.value.idcategoria === 0)
+        ) {
+            this.errorMensaje = 'Seleccionar Tipo Gasto...!';
+            _error = true;
         }
+
+        if (
+            !_error &&
+            (this.registerFormRegistro.value.codctactble === '' ||
+                this.registerFormRegistro.value.codctactble === null)
+        ) {
+            this.errorMensaje = 'Ingresar Cuenta Ctble...!';
+            _error = true;
+        }
+        }
+
 
           if (
             !_error &&
@@ -685,7 +742,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                 console.info('listarItemsTablaComprobante : ', rpta);
                 this.lstComprobante = rpta.filter(
                     (x: { codsunat: number }) =>
-                        x.codsunat === 1 || x.codsunat === 2 || x.codsunat === 0
+                        x.codsunat !== 3 && x.codsunat !== 4 && x.codsunat !== 7
                 );
                 //this.lstComprobante = rpta;
             },
@@ -699,7 +756,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
 
     changeTipoDoc(value: any) {
         console.log('changeTipoDoc...', value);
-        if (value === 0) {
+        if (value === 0 || value === 10 || value === 11  || value === 12) {
             this.verTipoDco = false;
             this.registerFormRegistro
                 .get('nrodocumento')
@@ -711,11 +768,21 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             this.registerFormRegistro.get('nrodocumento')?.setValue('');
             this.registerFormRegistro.get('idproveedor')?.setValue('');
             this.registerFormRegistro.get('direccion')?.setValue('');
+            
+            this.registerFormRegistro.get('idcategoria')?.setValue('');
+            this.registerFormRegistro.get('codctactble')?.setValue('');
+            this.registerFormRegistro.get('observacion')?.setValue('');
 
-            let lista = this.lstcategoria.filter((x: { coditem: any; codlabel: any }) => x.coditem === '2' && x.codlabel !== '0');
+            let lista = this.lstcategoria.filter((x: { coditem: any; codlabel: any }) => x.coditem === '2');
             this.lstcategoriaFinal = lista;
         }
-        this.verTipo = false;
+
+
+        if (value === 10 || value === 11 ) {
+            this.verTipo = true;
+        }else{
+            this.verTipo = false;
+        }
     }
 
     listarPlanContable() {
@@ -723,6 +790,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             .listarPlanContable()
             .subscribe({
                 next: (rpta: any) => {
+                    console.log('listarPlanContable...', rpta);
                     this.setSpinner(false);
                     this.lstCtaCtble = rpta;
                 },
@@ -805,11 +873,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
         console.log('tipo...', tipo); 
 
         this.registerFormRegistro.get('observacion')?.setValue(motivo);
-        if (tipo === '0') {
-            this.verTipo = true;
-        }else{
-            this.verTipo = false;
-        }
+        this.registerFormRegistro.get('codctactble')?.setValue(tipo.toString());        
     }
      
     listaTipoCuenta() {

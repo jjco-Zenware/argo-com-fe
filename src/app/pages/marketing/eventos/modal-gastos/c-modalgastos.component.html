@@ -10,18 +10,8 @@
                             optionValue="codsunat" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeTipoDoc($event.value)"></p-dropdown>
                     </span>
                 </div> 
-                <div *ngIf="verTipoDco" class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
-                    <label class="block text-900 font-semibold mb-1">Serie<span class="text-red-500 font-bold"> * </span></label>                        
-                    <span class="p-fluid">
-                        <input pInputText type="text" formControlName="nroserie_ctb"  class="p-inputtext-sm"/>
-                    </span>
-                </div>
-                <div *ngIf="verTipoDco" class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
-                    <label class="block text-900 font-semibold mb-1">N° Doc.<span class="text-red-500 font-bold"> * </span></label>                        
-                    <span class="p-fluid">
-                        <input pInputText type="text" formControlName="nrodocumento_ctb"  class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
-                    </span>
-                </div>    
+                <div *ngIf="verTipoDco" class="col-8"></div>
+                   
                 <div *ngIf="verTipoDco" class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem ">
                     <label class="block text-900 font-semibold mb-1">RUC <span class="text-red-500 font-bold"> * </span></label>       
                     <span class="p-input-icon-right">
@@ -48,6 +38,19 @@
                         <input pInputText type="text" formControlName="direccion" readonly=true class="p-inputtext-sm surface-100"/>
                     </span>
                 </div>
+                <div *ngIf="verTipoDco" class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
+                    <label class="block text-900 font-semibold mb-1">Serie<span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="nroserie_ctb"  class="p-inputtext-sm"/>
+                    </span>
+                </div>
+                <div *ngIf="verTipoDco" class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
+                    <label class="block text-900 font-semibold mb-1">N° Doc.<span class="text-red-500 font-bold"> * </span></label>                        
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="nrodocumento_ctb"  class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                    </span>
+                </div> 
+                <div *ngIf="verTipoDco" class="col-4"></div>
                 <div *ngIf="!verTipoDco" class="col-8"></div>
                 <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
                     <label class="block text-900 font-semibold mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>  
@@ -76,7 +79,7 @@
                         optionValue="iditem" appendTo="body"  class="p-inputtext-sm"></p-dropdown>
                     </span>
                 </div>                 
-                <div *ngIf="verTipoDco" class="col-6 sm:col-12 lg:col-4 md:col-12 h-4rem field -mt-1">
+                <div class="col-6 sm:col-12 lg:col-4 md:col-12 h-4rem field -mt-1">
                     <div class="flex mb-1">
                         <label class="block text-900 font-semibold">Fec. Emisión</label>    
                         <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
@@ -87,6 +90,7 @@
                         [minDate]="minimaFechaDesde" [maxDate]="maximaFechaDesde" [readonlyInput]="true" (onSelect)="changeFechaDesde($event)"></p-calendar>
                     </span>
                 </div>  
+                <div *ngIf="!verTipoDco" class="col-8"></div>
                 <div *ngIf="verTipoDco" class="col-6 sm:col-12 lg:col-4 md:col-12 h-4rem field -mt-1">
                     <div class="flex mb-1">
                         <label class="block text-900 font-semibold">Fec. Vencimiento <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> </label>    
@@ -98,18 +102,18 @@
                         [minDate]="minimaFechaHasta" [readonlyInput]="true" (onSelect)="changeFechaHasta($event)"></p-calendar>
                     </span>
                 </div>
-                <div class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field">
-                    <label class="text-900 font-semibold mb-1">Tipo<span class="text-red-500 font-bold"> * </span></label>
+                <div *ngIf="!verTipo"class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
+                    <label class="text-900 font-semibold mb-1">Tipo Gasto<span class="text-red-500 font-bold"> * </span></label>
                     <span>
                         <p-dropdown [options]="lstcategoriaFinal" formControlName="idcategoria" optionLabel="valoritem" placeholder="Seleccionar..."
-                        optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeTipo($event)"></p-dropdown>
+                        optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeTipo($event)" [filter]="true" ></p-dropdown>
                     </span>
                 </div> 
-                <div class="sm:col-12 lg:col-8 md:col-12 field h-4rem -mt-1">
+                <div *ngIf="!verTipo" class="sm:col-12 lg:col-8 md:col-12 field h-4rem -mt-1">
                     <label class="text-900 font-semibold mb-1">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
                     <span class="p-fluid mt-1">
                         <p-dropdown [options]="lstCtaCtble" formControlName="codctactble" placeholder="Seleccionar..." optionLabel="s_desctactble" 
-                        class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false" [filter]="true"  ></p-dropdown>
+                        class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false" [filter]="true" readonly="true"></p-dropdown>
                     </span>
                 </div> 
                 <div *ngIf="verTipo" class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem field">
@@ -134,7 +138,7 @@
                     </span>                                      
                 </div>
                 <div class="sm:col-6 lg:col-5 md:col-12 col-6 field h-4rem -mt-1">
-                    <label class="text-900 font-semibold mb-1">Centro Costos</label>                        
+                    <label class="text-900 font-semibold mb-1">Centro Costos<span class="text-red-500 font-bold"> * </span></label>                        
                     <span class="p-fluid mt-1">
                         <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" placeholder="Seleccionar..." optionLabel="descentrocosto" 
                         class="p-inputtext-sm" optionValue="idcentrocosto" appendTo="body" autoWidth="false" ></p-dropdown>

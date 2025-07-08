@@ -129,5 +129,10 @@ export class AlmacenService {
         const url = `${constantesApiWeb.listaritemTablaSunat}${codigo}`;
         return this.http.get<any>(url)
     }
+
+    listarPartidas() {
+        const url = `${constantesApiWeb.listarPartidas}`;
+        return this.http.get<any>(url)
+    }
     
 }

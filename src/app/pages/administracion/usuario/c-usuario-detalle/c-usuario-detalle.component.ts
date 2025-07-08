@@ -136,6 +136,7 @@ createFormCliente() {
   idtipocontrato: [{ value: null, disabled: false }],
   idcargo: [{ value: null, disabled: false }],
   adm_email: ['', Validators.email],
+  adm_ctasueldo: [{ value: null, disabled: false }],
   });
 }
 

@@ -88,7 +88,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
         this.createFormRegistro();
         this.listaMonedas();
         this.listarItemsTabla();
-        this.listaUsuarios();
+        this.getPersona();
         this.listarCentroCosto();
         this.listaClientes();
         this.listaBanco();
@@ -139,7 +139,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                 { value: constantesLocalStorage.idusuario, disabled: false },
             ],
             idusuario: [
-                { value: constantesLocalStorage.idusuario, disabled: false },
+                { value: 0, disabled: false },
             ],
             nrodocumentoadd: [{ value: '', disabled: false }],
             fechaingreso: [
@@ -163,7 +163,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
             ref01: [{ value: '', disabled: false }],
             ref02: [{ value: '', disabled: false }],
             ref03: [{ value: '', disabled: false }],
-            codtipoorden: [{ value: 'OC', disabled: false }],
+            codtipoorden: [{ value: 'LG', disabled: false }],
             codigonroorden: [{ value: '', disabled: true }],
             nomproyecto: [{ value: '', disabled: false }],
             nrodocumento: [{ value: '', disabled: false }],
@@ -206,7 +206,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
             codctactble: [{ value: null, disabled: false }],
             monto: [{ value: 0, disabled: false }],
             idcategoria: [{ value: null, disabled: false }],
-            idusersolicita: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+            idusersolicita: [{ value: null, disabled: false }],
             idtrack: [{ value: 51, disabled: false }],
             montoalcambio: [{ value: 0, disabled: false }],
             mtoutilizado: [{ value: 0, disabled: false }],
@@ -221,7 +221,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
             gas_codtipocuenta: [{ value: 0, disabled: false }],
             gas_fecoperacion: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
             gas_iduserdestino: [{ value: null, disabled: false }],
-            gas_ctabeneficiario: [{ value: constantesLocalStorage.idusuario, disabled: false }]
+            gas_ctabeneficiario: [{ value: '', disabled: false }]
         });
     }
 
@@ -240,6 +240,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
         switch (data) {
             case 'REG':
                 case 'OBS':
+                case 'PEN':
                 this.verbtnGrabar = true;
                 this.verbtnAcciones = true;
                 this.onlyRead = false;
@@ -287,8 +288,10 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                     console.log('traerUno', rpta.ordencompra[0]);
                     this.ordenCompra = rpta.ordencompra[0];
 
-                    //this.changeCC(rpta.ordencompra[0].idcentrocosto);
-                    this.visibleDocument = false;
+                    if (rpta.ordencompra[0].estado !== 'REG' || rpta.ordencompra[0].estado === 'PRC') {
+                        this.visibleDocument = false;
+                    }
+                    
                     this.verbtnPreliminar = true;
 
                     this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
@@ -309,7 +312,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                     //this.getBusquedaRUC();
                     this.setSpinner(false);
 
-                    this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);
+                    //this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);
                     this.getOrigen(rpta.ordencompra[0].codtipodoc);
                     this.getListarGasto();
                     this.listarTransacciones();
@@ -352,9 +355,11 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
         let fechaingreso;
         let fecemision;
         let fecvencimiento;
+        let gas_fecoperacion;
         fechaingreso = this.registerFormRegistro.value.fechaingreso;
         fecemision = this.registerFormRegistro.value.fecemision;
         fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
+        gas_fecoperacion = this.registerFormRegistro.value.gas_fecoperacion;
 
         //if (this.idOrdenC > 0) {
         if (fechaingreso.toString().length === 10) {
@@ -372,6 +377,11 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                 this.serviceUtilitario.formatFecha(fecvencimiento)
             );
         }
+         if (gas_fecoperacion.toString().length === 10) {
+            gas_fecoperacion = new Date(
+                this.serviceUtilitario.formatFecha(gas_fecoperacion)
+            );
+        }
         //}
 
         const objeto = {
@@ -380,6 +390,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
             fechaingreso,
             fecemision,
             fecvencimiento,
+            gas_fecoperacion,
             tipodoc_ctb: this.registerFormRegistro.value.tipodoc_ctb.toString(),
             cuotas: [],
             nrocuotas: 0,
@@ -418,7 +429,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                         this.traerUno();
                     }
 
-                    this.visibleDocument = false;
+                    //this.visibleDocument = false;
                 } else {
                     this.messageService.add({
                         severity: 'error',
@@ -486,20 +497,40 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
     }
 
     onAccion(item: any) {
+        console.log('item', item);
+        console.log('onAccion', this.lstGastos);
+        //let lista = this.lstGastos.length;
+        //console.log('onAccion', 'lista', lista);
+        
+        if ((this.registerFormRegistro.get('mtodiferencia')?.value !== 0 && this.registerFormRegistro.get('mtodiferencia')?.value > 1 )||
+         (this.lstGastos === undefined && item.idtrx !== 158)) {
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Aviso',
+                detail: 'No se puede realizar la transacción, porque no hay gastos o la diferencia es diferente a cero.',
+            });
+            return;
+            
+        }else{
+           this.abriModal(item);
+        }
+       
+    }
+
+    abriModal(item:any){
         console.log('onAccion', item);
         this.ordenCompra.idtrx = item.idtrx;
-        console.log('onAccion', item);
-        const ref = this.dialogService.open(CModalTransacComponent, {
-            data: this.ordenCompra,
-            header: item.nomtrx,
-            closeOnEscape: false,
-            styleClass: 'testDialog',
-            width: '40%',
-        });
+ const ref = this.dialogService.open(CModalTransacComponent, {
+                data: this.ordenCompra,
+                header: item.nomtrx,
+                closeOnEscape: false,
+                styleClass: 'testDialog',
+                width: '40%',
+            });
 
-        ref.onClose.subscribe(() => {
-            this.traerUno();
-        });
+            ref.onClose.subscribe(() => {
+                this.traerUno();
+            });
     }
 
     validarDatos(): boolean {
@@ -511,7 +542,7 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
             this.registerFormRegistro.value.idusersolicita === null ||
             this.registerFormRegistro.value.idusersolicita === ''
         ) {
-            this.errorMensaje = 'Seleccionar Usuario...!';
+            this.errorMensaje = 'Seleccionar Beneficiario...!';
             _error = true;
         }
 
@@ -672,19 +703,46 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (rpta: any) => {
                     console.log('rpta getListar', rpta);
-                    this.lstGastos = rpta.ordenescompra;
+                    if (rpta !== undefined) {
+                       this.lstGastos = rpta.ordenescompra; 
+                       console.log('rpta this.lstGastos', this.lstGastos);
 
-                    this.s_monto = this.lstGastos.reduce((acc:any, item:any) => acc + item.mtobaseimpo, 0);
-                    this.s_igv = this.lstGastos.reduce((acc:any, item:any) => acc + item.mtoigv, 0);
-                    this.s_montoTotal = this.lstGastos.reduce((acc:any, item:any) => acc + item.mtototal, 0);
+                       if (this.lstGastos === undefined || this.lstGastos.length === 0) {
+                           this.lstGastos = [];
+                           this.s_monto = 0;
+                           this.s_igv = 0;
+                           this.s_montoTotal = 0;
+                           this.registerFormRegistro.get('mtoutilizado')?.setValue(0);
+                           this.registerFormRegistro.get('mtodiferencia')?.setValue(0);
+                        return;
+                        
+                       }else{
+                        let lista = this.lstGastos.filter((item:any) => item.gas_indsuma === true);
 
-                    let asigando = this.registerFormRegistro.get('montoalcambio')?.value;
+                        this.s_monto = lista.reduce((acc:any, item:any) => acc + item.mtobaseimpo, 0);
+                        this.s_igv = lista.reduce((acc:any, item:any) => acc + item.mtoigv, 0);
+                        this.s_montoTotal = lista.reduce((acc:any, item:any) => acc + item.mtototal, 0);
 
-                    let lista = this.lstGastos.filter((item:any) => item.gas_indsuma === true);
-                    let mtoutilizado = lista.reduce((acc:any, item:any) => acc + item.mtototal, 0)
+                        let asigando = this.registerFormRegistro.get('montoalcambio')?.value;
 
-                    this.registerFormRegistro.get('mtoutilizado')?.setValue(mtoutilizado);
-                    this.registerFormRegistro.get('mtodiferencia')?.setValue(asigando - mtoutilizado);
+                        
+                        let mtoutilizado = lista.reduce((acc:any, item:any) => acc + item.mtototal, 0)
+
+                        this.registerFormRegistro.get('mtoutilizado')?.setValue(Math.round(mtoutilizado));
+                        this.registerFormRegistro.get('mtodiferencia')?.setValue(Math.round(asigando - mtoutilizado)); 
+                       }
+
+                                            
+                    }else{
+                        this.lstGastos = [];
+                        this.s_monto = 0;
+                        this.s_igv = 0;
+                        this.s_montoTotal = 0;
+                        this.registerFormRegistro.get('mtoutilizado')?.setValue(0);
+                        this.registerFormRegistro.get('mtodiferencia')?.setValue(0);
+                    }
+                    
+                    
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -801,15 +859,11 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
                 this.verOportunidad = false;
                 this.verProyecto = true;
                 this.cargarProyectos(0);
-                break;
-            case 'MKT':
-                this.verOportunidad = false;
-                this.verProyecto = true;
-                this.cargarProyectos(6);
-                break;
+                break;                
             case 'OPR':
                 this.verOportunidad = true;
                 this.verProyecto = false;
+                this.cargarProyectos(6);
                 break;
         }
     }
@@ -1104,7 +1158,40 @@ export class CInformeGastosDetComponent implements OnInit, OnDestroy {
 
     changeBeneficiario(event: any){
       console.log('changeBeneficiario...', event);
+      let nrocta = this.lstResponsable.filter( (item: any) => item.idcliente === event);
+      console.log('nrocta...', nrocta);
       this.registerFormRegistro.get('gas_iduserdestino')?.setValue(event);
-      this.registerFormRegistro.get('gas_ctabeneficiario')?.setValue('150-65654465655-0');
+      this.registerFormRegistro.get('gas_ctabeneficiario')?.setValue(nrocta.length > 0 ? nrocta[0].adm_ctasueldo : '');
     }
+
+    getPersona() {
+          this.setSpinner(true);
+          this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+    
+          const objeto = {
+              idrolpersona: 'ADM',
+              idusuario: constantesLocalStorage.idusuario
+          }
+    
+          const $getClientes =  this.proyectosService.ListaProveedores(objeto).subscribe({
+              next: (rpta: any) => {
+                  this.setSpinner(false);
+                  console.info('getPersona : ', rpta);
+                  this.lstResponsable = rpta;
+              },
+              error: (err) => {
+                  this.setSpinner(false);
+                  console.info('error : ', err);
+                  this.messageService.clear();
+                  this.messageService.add({
+                      severity: 'error',
+                      summary: 'Error',
+                      detail: mensajesQuestion.msgErrorGenerico,
+                  });
+              },
+              complete: () => {},
+              });
+              this.$listSubcription.push($getClientes);
+    
+        }
 }

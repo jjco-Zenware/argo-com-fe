@@ -9,6 +9,7 @@ import { SharedAppService } from '@sharedAppService';
 import { OrdencompraService } from '../../../compras/orden-compra-servicio/service/ordencompra.service';
 import { MessageService } from 'primeng/api';
 import { ModalVentaComponent } from '../c-modal-venta/c-modal-venta.component';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-c-reporte-venta',
@@ -83,7 +84,8 @@ export class CReporteVentaComponent implements OnInit, OnDestroy{
         next: (rpta:any) => {
             this.setSpinner(false);
             console.log('rpta getListar', rpta);
-            this.lstCompras = rpta.ordenescompra
+            let lista = rpta.ordenescompra; 
+            this.lstCompras = lista.filter((item: any) => item.ind_estado_fel === 1);
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -121,6 +123,16 @@ export class CReporteVentaComponent implements OnInit, OnDestroy{
   }  
 
   descargarReporte(){
+    if (this.lstCompras.length === 0) {
+        this.messageService.clear();
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Advertencia',
+            detail: "No hay registros para descargar",
+        });
+        return;
+      
+    }
       this.setSpinner(true);
       this.mensajeSpinner = 'Descargando...!';
   
@@ -181,4 +193,58 @@ export class CReporteVentaComponent implements OnInit, OnDestroy{
       this.getListar();
       
     }
+
+    getExportarExcel(data :any) {
+      if (this.lstCompras.length === 0) {
+        this.messageService.clear();
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Advertencia',
+            detail: "No hay registros para descargar",
+        });
+        return;
+      
+    }
+              this.lstExportar = [];
+              if (data.filteredValue !== undefined) {
+                this.lstExportExcel = data.filteredValue;
+              }else{
+                this.lstExportExcel = data._value
+              }
+              
+              for (let i = 0; i < this.lstExportExcel.length; i++) {       
+                  const objeto = {
+                      'Vou.Origen': this.lstExportExcel[i].fecemision,
+                      'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
+                      'DOCUMENTO': this.lstExportExcel[i].nrofactura,
+                      'CLIENTE': this.lstExportExcel[i].nomcomercial,
+                      'CENTRO COSTO' : this.lstExportExcel[i].descentrocosto,
+                      'MONEDA': this.lstExportExcel[i].simbmoneda,
+                      'BASE IMPONIBLE': parseFloat(this.lstExportExcel[i].s_monto).toFixed(2),
+                      'IGV': parseFloat(this.lstExportExcel[i].s_igv).toFixed(2),
+                      'TOTAL': parseFloat(this.lstExportExcel[i].s_monto_total).toFixed(2),
+                      'ESTADO' : this.lstExportExcel[i].nomestado,
+                      '% DETRACCIÓN' : parseFloat(this.lstExportExcel[i].porc_detraccion).toFixed(2),
+                      'S/ DETRACCIÓN' : parseFloat(this.lstExportExcel[i].s_monto_detraccion_mn_CTB).toFixed(2),
+                      
+                  }
+                  this.lstExportar.push(objeto);
+              }
+          
+              import('xlsx').then((xlsx) => {
+                const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
+                const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+                const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+                this.saveAsExcelFile(excelBuffer, 'REPORTE_VENTA');
+                });
+          }
+      
+          saveAsExcelFile(buffer: any, fileName: string): void {
+            let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+            let EXCEL_EXTENSION = '.xlsx';
+            const data: Blob = new Blob([buffer], {
+                type: EXCEL_TYPE
+            });
+            FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+          }
 }

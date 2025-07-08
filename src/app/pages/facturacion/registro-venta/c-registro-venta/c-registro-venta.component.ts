@@ -164,7 +164,6 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
           nomcomercial: 'TODOS'
         }
         this.lstProveedores.unshift(objet);
-        console.log('this.lstProveedores', this.lstProveedores);
       },
       error: (err) => {
         this.serviceSharedApp.messageToast()
@@ -176,7 +175,6 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
   }
 
   onVer(data: any) {
-      console.log('onVer...', data);
       this.dataPrc = {
         idordencompra: data.idordencompra,
         paramReg:'V'
@@ -188,7 +186,6 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
   }
 
     onVerDetalle(data: any) {
-      console.log('onVerDetalle...', data);
           // const refItem = this.dialogService.open(CDetalleFacturaComponent, {
           //   data: data,
           //   header: "Detalle de la Factura N° " + data.nrofactura,
@@ -251,7 +248,6 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
   
 
   onEditar(data: any) {
-      console.log('onEditar...', data);
       this.dataPrc = {
         idordencompra: data.idordencompra,
         paramReg:'E'
@@ -307,7 +303,6 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
     
       onAccion(item: any) {
         this.ordenCompra.idtrx = item.idtrx;
-        console.log('onAccion', item);
         const ref = this.dialogService.open(CModalTransacComponent, {
             data: this.ordenCompra,
             header: item.nomtrx,
@@ -369,7 +364,6 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
       listaMonedas() {
         const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
           next: (rpta: any) => {
-            console.log('listaMonedas', rpta);
             this.lstMonedas = rpta;       
             const objet = {
               idmoneda: 0,
@@ -435,7 +429,6 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
       }
 
       getSeverity(data:any) {
-        console.log()
         let color;
         switch (data) {
           case 0:

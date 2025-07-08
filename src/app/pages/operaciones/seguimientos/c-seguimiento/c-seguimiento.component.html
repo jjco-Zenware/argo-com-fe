@@ -7,7 +7,7 @@
                         pTooltip="Nuevo" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                 
                 <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">RENDICIÓN DE GASTOS</span>
+                    <span class="text-base font-semibold">SEGUIMIENTO HORAS ESPECIALISTAS</span>
                 </div>  
                        
             </div>
@@ -27,35 +27,12 @@
                         <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                             [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
                     </div>
-                    <div class="sm:col-4 lg:col-3 md:col-6 col-12 -mt-4">                            
-                <label class="font-semibold text-blue-600 text-base">Moneda</label>  
-                <span class="p-fluid">
-                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" optionLabel="desmoneda" 
-                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
-                </span> 
-            </div> 
                     <div class="field col-6 md:col-2 -mt-4 gap-2">
                         <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                             class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                        <button pButton type="button" (click)="getExportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom" 
-                            class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
                     </div>
                 </form> 
             </div>
-            <!-- <div class="md:col-6 sm:col-4 lg:col-2 gap-2 border-round surface-border border-1 h-5rem bg-teal-50">
-                <div class="flex flex-column gap-2">
-                    <div class="flex align-items-center justify-content-end">
-                        <span class="text-lg font-semibold">Total Soles : </span>
-                        <span class="text-lg ml-3 font-semibold">{{totalsoles | number: '0.2-2'}}</span>
-                    </div>
-                </div>
-                <div class="flex flex-column gap-2 mt-2">
-                    <div class="flex align-items-center justify-content-end">
-                        <span class="text-lg font-semibold">Total Dolares : </span>
-                        <span class="text-lg ml-3 font-semibold">{{totaldolares | number: '0.2-2'}}</span>
-                    </div>
-                </div>
-            </div> -->
         </div>
         
 
@@ -85,7 +62,7 @@
                         TIPO GASTO 
                     </div>
                 </th>
-                 <th style="width: 150px;" class="bg-teal-50 border-1" >
+                 <th style="width: 100px;" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         EMPLEADO
                     </div>
@@ -105,11 +82,6 @@
                         PROYECTO
                     </div>
                 </th>
-                <th style="width: 100px" class="bg-teal-50 border-1" >
-                    <div [ngStyle]="{'width':'30px','text-align':'center'}">
-                        OPORTUNIDAD
-                    </div>
-                </th>
                 <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         CLIENTE 
@@ -125,11 +97,12 @@
                         FECHA <br> LIQUIDACIÓN
                     </div>
                 </th>
-                <th [ngStyle]="{'width':'30px','text-align':'center'}" class="bg-teal-50 border-1" >
+                <th style="width: 30px" class="bg-teal-50 border-1" >
                     <div [ngStyle]="{'width':'30px','text-align':'center'}">
                         ESTADO
                     </div>
-                </th>                
+                </th>
+                
                 <th rowspan="2" style="width: 50px;" class="bg-teal-50 border-1" >
                     <div class="flex justify-content-between align-items-center">
                         ACCIONES
@@ -160,7 +133,7 @@
                     </div>
                 </td>
                  <td>
-                    <div [ngStyle]="{'width':'150px'}">
+                    <div [ngStyle]="{'width':'60px'}">
                         {{data.desresponsable | uppercase}}
                     </div>
                 </td>
@@ -180,11 +153,6 @@
                </div>
            </td>
             <td>
-               <div [ngStyle]="{'width':'150px'}" >
-                    {{data.titulo | uppercase}}
-                </div>
-           </td>
-            <td>
                 <div [ngStyle]="{'width':'200px'}" >
                     {{data.nomproveedor | uppercase}}
                 </div>
@@ -201,14 +169,14 @@
             </td>
             <td>                       
                 <div [ngStyle]="{'width':'60px','text-align': 'center'}">
-                    <p-tag [style]="{'width':'100%'}" [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
+                    <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                 </div>
             </td>
             <td>
                 <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                     <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text text-red-500" (click)="onVerDetalle(data)"></button>
                     <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                    <button *ngIf="data.estado === 'REG' || data.estado === 'OBS' || data.estado === 'PEN'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                    <button *ngIf="data.estado === 'REG' || data.estado === 'OBS'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
                     <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
                         pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
                     <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
@@ -244,7 +212,6 @@
                 </div>       
             </div>
         </div>
-        <app-c-infogastos-detalle [IA_data]="dataDet"></app-c-infogastos-detalle>
     </div>
 
 </ng-template>

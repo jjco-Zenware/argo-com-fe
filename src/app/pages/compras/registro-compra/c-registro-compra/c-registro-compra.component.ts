@@ -60,11 +60,11 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
       this.getListar();
       this.listaMonedas();
       this.cols = [
+        { field: 'codigonroorden_origen', header: '  EMISION' },
         { field: 'fecemision', header: '  EMISION' },
         { field: 'fecvencimiento', header: 'VENCIMIENTO' },
         { field: 'nrofactura', header: 'DOCUMENTOa' },
         { field: 'nomcomercial', header: 'PROVEEDOR' },
-        { field: 'descentrocosto', header: 'CENTRO COSTO' },
         { field: 'simbmoneda', header: 'MONEDA' },
         { field: 's_monto', header: 'SUBTOTAL' },
         { field: 's_igv', header: 'IGV' },
@@ -155,7 +155,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         idordencompra: data.idordencompra,
         paramReg:'V'
       }
-      this.tituloDetalle = "Ver Factura N° " + data.nrofactura;
+      this.tituloDetalle = "VER FACTURA";
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
@@ -225,7 +225,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         idordencompra: data.idordencompra,
         paramReg:'E'
       }
-      this.tituloDetalle = "Editar Factura N° " + data.nrofactura;
+      this.tituloDetalle = "EDITAR FACTURA " ;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
@@ -245,7 +245,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR COMPRA";
+      this.tituloDetalle = "REGISTRAR FACTURA";
       this.dataPrc = {
         idordencompra: 0,
         paramReg:'N'

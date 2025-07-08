@@ -1,6 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
+import {
+    constantesLocalStorage,
+    mensajesQuestion,
+    mensajesSpinner,
+} from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ProyectosService } from '../../proyectos-ganados/service/proyectos.service';
@@ -9,176 +13,262 @@ import { SharedAppService } from '@sharedAppService';
 import { ModalCompraComponent } from '../c-modal-compra/c-modal-compra.component';
 import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
 import { MessageService } from 'primeng/api';
+import * as FileSaver from 'file-saver';
 
 @Component({
-  selector: 'app-c-reporte-compra',
-  templateUrl: './c-reporte-compra.component.html',
-  styleUrls: ['./c-reporte-compra.component.scss']
+    selector: 'app-c-reporte-compra',
+    templateUrl: './c-reporte-compra.component.html',
+    styleUrls: ['./c-reporte-compra.component.scss'],
 })
-export class CReporteCompraComponent implements OnInit, OnDestroy{
+export class CReporteCompraComponent implements OnInit, OnDestroy {
+    $listSubcription: Subscription[] = [];
 
-  $listSubcription: Subscription[] = [];
-
-  lstCompras: any[] =[];
-  tituloDetalle!: string;
-  frmDatos!: FormGroup;
-  cols: any[] = [];
-  dataPrc:any;
-  blockedDocument: boolean = false;
-    mensajeSpinner: string = "";
+    lstCompras: any[] = [];
+    tituloDetalle!: string;
+    frmDatos!: FormGroup;
+    cols: any[] = [];
+    dataPrc: any;
+    blockedDocument: boolean = false;
+    mensajeSpinner: string = '';
     lstProveedores: any[] = [];
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private utilitariosService: UtilitariosService,
-    public dialogService: DialogService  ,
-    private proyectosService: ProyectosService,     
-    private serviceSharedApp: SharedAppService,
+    constructor(
+        private fb: FormBuilder,
+        private utilitariosService: UtilitariosService,
+        public dialogService: DialogService,
+        private proyectosService: ProyectosService,
+        private serviceSharedApp: SharedAppService,
         private ordencompraService: OrdencompraService,
-            private messageService: MessageService,
-    ){
+        private messageService: MessageService
+    ) {}
 
-  }
-
-  ngOnInit(): void{
-      this.createFrm();
-      this.getListar();
-      
-  }
-
-  ngOnDestroy(): void {
-      if (this.$listSubcription != undefined) {
-        this.$listSubcription.forEach((sub) => sub.unsubscribe());
-      }
-    }
-    
-    setSpinner(valor: boolean) {
-      this.blockedDocument = valor;
-    }
-  createFrm(){
-    this.frmDatos = this.fb.group({    
-        fecini: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}],       
-        fecfin: [{value: this.utilitariosService.obtenerFechaFinMes(),disabled: false}],     
-        idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
-        idproveedor: [{value: 0,disabled: false}],
-        idmoneda: [{value: 0,disabled: false}],
-        periodo: [{value: this.utilitariosService.obtenerFechaInicioMes(),disabled: false}], 
-        idcliente: [{value: 0,disabled: false}],
-    }) 
-  }
-
-  getListar(){
-    this.setSpinner(true);
-    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-    
-    const objeto = {
-      ...this.frmDatos.value,
-      idtipodocprc: 7
+    ngOnInit(): void {
+        this.createFrm();
+        this.getListar();
     }
 
-    const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
-      .subscribe({
-        next: (rpta:any) => {
-            this.setSpinner(false);
-            console.log('rpta getListar', rpta);
-            this.lstCompras = rpta.ordenescompra
-        },
-        error:(err)=>{
-            this.setSpinner(false);
-            this.serviceSharedApp.messageToast()
-        },
-        complete:() => {
-          this.setSpinner(false);
+    ngOnDestroy(): void {
+        if (this.$listSubcription != undefined) {
+            this.$listSubcription.forEach((sub) => sub.unsubscribe());
         }
-      });
-    this.$listSubcription.push($getListarOrdenCompra)
-  }
+    }
 
-  onVer(data: any) {
-      console.log('onVer...', data);
-      this.dataPrc = {
-        idordencompra: data.idordencompra,
-        paramReg:'V'
-      }
-      this.tituloDetalle = "Factura N° " + data.nrofactura;
+    setSpinner(valor: boolean) {
+        this.blockedDocument = valor;
+    }
+    createFrm() {
+        this.frmDatos = this.fb.group({
+            fecini: [
+                {
+                    value: this.utilitariosService.obtenerFechaInicioMes(),
+                    disabled: false,
+                },
+            ],
+            fecfin: [
+                {
+                    value: this.utilitariosService.obtenerFechaFinMes(),
+                    disabled: false,
+                },
+            ],
+            idusuario: [
+                { value: constantesLocalStorage.idusuario, disabled: false },
+            ],
+            idproveedor: [{ value: 0, disabled: false }],
+            idmoneda: [{ value: 0, disabled: false }],
+            periodo: [
+                {
+                    value: this.utilitariosService.obtenerFechaInicioMes(),
+                    disabled: false,
+                },
+            ],
+            idcliente: [{ value: 0, disabled: false }],
+        });
+    }
 
-      const objeto = {
-        idordencompra: data.idordencompra,
-              }
-              const ref = this.dialogService.open(ModalCompraComponent, {
-                  data: objeto,
-                  header: "Factura N° " + data.nrofactura,
-                  styleClass: 'testDialog',
-                  closeOnEscape: false,
-                  closable: true,
-                  width: '40%'
-              });
-              ref.onClose.subscribe(() => {
-                  //this.getListar();
-                });
-  }      
+    getListar() {
+        this.setSpinner(true);
+        this.mensajeSpinner = mensajesSpinner.msjRecuperaLista;
 
-  descargarReporte(){
-      this.setSpinner(true);
-      this.mensajeSpinner = 'Descargando...!';
-  
-      const objeto = {
-        idusuario : constantesLocalStorage.idusuario,
-        idtipodocprc: 7,
-        fecini: this.frmDatos.value.fecini,
-        fecfin: this.frmDatos.value.fecfin
-      }
-  
-      const $cargarOrdenC = this.ordencompraService.prcReporte(objeto).subscribe({
-        next: (rpta: any) => {
-          this.setSpinner(false);      
-  
-          console.log('descargarReporte', rpta);
-          
-          const mediaType = 'application/pdf';
-            const blob = new Blob([rpta.body], { type: mediaType });
-            const filename = 'REG-COMPRA';
-    
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.target = '_blank';
-            a.click();
-  
-            window.open(url);
-  
-            setTimeout(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 100);
-        },
-            error: (err) => {
-              this.setSpinner(false);
+        const objeto = {
+            ...this.frmDatos.value,
+            idtipodocprc: 7,
+        };
+
+        const $getListarOrdenCompra = this.proyectosService
+            .ordenCompraList(objeto)
+            .subscribe({
+                next: (rpta: any) => {
+                    this.setSpinner(false);
+                    console.log('rpta getListar', rpta);
+                    if (rpta.ordenescompra !== undefined) {
+                        let lista = rpta.ordenescompra;
+                        this.lstCompras = lista.filter(
+                            (item: any) => item.estado === 'ACP'
+                        );
+                    } else {
+                        this.lstCompras = [];
+                    }
+                },
+                error: (err) => {
+                    this.setSpinner(false);
+                    this.serviceSharedApp.messageToast();
+                },
+                complete: () => {
+                    this.setSpinner(false);
+                },
+            });
+        this.$listSubcription.push($getListarOrdenCompra);
+    }
+
+    descargarReporte() {
+        if (this.lstCompras.length === 0) {
             this.messageService.clear();
             this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: mensajesQuestion.msgErrorGenerico,
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No hay registros para descargar',
             });
-        },
-            complete: () => {
-        },
-      });
-      this.$listSubcription.push($cargarOrdenC)
+            return;
+        }
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Descargando...!';
+
+        const objeto = {
+            idusuario: constantesLocalStorage.idusuario,
+            idtipodocprc: 7,
+            fecini: this.frmDatos.value.fecini,
+            fecfin: this.frmDatos.value.fecfin,
+        };
+
+        const $cargarOrdenC = this.ordencompraService
+            .prcReporte(objeto)
+            .subscribe({
+                next: (rpta: any) => {
+                    this.setSpinner(false);
+
+                    console.log('descargarReporte', rpta);
+
+                    const mediaType = 'application/pdf';
+                    const blob = new Blob([rpta.body], { type: mediaType });
+                    const filename = 'REG-COMPRA';
+
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.target = '_blank';
+                    a.click();
+
+                    window.open(url);
+
+                    setTimeout(() => {
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }, 100);
+                },
+                error: (err) => {
+                    this.setSpinner(false);
+                    this.messageService.clear();
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: mensajesQuestion.msgErrorGenerico,
+                    });
+                },
+                complete: () => {},
+            });
+        this.$listSubcription.push($cargarOrdenC);
     }
 
-  changePeriodo(dato: any){
-    console.log('changePeriodo', dato);
-    console.log('Minimo', this.utilitariosService.obtenerFechaInicioMesPeriodo(dato));
-    console.log('Maximo', this.utilitariosService.obtenerFechaFinMesPeriodo(dato));
-    
-    this.frmDatos.get('fecini')?.setValue(this.utilitariosService.obtenerFechaInicioMesPeriodo(dato));
-    this.frmDatos.get('fecfin')?.setValue(this.utilitariosService.obtenerFechaFinMesPeriodo(dato));
-    this.getListar();
-    
-  }
+    changePeriodo(dato: any) {
+        console.log('changePeriodo', dato);
+        console.log(
+            'Minimo',
+            this.utilitariosService.obtenerFechaInicioMesPeriodo(dato)
+        );
+        console.log(
+            'Maximo',
+            this.utilitariosService.obtenerFechaFinMesPeriodo(dato)
+        );
+
+        this.frmDatos
+            .get('fecini')
+            ?.setValue(
+                this.utilitariosService.obtenerFechaInicioMesPeriodo(dato)
+            );
+        this.frmDatos
+            .get('fecfin')
+            ?.setValue(this.utilitariosService.obtenerFechaFinMesPeriodo(dato));
+        this.getListar();
+    }
+
+    getExportarExcel(data: any) {
+        if (this.lstCompras.length === 0) {
+            this.messageService.clear();
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No hay registros para descargar',
+            });
+            return;
+        }
+        this.lstExportar = [];
+        if (data.filteredValue !== undefined) {
+            this.lstExportExcel = data.filteredValue;
+        } else {
+            this.lstExportExcel = data._value;
+        }
+
+        for (let i = 0; i < this.lstExportExcel.length; i++) {
+            const objeto = {
+                'Vou.Origen': this.lstExportExcel[i].fecemision,
+                'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
+                DOCUMENTO: this.lstExportExcel[i].nrofactura,
+                CLIENTE: this.lstExportExcel[i].nomcomercial,
+                'CENTRO COSTO': this.lstExportExcel[i].descentrocosto,
+                MONEDA: this.lstExportExcel[i].simbmoneda,
+                'BASE IMPONIBLE': parseFloat(
+                    this.lstExportExcel[i].s_monto
+                ).toFixed(2),
+                IGV: parseFloat(this.lstExportExcel[i].s_igv).toFixed(2),
+                TOTAL: parseFloat(this.lstExportExcel[i].s_monto_total).toFixed(
+                    2
+                ),
+                ESTADO: this.lstExportExcel[i].nomestado,
+                '% DETRACCIÓN': parseFloat(
+                    this.lstExportExcel[i].porc_detraccion
+                ).toFixed(2),
+                'S/ DETRACCIÓN': parseFloat(
+                    this.lstExportExcel[i].s_monto_detraccion_mn_CTB
+                ).toFixed(2),
+            };
+            this.lstExportar.push(objeto);
+        }
+
+        import('xlsx').then((xlsx) => {
+            const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
+            const workbook = {
+                Sheets: { data: worksheet },
+                SheetNames: ['data'],
+            };
+            const excelBuffer: any = xlsx.write(workbook, {
+                bookType: 'xlsx',
+                type: 'array',
+            });
+            this.saveAsExcelFile(excelBuffer, 'REPORTE_COMPRA');
+        });
+    }
+
+    saveAsExcelFile(buffer: any, fileName: string): void {
+        let EXCEL_TYPE =
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        let EXCEL_EXTENSION = '.xlsx';
+        const data: Blob = new Blob([buffer], {
+            type: EXCEL_TYPE,
+        });
+        FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+    }
 }

@@ -51,6 +51,11 @@ const routes: Routes = [
         path: 'gastos',
         loadChildren: () => import('./gastos/gastos.module').then(m => m.GastosModule),
         data: { breadcrumb: 'Gastos' }
+      },
+      {
+        path: 'operaciones',
+        loadChildren: () => import('./operaciones/operaciones.module').then(m => m.OperacionesModule),
+        data: { breadcrumb: 'Operaciones' }
       }
     ]
   }

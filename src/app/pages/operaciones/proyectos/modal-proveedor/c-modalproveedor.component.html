@@ -1,0 +1,28 @@
+
+<div class="p-fluid  py-0  col-12 mt-2">
+    <form [formGroup]="registerFormProveedor" >
+        <div class="flex grid mt-2">
+            
+            <div class="sm:col-12 lg:col-12 md:col-12 col-12">                            
+                <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
+                <span>
+                    <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor" formControlName="idpersona" class="p-inputtext-sm"
+                    optionLabel="nomcomercial" optionValue="idcliente" appendTo="body" (onChange)="getContactos($event.value)" [filter]="true" ></p-dropdown>            
+                </span>
+            </div>                         
+            <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-2">
+                <div class="flex">
+                    <label class="block text-900 font-semibold mb-1">Contacto <span class="text-red-500 font-bold"> * </span></label>
+                </div>                            
+                <span>
+                    <p-dropdown [options]="lstContacto" formControlName="idcontacto" placeholder="Seleccionar Contacto" optionLabel="snombrecontacto" 
+                    optionValue="idcontacto" appendTo="body" class="p-inputtext-sm" [filter]="true"></p-dropdown>
+                </span>
+            </div>       
+           
+        </div>
+    </form>
+    <div class="flex justify-content-end">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto" (click)="guardarCliente()"></button>
+    </div>
+</div>

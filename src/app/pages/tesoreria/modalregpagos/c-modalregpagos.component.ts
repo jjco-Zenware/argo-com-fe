@@ -376,13 +376,13 @@ this.$listSubcription.push($traerUno)
           this.setSpinner(false);
           console.log('lstCuentas...', rpta);
 
-          if (this.param.tipodeuda === 2) {
-            this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
-          }else{
-            this.lstCuentas= rpta; 
-          }
+          // if (this.param.tipodeuda === 2) {
+          //   this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
+          // }else{
+          //   this.lstCuentas= rpta; 
+          // }
 
-          //this.lstCuentas= rpta;          //.filter((item:any) => item.idbanco === data);
+          this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
           
         },
         error: (err) => {

@@ -110,7 +110,14 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     filteredCtaCtble!: any[];
     lstCtaCtble: any[] = [];
     s_desctactble!: any[];
-  lstOrdenC: any;
+    lstOrdenC: any;
+
+    checkVisible: boolean = false;
+    
+    verProyecto: boolean = false;
+    verOportunidad: boolean = false;
+    
+    lstOportunidades: any;
 
     constructor(
         private fb: FormBuilder,
@@ -379,7 +386,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     }
 
                     this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);
-                    //this.changeCC(rpta.ordencompra[0].idcentrocosto);
                     this.visibleDocument = false;
                     this.visibleAsiento = false;
 
@@ -411,7 +417,9 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     //this.getBusquedaRUC();
                     this.setSpinner(false);
                     this.gettipocambiodia(new Date(this.serviceUtilitario.formatFecha(rpta.ordencompra[0].fecemision)));
-                    this.changeProyecto(rpta.ordencompra[0].idproyecto);
+                    this.getOportunidades(rpta.ordencompra[0].idproveedor_origen);
+                    
+                    this.getOrigen(rpta.ordencompra[0].codtipodoc);
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -419,6 +427,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                 },
                 complete: () => {
                     this.getBusquedaRUC();
+                    this.changeProyecto(this.ordenCompra.idproyecto);
+                    this.registerFormRegistro.get('idordencompra_origen_ctb')?.setValue(this.ordenCompra.iddocumentoprc_origen);
                 },
                 
             });
@@ -436,19 +446,19 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if (this.listaCuotas.length > 0) {
-            for (let i = 0; i < this.listaCuotas.length; i++) {
-                this.listaCuotas[i].nrocuota = i + 1;
-                if (this.listaCuotas[i].monto === 0) {
-                    this.messageService.add({
-                        severity: 'info',
-                        summary: 'Aviso',
-                        detail: 'El monto de la cuota debe ser mayor que cero...',
-                    });
-                    return;
-                }
-            }
-        }
+        // if (this.listaCuotas.length > 0) {
+        //     for (let i = 0; i < this.listaCuotas.length; i++) {
+        //         this.listaCuotas[i].nrocuota = i + 1;
+        //         if (this.listaCuotas[i].monto === 0) {
+        //             this.messageService.add({
+        //                 severity: 'info',
+        //                 summary: 'Aviso',
+        //                 detail: 'El monto de la cuota debe ser mayor que cero...',
+        //             });
+        //             return;
+        //         }
+        //     }
+        // }
 
         this.setSpinner(true);
         this.mensajeSpinner = 'Guardando...!';
@@ -486,9 +496,26 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
             }
         }
 
+        let itemTrue = this.lstItemOC.filter((x: any) => x.gas_indsuma === true).length;
+        console.log('itemTrue...', itemTrue);
+
+            let listaItems: OrdenCompraItem[] = [];
+        if (itemTrue > 0) {
+            let listaNvaItems: OrdenCompraItem[] = [];
+            for (let i = 0; i < this.lstItemOC.length; i++) {
+                if (this.lstItemOC[i].gas_indsuma) {
+                    listaNvaItems.push(this.lstItemOC[i]);
+                }
+            }
+            console.log('listaNvaItems...', listaNvaItems);
+            listaItems = listaNvaItems;
+        }else{
+            listaItems = this.lstItemOC;
+        }
+
         const objeto = {
             ...this.registerFormRegistro.getRawValue(),
-            items: this.lstItemOC,
+            items: listaItems,
             fechaingreso,
             fecemision,
             fecvencimiento,
@@ -526,7 +553,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                         this.verAdjunto = true;
 
                         //agregar una cuota por defecto
-                        this.traerUno2();
+                        //this.traerUno2();
 
                         //preguntar si desea emitir el documento con una cuota
                         // this.confirmationService.confirm({
@@ -538,9 +565,12 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                         //     this.procesarTRX();
                         //     }
                         // });
-                    } else {
-                        this.traerUno();
-                    }
+                    } 
+                    // else {
+                    //     this.traerUno();
+                    // }
+
+                    this.traerUno();
 
                     this.visibleDocument = false;
                     this.visibleAsiento = false;
@@ -565,73 +595,73 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         });
     }
 
-    traerUno2() {
-        // this.setSpinner(true);
-        // this.mensajeSpinner = 'Cargando...!';
-        const objeto = {
-            idordencompra: this.idOrdenC,
-            idusuario: constantesLocalStorage.idusuario,
-        };
+    // traerUno2() {
+    //     // this.setSpinner(true);
+    //     // this.mensajeSpinner = 'Cargando...!';
+    //     const objeto = {
+    //         idordencompra: this.idOrdenC,
+    //         idusuario: constantesLocalStorage.idusuario,
+    //     };
 
-        const $cargarOrdenC = this.proyectosService
-            .ordenCompraTraeruno(objeto)
-            .subscribe({
-                next: (rpta: any) => {
-                    console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-                    this.ordenCompra = rpta.ordencompra[0];
-                    //this.getOcproveedor(rpta.ordencompra[0].idproveedor);
-                    if (rpta.ordencompra[0].items !== undefined) {
-                        this.lstItemOC = rpta.ordencompra[0].items;
-                    }
-                    if (rpta.ordencompra[0].quotes !== undefined) {
-                        this.lstQuotes = rpta.ordencompra[0].quotes;
-                    }
-                    if (rpta.ordencompra[0].cuotas !== undefined) {
-                        this.listaCuotas = rpta.ordencompra[0].cuotas;
-                    }
+    //     const $cargarOrdenC = this.proyectosService
+    //         .ordenCompraTraeruno(objeto)
+    //         .subscribe({
+    //             next: (rpta: any) => {
+    //                 console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+    //                 this.ordenCompra = rpta.ordencompra[0];
+    //                 //this.getOcproveedor(rpta.ordencompra[0].idproveedor);
+    //                 if (rpta.ordencompra[0].items !== undefined) {
+    //                     this.lstItemOC = rpta.ordencompra[0].items;
+    //                 }
+    //                 if (rpta.ordencompra[0].quotes !== undefined) {
+    //                     this.lstQuotes = rpta.ordencompra[0].quotes;
+    //                 }
+    //                 if (rpta.ordencompra[0].cuotas !== undefined) {
+    //                     this.listaCuotas = rpta.ordencompra[0].cuotas;
+    //                 }
 
-                    this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);
-                    this.visibleDocument = false;
-                    this.visibleAsiento = false;
+    //                 this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);
+    //                 this.visibleDocument = false;
+    //                 this.visibleAsiento = false;
 
-                    this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-                    this.registerFormRegistro
-                        .get('tipodoc_ctb')
-                        ?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
-                    //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
-                    this.s_monto = rpta.ordencompra[0].s_monto;
-                    this.s_igv = rpta.ordencompra[0].s_igv;
-                    this.montoTotal = rpta.ordencompra[0].s_monto_total;
-                    this.mostrarBotones(rpta.ordencompra[0].estado);
-                    this.setearDias(
-                        rpta.ordencompra[0].fecvencimiento,
-                        rpta.ordencompra[0].fecemision
-                    );
-                    this.registerFormRegistro
-                        .get('monto_pen_pago')
-                        ?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
-                    this.registerFormRegistro
-                        .get('fecvencimiento')
-                        ?.setValue(rpta.ordencompra[0].fecvencimiento);
-                    this.registerFormRegistro
-                        .get('fecemision')
-                        ?.setValue(rpta.ordencompra[0].fecemision);
-                    this.nrocuotas = rpta.ordencompra[0].nrocuotas;
-                    //agregar cuotas
-                    this.prcCuota2(1);
+    //                 this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+    //                 this.registerFormRegistro
+    //                     .get('tipodoc_ctb')
+    //                     ?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
+    //                 //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
+    //                 this.s_monto = rpta.ordencompra[0].s_monto;
+    //                 this.s_igv = rpta.ordencompra[0].s_igv;
+    //                 this.montoTotal = rpta.ordencompra[0].s_monto_total;
+    //                 this.mostrarBotones(rpta.ordencompra[0].estado);
+    //                 this.setearDias(
+    //                     rpta.ordencompra[0].fecvencimiento,
+    //                     rpta.ordencompra[0].fecemision
+    //                 );
+    //                 this.registerFormRegistro
+    //                     .get('monto_pen_pago')
+    //                     ?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
+    //                 this.registerFormRegistro
+    //                     .get('fecvencimiento')
+    //                     ?.setValue(rpta.ordencompra[0].fecvencimiento);
+    //                 this.registerFormRegistro
+    //                     .get('fecemision')
+    //                     ?.setValue(rpta.ordencompra[0].fecemision);
+    //                 this.nrocuotas = rpta.ordencompra[0].nrocuotas;
+    //                 //agregar cuotas
+    //                 this.prcCuota2(1);
 
-                    this.setSpinner(false);
-                },
-                error: (err) => {
-                    this.setSpinner(false);
-                    this.serviceSharedApp.messageToast();
-                },
-                complete: () => {
-                    this.setSpinner(false);
-                },
-            });
-        this.$listSubcription.push($cargarOrdenC);
-    }
+    //                 this.setSpinner(false);
+    //             },
+    //             error: (err) => {
+    //                 this.setSpinner(false);
+    //                 this.serviceSharedApp.messageToast();
+    //             },
+    //             complete: () => {
+    //                 this.setSpinner(false);
+    //             },
+    //         });
+    //     this.$listSubcription.push($cargarOrdenC);
+    // }
 
     procesarTRX() {
         const objeto = {
@@ -793,13 +823,24 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         // this.registerFormRegistro.get('codctactble')?.setValue('');
         switch (data) {
             case 'OPO':
+                this.verOportunidad = false;
+                this.verProyecto = true;
                 this.cargarProyectos(1);
                 break;
             case 'REQ':
+                this.verOportunidad = false;
+                this.verProyecto = true;
                 this.cargarProyectos(4);
                 break;
             case 'OTR':
+                this.verOportunidad = false;
+                this.verProyecto = true;
                 this.cargarProyectos(0);
+                break;
+            case 'OPR':
+                this.verOportunidad = true;
+                this.verProyecto = false;
+                this.cargarProyectos(6);
                 break;
         }
     }
@@ -1236,7 +1277,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.ordencompraService.listarItemsTablaSunat(2).subscribe({
             next: (rpta: any) => {
                 console.info('listarItemsTablaComprobante : ', rpta);
-                this.lstComprobante = rpta;
+                this.lstComprobante = rpta.filter((x: { codsunat: any }) => x.codsunat === 1 || x.codsunat === 2);
             },
             error: (err) => {
                 console.info('error : ', err);
@@ -1307,26 +1348,26 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         // this.listaCuotas.push(objet);
     }
 
-    prcCuota2(data: number) {
-        this.nrocuotas = data;
-        this.listaCuotas = [];
-        const _monto = this.registerFormRegistro.value.monto_pen_pago / data;
-        console.log('_monto...', _monto);
-        let tot_dia = this.registerFormRegistro.value.nrodias;
+    // prcCuota2(data: number) {
+    //     this.nrocuotas = data;
+    //     this.listaCuotas = [];
+    //     const _monto = this.registerFormRegistro.value.monto_pen_pago / data;
+    //     console.log('_monto...', _monto);
+    //     let tot_dia = this.registerFormRegistro.value.nrodias;
 
-        const newDate = this.addDays(
-            this.serviceUtilitario.obtenerFechaActual(),
-            tot_dia
-        );
-        const objet = {
-            fechacuota: newDate,
-            monto: _monto,
-            idcuotadoc: 0,
-        };
-        this.listaCuotas.push(objet);
+    //     const newDate = this.addDays(
+    //         this.serviceUtilitario.obtenerFechaActual(),
+    //         tot_dia
+    //     );
+    //     const objet = {
+    //         fechacuota: newDate,
+    //         monto: _monto,
+    //         idcuotadoc: 0,
+    //     };
+    //     this.listaCuotas.push(objet);
 
-        this.guardarOC();
-    }
+    //     this.guardarOC();
+    // }
 
     eliminarCuota(data: any, index: number) {
         console.log('index', index);
@@ -1444,19 +1485,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.$listSubcription.push($getListarOrdenCompra);
     }
 
-    // changeProyecto(value: any) {
-    //     console.log('changeProyecto...', value);
-    //     console.log('this.lstProyectos...', this.lstProyectos);
-    //     let _codcentrocosto = this.lstProyectos.filter(
-    //         (x: { idproyecto: number }) => x.idproyecto === value
-    //     );
-    //     console.log('_codcentrocosto...', _codcentrocosto);
-    //     this.registerFormRegistro
-    //         .get('idcentrocosto')
-    //         ?.setValue(_codcentrocosto[0].idcentrocosto);
-    //     this.changeCC(_codcentrocosto[0].idcentrocosto);
-    // }
-
     changeProyecto(value:any){
     console.log('changeProyecto...', value);
     console.log('this.lstProyectos...', this.lstProyectos);
@@ -1571,18 +1599,6 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.$listSubcription.push($gettipocambio);
     }
 
-    changeCC(value: any) {
-        console.log('changeProyecto...', value);
-        // console.log('this.lstProyectos...', this.lstProyectos);
-        let _ctctble = this.lstCentroCosto.filter(
-            (x: { idcentrocosto: number }) => x.idcentrocosto === value
-        );
-        console.log('_ctctble...', _ctctble);
-        this.registerFormRegistro
-            .get('codctactble')
-            ?.setValue(_ctctble[0].codctactble);
-    }
-
     filterCtaCtble(event: any) {
         let filtered: any[] = [];
         let query = event.query;
@@ -1638,4 +1654,112 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
       },
   }); 
   }
+
+  seleccionarTodo(dato : any){
+    if (dato === 0) {
+        this.lstItemOC.forEach(product => {
+          product.gas_indsuma = false;
+        });
+        this.checkVisible = false;
+    } else {
+      this.lstItemOC.forEach(product => {
+        product.gas_indsuma = true;
+      });
+        this.checkVisible = true;
+    }
+  }
+
+  changeOC(value:any){
+    console.log('changeOC...', value);
+    console.log('this.lstOrdenC...', this.lstOrdenC);    
+    this.registerFormRegistro.get('iddocumentoprc_origen')?.setValue(value);
+    
+    let codigo =  this.lstOrdenC.filter((x: { idordencompra: any; }) => x.idordencompra === value);
+    console.log('codigo...', codigo);
+   this.traerUnoItems(codigo[0].codigonroorden);
+  }
+
+  traerUnoItems(dato:any) {
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Cargando...!';
+        const objeto = {
+            codigonroorden: dato,
+            idusuario: constantesLocalStorage.idusuario,
+        };
+
+        const $cargarOrdenC = this.proyectosService
+            .ordenCompraTraerItems(objeto)
+            .subscribe({
+                next: (rpta: any) => {
+        this.setSpinner(false);
+                    console.log('traerUnoItems', rpta.ordencompra[0]);
+                    this.ordenCompra = rpta.ordencompra[0];
+                    //this.getOcproveedor(rpta.ordencompra[0].idproveedor);
+                    if (rpta.ordencompra[0].items !== undefined) {
+                        this.lstItemOC = rpta.ordencompra[0].items;
+                    }
+                    this.lstItemOC.forEach(element => {
+                        element.idordencompraitem = 0;
+                        element.gas_indsuma = false;
+
+                    });
+                    
+                },
+                error: (err) => {
+                    this.setSpinner(false);
+                    this.serviceSharedApp.messageToast();
+                },
+                complete: () => {
+                },
+                
+            });
+        this.$listSubcription.push($cargarOrdenC);
+    }
+
+    getDatos(dato:any){
+        console.log('getDatos...', dato);
+        let provee = this.lstProveedores.filter((x: { idcliente: number; }) => x.idcliente === dato);
+        this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
+        this.registerFormRegistro.get('direccion')?.setValue(provee[0].direcresumen);
+    }
+
+    getOportunidades(event:any){
+        let origen = this.registerFormRegistro.value.codtipodoc;
+        this.getOrigen(origen);
+        const objeto = {
+            idcliente :event
+        }
+        this.ordencompraService.getOportunidades(objeto).subscribe({
+            next: (rpta: any) => {
+                this.lstOportunidades = rpta;
+            },
+            error: (err) => {
+                this.messageService.clear();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: mensajesQuestion.msgErrorGenerico,
+                });
+            },
+            complete: () => {
+            },
+        });
+    }
+
+    recuperarItems(){
+        let value = this.registerFormRegistro.get('idordencompra_origen_ctb')?.value;
+        if ( value === 0) {
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Aviso',
+                detail: 'Seleccionar Orden de Compra Origen',
+            });
+            return;
+        }
+    console.log('recuperarItems...', value);
+        let codigo =  this.lstOrdenC.filter((x: { idordencompra: any; }) => x.idordencompra === value);
+    console.log('codigo...', codigo);
+   this.traerUnoItems(codigo[0].codigonroorden);
+    }
+
 }

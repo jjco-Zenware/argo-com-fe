@@ -99,7 +99,7 @@ export class CInformeGastosComponent implements OnInit, OnDestroy {
         };
 
         const $getListarOrdenCompra = this.proyectosService
-            .ordenCompraList(objeto)
+            .ordenCompralistargastos(objeto)
             .subscribe({
                 next: (rpta: any) => {
                     this.setSpinner(false);
@@ -180,23 +180,22 @@ export class CInformeGastosComponent implements OnInit, OnDestroy {
 
     onAccion(item: any) {
         console.log('onAccion', item);
-        this.gasto.idtrx = item.idtrx;
-        console.log('onAccion', item);
-        const ref = this.dialogService.open(
-            CModalTransacComponent,
-            {
-                data: this.gasto,
-                header: item.nomtrx,
-                closeOnEscape: false,
-                styleClass: 'testDialog',
-                width: '40%',
-            }
-        );
+        // this.gasto.idtrx = item.idtrx;
+        // const ref = this.dialogService.open(
+        //     CModalTransacComponent,
+        //     {
+        //         data: this.gasto,
+        //         header: item.nomtrx,
+        //         closeOnEscape: false,
+        //         styleClass: 'testDialog',
+        //         width: '40%',
+        //     }
+        // );
 
-        ref.onClose.subscribe(() => {
-            this.getListar();
-        });
-        //this.getListarGasto(item);
+        // ref.onClose.subscribe(() => {
+        //     this.getListar();
+        // });
+        this.getListarGasto(item);
     }
 
     getExportarExcel() {
@@ -315,17 +314,16 @@ export class CInformeGastosComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (rpta: any) => {
                     console.log('rpta getListar', rpta);
-                    if (rpta.length === 0) {
+                    if (rpta.length === 0 && valor.idtrx !== 158) {
                       this.setSpinner(false);
                         this.messageService.add({
                             severity: 'info',
                             summary: 'Aviso',
-                            detail: 'No existen Gastos Registrados...!',
+                            detail: 'No se puede realizar la transacción, porque no hay gastos o la diferencia es diferente a cero.',
                         });
                     } else {
                       this.setSpinner(false);
                         this.gasto.idtrx = valor.idtrx;
-                        console.log('onAccion', valor);
                         const ref = this.dialogService.open(
                             CModalTransacComponent,
                             {

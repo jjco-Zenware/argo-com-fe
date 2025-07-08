@@ -33,7 +33,7 @@ export class CModalPersonaComponent implements OnInit, OnDestroy {
 
 dropdownItemsNac = [
     { name: 'Extranjero', code: '0' },
-    { name: 'Nacional', code: '1' }
+    { name: 'Peruano', code: '1' }
 ];
 
 dropdownItemsTipNro = [
@@ -94,6 +94,7 @@ lstEnti = [
     nomcomercial: [{ value: null, disabled: false }],
     direcresumen: [{ value: null, disabled: false }, [Validators.required]],
     telefresumen: [{ value: null, disabled: false }],
+    telefmovil: [{ value: null, disabled: false }],
     email: ['', [Validators.required, Validators.email]],
     paginaweb: [{ value: null, disabled: false }],
     facebook: [{ value: null, disabled: false }],

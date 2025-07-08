@@ -1,0 +1,168 @@
+<ng-container *ngIf="vistaLista; else visSecciones">
+    <div class="card m-4">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">   
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-file" label="Nuevo"
+                        pTooltip="Nuevo" tooltipPosition="left" (click)="onNuevo()" ></button>
+                </div>                 
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-base font-semibold">PARTIDAS ORDENES DE SERVICIOS</span>
+                </div>  
+                       
+            </div>
+        </div>
+
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-12 lg:col-9 text-sm  border-round surface-border">            
+            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
+                <label class="font-semibold text-blue-600 text-base">Desde</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
+                </p-calendar>
+            </div>
+            <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
+                <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
+            </div>
+            <div class="field col-6 md:col-2 -mt-4 gap-2">
+                <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
+                <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
+            </div>
+        </form> 
+
+        <p-table #dt1 [value]="lstMovimientos" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+        [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border -mt-3">
+
+        <ng-template pTemplate="header">
+            <tr class="text-sm h-3rem">
+                <th style="width: 10px" class="bg-teal-50 border-1" >
+                    <div class="flex justify-content-between align-items-center">
+                        N°
+                    </div>
+                </th>
+                <th style="width: 80px;" class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        ID <br> DOCUMENTO
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        CÓDIGO
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        CLIENTE 
+                    </div>
+                </th>
+                 <th style="width: 100px;" class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        COD. PROYECTO
+                    </div>
+                </th>
+                <th style="width: 100px;" class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        NOM. PROYECTO
+                    </div>
+                </th>
+                <th style="width: 30px" class="bg-teal-50 border-1" >
+                    <div [ngStyle]="{'width':'30px','text-align':'center'}">
+                        ESTADO
+                    </div>
+                </th>
+                <th style="width: 50px;" class="bg-teal-50 border-1" >
+                    <div class="flex justify-content-between align-items-center">
+                        ACCIONES
+                    </div>
+                </th>
+            </tr>    
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td [ngStyle]="{'width':'10px'}">
+                    {{rowIndex + 1}}
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'50px'}">
+                        {{data.idordencompra }}
+                    </div>
+                </td>
+                <td >
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.codigonroorden}}
+                    </div>
+                </td>
+                <td >
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.nomempresa | uppercase}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'100px'}">
+                        {{data.codigoproyecto }}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'150px'}">
+                        {{data.nomproyecto | uppercase}}
+                    </div>
+                </td>
+                <td>                       
+                    <div [ngStyle]="{'width':'30px','text-align': 'center'}">
+                        <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
+                    </div>
+                </td>
+                <td>
+                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
+                        <!-- <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onVerDetalle(data)"></button> -->
+
+                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                        <button *ngIf="data.estado === 'REG' || data.estado === 'OBS'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
+                        <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0" (click)="toggleMenu($event, data)"
+                            pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
+                        <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="8">Cargando datos. Espere por favor.</td>8
+            </tr>
+        </ng-template>
+    </p-table>
+    </div>
+</ng-container>
+
+<ng-template #visSecciones>
+
+    <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">
+                <div style="display: flex; justify-content: end;" class="mt-2 h-2rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-backward" label="Regresar"
+                        pTooltip="Regresar" tooltipPosition="left" (click)="getBack()" ></button>                    
+                </div>
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-base font-semibold">{{tituloDetalle}}</span>
+                </div>       
+            </div>
+        </div>
+        <app-c-proyectosdet [IA_data]="dataDet"></app-c-proyectosdet>
+    </div>
+
+</ng-template>
+
+<p-toast></p-toast>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>

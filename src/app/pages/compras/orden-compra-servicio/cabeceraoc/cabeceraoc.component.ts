@@ -726,6 +726,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
          item.codproducto = item.CodProducto === undefined ? null : item.CodProducto,
          item.idfamilia = this.idfamilia,
          item.idsubfamilia = this.idsubfamilia,
+         item.tipoigv = 1
     
          this.lstItemOC.push(item)
        });
