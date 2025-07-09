@@ -114,7 +114,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
 
     checkVisible: boolean = false;
     
-    verProyecto: boolean = false;
+    verProyecto: boolean = true;
     verOportunidad: boolean = false;
     
     lstOportunidades: any;
