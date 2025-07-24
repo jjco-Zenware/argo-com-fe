@@ -224,26 +224,28 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
 
         for (let i = 0; i < this.lstExportExcel.length; i++) {
             const objeto = {
-                'Vou.Origen': this.lstExportExcel[i].fecemision,
+                'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
                 'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
-                DOCUMENTO: this.lstExportExcel[i].nrofactura,
-                CLIENTE: this.lstExportExcel[i].nomcomercial,
+                'DOCUMENTO': this.lstExportExcel[i].nrofactura,
+                'CLIENTE': this.lstExportExcel[i].nomcomercial,
                 'CENTRO COSTO': this.lstExportExcel[i].descentrocosto,
-                MONEDA: this.lstExportExcel[i].simbmoneda,
-                'BASE IMPONIBLE': parseFloat(
-                    this.lstExportExcel[i].s_monto
-                ).toFixed(2),
-                IGV: parseFloat(this.lstExportExcel[i].s_igv).toFixed(2),
-                TOTAL: parseFloat(this.lstExportExcel[i].s_monto_total).toFixed(
-                    2
-                ),
-                ESTADO: this.lstExportExcel[i].nomestado,
+                'MONEDA': this.lstExportExcel[i].simbmoneda,
+                'BASE S.': this.lstExportExcel[i].basesol,
+                'IGV S.': this.lstExportExcel[i].igvsol,
+                'TOTAL S.': this.lstExportExcel[i].totalsol,
+                'BASE $': this.lstExportExcel[i].baseDol,
+                'IGV $': this.lstExportExcel[i].igvDol,
+                'TOTAL $': this.lstExportExcel[i].totalDol,
+                // 'BASE IMPONIBLE':  this.lstExportExcel[i].s_monto_rep,
+                // 'IGV': this.lstExportExcel[i].s_igv_rep,
+                // 'TOTAL': this.lstExportExcel[i].s_monto_total_rep,
+                'GLOSA': this.lstExportExcel[i].s_glosa,
+                'ESTADO': this.lstExportExcel[i].nomestado,
                 '% DETRACCIÓN': parseFloat(
                     this.lstExportExcel[i].porc_detraccion
                 ).toFixed(2),
-                'S/ DETRACCIÓN': parseFloat(
-                    this.lstExportExcel[i].s_monto_detraccion_mn_CTB
-                ).toFixed(2),
+                'S/ DETRACCIÓN': this.lstExportExcel[i].s_monto_detraccion_mn_CTB
+               
             };
             this.lstExportar.push(objeto);
         }

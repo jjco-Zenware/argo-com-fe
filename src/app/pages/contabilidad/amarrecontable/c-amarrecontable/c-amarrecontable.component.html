@@ -1,0 +1,84 @@
+    <div class="card m-4">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">   
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
+                        pTooltip="Nuevo" tooltipPosition="left" (click)="onNuevo()" ></button>
+                </div>  
+                <button pButton type="button" (click)="getListar()" pTooltip="Actualizar Registros" tooltipPosition="bottom" 
+                    class="font-semibold mt-2 justify-content-center h-2rem w-3rem w-auto p-button-outlined" icon="pi pi-refresh"></button>               
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-base font-semibold">CONFIGURACIÓN CONTABLE</span>
+                </div>                         
+            </div>
+        </div>
+
+        <p-table #dt1 [value]="lstAmarreContable" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
+            styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
+            <ng-template pTemplate="header">
+                <tr class="text-sm h-1rem">
+                    <th style="width: 20px" class="bg-teal-50 border-1" >
+                        <div class="flex justify-content-between align-items-center">
+                            N°
+                        </div>
+                    </th>
+                    <th style="width: 200px;" class="bg-teal-50 border-1">DOCUMENTO <br> PRC</th>
+                    <th style="width: 250px;" class="bg-teal-50 border-1">MOTIVO</th>
+                    <th style="width: 200px;" class="bg-teal-50 border-1">CONCEPTO <br> CTBLE</th>
+                    <th style="width: 200px;" class="bg-teal-50 border-1">CTA <br> CTBLE</th>
+                    <th style="width: 200px;" class="bg-teal-50 border-1">PARTIDA <br> DOBLE</th>
+                    <th style="width: 100px;" class="bg-teal-50 border-1">ACCIÓN</th>
+                </tr>
+              
+                <tr >
+                    <th></th>
+                    <th *ngFor="let col of cols">
+                        <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>
+                        
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex"> 
+                <tr class="text-sm">
+                    <td>{{rowIndex + 1}}</td>
+                    <td>{{dato.nomtipodocprc}}</td>
+                    <td>{{dato.nomcategoria}}</td>
+                    <td>{{dato.nomconceptoctble}}</td>
+                    <td>{{dato.nomctactble}}</td>
+                    <td>{{dato.nompartidacfg}}</td>
+                    <td>
+                        <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'30px'}">
+
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(dato)"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <!-- <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="3" class="text-right">Totals</td>
+                    <td>{{lastYearTotal | currency: 'USD'}}</td>
+                    <td>{{thisYearTotal | currency: 'USD'}}</td>
+                </tr>
+            </ng-template> -->
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="12">No se encontraron registros.</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="loadingbody">
+                <tr>
+                    <td colspan="12">Cargando datos. Espere por favor.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+
+
+<p-toast></p-toast>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>

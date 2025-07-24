@@ -26,20 +26,26 @@
                         </span>
                     </div> 
                     <div class="lg:col-6"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field">
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field h-4rem">
                         <label class="block text-900 font-semibold mb-1">N° </label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="labelnrodocumento"/>
                         </span>
                     </div> 
-                    <div class="col-6 sm:col-6 lg:col-5 md:col-12 -mt-5">                            
+                    <div class="col-6 sm:col-6 lg:col-5 md:col-12 field h-4rem">                            
                         <label class="block text-900 font-semibold mb-1">Almacen Ingreso<span class="text-red-500 font-bold"> * </span></label>                            
                         <span>
                             <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" (onChange)="changeAlmacen()"
                             optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
                         </span>
                     </div> 
-                    <div class="lg:col-7"></div>
+                    <div class=" sm:col-8 lg:col-4 md:col-12 "></div> 
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field h-4rem">
+                        <label class="block text-900 font-semibold mb-1">N° Guia </label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="sustentodoc"/>
+                        </span>
+                    </div> 
                                            
 
                         <!-- <div class="sm:col-6 lg:col-4 md:col-3 col-4 -mt-6">
@@ -50,7 +56,7 @@
                             </span>
                         </div> 
                         <div class=" sm:col-8 lg:col-7 md:col-12"></div>  -->
-                        <div class="col-12 field -mt-3">
+                        <div class="col-12 field field h-4rem">
                             <label class="block text-900 font-semibold mb-1">Proyecto <span class="text-red-500 font-bold"> * </span></label>                        
                             <span class="p-fluid mt-1">
                                 <p-dropdown [options]="lstProyectos" formControlName="idproyecto" placeholder="Seleccionar Proyecto" optionLabel="s_nomproyecto" class="p-inputtext-sm"
@@ -58,14 +64,14 @@
                             </span>
                         </div>
                         
-                        <div class="sm:col-6 lg:col-5 md:col-6 col-12 -mt-5">                            
+                        <div class="sm:col-6 lg:col-5 md:col-6 col-12 field h-4rem">                            
                             <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
                             <span>
                                 <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
                                 optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead></p-dropdown>            
                             </span>
                         </div>   
-                        <div class="sm:col-6 lg:col-7 md:col-3 col-12 -mt-5">
+                        <div class="sm:col-6 lg:col-7 md:col-3 col-12 field h-4rem">
                             <div class="flex">
                                 <label class="block text-900 font-semibold mb-1">Orden Compra <span class="text-red-500 font-bold"> * </span></label>
                             </div>                            
@@ -75,7 +81,7 @@
                             </span>
                             <input *ngIf="!verOc" pInputText type="text" class="p-inputtext-sm surface-100" readonly="true" formControlName="label_resumen_alm"/>
                         </div> 
-                        <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-4">
+                        <div class="sm:col-12 lg:col-12 md:col-12 col-12 ">
                             <label class="block text-900 font-semibold mb-1">Justificación</label>                        
                             <span class="p-fluid">
                                 <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" 

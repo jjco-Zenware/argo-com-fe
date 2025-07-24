@@ -51,9 +51,9 @@
                         </div>                        
                                                 
                         <span inputStyleClass="font-semibold surface-300">
-                            <p-dropdown [options]="lstCliente" placeholder="Cliente..."  formControlName="idproveedor" class="p-inputtext-sm" styleClass="surface-100"
-                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" readonly=true styleClass="surface-100"
-                            [dropdownIcon]="'none'"></p-dropdown>            
+                            <p-dropdown [options]="lstCliente" placeholder="Cliente..."  formControlName="idproveedor" class="p-inputtext-sm" 
+                            optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead  [filter]="true"
+                                (onChange)="getDatos($event.value)"></p-dropdown>            
                         </span>
                     </div>  
                     <div class="lg:col-3 "></div>  
@@ -247,14 +247,14 @@
                             <label class="text-900 mb-1">Tipo Detracción</label>
                             <span class="p-fluid mt-1">
                                 <p-dropdown [options]="lstTipoDetra" formControlName="detraccion_tipo" placeholder="Seleccionar..." optionLabel="nomitemsunat" 
-                                optionValue="codsunat" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                optionValue="codsunat" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true"></p-dropdown>
                             </span>
                         </div> 
                         <div *ngIf="verDetraccion" class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
                             <label class="text-900 mb-1">Tipo Pago</label>
                             <span class="p-fluid mt-1">
                                 <p-dropdown [options]="lstTipoPagoDetra" formControlName="detraccion_tipo_pago" placeholder="Seleccionar..." optionLabel="nomitemsunat" 
-                                optionValue="codsunat" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                optionValue="codsunat" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true"></p-dropdown>
                             </span>
                         </div> 
                         <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field">

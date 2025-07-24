@@ -17,18 +17,28 @@
                     </div>
                 </ng-template>
 
-                <form [formGroup]="registerFormRegistro" class="p-fluid grid lg:col-7 col-12 border-1 border-round surface-border p-2 m-2">                        
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+                <form [formGroup]="registerFormRegistro" class="p-fluid grid lg:col-7 col-12 border-1 border-round surface-border p-2 m-2">      
+                    <div class="col-6 sm:col-4 lg:col-3 md:col-12 justify-content-end h-4rem field">
+                        <div class="flex mb-1">
+                            <label class="block text-900 font-semibold">Fec. Emisión</label>    
+                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
+                        </div>
+                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
+                            <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
+                            inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
+                        </span>
+                    </div>  
+                    <div class="lg:col-3"></div>                  
+                    <!-- <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
                         <div class="flex mb-1">
                             <label class="block text-900 font-semibold">Fecha Registro</label>    
                             <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
                         </div>
                         <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
-                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
+                            <p-calendar formControlName="fecreg" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
                             inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
                         </span>
-                    </div> 
-                    <div class="lg:col-3"></div>   
+                    </div>   -->
                     <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">ID Registro</label>
                         <span class="p-fluid">
@@ -140,7 +150,7 @@
                         </span>
                     </div>                  
                     <div class="lg:col-3"></div>  
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field -mt-1">
+                    <!-- <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field -mt-1">
                         <label class="block text-900 font-semibold mb-1">Moneda</label>  
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstMonedas" formControlName="idmoneda"  optionLabel="desmoneda" styleClass="surface-100" [dropdownIcon]="'none'"
@@ -166,13 +176,9 @@
                             <label class="block text-900 font-semibold">Fec. Emisión</label>    
                             <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
                         </div>
-                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;" >
-                            <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="false" [required]="true" inputId="start"
-                            inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm" [readonlyInput]="true" ></p-calendar>
-                        </span>
-                        <!-- <span class="p-fluid">
+                        <span class="p-fluid">
                             <input pInputText type="text" formControlName="fecemision" readonly="true" class="p-inputtext-sm surface-100" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
-                        </span> -->
+                        </span>
                     </div>     
                     
                     <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field -mt-3">
@@ -198,7 +204,7 @@
                             optionValue="codsunat" appendTo="body" readonly="true" class="p-inputtext-sm" styleClass="surface-100" [dropdownIcon]="'none'"></p-dropdown>
                         </span>
                     </div>   
-                    <div class="lg:col-3"></div> 
+                    <div class="lg:col-3"></div>  -->
 <!--                     
                     <p-divider class="sm:col-12 lg:col-9 md:col-6 col-12 -mt-4 -mb-4">                       
                     </p-divider>

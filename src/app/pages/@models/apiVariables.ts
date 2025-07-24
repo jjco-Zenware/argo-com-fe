@@ -240,4 +240,8 @@ export const constantesApiWeb = {
     listarPartidas: controllerProducto + '/listarpartidas',
     ordenCompralistargastos: controllerComercial + '/ordenCompralistargastos',
     ordenCompraTraerItems: controllerComercial + '/ordencompratrearitems',
+    lstCategoriasDoc: controllerContabilidad + '/listarcategoriadoc/',
+    listarAmarreContable: controllerContabilidad + '/listarAmarreContable',
+    listarDocumentoPrc: controllerContabilidad + '/listartipodocumentoprc',
+    amarrecontablePrc: controllerContabilidad + '/amarrecontableprc',
 }

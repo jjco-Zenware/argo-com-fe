@@ -257,8 +257,8 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
             if (rpta.ordencompra[0].estado !== 'REG') {
               this.verOc =  false; 
             }
-            //this.getOrigen(rpta.ordencompra[0].idtipoproyecto); 
-            this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto); 
+            this.getOrigen(rpta.ordencompra[0].idtipoproyecto); 
+            //this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto); 
           this.visibleDocument = false;
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
@@ -654,6 +654,11 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
           this.errorMensaje="Seleccionar Almacen...!";
           _error = true;
       }
+       if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
+      {
+          this.errorMensaje="Ingresar Guia...!";
+          _error = true;
+      }
 
       if (!_error && this.registerFormRegistro.value.idproyecto === null)
       {
@@ -661,11 +666,7 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === ''))
-      {
-          this.errorMensaje="Ingresar Guia...!";
-          _error = true;
-      }
+     
 
       if (!_error && this.registerFormRegistro.value.idproveedor === null)
       {
@@ -677,12 +678,6 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
         //this._alm_idordencompra === 0 || this._alm_idordencompra === null))
       {
           this.errorMensaje="Seleccionar Orden Compra...!";
-          _error = true;
-      }
-
-      if (!_error && (this.registerFormRegistro.value.sustentodoc === '') )
-      {
-          this.errorMensaje="Ingresar N° de Guia...!";
           _error = true;
       }
 
@@ -784,6 +779,12 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
 
       this.lstItemOC = data;
     }
+
+    getOrigen(data:any){
+    console.log('getOrigen', data);
+    this.cargarProyectos(data);   
+
+  }
 
     cargarProyectos(dato:any){
       console.log('cargarProyectos', dato);

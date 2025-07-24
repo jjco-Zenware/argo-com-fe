@@ -41,52 +41,53 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
     lstCtaCtble: any[] = [];
     lstCentroCosto: any[] = [];
     lstcategoria: any[] = [];
-    lstItemOC: any[] = [{        
-          idordencompraitem: 0,
-          idordencompra: 0,
-          idtipoprod: 0,
-          idprod: 100,
-          descripcion: 'OTROS GASTOS',
-          cantidad: 1,
-          codunidad: 'UNID',
-          preciocosto: 0,
-          descuento: 0,
-          margen: 0,
-          precioventa: 0,
-          indvig: true,
-          iduserreg: 0,
-          fecreg :this.serviceUtilitario.obtenerFechaActual(),
-          iduseract: 0,
-          fecact: this.serviceUtilitario.obtenerFechaActual(),
-          coditem:  '0',
-          idmarca: 109,
-          nomprod: '',
-          nommarca: '',
-          preciocostototal: 0,
-          precioventatotal: 0,
-          preprofit: 0,
-          nomtipoprod: '',
-          nomproveedor: '',
-          serialnumber: '',
-          sku: '',
-          nrocontrato: '',
-          nromeses: 0,
-          fecini: null,
-          fecfin: null,
-          idunidad: 130,
-          nomunidad: '', 
-          valor: '', 
-          ref1: '', 
-          codproducto: '', 
-          despro: '',
-          tipoigv: 1,
-      }
-];
+    lstItemOC: any[] = [
+        {
+            idordencompraitem: 0,
+            idordencompra: 0,
+            idtipoprod: 0,
+            idprod: 100,
+            descripcion: 'OTROS GASTOS',
+            cantidad: 1,
+            codunidad: 'UNID',
+            preciocosto: 0,
+            descuento: 0,
+            margen: 0,
+            precioventa: 0,
+            indvig: true,
+            iduserreg: 0,
+            fecreg: this.serviceUtilitario.obtenerFechaActual(),
+            iduseract: 0,
+            fecact: this.serviceUtilitario.obtenerFechaActual(),
+            coditem: '0',
+            idmarca: 109,
+            nomprod: '',
+            nommarca: '',
+            preciocostototal: 0,
+            precioventatotal: 0,
+            preprofit: 0,
+            nomtipoprod: '',
+            nomproveedor: '',
+            serialnumber: '',
+            sku: '',
+            nrocontrato: '',
+            nromeses: 0,
+            fecini: null,
+            fecfin: null,
+            idunidad: 130,
+            nomunidad: '',
+            valor: '',
+            ref1: '',
+            codproducto: '',
+            despro: '',
+            tipoigv: 1,
+        },
+    ];
     lstTipocuenta: any[] = [];
     lstCuentas: any[] = [];
     lstBancos: any[] = [];
     verTipo: boolean = false;
-    lstcategoriaFinal: any[] = [];
+    //lstcategoriaFinal: any[] = [];
 
     constructor(
         public refDatoItem: DynamicDialogRef,
@@ -99,7 +100,7 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
         private serviceUtilitario: UtilitariosService,
         private ordencompraService: OrdencompraService,
         private comprasService: ComprasService,
-        private contabilidadService: ContabilidadService,
+        private contabilidadService: ContabilidadService
     ) {}
 
     ngOnInit(): void {
@@ -220,9 +221,14 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             gas_nrooperacionbco: [{ value: '', disabled: false }],
             gas_observacionbco: [{ value: '', disabled: false }],
             gas_codtipocuenta: [{ value: 0, disabled: false }],
-            gas_fecoperacion: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
+            gas_fecoperacion: [
+                {
+                    value: this.serviceUtilitario.obtenerFechaActual(),
+                    disabled: false,
+                },
+            ],
             gas_iduserdestino: [{ value: null, disabled: false }],
-            gas_ctabeneficiario: [{ value: '', disabled: false }]
+            gas_ctabeneficiario: [{ value: '', disabled: false }],
         });
     }
 
@@ -251,7 +257,9 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                         )
                     );
                     this.getBusquedaRUC();
-                    this.changeTipoDoc2(parseInt(rpta.ordencompra[0].tipodoc_ctb));
+                    this.changeTipoDoc2(
+                        parseInt(rpta.ordencompra[0].tipodoc_ctb)
+                    );
                     this.changeBanco(rpta.ordencompra[0].gas_idbancobco);
                 },
                 error: (err) => {
@@ -302,12 +310,12 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
                 );
             }
             if (gas_fecoperacion.toString().length === 10) {
-            gas_fecoperacion = new Date(
-                this.serviceUtilitario.formatFecha(gas_fecoperacion)
-            );
+                gas_fecoperacion = new Date(
+                    this.serviceUtilitario.formatFecha(gas_fecoperacion)
+                );
+            }
         }
-        }
-        let monto =  (this.registerFormRegistro.value.monto * 100)/118;
+        let monto = (this.registerFormRegistro.value.monto * 100) / 118;
 
         this.lstItemOC.map((item: any) => {
             item.preciocosto = monto;
@@ -433,17 +441,13 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
         ) {
             this.errorMensaje = 'Ingresar Forma de Pago...!';
             _error = true;
-        }        
-
-       
-
-      
+        }
 
         if (this.verTipo) {
             if (
                 !_error &&
                 (this.registerFormRegistro.value.gas_idbancobco === '' ||
-                    this.registerFormRegistro.value.gas_idbancobco === null||
+                    this.registerFormRegistro.value.gas_idbancobco === null ||
                     this.registerFormRegistro.value.gas_idbancobco === 0)
             ) {
                 this.errorMensaje = 'Seleccionar Banco...!';
@@ -453,7 +457,8 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             if (
                 !_error &&
                 (this.registerFormRegistro.value.gas_codtipocuenta === '' ||
-                    this.registerFormRegistro.value.gas_codtipocuenta === null||
+                    this.registerFormRegistro.value.gas_codtipocuenta ===
+                        null ||
                     this.registerFormRegistro.value.gas_codtipocuenta === 0)
             ) {
                 this.errorMensaje = 'Seleccionat Tipo de Cuenta...!';
@@ -463,38 +468,38 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
             if (
                 !_error &&
                 (this.registerFormRegistro.value.gas_idcuentaprovbco === '' ||
-                    this.registerFormRegistro.value.gas_idcuentaprovbco === null||
+                    this.registerFormRegistro.value.gas_idcuentaprovbco ===
+                        null ||
                     this.registerFormRegistro.value.gas_idcuentaprovbco === 0)
             ) {
                 this.errorMensaje = 'Seleccionar Cuenta...!';
                 _error = true;
             }
-        }else{
- if (
-            !_error &&
-            (this.registerFormRegistro.value.idcategoria === '' ||
-                this.registerFormRegistro.value.idcategoria === null||
-                this.registerFormRegistro.value.idcategoria === 0)
-        ) {
-            this.errorMensaje = 'Seleccionar Tipo Gasto...!';
-            _error = true;
+        } else {
+            if (
+                !_error &&
+                (this.registerFormRegistro.value.idcategoria === '' ||
+                    this.registerFormRegistro.value.idcategoria === null ||
+                    this.registerFormRegistro.value.idcategoria === 0)
+            ) {
+                this.errorMensaje = 'Seleccionar Tipo Gasto...!';
+                _error = true;
+            }
+
+            // if (
+            //     !_error &&
+            //     (this.registerFormRegistro.value.codctactble === '' ||
+            //         this.registerFormRegistro.value.codctactble === null)
+            // ) {
+            //     this.errorMensaje = 'Ingresar Cuenta Ctble...!';
+            //     _error = true;
+            // }
         }
 
         if (
             !_error &&
-            (this.registerFormRegistro.value.codctactble === '' ||
-                this.registerFormRegistro.value.codctactble === null)
-        ) {
-            this.errorMensaje = 'Ingresar Cuenta Ctble...!';
-            _error = true;
-        }
-        }
-
-
-          if (
-            !_error &&
             (this.registerFormRegistro.value.idcentrocosto === '' ||
-                this.registerFormRegistro.value.idcentrocosto === null||
+                this.registerFormRegistro.value.idcentrocosto === null ||
                 this.registerFormRegistro.value.idcentrocosto === 0)
         ) {
             this.errorMensaje = 'Seleccionar Centro Costo...!';
@@ -756,31 +761,32 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
 
     changeTipoDoc(value: any) {
         console.log('changeTipoDoc...', value);
-        if (value === 0 || value === 10 || value === 11  || value === 12) {
+        if (value === 0 || value === 10 || value === 11 || value === 12) {
             this.verTipoDco = false;
             this.registerFormRegistro
                 .get('nrodocumento')
                 ?.setValue('00000000000');
             this.getBusquedaRUC();
-            this.lstcategoriaFinal = this.lstcategoria;
+            //this.lstcategoriaFinal = this.lstcategoria;
         } else {
             this.verTipoDco = true;
             this.registerFormRegistro.get('nrodocumento')?.setValue('');
             this.registerFormRegistro.get('idproveedor')?.setValue('');
             this.registerFormRegistro.get('direccion')?.setValue('');
-            
+
             this.registerFormRegistro.get('idcategoria')?.setValue('');
             this.registerFormRegistro.get('codctactble')?.setValue('');
             this.registerFormRegistro.get('observacion')?.setValue('');
 
-            let lista = this.lstcategoria.filter((x: { coditem: any; codlabel: any }) => x.coditem === '2');
-            this.lstcategoriaFinal = lista;
+            let lista = this.lstcategoria.filter(
+                (x: { coditem: any; codlabel: any }) => x.coditem === '2'
+            );
+            //this.lstcategoriaFinal = lista;
         }
 
-
-        if (value === 10 || value === 11 ) {
+        if (value === 10 || value === 11) {
             this.verTipo = true;
-        }else{
+        } else {
             this.verTipo = false;
         }
     }
@@ -826,15 +832,16 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
     }
 
     listarTipoGasto() {
-        this.contabilidadService.listarItemsTabla(128).subscribe({
+        this.contabilidadService.listarCategoriasDoc(7).subscribe({
             next: (rpta: any) => {
                 console.info('listarItemsTabla : ', rpta);
+                this.lstcategoria = rpta;
                 //this.lstcategoria = rpta.filter({x:any});
-                this.lstcategoria = rpta.filter(
-                    (x: { coditem: any }) =>
-                        x.coditem !== '1'
-                );
-                this.lstcategoriaFinal = this.lstcategoria
+                // this.lstcategoria = rpta.filter(
+                //     (x: { coditem: any }) =>
+                //         x.coditem !== '1'
+                // );
+                // this.lstcategoriaFinal = this.lstcategoria
             },
             error: (err) => {
                 console.info('error : ', err);
@@ -858,81 +865,82 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
     }
 
     changeTipo(item: any) {
-        console.log('changeTipo...', item); 
+        console.log('changeTipo...', item);
         let motivo = '';
         let tipo = '';
 
         const motivoArr = this.lstcategoria.filter(
-                    (x: { iditem: any }) =>
-                        x.iditem  == item.value
-                );
+            (x: { iditem: any }) => x.iditem == item.value
+        );
         console.log('motivoArr...', motivoArr);
         motivo = motivoArr.length > 0 ? motivoArr[0].valoritem || '' : '';
         tipo = motivoArr.length > 0 ? motivoArr[0].codlabel || '' : '';
-        console.log('motivo...', motivo); 
-        console.log('tipo...', tipo); 
+        console.log('motivo...', motivo);
+        console.log('tipo...', tipo);
 
         this.registerFormRegistro.get('observacion')?.setValue(motivo);
-        this.registerFormRegistro.get('codctactble')?.setValue(tipo.toString());        
+        this.registerFormRegistro.get('codctactble')?.setValue(tipo.toString());
     }
-     
+
     listaTipoCuenta() {
-        const $listaTipo = this.ordencompraService.obtenerTipoDocumento(106).subscribe({
-            next: (rpta: any) => {
-            this.lstTipocuenta = rpta;
-            },
-            error: (err) => {
-            this.serviceSharedApp.messageToast()
-            },
-            complete: () => {
-            },
-        });
+        const $listaTipo = this.ordencompraService
+            .obtenerTipoDocumento(106)
+            .subscribe({
+                next: (rpta: any) => {
+                    this.lstTipocuenta = rpta;
+                },
+                error: (err) => {
+                    this.serviceSharedApp.messageToast();
+                },
+                complete: () => {},
+            });
         this.$listSubcription.push($listaTipo);
     }
 
-    changeBanco(data:any){
-      console.log('changeBanco...', data);
-      const $personaProveedorlist = this.ordencompraService.listaPersonaLinea(3324).subscribe({
-        next: (rpta: any) => {
-          this.setSpinner(false);
-          console.log('lstCuentas...', rpta);
+    changeBanco(data: any) {
+        console.log('changeBanco...', data);
+        const $personaProveedorlist = this.ordencompraService
+            .listaPersonaLinea(3324)
+            .subscribe({
+                next: (rpta: any) => {
+                    this.setSpinner(false);
+                    console.log('lstCuentas...', rpta);
 
-           this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
-          
-        },
-        error: (err) => {
-          this.messageService.clear();
-          this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: mensajesQuestion.msgErrorGenerico
-          })
-        },
-        complete: () => {
-          this.setSpinner(false);
-        },
-      });
-      this.$listSubcription.push($personaProveedorlist);
+                    this.lstCuentas = rpta.filter(
+                        (item: any) => item.idbanco === data
+                    );
+                },
+                error: (err) => {
+                    this.messageService.clear();
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: mensajesQuestion.msgErrorGenerico,
+                    });
+                },
+                complete: () => {
+                    this.setSpinner(false);
+                },
+            });
+        this.$listSubcription.push($personaProveedorlist);
     }
 
-    listaBanco(){    
-    const $listaBanco = this.ordencompraService.listarBanco()
-      .subscribe({
-        next: (rpta:any) => {
-          console.log('rpta listaBanco', rpta);
-            this.lstBancos = rpta;
-        },
-        error:(err)=>{
-          this.messageService.clear();
-          this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: mensajesQuestion.msgErrorGenerico
-          })
-        },
-        complete:() => {
-        }
-      });
-    this.$listSubcription.push($listaBanco)
-  }
+    listaBanco() {
+        const $listaBanco = this.ordencompraService.listarBanco().subscribe({
+            next: (rpta: any) => {
+                console.log('rpta listaBanco', rpta);
+                this.lstBancos = rpta;
+            },
+            error: (err) => {
+                this.messageService.clear();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: mensajesQuestion.msgErrorGenerico,
+                });
+            },
+            complete: () => {},
+        });
+        this.$listSubcription.push($listaBanco);
+    }
 }

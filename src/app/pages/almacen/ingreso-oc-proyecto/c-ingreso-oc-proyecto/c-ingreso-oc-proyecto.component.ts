@@ -276,7 +276,7 @@ export class CIngresoOcProyectoComponent implements OnInit, OnDestroy{
           console.log('this.listadoArchivos ...', this.listadoArchivos );
 
           if (this.listadoArchivos.length === 0) {
-            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Adjunto...!' });
                 return;
           }else{
             this.ordenCompra.idtrx = valor.idtrx;

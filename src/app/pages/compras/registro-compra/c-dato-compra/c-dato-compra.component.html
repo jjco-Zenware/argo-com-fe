@@ -2,11 +2,8 @@
     <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
         <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem"
             (click)="guardarOC()"></button>
-        <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar"
-            class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>
-        <!-- 
-        <button *ngIf="verbtnOrden" pButton icon="pi pi-file" label="Ver Orden Compra" class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>
-        <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton> -->
+        <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>        
+        <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
     </div>
     <div class="card p-2">
         <p-tabView>
@@ -180,15 +177,11 @@
 
                     <p-divider class="sm:col-12 lg:col-9 md:col-6 col-12 -mt-2 -mb-4">
                     </p-divider>
-                    <div class="lg:col-3"></div>
+                    <!-- <div class="lg:col-3"></div>
                     <div class="sm:col-12 lg:col-5 md:col-12 field h-4rem mt-1">
                         <label class="text-900 mb-1">Cuenta Contable<span class="text-red-500 font-bold">
                                 *
                             </span></label>
-                        <!-- <span class="p-fluid mt-1">
-                            <p-autoComplete formControlName="codctactble" [dropdown]="true" [suggestions]="filteredCtaCtble" (completeMethod)="filterCtaCtble($event)" 
-                            field="s_desctactble" appendTo="body" class="p-inputtext-sm" (onSelect)="selectCuenta($event)" [readonly]=onlyRead ></p-autoComplete>
-                        </span>  -->
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstCtaCtble" formControlName="codctactble"
                                 placeholder="Seleccionar..." optionLabel="s_desctactble" class="p-inputtext-sm"
@@ -205,7 +198,15 @@
                                 [readonly]="onlyRead"></p-dropdown>
                         </span>
                     </div>
-                    <div class="lg:col-3"></div>
+                    <div class="lg:col-3"></div> -->
+                    <div class="sm:col-12 lg:col-5 md:col-12 h-4rem field">
+                        <label class="text-900 mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstCategoriaDoc" formControlName="idcategoria" optionLabel="nomcategoria" placeholder="Seleccionar..."
+                                optionValue="idcategoria" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div>
+                    <div class="lg:col-7"></div>
                     <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 mb-1">Origen</label>
                         <span class="p-fluid mt-1">

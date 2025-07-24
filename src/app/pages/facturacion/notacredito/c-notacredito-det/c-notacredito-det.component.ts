@@ -168,12 +168,12 @@ createFormRegistro() {
     codigonroorden:[{ value: '', disabled: true }],
     nomproyecto:[{ value: '', disabled: false }],
     nrodocumento:[{ value: '', disabled: false }],
-    fecemision: [{ value: '', disabled: false, }],
+    fecemision: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
     tc:[{ value: '', disabled: false }],
     tipodoc_ctb:[{ value: 3, disabled: false }],
     nroserie_ctb:[{ value: '', disabled: false }],
     nrodocumento_ctb:[{ value: '', disabled: false }],
-    fecvencimiento: [{ value: '', disabled: false, }],
+    fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
     nrocuotas:[{ value: 1, disabled: false }],
     porc_detraccion:[{ value: 0, disabled: false }],
     s_monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
@@ -203,6 +203,7 @@ createFormRegistro() {
     nroserie_ctb_origen:[{ value: null, disabled: false }],
     nrodocumento_ctb_origen:[{ value: null, disabled: false }],
     enlaceFEL:[{ value: null, disabled: false }],
+    //fecreg: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
   });
 
   

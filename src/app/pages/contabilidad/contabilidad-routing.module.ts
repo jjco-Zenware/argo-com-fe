@@ -42,6 +42,11 @@ const routes: Routes = [
     path: 'plancontable',
     loadChildren: () => import('./plancontable/plancontable.module').then(m => m.PlanContableModule),
     data: { breadcrumb: 'Plan Contable' }
+  },
+  {
+    path: 'amarrecontable',
+    loadChildren: () => import('./amarrecontable/amarrecontable.module').then(m => m.AmarreContableModule),
+    data: { breadcrumb: 'Amarre Contable' }
   }
  
 ];

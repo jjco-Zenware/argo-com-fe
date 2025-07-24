@@ -21,6 +21,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { LibroDiarioModule } from '../../contabilidad/librodiario/librodiario.module';
 import { MarketingService } from '../../marketing/service/marketingServices';
 import { DropdownModule } from 'primeng/dropdown';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,8 @@ import { DropdownModule } from 'primeng/dropdown';
     TagModule,
     RegistroProveedorModule,
     LibroDiarioModule,
-    DropdownModule 
+    DropdownModule ,
+    SplitButtonModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService, MarketingService]
 })

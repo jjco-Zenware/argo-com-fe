@@ -71,7 +71,8 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         { field: 's_monto_total', header: 'TOTAL' },
         { field: 'nomestado', header: 'ESTADO' },
         { field: 'porc_detraccion', header: 'ESTADO' },
-        { field: 's_monto_detraccion_mn_CTB', header: 'ESTADO' }
+        { field: 's_monto_detraccion_mn_CTB', header: 'ESTADO' },
+        { field: 's_glosa', header: 'ESTADO' }
     ];
   }
 
@@ -311,6 +312,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
               'BASE IMPONIBLE': parseFloat(this.lstExportExcel[i].s_monto).toFixed(2),
               'IGV': parseFloat(this.lstExportExcel[i].s_igv).toFixed(2),
               'TOTAL': parseFloat(this.lstExportExcel[i].s_monto_total).toFixed(2),
+              'GLOSA': this.lstExportExcel[i].s_glosa,
               'ESTADO' : this.lstExportExcel[i].nomestado,
               '% DETRACCIÓN' : parseFloat(this.lstExportExcel[i].porc_detraccion).toFixed(2),
               'S/ DETRACCIÓN' : parseFloat(this.lstExportExcel[i].s_monto_detraccion_mn_CTB).toFixed(2),

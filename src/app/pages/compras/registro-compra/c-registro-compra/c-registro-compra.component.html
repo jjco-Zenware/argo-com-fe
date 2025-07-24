@@ -108,7 +108,12 @@
                         <div class="justify-content-end ">
                             TOTAL
                         </div>
-                    </th>      
+                    </th>     
+                    <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            GLOSA
+                        </div>
+                    </th> 
                     <th style="width: 80px" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'width':'70px','text-align':'center'}">
                             ESTADO
@@ -213,6 +218,11 @@
                             {{data.s_monto_total | number: '0.2-2'  }}
                         </div>
                     </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px'}">
+                            {{data.s_glosa | uppercase}}
+                        </div>
+                    </td>
                     <td>                       
                         <div [ngStyle]="{'width':'70px','text-align': 'center'}">
                             <p-tag [style]="{'width':'100%'}" [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
@@ -237,8 +247,8 @@
                                 pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
                             <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
                             <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onVerDetalle(data)"></button>
-                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500" (click)="onVer(data)"></button>
-                            <button *ngIf="data.estado === 'REG'" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-yellow-500" (click)="onEditar(data)"></button>
+                            <!-- <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500" (click)="onVer(data)"></button> -->
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-yellow-500" (click)="onEditar(data)"></button>
                         </div>
                     </td>
                 </tr>

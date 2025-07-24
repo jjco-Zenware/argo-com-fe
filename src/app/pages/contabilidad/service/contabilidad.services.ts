@@ -73,4 +73,24 @@ export class ContabilidadService {
         const url = `${constantesApiWeb.lstItemsTabla}${codigo}`;
         return this.http.get<any>(url)
     }
+
+    listarCategoriasDoc(codigo: any) {
+        const url = `${constantesApiWeb.lstCategoriasDoc}${codigo}`;
+        return this.http.get<any>(url)
+    }
+
+    listarAmarreContable(objeto: any) {
+        const url = `${constantesApiWeb.listarAmarreContable}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+    listarDocumentoPrc() {
+        const url = `${constantesApiWeb.listarDocumentoPrc}`;
+        return this.http.get<any>(url)
+    }
+
+    amarrecontablePrc(objeto: any) {
+        const url = `${constantesApiWeb.amarrecontablePrc}`;
+        return this.http.post<any>(url, objeto)
+    }
 }

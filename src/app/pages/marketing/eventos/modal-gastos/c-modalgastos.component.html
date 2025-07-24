@@ -103,10 +103,10 @@
                     </span>
                 </div>
                 <div *ngIf="!verTipo"class="sm:col-12 lg:col-4 md:col-12 col-6 h-4rem field -mt-1">
-                    <label class="text-900 font-semibold mb-1">Tipo Gasto<span class="text-red-500 font-bold"> * </span></label>
+                    <label class="text-900 font-semibold mb-1">Motivo<span class="text-red-500 font-bold"> * </span></label>
                     <span>
-                        <p-dropdown [options]="lstcategoriaFinal" formControlName="idcategoria" optionLabel="valoritem" placeholder="Seleccionar..."
-                        optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeTipo($event)" [filter]="true" ></p-dropdown>
+                        <p-dropdown [options]="lstcategoria" formControlName="idcategoria" optionLabel="nomcategoria" placeholder="Seleccionar..."
+                        optionValue="idcategoria" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="changeTipo($event)" [filter]="true" ></p-dropdown>
                     </span>
                 </div> 
                 <div *ngIf="!verTipo" class="sm:col-12 lg:col-8 md:col-12 field h-4rem -mt-1">

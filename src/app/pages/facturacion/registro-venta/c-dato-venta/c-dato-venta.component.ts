@@ -1581,4 +1581,11 @@ createFormRegistro() {
         this.onlyReadMonto = true;
       }
     }
+
+    getDatos(dato:any){
+        console.log('getDatos...', dato);
+        let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
+        this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
+        this.registerFormRegistro.get('direccion')?.setValue(provee[0].direcresumen);
+    }
 }
