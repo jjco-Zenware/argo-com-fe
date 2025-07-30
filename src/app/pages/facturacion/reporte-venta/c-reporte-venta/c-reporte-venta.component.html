@@ -114,6 +114,11 @@
                             TOTAL
                         </div>
                     </th>      
+                     <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            GLOSA
+                        </div>
+                    </th> 
                     <th style="width: 80px" class="bg-teal-50 border-1">
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
                             ESTADO
@@ -200,6 +205,11 @@
                     <td>
                         <div [ngStyle]="{'width':'100px','text-align':'right'}">
                             {{data.s_monto_total | number: '0.2-2'  }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px'}">
+                            {{data.s_glosa | uppercase}}
                         </div>
                     </td>
                     <td>                       

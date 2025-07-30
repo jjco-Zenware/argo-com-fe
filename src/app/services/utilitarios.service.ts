@@ -308,4 +308,15 @@ export class UtilitariosService {
     );
   }
 
+  diferenciaEnDias(fechaInicio: Date, fechaFin: Date): number {
+  const milisegundosPorDia = 1000 * 60 * 60 * 24;
+  
+  // Convertimos ambas fechas a solo fecha (sin horas)
+  const inicio = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), fechaInicio.getDate());
+  const fin = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), fechaFin.getDate());
+
+  const diferenciaMs = fin.getTime() - inicio.getTime();
+  return Math.floor(diferenciaMs / milisegundosPorDia);
+}
+
 }

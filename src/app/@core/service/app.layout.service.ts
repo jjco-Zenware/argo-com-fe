@@ -42,7 +42,7 @@ export class LayoutService {
         menuMode: 'drawer',
         colorScheme: 'light',
         componentTheme: 'indigo',
-        scale: 10,
+        scale: 11,
         menuTheme: 'light',
         topbarTheme: 'indigo',
         menuProfilePosition: 'end'

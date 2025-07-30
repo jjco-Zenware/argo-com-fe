@@ -1175,8 +1175,15 @@ createFormRegistro() {
     this.listaCuotas=[];
   const _monto = this.registerFormRegistro.value.monto_pen_pago/data;
 
-  const _fecha =new Date(this.serviceUtilitario.formatFecha(this.registerFormRegistro.value.fecemision));
-  console.log('_fecha...', _fecha);
+  let fecemision;
+    fecemision = this.registerFormRegistro.value.fecemision;
+
+    if (fecemision.toString().length === 10) {
+        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision)); 
+      }
+
+  //const _fecha =new Date(this.serviceUtilitario.formatFecha(this.registerFormRegistro.value.fecemision));
+  console.log('_fecha...', fecemision);
   console.log('_monto...', _monto);
   let tot_dia = this.registerFormRegistro.value.nrodias/data;
   console.log('tot_dia...', tot_dia);
@@ -1189,7 +1196,7 @@ createFormRegistro() {
 
     let dias = (tot_dia * i) + tot_dia
     
-    const newDate = this.addDays(_fecha, dias );
+    const newDate = this.addDays(fecemision, dias );
     const objet = {
       fechacuota: newDate,
       monto: _monto,
@@ -1262,31 +1269,46 @@ createFormRegistro() {
   changeFechaDesde(event: Date) {
     this.gettipocambiodia(event);
     this.minimaFechaHasta = event;
+    console.log('changeFechaDesde event', event);
     let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
-    let vencimiento = new Date(this.registerFormRegistro.get('fecvencimiento')?.value);
+    
+    let vencimiento = this.registerFormRegistro.value.fecvencimiento;
+    console.log('changeFechaDesde vencimiento', vencimiento);
+    if (vencimiento.toString().length === 10) {
+      vencimiento = new Date(this.serviceUtilitario.formatFecha(vencimiento));    
+    }
+
     console.log('emision', emision);
     console.log('vencimiento', vencimiento);
-    let inicio = emision.getTime();
-    let fin = vencimiento.getTime();
-    var diff = fin - inicio;
-    let numerDiff = (diff/(1000*60*60*24))+1;
-    this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
+    let diferenci = this.serviceUtilitario.diferenciaEnDias(emision,vencimiento);
+    console.log('diferenci', diferenci);
+    // let inicio = emision.getTime();
+    // let fin = vencimiento.getTime();
+    // var diff = fin - inicio;
+    // let numerDiff = (diff/(1000*60*60*24))+1;
+    this.registerFormRegistro.get('nrodias')?.setValue(diferenci);
+    this.prcCuota(this.nrocuotas);
   }
 
   changeFechaHasta(event: Date) {
     let fecemision = this.registerFormRegistro.value.fecemision;
+    console.log('fecemision changeFechaHasta', fecemision);
     if (fecemision.toString().length === 10) {
       fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
     }
     
     this.maximaFechaDesde = event;
-    let vencimiento = new Date(this.registerFormRegistro.get('fecvencimiento')?.value);
+    let vencimiento = event;
+
     console.log('fecemision', fecemision, 'vencimiento', vencimiento);
-    let inicio = fecemision.getTime();
-    let fin = vencimiento.getTime();
-    var diff = fin - inicio;
-    let numerDiff = (diff/(1000*60*60*24))+1;
-    this.registerFormRegistro.get('nrodias')?.setValue( Math.round(numerDiff));
+    let diferenci = this.serviceUtilitario.diferenciaEnDias(fecemision,vencimiento);
+    console.log('diferenci', diferenci);
+    // let inicio = emision.getTime();
+    // let fin = vencimiento.getTime();
+    // var diff = fin - inicio;
+    // let numerDiff = (diff/(1000*60*60*24))+1;
+    this.registerFormRegistro.get('nrodias')?.setValue(diferenci);
+    this.prcCuota(this.nrocuotas);
   }
 
   addDays(date: Date, days: number): Date {
@@ -1304,6 +1326,7 @@ createFormRegistro() {
 
     let fecha = this.addDays(fecemision, parseInt(this.registerFormRegistro.value.nrodias));
     this.registerFormRegistro.get('fecvencimiento')?.setValue( fecha );
+    this.prcCuota(this.nrocuotas);
   }
 
 
@@ -1454,6 +1477,7 @@ createFormRegistro() {
             mes: fecha.getMonth() + 1,
             dia: fecha.getDate(),
         };   
+                console.log('gettipocambiodia', objeto);
 
       // let fecha = new Date();
       //   const objeto = {

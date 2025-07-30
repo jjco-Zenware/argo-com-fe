@@ -203,7 +203,7 @@
                         <label class="text-900 mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
                         <span>
                             <p-dropdown [options]="lstCategoriaDoc" formControlName="idcategoria" optionLabel="nomcategoria" placeholder="Seleccionar..."
-                                optionValue="idcategoria" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                                optionValue="idcategoria" appendTo="body" class="p-inputtext-sm" [filter]="true"></p-dropdown>
                         </span>
                     </div>
                     <div class="lg:col-7"></div>
@@ -266,24 +266,21 @@
                         <label class="text-900 mb-1">B.Imponible</label>
                         <span class="p-fluid">
                             <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
-                                inputStyleClass="surface-100 text-right" formControlName="s_monto_valor_venta_CTB"
-                                readonly="true"></p-inputNumber>
+                                inputStyleClass="surface-100 text-right" formControlName="s_monto_valor_venta_CTB"></p-inputNumber>
                         </span>
                     </div>
                     <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field">
                         <label class="text-900 mb-1">IGV</label>
                         <span class="p-fluid">
                             <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
-                                inputStyleClass="surface-100 text-right" formControlName="s_monto_igv_CTB"
-                                readonly="true"></p-inputNumber>
+                                inputStyleClass="surface-100 text-right" formControlName="s_monto_igv_CTB"></p-inputNumber>
                         </span>
                     </div>
                     <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field">
                         <label class="text-900 mb-1">Total</label>
                         <span class="p-fluid">
                             <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
-                                inputStyleClass="surface-100 text-right" formControlName="s_monto_total_CTB"
-                                readonly="true"></p-inputNumber>
+                                inputStyleClass="surface-100 text-right" formControlName="s_monto_total_CTB"></p-inputNumber>
                         </span>
                     </div>
                     <div class="sm:col-6 lg:col-2 md:col-3 h-4rem field">

@@ -244,7 +244,10 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
                 '% DETRACCIÓN': parseFloat(
                     this.lstExportExcel[i].porc_detraccion
                 ).toFixed(2),
-                'S/ DETRACCIÓN': this.lstExportExcel[i].s_monto_detraccion_mn_CTB
+                'S/ DETRACCIÓN': this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
+                'BASE SOLES': this.lstExportExcel[i].s_monto_valor_venta_CTB,
+                'IGV SOLES': this.lstExportExcel[i].s_monto_igv_CTB,
+                'TOTAL SOLES': this.lstExportExcel[i].s_monto_neto_CTB,
                
             };
             this.lstExportar.push(objeto);
