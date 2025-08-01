@@ -150,7 +150,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       telf1: ['', [Validators.required]],
       cargo: [{ value: '', disabled: false }, [Validators.required]],
       tiporol: [{ value: 0, disabled: false }],
-      indvig: [{ value: true, disabled: false }]
+      indvig: [{ value: true, disabled: false }],
     });
 }
 

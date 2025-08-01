@@ -13,7 +13,7 @@ export class AppMenuComponent implements OnInit, OnDestroy {
 
   constructor(private serviceAuth: AuthService) { }
 
-  model: MenuItem[] = [];
+  model: any[] = [];
 
   ngOnInit() {
     const $obtenerMenu = this.serviceAuth.obtenerMenu(moduloAPP, constantesLocalStorage.idusuario)

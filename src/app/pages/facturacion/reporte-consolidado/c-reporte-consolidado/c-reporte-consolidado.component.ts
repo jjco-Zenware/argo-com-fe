@@ -7,35 +7,33 @@ import {
 } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
-import { ProyectosService } from '../../proyectos-ganados/service/proyectos.service';
+import { ProyectosService } from '../../../compras/proyectos-ganados/service/proyectos.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
-import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
+import { OrdencompraService } from '../../../compras/orden-compra-servicio/service/ordencompra.service';
 import { MessageService } from 'primeng/api';
 import * as FileSaver from 'file-saver';
-import { Moneda } from '@interfaces';
-import { ComprasService } from '../../Service/compraServices';
+import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 
 @Component({
-    selector: 'app-c-reporte-compra',
-    templateUrl: './c-reporte-compra.component.html',
-    styleUrls: ['./c-reporte-compra.component.scss'],
+    selector: 'app-c-reporte-consolidado',
+    templateUrl: './c-reporte-consolidado.component.html',
+    styleUrls: ['./c-reporte-consolidado.component.scss'],
 })
-export class CReporteCompraComponent implements OnInit, OnDestroy {
+export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
     $listSubcription: Subscription[] = [];
 
     lstCompras: any[] = [];
     tituloDetalle!: string;
     frmDatos!: FormGroup;
-    cols: any[] = [];
     dataPrc: any;
     blockedDocument: boolean = false;
     mensajeSpinner: string = '';
     lstProveedores: any[] = [];
     lstExportar: any[] = [];
     lstExportExcel: any[] = [];
-    lstMonedas: Moneda[] = [];
     lstCentroCosto: any;
+    lstMonedas: any;
 
     constructor(
         private fb: FormBuilder,
@@ -45,7 +43,7 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
         private serviceSharedApp: SharedAppService,
         private ordencompraService: OrdencompraService,
         private messageService: MessageService,
-         private comprasService: ComprasService,
+        private comprasService: ComprasService
     ) {}
 
     ngOnInit(): void {
@@ -102,23 +100,19 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
 
         const objeto = {
             ...this.frmDatos.value,
-            idtipodocprc: 7,
+            idtipodocprc: 6,
         };
 
         const $getListarOrdenCompra = this.proyectosService
             .ordenCompraList(objeto)
             .subscribe({
                 next: (rpta: any) => {
+                    this.setSpinner(false);
                     console.log('rpta getListar', rpta);
-                    if (rpta.ordenescompra !== undefined) {
-                        let lista = rpta.ordenescompra;
-                        this.lstCompras = lista.filter(
-                            (item: any) => item.estado === 'ACP'
-                        );
-                    } else {
-                        this.lstCompras = [];
-                    }
-                    //his.setSpinner(false);
+                    let lista = rpta.ordenescompra;
+                    this.lstCompras = lista.filter(
+                        (item: any) => item.ind_estado_fel === 1
+                    );
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -129,6 +123,16 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
                 },
             });
         this.$listSubcription.push($getListarOrdenCompra);
+    }
+
+    onVer(data: any) {
+        console.log('onVer...', data);
+        this.dataPrc = {
+            idordencompra: data.idordencompra,
+            paramReg: 'V',
+        };
+        this.tituloDetalle = 'Factura N° ' + data.nrofactura;
+
     }
 
     descargarReporte() {
@@ -146,7 +150,7 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
 
         const objeto = {
             idusuario: constantesLocalStorage.idusuario,
-            idtipodocprc: 7,
+            idtipodocprc: 6,
             fecini: this.frmDatos.value.fecini,
             fecfin: this.frmDatos.value.fecfin,
         };
@@ -161,7 +165,7 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
 
                     const mediaType = 'application/pdf';
                     const blob = new Blob([rpta.body], { type: mediaType });
-                    const filename = 'REG-COMPRA';
+                    const filename = 'REG-VENTA';
 
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -233,28 +237,30 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
 
         for (let i = 0; i < this.lstExportExcel.length; i++) {
             const objeto = {
-                'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
+                'Vou.Origen': this.lstExportExcel[i].fecemision,
                 'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
                 'DOCUMENTO': this.lstExportExcel[i].nrofactura,
                 'CLIENTE': this.lstExportExcel[i].nomcomercial,
                 'CENTRO COSTO': this.lstExportExcel[i].descentrocosto,
+                'TC': this.lstExportExcel[i].tc,
                 'MONEDA': this.lstExportExcel[i].simbmoneda,
-                // 'BASE S.': this.lstExportExcel[i].basesol,
-                // 'IGV S.': this.lstExportExcel[i].igvsol,
-                // 'TOTAL S.': this.lstExportExcel[i].totalsol,
-                // 'BASE $': this.lstExportExcel[i].baseDol,
-                // 'IGV $': this.lstExportExcel[i].igvDol,
-                // 'TOTAL $': this.lstExportExcel[i].totalDol,
-                'BASE IMPONIBLE':  this.lstExportExcel[i].s_monto_rep,
-                'IGV': this.lstExportExcel[i].s_igv_rep,
-                'TOTAL': this.lstExportExcel[i].s_monto_total_rep,
-                'GLOSA': this.lstExportExcel[i].s_glosa,
-                'ESTADO': this.lstExportExcel[i].nomestado,
+                'BASE S.': this.lstExportExcel[i].basesol,
+                'IGV S.': this.lstExportExcel[i].igvsol,
+                'TOTAL S.': this.lstExportExcel[i].totalsol,
+                'BASE $': this.lstExportExcel[i].baseDol,
+                'IGV $': this.lstExportExcel[i].igvDol,
+                'TOTAL $': this.lstExportExcel[i].totalDol,
+                GLOSA: this.lstExportExcel[i].s_glosa,
+                ESTADO: this.lstExportExcel[i].nomestado,
                 '% DETRACCIÓN': parseFloat(
                     this.lstExportExcel[i].porc_detraccion
                 ).toFixed(2),
-                'S/ DETRACCIÓN': this.lstExportExcel[i].s_monto_detraccion_mn_CTB                
-               
+                'S/ DETRACCIÓN': parseFloat(
+                    this.lstExportExcel[i].s_monto_detraccion_mn_CTB
+                ).toFixed(2),
+                'BASE SOLES': this.lstExportExcel[i].s_monto_valor_venta_CTB,
+                'IGV SOLES': this.lstExportExcel[i].s_monto_igv_CTB,
+                'TOTAL SOLES': this.lstExportExcel[i].s_monto_total_CTB,
             };
             this.lstExportar.push(objeto);
         }
@@ -269,7 +275,7 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
                 bookType: 'xlsx',
                 type: 'array',
             });
-            this.saveAsExcelFile(excelBuffer, 'REPORTE_COMPRA');
+            this.saveAsExcelFile(excelBuffer, 'REPORTE_VENTA');
         });
     }
 
@@ -285,7 +291,7 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
 
      listaProveedores() {
 
-        const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+        const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
         next: (rpta: any) => {
             this.lstProveedores = rpta;
             const objet = {

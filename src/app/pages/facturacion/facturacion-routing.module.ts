@@ -36,6 +36,11 @@ const routes: Routes = [
     path: 'notadebito',
     loadChildren: () => import('./notadebito/notadebito.module').then(m => m.NotaDebitoModule),
     data: { breadcrumb: 'Nota de Débito' }
+  },
+  {
+    path: 'reporte-consolidado',
+    loadChildren: () => import('./reporte-consolidado/reporte-consolidado.module').then(m => m.ReporteConsolidadoModule),
+    data: { breadcrumb: 'Reporte Consolidado' }
   }
 ];
 

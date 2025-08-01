@@ -4,19 +4,18 @@
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
                                 
                 <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">REPORTE DE COMPRAS POR PERIODO</span>
+                    <span class="text-base font-semibold">REPORTE CONSOLIDADO DE VENTAS</span>
                 </div>           
             </div>
         </div>
-
-        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-10 text-sm">
+<form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-10 text-sm">
                  
                 <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
                     <label class="font-semibold text-blue-600 text-base">Periodo</label>
                     <p-calendar view="month" dateFormat="mm/yy" [showIcon]="true" inputId="periodo" formControlName="periodo" (onSelect)="changePeriodo($event)"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
                 </div>
-                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
+                <!-- <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
                     <label class="font-semibold text-blue-600 text-base">Desde</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini"
                         [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
@@ -26,7 +25,7 @@
                     <label class="font-semibold text-blue-600 text-base">Hasta</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-                </div>
+                </div> -->
                 <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">
                     <label class=" font-semibold text-blue-600 text-base">Moneda</label>
                     <span class="p-fluid mt-1">
@@ -35,7 +34,7 @@
                     </span>
                 </div>
                 
-                <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">                            
+                <!-- <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">                            
                     <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
                     <span>
                         <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
@@ -51,7 +50,7 @@
                                 optionValue="idcentrocosto" appendTo="body" autoWidth="false"></p-dropdown>
                         </span>
                     </span>
-                </div>
+                </div> -->
                 <div class="field md:col-2 -mt-3 gap-2">
                     <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                         class="font-semibold mt-3 justify-content-center  w-3rem w-auto h-auto" icon="pi pi-search"></button>
@@ -102,7 +101,12 @@
                    
                     <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
-                            PROVEEDOR
+                            CLIENTE
+                        </div>
+                    </th>
+                     <th style="width: 100px;text-align:right;" class="bg-teal-50 border-1" >
+                        <div class="justify-content-end">
+                            TC
                         </div>
                     </th>
                     <th style="width: 60px;" class="bg-teal-50 border-1" >
@@ -187,6 +191,11 @@
                         </div>
                     </td>
                     <td>
+                        <div [ngStyle]="{'width':'80px','text-align':'right'}">
+                            {{data.tc | number: '0.2-4'  }}
+                        </div>
+                    </td>
+                    <td>
                         <div [ngStyle]="{'width':'60px','text-align':'center'}">
                             {{data.simbmoneda | uppercase}}
                         </div>
@@ -218,7 +227,7 @@
                     </td>
                     <td>
                         <div [ngStyle]="{'width':'100px'}">
-                            {{data.descentrocosto}}
+                            {{data.descentrocostoPRY}}
                         </div>
                     </td>
                     <td>                       

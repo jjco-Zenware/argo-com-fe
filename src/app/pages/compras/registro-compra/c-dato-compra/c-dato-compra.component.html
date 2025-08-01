@@ -240,7 +240,7 @@
                     </div>
                     <div class="lg:col-3"></div>
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 mb-1">N° Orden Compra</label>
+                        <label class="block text-900 mb-1">N° OC/OS</label>
                         <span class="p-fluid">
                             <p-dropdown [options]="lstOrdenC" formControlName="idordencompra_origen_ctb"
                                 placeholder="Seleccionar Orden" optionLabel="codigonroorden" optionValue="idordencompra"
@@ -265,21 +265,21 @@
                     <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field">
                         <label class="text-900 mb-1">B.Imponible</label>
                         <span class="p-fluid">
-                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
-                                inputStyleClass="surface-100 text-right" formControlName="s_monto_valor_venta_CTB"></p-inputNumber>
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm" inputStyleClass="surface-100 text-right" 
+                            formControlName="s_monto_valor_venta_CTB" (blur)="prcMontosCabecera()" (keydown.enter)="prcMontosCabecera()"></p-inputNumber>
                         </span>
                     </div>
                     <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field">
                         <label class="text-900 mb-1">IGV</label>
                         <span class="p-fluid">
-                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm" (blur)="prcMontosCabecera()" (keydown.enter)="prcMontosCabecera()"
                                 inputStyleClass="surface-100 text-right" formControlName="s_monto_igv_CTB"></p-inputNumber>
                         </span>
                     </div>
                     <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field">
                         <label class="text-900 mb-1">Total</label>
                         <span class="p-fluid">
-                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm" (blur)="prcMontosCabecera()" (keydown.enter)="prcMontosCabecera()"
                                 inputStyleClass="surface-100 text-right" formControlName="s_monto_total_CTB"></p-inputNumber>
                         </span>
                     </div>

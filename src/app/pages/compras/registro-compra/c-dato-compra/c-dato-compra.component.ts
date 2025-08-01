@@ -1914,4 +1914,32 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     //       this.traerUno();        
     //     });
     }
+
+    prcMontosCabecera() {
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Actualizando Monto...!';
+        const objeto = {
+            idordencompra: this.idOrdenC,
+            monto_valorventa: this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.value,
+            monto_igv: this.registerFormRegistro.get('s_monto_igv_CTB')?.value,
+            monto: this.registerFormRegistro.get('s_monto_total_CTB')?.value,
+        };
+
+        const $prcMontosCabecera = this.ordencompraService
+            .ordenCompraprcMonto(objeto)
+            .subscribe({
+                next: (rpta: any) => {
+                    this.setSpinner(false);
+                    console.log('prcMontosCabecera');
+                    this.traerUno();
+                   
+                },
+                error: (err) => {
+                    this.setSpinner(false);
+                    this.serviceSharedApp.messageToast();
+                },
+                complete: () => {},
+            });
+        this.$listSubcription.push($prcMontosCabecera);
+    }
 }

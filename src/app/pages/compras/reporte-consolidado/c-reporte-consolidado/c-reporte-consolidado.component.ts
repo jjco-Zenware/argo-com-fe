@@ -17,11 +17,11 @@ import { Moneda } from '@interfaces';
 import { ComprasService } from '../../Service/compraServices';
 
 @Component({
-    selector: 'app-c-reporte-compra',
-    templateUrl: './c-reporte-compra.component.html',
-    styleUrls: ['./c-reporte-compra.component.scss'],
+    selector: 'app-c-reporte-consolidado',
+    templateUrl: './c-reporte-consolidado.component.html',
+    styleUrls: ['./c-reporte-consolidado.component.scss'],
 })
-export class CReporteCompraComponent implements OnInit, OnDestroy {
+export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
     $listSubcription: Subscription[] = [];
 
     lstCompras: any[] = [];
@@ -238,22 +238,26 @@ export class CReporteCompraComponent implements OnInit, OnDestroy {
                 'DOCUMENTO': this.lstExportExcel[i].nrofactura,
                 'CLIENTE': this.lstExportExcel[i].nomcomercial,
                 'CENTRO COSTO': this.lstExportExcel[i].descentrocosto,
+                'TIPO CAMBIO': this.lstExportExcel[i].tc,
                 'MONEDA': this.lstExportExcel[i].simbmoneda,
-                // 'BASE S.': this.lstExportExcel[i].basesol,
-                // 'IGV S.': this.lstExportExcel[i].igvsol,
-                // 'TOTAL S.': this.lstExportExcel[i].totalsol,
-                // 'BASE $': this.lstExportExcel[i].baseDol,
-                // 'IGV $': this.lstExportExcel[i].igvDol,
-                // 'TOTAL $': this.lstExportExcel[i].totalDol,
-                'BASE IMPONIBLE':  this.lstExportExcel[i].s_monto_rep,
-                'IGV': this.lstExportExcel[i].s_igv_rep,
-                'TOTAL': this.lstExportExcel[i].s_monto_total_rep,
+                'BASE S.': this.lstExportExcel[i].basesol,
+                'IGV S.': this.lstExportExcel[i].igvsol,
+                'TOTAL S.': this.lstExportExcel[i].totalsol,
+                'BASE $': this.lstExportExcel[i].baseDol,
+                'IGV $': this.lstExportExcel[i].igvDol,
+                'TOTAL $': this.lstExportExcel[i].totalDol,
+                // 'BASE IMPONIBLE':  this.lstExportExcel[i].s_monto_rep,
+                // 'IGV': this.lstExportExcel[i].s_igv_rep,
+                // 'TOTAL': this.lstExportExcel[i].s_monto_total_rep,
                 'GLOSA': this.lstExportExcel[i].s_glosa,
                 'ESTADO': this.lstExportExcel[i].nomestado,
                 '% DETRACCIÓN': parseFloat(
                     this.lstExportExcel[i].porc_detraccion
                 ).toFixed(2),
-                'S/ DETRACCIÓN': this.lstExportExcel[i].s_monto_detraccion_mn_CTB                
+                'S/ DETRACCIÓN': this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
+                'BASE SOLES': this.lstExportExcel[i].s_monto_valor_venta_CTB,
+                'IGV SOLES': this.lstExportExcel[i].s_monto_igv_CTB,
+                'TOTAL SOLES': this.lstExportExcel[i].s_monto_neto_CTB,
                
             };
             this.lstExportar.push(objeto);

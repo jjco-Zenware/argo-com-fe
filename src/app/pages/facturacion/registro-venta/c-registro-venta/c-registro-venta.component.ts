@@ -45,6 +45,14 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
   ordenCompra: any;
   lstMonedas: Moneda[] = [];
   lstAccionesSunatMostrar: any[] = [];
+  lstEstados:any[] = [
+    { codestadofel: 0, nomestadofel: 'TODOS' },
+    { codestadofel: 1, nomestadofel: 'ACEPTADO' },
+    { codestadofel: 2, nomestadofel: 'ERROR' },
+    { codestadofel: 3, nomestadofel: 'EN PROCESO' },
+    { codestadofel: 4, nomestadofel: 'ANULADO' },
+    { codestadofel: 4, nomestadofel: 'EN PROCESO ANULACIÓN' }
+  ];
 
   lstAccionesSunat: any = [
     {
@@ -123,7 +131,9 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
-        idcliente: [{value: 0,disabled: false}]
+        idcliente: [{value: 0,disabled: false}],
+        idcentrocosto: [{ value: 0, disabled: false }],
+        ind_estado_fel: [{ value: 0, disabled: false }]
     }) 
   }
 

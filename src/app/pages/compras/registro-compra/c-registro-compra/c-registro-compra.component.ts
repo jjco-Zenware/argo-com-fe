@@ -64,15 +64,17 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         { field: 'fecemision', header: '  EMISION' },
         { field: 'fecvencimiento', header: 'VENCIMIENTO' },
         { field: 'nrofactura', header: 'DOCUMENTOa' },
-        { field: 'nomcomercial', header: 'PROVEEDOR' },
+        { field: 'nomempresa', header: 'PROVEEDOR' },
         { field: 'simbmoneda', header: 'MONEDA' },
         { field: 's_monto', header: 'SUBTOTAL' },
         { field: 's_igv', header: 'IGV' },
         { field: 's_monto_total', header: 'TOTAL' },
+        { field: 's_glosa', header: 'ESTADO' },
+        { field: 'codigoproyecto', header: 'PROYECTO' },
+        { field: 'descentrocosto', header: 'CENTRO COSTO' },
         { field: 'nomestado', header: 'ESTADO' },
-        { field: 'porc_detraccion', header: 'ESTADO' },
-        { field: 's_monto_detraccion_mn_CTB', header: 'ESTADO' },
-        { field: 's_glosa', header: 'ESTADO' }
+        { field: 'porc_detraccion', header: 'porc_detraccion' },
+        { field: 's_monto_detraccion_mn_CTB', header: 's_monto_detraccion_mn_CTB' }        
     ];
   }
 
@@ -93,6 +95,8 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
         idcliente: [{value: 0,disabled: false}],
+        idcentrocosto: [{ value: 0, disabled: false }],
+        ind_estado_fel: [{ value: 0, disabled: false }]
     }) 
   }
 
@@ -277,6 +281,12 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
   
     onAccion(item: any) {
       this.ordenCompra.idtrx = item.idtrx;
+      let ancho;
+      if (item.idtrx === 159) {
+          ancho = '20%';
+      } else {
+          ancho = '40%';
+      }
       console.log('onAccion', item);
       console.log('this.ordenCompra', this.ordenCompra);
       const ref = this.dialogService.open(CModalTransacComponent, {
@@ -284,7 +294,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
           header: item.nomtrx,
           closeOnEscape: false,
           styleClass: 'testDialog',
-          width: '40%'
+          width: ancho
       });
   
       ref.onClose.subscribe(() => {
