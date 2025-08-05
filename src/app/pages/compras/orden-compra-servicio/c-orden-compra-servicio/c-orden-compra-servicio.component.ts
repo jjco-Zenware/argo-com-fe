@@ -42,6 +42,7 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
     lstExportExcel: any[] = [];
     lstProveedores: any[] = [];
     lstCliente: any[] = [];
+    visXperfil: boolean = true;
 
     constructor(
         private fb: FormBuilder,
@@ -77,6 +78,11 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
       ];
       this.listaProveedores();
       this.listaClientes();
+      if (constantesLocalStorage.idperfil === 11) {
+        this.visXperfil = false;
+      }else{
+        this.visXperfil = true;
+        }
     }
 
     ngOnDestroy(): void {

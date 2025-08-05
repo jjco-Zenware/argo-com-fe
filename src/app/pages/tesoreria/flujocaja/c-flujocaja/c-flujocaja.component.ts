@@ -21,65 +21,16 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
   $listSubcription: Subscription[] = [];
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
-  cols: any[] = [];
   lstExportar: any[] = [];
   lstExportExcel: any[] = [];
   frmDatos!: FormGroup;
   lstMonedas: any;
   lstProveedor: any;
+  lstFlujoCaja: any[] = [];
   
-  products:any[] = [{
-    "name": "DINET S.A.",
-    "destipo": "INGRESOS",
-    "tipo": "I",
-    "enero": "20,000.00",
-    "febrero": "210,000.00",
-    "marzo": "50,000.00",
-    "abril": "220,000.00",
-    "mayo": "90,000.00",
-    "junio": "80,000.00",
-    "julio": "220,000.00",
-    "agosto": "20,000.00",
-    "setiembre": "320,000.00",
-    "octubre": "220,000.00",
-    "noviembre": "120,000.00",
-    "diciembre": "20,000.00"
-  },
-  {
-    "name": "DYNATRACE PERU",
-    "destipo": "INGRESOS",
-    "tipo": "I",
-    "enero": "20,000.00",
-    "febrero": "20,000.00",
-    "marzo": "510,000.00",
-    "abril": "20,000.00",
-    "mayo": "70,000.00",
-    "junio": "80,000.00",
-    "julio": "20,000.00",
-    "agosto": "220,000.00",
-    "setiembre": "120,000.00",
-    "octubre": "250,000.00",
-    "noviembre": "120,000.00",
-    "diciembre": "10,000.00"
-  },
-  {
-    "name": "DYNATRACE ",
-    "destipo": "EGRESOS",
-    "tipo": "E",
-    "enero": "20,000.00",
-    "febrero": "210,000.00",
-    "marzo": "50,000.00",
-    "abril": "220,000.00",
-    "mayo": "90,000.00",
-    "junio": "80,000.00",
-    "julio": "220,000.00",
-    "agosto": "20,000.00",
-    "setiembre": "320,000.00",
-    "octubre": "220,000.00",
-    "noviembre": "120,000.00",
-    "diciembre": "20,000.00"
-  }];
-  selectedColumns:any[] = [];
+  
+    chartMonthlyData: any;
+    chartMonthlyOptions: any;
 
   constructor(
       private fb: FormBuilder,
@@ -98,24 +49,9 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
   ngOnInit(): void{
       this.createFrm();
       this.listaMonedas();
-      this.cols = [
-        { field: 'enero', header: 'Enero' },
-        { field: 'febrero', header: 'Febrero ' },
-        { field: 'marzo', header: 'Marzo' },
-        { field: 'abril', header: 'Abril' },
-        { field: 'mayo', header: 'Mayo' },
-        { field: 'junio', header: 'Junio' },
-        { field: 'julio', header: 'Julio' },
-        { field: 'agosto', header: 'Agosto' },
-        { field: 'setiembre', header: 'Setiembre' },
-        { field: 'octubre', header: 'Octubre' },
-        { field: 'noviembre', header: 'Noviembre' },
-        { field: 'diciembre', header: 'Diciembre' }
-        
-    ];
 
-    this.selectedColumns = this.cols;
     this.getListar();
+    this.monthlyChartInit();   
   }
 
   createFrm(){
@@ -141,16 +77,15 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     //console.log('this.frmDatos...', this.frmDatos.value);
-    const objeto = {
-      ...this.frmDatos.value,
-      idtipodocprc: 0
-    }
+    let anio = 2025;
 
-    const $getListar = this.proyectosService.ordenCompraList(objeto)
+    const $getListar = this.tesoreriaService.listarFlujoCaja(anio)
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
-            console.log('rpta getListar', rpta.ordenescompra);
+            console.log('rpta getListar', rpta);
+
+            this.lstFlujoCaja = rpta;
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -233,5 +168,95 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
 
   }
 
-  
+   monthlyChartInit() {
+    this.chartMonthlyData = this.getChartData();
+    this.chartMonthlyOptions = this.getChartOptions();
+  }
+
+  getChartData() {
+      const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
+          cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
+
+      return {
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+          datasets: [                
+              
+              {
+                  label: '2025',
+                  data: [31, 4, 35, 74, 47, 35, 46, 4, 35, 74],
+                  borderColor: greenColor,
+                  backgroundColor: amberColor,
+                  borderWidth: 2,
+                  fill: true
+              }
+          ]
+      };
+  }
+
+  getChartOptions() {
+      const textColor = getComputedStyle(document.body).getPropertyValue('--text-color') || 'rgba(0, 0, 0, 0.87)';
+      const gridLinesColor = getComputedStyle(document.body).getPropertyValue('--surface-border') || 'rgba(160, 167, 181, .3)';
+      const fontFamily = getComputedStyle(document.body).getPropertyValue('--font-family');
+      return {
+          plugins: {
+              legend: {
+                  display: true,
+                  labels: {
+                      fontFamily,
+                      color: textColor
+                  }
+              },
+          },
+          animation: {
+              animateScale: true,
+              animateRotate: true
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+              y: {
+                  ticks: {
+                      fontFamily,
+                      color: textColor
+                  },
+                  grid: {
+                      color: gridLinesColor
+                  }
+              },
+              x: {
+                  categoryPercentage: .9,
+                  barPercentage: .8,
+                  ticks: {
+                      fontFamily,
+                      color: textColor
+                  },
+                  grid: {
+                      color: gridLinesColor
+                  }
+              }
+          },
+      };
+  }
+
+  getColors() {
+      const isLight = true;
+      return {
+          pinkColor: isLight ? '#EC407A' : '#F48FB1',
+          purpleColor: isLight ? '#AB47BC' : '#CE93D8',
+          deeppurpleColor: isLight ? '#7E57C2' : '#B39DDB',
+          indigoColor: isLight ? '#5C6BC0' : '#9FA8DA',
+          blueColor: isLight ? '#42A5F5' : '#90CAF9',
+          lightblueColor: isLight ? '#29B6F6' : '#81D4FA',
+          cyanColor: isLight ? '#00ACC1' : '#4DD0E1',
+          tealColor: isLight ? '#26A69A' : '#80CBC4',
+          greenColor: isLight ? '#66BB6A' : '#A5D6A7',
+          lightgreenColor: isLight ? '#9CCC65' : '#C5E1A5',
+          limeColor: isLight ? '#D4E157' : '#E6EE9C',
+          yellowColor: isLight ? '#FFEE58' : '#FFF59D',
+          amberColor: isLight ? '#FFCA28' : '#FFE082',
+          orangeColor: isLight ? '#FFA726' : '#FFCC80',
+          deeporangeColor: isLight ? '#FF7043' : '#FFAB91',
+          brownColor: isLight ? '#8D6E63' : '#BCAAA4'
+      };
+  }
 }

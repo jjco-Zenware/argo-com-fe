@@ -41,6 +41,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
   @ViewChild('menu') menu!: Menu;
   ordenCompra: any;
     lstMonedas: Moneda[] = [];
+  visXperfil: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -76,6 +77,11 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         { field: 'porc_detraccion', header: 'porc_detraccion' },
         { field: 's_monto_detraccion_mn_CTB', header: 's_monto_detraccion_mn_CTB' }        
     ];
+    if (constantesLocalStorage.idperfil === 11) {
+        this.visXperfil = false;
+      }else{
+        this.visXperfil = true;
+        }
   }
 
   ngOnDestroy(): void {

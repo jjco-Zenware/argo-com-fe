@@ -53,7 +53,7 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
     { codestadofel: 4, nomestadofel: 'ANULADO' },
     { codestadofel: 4, nomestadofel: 'EN PROCESO ANULACIÓN' }
   ];
-
+visXperfil: boolean = true;
   lstAccionesSunat: any = [
     {
       operacion : 'consultar_comprobante',
@@ -113,6 +113,11 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy{
         { field: 'porc_detraccion', header: 'ESTADO' },
         { field: 's_monto_detraccion_mn_CTB', header: 'ESTADO' }
     ];
+    if (constantesLocalStorage.idperfil === 11) {
+        this.visXperfil = false;
+      }else{
+        this.visXperfil = true;
+        }
   }
 
   ngOnDestroy(): void {

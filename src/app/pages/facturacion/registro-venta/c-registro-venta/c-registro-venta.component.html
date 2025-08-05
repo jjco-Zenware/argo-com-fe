@@ -2,7 +2,7 @@
     <div class="card m-4">
         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
-                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                <div *ngIf="visXperfil" style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
                         pTooltip="Nuevo" tooltipPosition="bottom" (click)="onNuevo()" ></button>
                 </div>                 
@@ -179,9 +179,9 @@
                 </td>
                 <td>
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
-                        <button *ngIf="data.estado === 'EMT' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3 && data.ind_estado_fel != 4" pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom" pTooltip="Enviar a SUNAT" class="p-button-rounded p-button-text text-blue-500" (click)="emitirDocumento(data)"></button>
+                        <button *ngIf="data.estado === 'EMT' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3 && data.ind_estado_fel != 4 && visXperfil" pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom" pTooltip="Enviar a SUNAT" class="p-button-rounded p-button-text text-blue-500" (click)="emitirDocumento(data)"></button>
                         <button *ngIf="data.ind_estado_fel === 1 || data.ind_estado_fel === 3 || data.ind_estado_fel === 4" pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom" pTooltip="Descargar Documento" class="p-button-rounded p-button-text text-green-500" (click)="verDocumento(data)"></button>
-                        <button *ngIf="data.ind_estado_fel != 0 && data.ind_estado_fel != 2 && data.ind_estado_fel != 4" [disabled]="data.b_accion" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenuSunat($event, data)"
+                        <button *ngIf="data.ind_estado_fel != 0 && data.ind_estado_fel != 2 && data.ind_estado_fel != 4 && visXperfil" [disabled]="data.b_accion" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenuSunat($event, data)"
                          pTooltip="Transacciones Sunat" tooltipPosition="bottom"></button>
                      <p-tieredMenu #menuSunat [model]="menuItemsSunat" appendTo="body" [popup]="true"></p-tieredMenu>
                      </div> 
@@ -272,12 +272,12 @@
                         <!-- <i class="fa-solid fa-file-pdf text-red-500 cursor-pointer" pTooltip="Vista Preliminar" tooltipPosition="left" (click)="onVerDetalle(data)"></i>
                         <i class="fa-solid fa-binoculars text-blue-500 cursor-pointer" pTooltip="Ver" tooltipPosition="left" (click)="onVer(data)"></i> -->
 
-                        <button *ngIf="data.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenu($event, data)"
+                        <button *ngIf="data.acciones.length > 0 || visXperfil" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenu($event, data)"
                             pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
                         <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
                         <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text text-red-500" (click)="onVerDetalle(data)"></button>
                         <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text text-green-500" (click)="onVer(data)"></button>
-                        <button *ngIf="data.ind_estado_fel != 1" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button>
+                        <button *ngIf="data.ind_estado_fel == 0 && visXperfil" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button>
                     </div>
                 </td>
             </tr>
