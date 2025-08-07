@@ -351,7 +351,7 @@ visXperfil: boolean = true;
                   'BASE IMPONIBLE': parseFloat(this.lstExportExcel[i].s_monto).toFixed(2),
                   'IGV': parseFloat(this.lstExportExcel[i].s_igv).toFixed(2),
                   'TOTAL': parseFloat(this.lstExportExcel[i].s_monto_total).toFixed(2),
-                  'ESTADO' : this.lstExportExcel[i].nomestado,
+                  'ESTADO' : this.lstExportExcel[i].nomestadofel,
                   '% DETRACCIÓN' : parseFloat(this.lstExportExcel[i].porc_detraccion).toFixed(2),
                   'S/ DETRACCIÓN' : parseFloat(this.lstExportExcel[i].s_monto_detraccion_mn_CTB).toFixed(2),
                   

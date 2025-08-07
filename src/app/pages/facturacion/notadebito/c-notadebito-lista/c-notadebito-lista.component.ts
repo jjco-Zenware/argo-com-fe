@@ -113,7 +113,8 @@ export class CNotaDebitoComponent implements OnInit, OnDestroy{
         idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
-        idcliente: [{value: 0,disabled: false}]
+        idcliente: [{value: 0,disabled: false}],
+        idcentrocosto: [{ value: 0, disabled: false }],
     }) 
   }
 
