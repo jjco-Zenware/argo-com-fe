@@ -95,7 +95,7 @@ visXperfil: boolean = true;
 
   ngOnInit(): void{
       this.createFrm();
-      this.listaClientes();
+      //this.listaClientes();
       this.getListar();
       this.listaMonedas();
       this.cols = [
@@ -118,6 +118,8 @@ visXperfil: boolean = true;
       }else{
         this.visXperfil = true;
         }
+
+        
   }
 
   ngOnDestroy(): void {
@@ -143,6 +145,7 @@ visXperfil: boolean = true;
   }
 
   getListar(){
+   
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     
@@ -157,6 +160,10 @@ visXperfil: boolean = true;
             this.setSpinner(false);
             console.log('rpta getListar', rpta);
             this.lstCompras = rpta.ordenescompra
+           if (this.frmDatos.value.idproveedor === 0) {
+              this.listaClientes();       
+            }
+            
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -170,23 +177,24 @@ visXperfil: boolean = true;
   }
 
   listaClientes() {
-
-    const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
-      next: (rpta: any) => {
-        this.lstProveedores = rpta;
-        const objet = {
+     this.lstProveedores = [];
+     const objet = {
           idcliente: 0,
           nomcomercial: 'TODOS'
         }
         this.lstProveedores.unshift(objet);
-      },
-      error: (err) => {
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => { },
-    });
-    this.$listSubcription.push($getClientes);
 
+        let lista = this.lstCompras.filter(
+          (obj, index, self) => index === self.findIndex((t) => t.idproveedor === obj.idproveedor)
+        );         
+
+        lista.forEach(element => {
+          let objeto ={
+            idcliente: element.idproveedor,
+            nomcomercial: element.nomempresa
+          }
+          this.lstProveedores.unshift(objeto);
+        });       
   }
 
   onVer(data: any) {
@@ -345,15 +353,16 @@ visXperfil: boolean = true;
                   'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
                   'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
                   'DOCUMENTO': this.lstExportExcel[i].nrofactura,
-                  'CLIENTE': this.lstExportExcel[i].nomcomercial,
-                  'CENTRO COSTO' : this.lstExportExcel[i].descentrocosto,
+                  'RUC': this.lstExportExcel[i].nrodocumento,
+                  'CLIENTE': this.lstExportExcel[i].nomempresa,
+                  'CENTRO COSTO' : this.lstExportExcel[i].descentrocostoPRY,
                   'MONEDA': this.lstExportExcel[i].simbmoneda,
-                  'BASE IMPONIBLE': parseFloat(this.lstExportExcel[i].s_monto).toFixed(2),
-                  'IGV': parseFloat(this.lstExportExcel[i].s_igv).toFixed(2),
-                  'TOTAL': parseFloat(this.lstExportExcel[i].s_monto_total).toFixed(2),
+                  'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
+                  'IGV': this.lstExportExcel[i].s_igv,
+                  'TOTAL': this.lstExportExcel[i].s_monto_total,
                   'ESTADO' : this.lstExportExcel[i].nomestadofel,
-                  '% DETRACCIÓN' : parseFloat(this.lstExportExcel[i].porc_detraccion).toFixed(2),
-                  'S/ DETRACCIÓN' : parseFloat(this.lstExportExcel[i].s_monto_detraccion_mn_CTB).toFixed(2),
+                  '% DETRACCIÓN' : this.lstExportExcel[i].porc_detraccion,
+                  'S/ DETRACCIÓN' : this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
                   
               }
               this.lstExportar.push(objeto);

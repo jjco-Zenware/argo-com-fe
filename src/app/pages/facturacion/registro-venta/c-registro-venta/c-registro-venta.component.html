@@ -13,41 +13,39 @@
         </div>
 
         <div class="flex justify-content-between col-12 -mt-3 gap-2">
-            <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm">
-                        
-                    <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
-                        <label class="font-semibold text-blue-600 text-base">Desde</label>
-                        <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini" [showOnFocus]="false"
-                            [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
-                        </p-calendar>                    
-                    </div>
-                    <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
-                        <label class="font-semibold text-blue-600 text-base">Hasta</label>
-                        <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
-                            [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-                    </div>
-                    <div class="sm:col-6 lg:col-3 md:col-6 col-12 -mt-3">                            
-                        <label class=" font-semibold text-blue-600 text-base">Cliente</label>                            
-                        <span>
-                            <p-dropdown [options]="lstProveedores"  formControlName="idproveedor" class="p-inputtext-sm"
-                            optionLabel="nomcomercial" optionValue="idcliente" appendTo="body" [filter]="true"></p-dropdown>            
-                        </span>
-                    </div> 
-                    <div class="sm:col-4 lg:col-2 md:col-6 col-12 -mt-3">                            
-                        <label class="font-semibold text-blue-600 text-base">Moneda</label>  
-                        <span class="p-fluid">
-                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda" optionLabel="desmoneda" 
-                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
-                        </span> 
-                    </div> 
-                    <div class="sm:col-4 lg:col-2 md:col-6 col-12 -mt-3">                            
-                        <label class="font-semibold text-blue-600 text-base">Estado SUNAT</label>  
-                        <span class="p-fluid">
-                            <p-dropdown [options]="lstEstados" formControlName="ind_estado_fel" optionLabel="nomestadofel" 
-                            optionValue="codestadofel" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
-                        </span> 
-                    </div>
-                    
+            <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm">                        
+                <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
+                    <label class="font-semibold text-blue-600 text-base">Desde</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini" [showOnFocus]="false"
+                        [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
+                    </p-calendar>                    
+                </div>
+                <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
+                    <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
+                </div>
+                <div class="sm:col-6 lg:col-3 md:col-6 col-12 -mt-3">                            
+                    <label class=" font-semibold text-blue-600 text-base">Cliente</label>                            
+                    <span>
+                        <p-dropdown [options]="lstProveedores"  formControlName="idproveedor" class="p-inputtext-sm"
+                        optionLabel="nomcomercial" optionValue="idcliente" appendTo="body" [filter]="true"></p-dropdown>            
+                    </span>
+                </div> 
+                <div class="sm:col-4 lg:col-2 md:col-6 col-12 -mt-3">                            
+                    <label class="font-semibold text-blue-600 text-base">Moneda</label>  
+                    <span class="p-fluid">
+                        <p-dropdown [options]="lstMonedas" formControlName="idmoneda" optionLabel="desmoneda" 
+                        optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                    </span> 
+                </div> 
+                <div class="sm:col-4 lg:col-2 md:col-6 col-12 -mt-3">                            
+                    <label class="font-semibold text-blue-600 text-base">Estado SUNAT</label>  
+                    <span class="p-fluid">
+                        <p-dropdown [options]="lstEstados" formControlName="ind_estado_fel" optionLabel="nomestadofel" 
+                        optionValue="codestadofel" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                    </span> 
+                </div>                    
             </form> 
 
             <div class="field sm:col-3 md:col-2 lg:col-3 -mt-3 gap-2">
@@ -178,7 +176,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
+                    <div *ngIf="!data.indsunatreg" class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
                         <button *ngIf="data.estado === 'EMT' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3 && data.ind_estado_fel != 4 && visXperfil" pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom" pTooltip="Enviar a SUNAT" class="p-button-rounded p-button-text text-blue-500" (click)="emitirDocumento(data)"></button>
                         <button *ngIf="data.ind_estado_fel === 1 || data.ind_estado_fel === 3 || data.ind_estado_fel === 4" pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom" pTooltip="Descargar Documento" class="p-button-rounded p-button-text text-green-500" (click)="verDocumento(data)"></button>
                         <button *ngIf="data.ind_estado_fel != 0 && data.ind_estado_fel != 2 && data.ind_estado_fel != 4 && visXperfil" [disabled]="data.b_accion" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenuSunat($event, data)"

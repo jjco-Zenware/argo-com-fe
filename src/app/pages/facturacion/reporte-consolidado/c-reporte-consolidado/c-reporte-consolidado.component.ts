@@ -237,11 +237,12 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
 
         for (let i = 0; i < this.lstExportExcel.length; i++) {
             const objeto = {
-                'Vou.Origen': this.lstExportExcel[i].fecemision,
+                'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
                 'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
                 'DOCUMENTO': this.lstExportExcel[i].nrofactura,
-                'CLIENTE': this.lstExportExcel[i].nomcomercial,
-                'CENTRO COSTO': this.lstExportExcel[i].descentrocosto,
+                'RUC': this.lstExportExcel[i].nrodocumento,
+                  'CLIENTE': this.lstExportExcel[i].nomempresa,
+                'CENTRO COSTO': this.lstExportExcel[i].descentrocostoPRY,
                 'TC': this.lstExportExcel[i].tc,
                 'MONEDA': this.lstExportExcel[i].simbmoneda,
                 'BASE S.': this.lstExportExcel[i].basesol,
@@ -250,14 +251,10 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
                 'BASE $': this.lstExportExcel[i].baseDol,
                 'IGV $': this.lstExportExcel[i].igvDol,
                 'TOTAL $': this.lstExportExcel[i].totalDol,
-                GLOSA: this.lstExportExcel[i].s_glosa,
-                ESTADO: this.lstExportExcel[i].nomestado,
-                '% DETRACCIÓN': parseFloat(
-                    this.lstExportExcel[i].porc_detraccion
-                ).toFixed(2),
-                'S/ DETRACCIÓN': parseFloat(
-                    this.lstExportExcel[i].s_monto_detraccion_mn_CTB
-                ).toFixed(2),
+                'GLOSA': this.lstExportExcel[i].s_glosa,
+                'ESTADO': this.lstExportExcel[i].nomestado,
+                '% DETRACCIÓN': this.lstExportExcel[i].porc_detraccion,
+                'S/ DETRACCIÓN': this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
                 'BASE SOLES': this.lstExportExcel[i].s_monto_valor_venta_CTB,
                 'IGV SOLES': this.lstExportExcel[i].s_monto_igv_CTB,
                 'TOTAL SOLES': this.lstExportExcel[i].s_monto_total_CTB,
@@ -275,7 +272,7 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
                 bookType: 'xlsx',
                 type: 'array',
             });
-            this.saveAsExcelFile(excelBuffer, 'REPORTE_VENTA');
+            this.saveAsExcelFile(excelBuffer, 'REPORTE_VENTA_CONSOLIDADO');
         });
     }
 

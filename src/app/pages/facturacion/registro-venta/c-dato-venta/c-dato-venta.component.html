@@ -64,7 +64,15 @@
                         </span>
                     </div>
                     <div class="lg:col-3 "></div> 
-                    
+                    <div class="sm:col-12 lg:col-6 md:col-6 field h-3rem flex flex-column">
+                        <div class="flex mb-1">
+                            <label class="text-900">Registrada por el Portal SUNAT</label>    
+                        </div>
+                        <span>
+                            <p-checkbox [readonly]=onlyRead formControlName="indsunatreg" inputId="ny" [binary]="true" class="align-items-start" (onChange)="changeAplicaSunat($event.checked)"/>
+                        </span>
+                    </div> 
+                    <div class="lg:col-6"></div> 
                     <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
                         <label class="block text-900  mb-1">Tipo Documento<span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-fluid mt-1">
@@ -75,13 +83,13 @@
                     <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field mt-1">
                         <label class="block text-900 mb-1">Serie</label>                        
                         <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nroserie_ctb" readonly="true" class="p-inputtext-sm surface-100"/>
+                            <input pInputText type="text" formControlName="nroserie_ctb" [readonly]=onlyReadSunat class="p-inputtext-sm surface-100"/>
                         </span>
                     </div>
                     <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
                         <label class="block text-900 mb-1">N° Documento</label>                        
                         <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nrodocumento_ctb" readonly="true" class="p-inputtext-sm surface-100" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
+                            <input pInputText type="text" formControlName="nrodocumento_ctb" [readonly]=onlyReadSunat class="p-inputtext-sm surface-100" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
                         </span>
                     </div>                  
                     <div class="lg:col-3"></div>  
@@ -144,7 +152,7 @@
                             <label class="text-900">Detracción</label>    
                         </div>
                         <span>
-                            <p-checkbox formControlName="inddetraccion_ctb" inputId="ny" [binary]="true" class="align-items-start" (onChange)="changeAplicaDetra($event.checked)"/>
+                            <p-checkbox [readonly]=onlyRead formControlName="inddetraccion_ctb" inputId="ny" [binary]="true" class="align-items-start" (onChange)="changeAplicaDetra($event.checked)"/>
                         </span>
                     </div> 
                     <div class="sm:col-4 lg:col-6 md:col-3 col-6 -mt-1">

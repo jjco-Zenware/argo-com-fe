@@ -236,7 +236,8 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
                 'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
                 'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
                 'DOCUMENTO': this.lstExportExcel[i].nrofactura,
-                'CLIENTE': this.lstExportExcel[i].nomcomercial,
+                'RUC': this.lstExportExcel[i].nrodocumento,
+                'PROVEEDOR': this.lstExportExcel[i].nomempresa,
                 'CENTRO COSTO': this.lstExportExcel[i].descentrocosto,
                 'TIPO CAMBIO': this.lstExportExcel[i].tc,
                 'MONEDA': this.lstExportExcel[i].simbmoneda,
@@ -273,7 +274,7 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
                 bookType: 'xlsx',
                 type: 'array',
             });
-            this.saveAsExcelFile(excelBuffer, 'REPORTE_COMPRA');
+            this.saveAsExcelFile(excelBuffer, 'REPORTE_COMPRA_CONSOLIDADO');
         });
     }
 

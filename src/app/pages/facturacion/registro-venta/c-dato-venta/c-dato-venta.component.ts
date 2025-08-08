@@ -71,6 +71,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
   lstTipoProducto:any;
   verImportar: boolean = true;
   onlyRead: boolean = false;
+  onlyReadSunat: boolean = true;
   //verReferencia: boolean = false;
   verProyecto: boolean = true;
   lstUnidades:any;
@@ -254,8 +255,9 @@ createFormRegistro() {
     monto_anticipo:[{ value: 0, disabled: false }],
     retencion_tipo:[{ value: 0, disabled: false }],
     retencion_base_imponible:[{ value: 0, disabled: false }],
-    indmanualdetraccion:[{ value: false, disabled: false }], 
-    //codctactble:[{ value: '0', disabled: false }],  
+    indmanualdetraccion:[{ value: false, disabled: false }],
+    indsunatreg:[{ value: false, disabled: false }],
+    //codctactble:[{ value: '0', disabled: false }],
   });
 
   
@@ -393,6 +395,7 @@ createFormRegistro() {
           this.changeEditaDetra(rpta.ordencompra[0].indmanualdetraccion);
           this.changeProyecto(rpta.ordencompra[0].idproyecto);
           this.gettipocambiodia(new Date(this.serviceUtilitario.formatFecha(rpta.ordencompra[0].fecemision)));
+          this.changeAplicaSunat2(rpta.ordencompra[0].indsunatreg);
          },
          error:(err)=>{
              this.setSpinner(false);
@@ -1611,5 +1614,33 @@ createFormRegistro() {
         let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
         this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
         this.registerFormRegistro.get('direccion')?.setValue(provee[0].direcresumen);
+    }
+
+    changeAplicaSunat(value:any){
+      console.log('changeAplicaSunat...', value);
+      
+      if (value) {
+      console.log('entro...', value);
+      this.onlyReadSunat = false;
+      }else{
+      console.log('false...', value);
+      this.onlyReadSunat = true;
+      this.registerFormRegistro.get('nroserie_ctb')?.setValue('');
+      this.registerFormRegistro.get('nrodocumento_ctb')?.setValue('');
+      }
+      
+    }
+
+    changeAplicaSunat2(value:any){
+      console.log('changeAplicaSunat...', value);
+      
+      if (value) {
+      console.log('entro...', value);
+      this.onlyReadSunat = false;
+      }else{
+      console.log('false...', value);
+      this.onlyReadSunat = true;
+      }
+      
     }
 }

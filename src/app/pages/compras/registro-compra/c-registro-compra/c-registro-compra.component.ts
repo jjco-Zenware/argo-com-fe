@@ -57,7 +57,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void{
       this.createFrm();
-      this.listaProveedores();
+      //this.listaProveedores();
       this.getListar();
       this.listaMonedas();
       this.cols = [
@@ -120,12 +120,20 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         next: (rpta:any) => {
             this.setSpinner(false);
             console.log('rpta getListar', rpta);
+            
             let lista = rpta.ordenescompra;
-            //this.lstCompras = lista.filter((idproveedor: any) => { idproveedor !== 0 });
+            if (lista.length > 0) {
+             this.lstCompras = lista.filter((idproveedor: any) => { idproveedor !== 0 });
             this.lstCompras = lista.filter(
                     (x: { idproveedor: any }) =>
                         x.idproveedor !== 0
                 );
+            }
+            
+
+                if (this.frmDatos.value.idproveedor === 0) {
+              this.listaProveedores();       
+            }
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -141,22 +149,41 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
 
   listaProveedores() {
 
-    const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
-      next: (rpta: any) => {
-        this.lstProveedores = rpta;
-        const objet = {
+    this.lstProveedores = [];
+     const objet = {
           idcliente: 0,
           nomcomercial: 'TODOS'
         }
         this.lstProveedores.unshift(objet);
-        console.log('this.lstProveedores', this.lstProveedores);
-      },
-      error: (err) => {
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => { },
-    });
-    this.$listSubcription.push($getClientes);
+
+        let lista = this.lstCompras.filter(
+          (obj, index, self) => index === self.findIndex((t) => t.idproveedor === obj.idproveedor)
+        );         
+
+        lista.forEach(element => {
+          let objeto ={
+            idcliente: element.idproveedor,
+            nomcomercial: element.nomempresa
+          }
+          this.lstProveedores.unshift(objeto);
+        });   
+
+    // const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+    //   next: (rpta: any) => {
+    //     this.lstProveedores = rpta;
+    //     const objet = {
+    //       idcliente: 0,
+    //       nomcomercial: 'TODOS'
+    //     }
+    //     this.lstProveedores.unshift(objet);
+    //     console.log('this.lstProveedores', this.lstProveedores);
+    //   },
+    //   error: (err) => {
+    //     this.serviceSharedApp.messageToast()
+    //   },
+    //   complete: () => { },
+    // });
+    // this.$listSubcription.push($getClientes);
 
   }
 
@@ -309,8 +336,10 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
     }
 
     getExportarExcel(data :any) {
+      console.log('filteredValue', data.filteredValue);
+      console.log('_value', data._value);
       this.lstExportar = [];
-      if (data.filteredValue !== undefined) {
+      if (data.filteredValue !== null) {
         this.lstExportExcel = data.filteredValue;
       }else{
         this.lstExportExcel = data._value
@@ -322,16 +351,17 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
               'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
               'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
               'DOCUMENTO': this.lstExportExcel[i].nrofactura,
-              'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
+              'RUC': this.lstExportExcel[i].nrodocumento,
+              'PROVEEDOR': this.lstExportExcel[i].nomempresa,
               'CENTRO COSTO' : this.lstExportExcel[i].descentrocosto,
               'MONEDA': this.lstExportExcel[i].simbmoneda,
-              'BASE IMPONIBLE': parseFloat(this.lstExportExcel[i].s_monto).toFixed(2),
-              'IGV': parseFloat(this.lstExportExcel[i].s_igv).toFixed(2),
-              'TOTAL': parseFloat(this.lstExportExcel[i].s_monto_total).toFixed(2),
+              'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
+              'IGV': this.lstExportExcel[i].s_igv,
+              'TOTAL': this.lstExportExcel[i].s_monto_total,
               'GLOSA': this.lstExportExcel[i].s_glosa,
               'ESTADO' : this.lstExportExcel[i].nomestado,
-              '% DETRACCIÓN' : parseFloat(this.lstExportExcel[i].porc_detraccion).toFixed(2),
-              'S/ DETRACCIÓN' : parseFloat(this.lstExportExcel[i].s_monto_detraccion_mn_CTB).toFixed(2),
+              '% DETRACCIÓN' : this.lstExportExcel[i].porc_detraccion,
+              'S/ DETRACCIÓN' : this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
               
           }
           this.lstExportar.push(objeto);
