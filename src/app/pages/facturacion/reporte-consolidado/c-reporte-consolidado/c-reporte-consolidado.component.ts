@@ -49,7 +49,7 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.createFrm();
         this.getListar();
-        this.listaProveedores();
+        //this.listaProveedores();
         this.listaMonedas();
         this.listarCentroCosto();
     }

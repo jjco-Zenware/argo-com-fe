@@ -50,7 +50,6 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.createFrm();
         this.getListar();
-        this.listaProveedores();
         this.listaMonedas();
         this.listarCentroCosto();
     }
@@ -109,11 +108,14 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (rpta: any) => {
                     this.setSpinner(false);
-                    console.log('rpta getListar', rpta);
-                    let lista = rpta.ordenescompra;
+                     console.log('rpta getListar', rpta);
+                        let lista = rpta.ordenescompra;
                     this.lstCompras = lista.filter(
                         (item: any) => item.ind_estado_fel === 1
                     );
+                    if (this.frmDatos.value.idproveedor === 0) {
+                        this.listaProveedores();       
+                        }
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -294,23 +296,41 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
     }
 
      listaProveedores() {
+        
+        this.lstProveedores = [];
+     const objet = {
+          idcliente: 0,
+          nomcomercial: 'TODOS'
+        }
+        this.lstProveedores.unshift(objet);
 
-        const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
-        next: (rpta: any) => {
-            this.lstProveedores = rpta;
-            const objet = {
-            idcliente: 0,
-            razonsocial: 'TODOS'
-            }
-            this.lstProveedores.unshift(objet);
-            //console.log('this.lstProveedores', this.lstProveedores);
-        },
-        error: (err) => {
-            this.serviceSharedApp.messageToast()
-        },
-        complete: () => { },
-        });
-        this.$listSubcription.push($getClientes);
+        let lista = this.lstCompras.filter(
+          (obj, index, self) => index === self.findIndex((t) => t.idproveedor === obj.idproveedor)
+        );         
+
+        lista.forEach(element => {
+          let objeto ={
+            idcliente: element.idproveedor,
+            nomcomercial: element.nomempresa
+          }
+          this.lstProveedores.unshift(objeto);
+        });  
+        // const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
+        // next: (rpta: any) => {
+        //     this.lstProveedores = rpta;
+        //     const objet = {
+        //     idcliente: 0,
+        //     razonsocial: 'TODOS'
+        //     }
+        //     this.lstProveedores.unshift(objet);
+        //     //console.log('this.lstProveedores', this.lstProveedores);
+        // },
+        // error: (err) => {
+        //     this.serviceSharedApp.messageToast()
+        // },
+        // complete: () => { },
+        // });
+        // this.$listSubcription.push($getClientes);
 
     }
 
