@@ -1,7 +1,7 @@
 export const environment = {
     production: true,
     //webAPI: 'https://argozenware.com/dev/backend/api/',
-    webAPI: 'https://sigzenware.com/bac/api/',
+    webAPI: 'https://ion.net.pe/huascaran-backend/api/',
     msalConfig: {
         auth: {
             clientId: 'b65e275c-ca73-4aac-b3e3-fd74c0658fd8',
