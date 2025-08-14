@@ -1,0 +1,40 @@
+/* Fondo y bordes */
+:host ::ng-deep .custom-panelmenu .p-panelmenu-header {
+  background: linear-gradient(135deg, #4a90e2, #357ab8);
+  color: rgb(189, 115, 115);
+  border: none;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 1px;
+}
+
+/* Hover en header */
+:host ::ng-deep .custom-panelmenu .p-panelmenu-header:hover {
+  background: linear-gradient(135deg, #5aa3f2, #4682c1);
+}
+
+/* Items internos */
+:host ::ng-deep .custom-panelmenu .p-menuitem-link {
+  background-color: #fcfcfc;
+  border-radius: 6px;
+  margin: 2px 0 0 5px;
+  padding: 5px;
+  color: #357ab8;
+
+}
+
+/* Hover de items */
+:host ::ng-deep .custom-panelmenu .p-menuitem-link:hover {
+  background-color: #0d3e61;
+}
+
+/* Íconos */
+:host ::ng-deep .custom-panelmenu .p-menuitem-icon {
+  font-size: 11px;
+  color: #0c54a7;
+}
+
+/* Texto */
+:host ::ng-deep .custom-panelmenu .p-menuitem-text {
+  font-size: 9px;
+  color: #0c54a7;
+}

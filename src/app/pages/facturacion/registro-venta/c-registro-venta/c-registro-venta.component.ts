@@ -357,13 +357,13 @@ visXperfil: boolean = true;
                   'CLIENTE': this.lstExportExcel[i].nomempresa,
                   'CENTRO COSTO' : this.lstExportExcel[i].descentrocostoPRY,
                   'MONEDA': this.lstExportExcel[i].simbmoneda,
-                  'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
-                  'IGV': this.lstExportExcel[i].s_igv,
-                  'TOTAL': this.lstExportExcel[i].s_monto_total,
+                  'BASE IMPONIBLE': this.lstExportExcel[i].ind_estado_fel === 4 ? 0 : this.lstExportExcel[i].s_monto,
+                  'IGV': this.lstExportExcel[i].ind_estado_fel === 4 ? 0 : this.lstExportExcel[i].s_igv,
+                  'TOTAL': this.lstExportExcel[i].ind_estado_fel === 4 ? 0 : this.lstExportExcel[i].s_monto_total,
                   'ESTADO' : this.lstExportExcel[i].nomestadofel,
-                  '% DETRACCIÓN' : this.lstExportExcel[i].porc_detraccion,
-                  'S/ DETRACCIÓN' : this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
-                  
+                  '% DETRACCIÓN' : this.lstExportExcel[i].ind_estado_fel === 4 ? 0 : this.lstExportExcel[i].porc_detraccion,
+                  'S/ DETRACCIÓN' : this.lstExportExcel[i].ind_estado_fel === 4 ? 0 : this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
+
               }
               this.lstExportar.push(objeto);
           }
@@ -372,7 +372,7 @@ visXperfil: boolean = true;
             const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
             const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-            this.saveAsExcelFile(excelBuffer, 'RREGISTRO_VENTA');
+            this.saveAsExcelFile(excelBuffer, 'REGISTRO_VENTA');
             });
       }
   

@@ -257,7 +257,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
                 'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
                 'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
                 'DOCUMENTO': this.lstExportExcel[i].nrofactura,
-                'CLIENTE': this.lstExportExcel[i].nomcomercial,
+                'CLIENTE': this.lstExportExcel[i].nomempresa,
                 'CENTRO COSTO': this.lstExportExcel[i].descentrocostoPRY,
                 'MONEDA': this.lstExportExcel[i].simbmoneda,
                 'BASE IMPONIBLE':  this.lstExportExcel[i].s_monto_rep,

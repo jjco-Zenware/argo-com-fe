@@ -17,6 +17,7 @@ import { SharedPrimeNgModule } from '@primeNgModule';
 import { MenuService } from './app.menu.service';
 import { MenuModule } from 'primeng/menu';
 import { AccordionModule } from 'primeng/accordion';
+import { PanelMenuModule } from 'primeng/panelmenu';
 
 @NgModule({
     declarations: [
@@ -38,7 +39,8 @@ import { AccordionModule } from 'primeng/accordion';
         SharedPrimeNgModule,
         ReactiveFormsModule,
         MenuModule ,
-        AccordionModule 
+        AccordionModule ,
+        PanelMenuModule 
     ],
     exports: [
         AppBreadcrumbComponent,

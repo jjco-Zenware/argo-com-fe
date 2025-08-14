@@ -79,40 +79,40 @@
                 <td>
                     {{customer.name}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.enero < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.enero | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.febrero < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.febrero | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.marzo < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.marzo | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.abril < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.abril | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.mayo < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.mayo | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.junio < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.junio | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.julio < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.julio | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.agosto < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.agosto | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.setiembre < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.setiembre | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.octubre < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.octubre | number :'0.2-2'}}
                 </td>
-                <td>
+                <td [ngClass]="{'text-red-500': customer.noviembre < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.noviembre | number :'0.2-2'}}
                 </td>
-                <td >
+                <td [ngClass]="{'text-red-500': customer.diciembre < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.diciembre | number :'0.2-2'}}
                 </td>
             </tr>
@@ -123,8 +123,8 @@
         <div class="card">
             <div class="flex align-items-center justify-content-between mb-3">
                 <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0">Gráfico Estadístico</h5>
-                    <i class="pi pi-chart-bar mt-2" pTooltip="Cantidad de dinero que entra y sale de su empresa"
+                    <h5 class="m-0 text-blue-500">Gráfico Estadístico</h5>
+                    <i class="pi pi-chart-bar ml-3 mt-1 text-blue-500 text-1xl" pTooltip="Cantidad de dinero que entra y sale de su empresa"
                         tooltipPosition="bottom"></i>
                 </div> 
             </div>
@@ -142,7 +142,7 @@
                 
             </div>
 
-            <div class="border-top-1 surface-border flex justify-content-between mt-3 col-12 h-full align-content-end">
+            <!-- <div class="border-top-1 surface-border flex justify-content-between mt-3 col-12 h-full align-content-end">
                 <div class="w-4 text-center p-1 flex flex-column surface-border">
                     <span class="font-medium text-green-500  text-1xl">Entrante (+)</span>
                     <span class="text-color-secondary text-1xl">10.000</span>
@@ -155,7 +155,7 @@
                     <span class="font-medium text-blue-500 text-1xl">Efectivo al (fecha) (=) </span>
                     <span class="text-color-secondary text-1xl">50.702</span>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div> 
 </div>

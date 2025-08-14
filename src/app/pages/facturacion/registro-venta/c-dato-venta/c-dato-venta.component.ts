@@ -241,7 +241,7 @@ createFormRegistro() {
     nrodias:[{ value: 1, disabled: false }],
     idordencompra_origen_ctb:[{ value: 0, disabled: false }],
     monto_pen_pago:[{ value: 0, disabled: false }],
-    idcentrocosto:[{ value: 0, disabled: false }],
+    idcentrocosto:[{ value: 225, disabled: false }],
     s_monto_neto_CTB:[{ value: 0, disabled: false }],
     direccion:[{ value: null, disabled: false }],
     fel_sunat_transaction:[{ value: 1, disabled: false }],

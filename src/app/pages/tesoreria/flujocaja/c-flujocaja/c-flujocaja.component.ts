@@ -27,6 +27,7 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
   lstMonedas: any;
   lstProveedor: any;
   lstFlujoCaja: any[] = [];
+  lstmontomes: number[] = [];
   
   
     chartMonthlyData: any;
@@ -51,7 +52,7 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
       this.listaMonedas();
 
     this.getListar();
-    this.monthlyChartInit();   
+      
   }
 
   createFrm(){
@@ -86,12 +87,20 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
             console.log('rpta getListar', rpta);
 
             this.lstFlujoCaja = rpta;
+            this.lstmontomes = [];
+            this.lstFlujoCaja.forEach(element => {
+              if (element.tipo === "C" ) {
+                this.lstmontomes = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.septiembre, element.octubre, element.noviembre, element.diciembre];
+              }
+              
+            });
         },
         error:(err)=>{
             this.setSpinner(false);
             this.serviceSharedApp.messageToast()
         },
         complete:() => {
+          this.monthlyChartInit(); 
           this.setSpinner(false);
         }
       });
@@ -178,14 +187,14 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
           cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
 
       return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
-          datasets: [                
-              
+          labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+          datasets: [               
+
               {
                   label: '2025',
-                  data: [31, 4, 35, 74, 47, 35, 46, 4, 35, 74],
+                  data: this.lstmontomes,
                   borderColor: greenColor,
-                  backgroundColor: amberColor,
+                  backgroundColor: cyanColor,
                   borderWidth: 2,
                   fill: true
               }

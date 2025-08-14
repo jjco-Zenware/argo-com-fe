@@ -177,8 +177,8 @@
                 </td>
                 <td>
                     <div *ngIf="!data.indsunatreg" class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
-                        <button *ngIf="data.estado === 'EMT' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3 && data.ind_estado_fel != 4 && visXperfil" pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom" pTooltip="Enviar a SUNAT" class="p-button-rounded p-button-text text-blue-500" (click)="emitirDocumento(data)"></button>
-                        <button *ngIf="data.ind_estado_fel === 1 || data.ind_estado_fel === 3 || data.ind_estado_fel === 4" pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom" pTooltip="Descargar Documento" class="p-button-rounded p-button-text text-green-500" (click)="verDocumento(data)"></button>
+                        <button *ngIf="data.estado === 'EMT' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3 && data.ind_estado_fel != 4 && data.ind_estado_fel != 5 && visXperfil" pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom" pTooltip="Enviar a SUNAT" class="p-button-rounded p-button-text text-blue-500" (click)="emitirDocumento(data)"></button>
+                        <button *ngIf="data.ind_estado_fel === 1 || data.ind_estado_fel === 3 || data.ind_estado_fel === 4 || data.ind_estado_fel === 5" pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom" pTooltip="Descargar Documento" class="p-button-rounded p-button-text text-green-500" (click)="verDocumento(data)"></button>
                         <button *ngIf="data.ind_estado_fel != 0 && data.ind_estado_fel != 2 && data.ind_estado_fel != 4 && visXperfil" [disabled]="data.b_accion" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenuSunat($event, data)"
                          pTooltip="Transacciones Sunat" tooltipPosition="bottom"></button>
                      <p-tieredMenu #menuSunat [model]="menuItemsSunat" appendTo="body" [popup]="true"></p-tieredMenu>
@@ -243,7 +243,7 @@
                 </td>
                 <td>
                     <div [ngStyle]="{'width':'120px'}">
-                        {{data.descentrocostoPRY | uppercase}}
+                        {{data.descentrocosto | uppercase}}
                     </div>
                 </td>
                 
@@ -275,7 +275,7 @@
                         <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
                         <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text text-red-500" (click)="onVerDetalle(data)"></button>
                         <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text text-green-500" (click)="onVer(data)"></button>
-                        <button *ngIf="data.ind_estado_fel == 0 && visXperfil" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button>
+                        <button *ngIf="(data.ind_estado_fel == 0 || data.ind_estado_fel == 2) && visXperfil" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button>
                     </div>
                 </td>
             </tr>
