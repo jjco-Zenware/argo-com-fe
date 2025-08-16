@@ -41,6 +41,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
   @ViewChild('menu') menu!: Menu;
   ordenCompra: any;
     lstMonedas: Moneda[] = [];
+  visXperfil: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -56,7 +57,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void{
       this.createFrm();
-      this.listaProveedores();
+      //this.listaProveedores();
       this.getListar();
       this.listaMonedas();
       this.cols = [
@@ -64,16 +65,23 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         { field: 'fecemision', header: '  EMISION' },
         { field: 'fecvencimiento', header: 'VENCIMIENTO' },
         { field: 'nrofactura', header: 'DOCUMENTOa' },
-        { field: 'nomcomercial', header: 'PROVEEDOR' },
+        { field: 'nomempresa', header: 'PROVEEDOR' },
         { field: 'simbmoneda', header: 'MONEDA' },
         { field: 's_monto', header: 'SUBTOTAL' },
         { field: 's_igv', header: 'IGV' },
         { field: 's_monto_total', header: 'TOTAL' },
+        { field: 's_glosa', header: 'ESTADO' },
+        { field: 'codigoproyecto', header: 'PROYECTO' },
+        { field: 'descentrocosto', header: 'CENTRO COSTO' },
         { field: 'nomestado', header: 'ESTADO' },
-        { field: 'porc_detraccion', header: 'ESTADO' },
-        { field: 's_monto_detraccion_mn_CTB', header: 'ESTADO' },
-        { field: 's_glosa', header: 'ESTADO' }
+        { field: 'porc_detraccion', header: 'porc_detraccion' },
+        { field: 's_monto_detraccion_mn_CTB', header: 's_monto_detraccion_mn_CTB' }        
     ];
+    if (constantesLocalStorage.idperfil === 11) {
+        this.visXperfil = false;
+      }else{
+        this.visXperfil = true;
+        }
   }
 
   ngOnDestroy(): void {
@@ -93,6 +101,8 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
         idcliente: [{value: 0,disabled: false}],
+        idcentrocosto: [{ value: 0, disabled: false }],
+        ind_estado_fel: [{ value: 0, disabled: false }]
     }) 
   }
 
@@ -110,12 +120,20 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
         next: (rpta:any) => {
             this.setSpinner(false);
             console.log('rpta getListar', rpta);
+            
             let lista = rpta.ordenescompra;
-            //this.lstCompras = lista.filter((idproveedor: any) => { idproveedor !== 0 });
+            if (lista.length > 0) {
+             this.lstCompras = lista.filter((idproveedor: any) => { idproveedor !== 0 });
             this.lstCompras = lista.filter(
                     (x: { idproveedor: any }) =>
                         x.idproveedor !== 0
                 );
+            }
+            
+
+                if (this.frmDatos.value.idproveedor === 0) {
+              this.listaProveedores();       
+            }
         },
         error:(err)=>{
             this.setSpinner(false);
@@ -131,22 +149,41 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
 
   listaProveedores() {
 
-    const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
-      next: (rpta: any) => {
-        this.lstProveedores = rpta;
-        const objet = {
+    this.lstProveedores = [];
+     const objet = {
           idcliente: 0,
           nomcomercial: 'TODOS'
         }
         this.lstProveedores.unshift(objet);
-        console.log('this.lstProveedores', this.lstProveedores);
-      },
-      error: (err) => {
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => { },
-    });
-    this.$listSubcription.push($getClientes);
+
+        let lista = this.lstCompras.filter(
+          (obj, index, self) => index === self.findIndex((t) => t.idproveedor === obj.idproveedor)
+        );         
+
+        lista.forEach(element => {
+          let objeto ={
+            idcliente: element.idproveedor,
+            nomcomercial: element.nomempresa
+          }
+          this.lstProveedores.unshift(objeto);
+        });   
+
+    // const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+    //   next: (rpta: any) => {
+    //     this.lstProveedores = rpta;
+    //     const objet = {
+    //       idcliente: 0,
+    //       nomcomercial: 'TODOS'
+    //     }
+    //     this.lstProveedores.unshift(objet);
+    //     console.log('this.lstProveedores', this.lstProveedores);
+    //   },
+    //   error: (err) => {
+    //     this.serviceSharedApp.messageToast()
+    //   },
+    //   complete: () => { },
+    // });
+    // this.$listSubcription.push($getClientes);
 
   }
 
@@ -277,6 +314,12 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
   
     onAccion(item: any) {
       this.ordenCompra.idtrx = item.idtrx;
+      let ancho;
+      if (item.idtrx === 159) {
+          ancho = '20%';
+      } else {
+          ancho = '40%';
+      }
       console.log('onAccion', item);
       console.log('this.ordenCompra', this.ordenCompra);
       const ref = this.dialogService.open(CModalTransacComponent, {
@@ -284,7 +327,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
           header: item.nomtrx,
           closeOnEscape: false,
           styleClass: 'testDialog',
-          width: '40%'
+          width: ancho
       });
   
       ref.onClose.subscribe(() => {
@@ -293,8 +336,10 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
     }
 
     getExportarExcel(data :any) {
+      console.log('filteredValue', data.filteredValue);
+      console.log('_value', data._value);
       this.lstExportar = [];
-      if (data.filteredValue !== undefined) {
+      if (data.filteredValue !== null) {
         this.lstExportExcel = data.filteredValue;
       }else{
         this.lstExportExcel = data._value
@@ -306,16 +351,17 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy{
               'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
               'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
               'DOCUMENTO': this.lstExportExcel[i].nrofactura,
-              'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
+              'RUC': this.lstExportExcel[i].nrodocumento,
+              'PROVEEDOR': this.lstExportExcel[i].nomempresa,
               'CENTRO COSTO' : this.lstExportExcel[i].descentrocosto,
               'MONEDA': this.lstExportExcel[i].simbmoneda,
-              'BASE IMPONIBLE': parseFloat(this.lstExportExcel[i].s_monto).toFixed(2),
-              'IGV': parseFloat(this.lstExportExcel[i].s_igv).toFixed(2),
-              'TOTAL': parseFloat(this.lstExportExcel[i].s_monto_total).toFixed(2),
+              'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
+              'IGV': this.lstExportExcel[i].s_igv,
+              'TOTAL': this.lstExportExcel[i].s_monto_total,
               'GLOSA': this.lstExportExcel[i].s_glosa,
               'ESTADO' : this.lstExportExcel[i].nomestado,
-              '% DETRACCIÓN' : parseFloat(this.lstExportExcel[i].porc_detraccion).toFixed(2),
-              'S/ DETRACCIÓN' : parseFloat(this.lstExportExcel[i].s_monto_detraccion_mn_CTB).toFixed(2),
+              '% DETRACCIÓN' : this.lstExportExcel[i].porc_detraccion,
+              'S/ DETRACCIÓN' : this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
               
           }
           this.lstExportar.push(objeto);

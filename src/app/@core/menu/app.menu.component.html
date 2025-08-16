@@ -1,7 +1,6 @@
-
 <!-- <div class="h-full">
-    <ul class="layout-menu">
-        <ng-container *ngFor="let item of model; let i = index;">
+    <ul class="layout-menu layout-menu-light">
+        <ng-container *ngFor="let item of model; let i = index;" class="menu-item collapsed">
                 <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
                 <li *ngIf="item.separator" class="menu-separator"></li>
         </ng-container>
@@ -9,14 +8,20 @@
 </div> -->
 
 
-<div class="h-full">
-    <ul class="layout-menu">
-        <ng-container *ngFor="let item of model; let i = index;">
-                <li app-menuitem *ngIf="!item.separator" [item]="item" [index]="i" [root]="true"></li>
-                <li *ngIf="item.separator" class="menu-separator"></li>
-        </ng-container>
-    </ul>
-</div>
+
+    <p-panelMenu [model]="model" class="custom-panelmenu"></p-panelMenu>
 
 
+<!-- <div class="h-full p-1 flex flex-column align-items-center">
+    <p-panelMenu [model]="model">
+    <ng-template pTemplate="item" let-item>
+        <a pRipple class="flex align-items-center px-3 py-2 cursor-pointer">
+            <i [class]="item.icono"></i>
+            <span class="ml-2 text-sm font-semibold" [ngClass]="{'text-blue-600': item.activo}">
+                {{ item.nomopcion }}
+            </span>
+        </a>
+    </ng-template>
+</p-panelMenu>
+</div> -->
 

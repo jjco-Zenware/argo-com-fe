@@ -103,6 +103,7 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
         idproveedor: [{value: 0,disabled: false}],
         idmoneda: [{value: 0,disabled: false}],
         idcliente: [{value: 0,disabled: false}],
+        idcentrocosto: [{ value: 0, disabled: false }]
       })
     }
 

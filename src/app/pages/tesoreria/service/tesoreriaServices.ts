@@ -159,4 +159,9 @@ export class TesoreriaService {
             .pipe(
             map((resp: Blob) => resp));
         }
+
+    listarFlujoCaja(codigo: any) {
+        const url = `${constantesApiWeb.listarFlujoCaja}${codigo}`;
+        return this.http.get<any>(url);
+    }
 }

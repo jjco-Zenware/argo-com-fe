@@ -102,16 +102,16 @@ export class CDashboardComponent implements OnInit {
               //     fill: true
               // },
               {
-                  label: '2023',
-                  data: [18, 36, 39, 58, 41, 50, 72,50,20,30],
+                  label: '2024',
+                  data: [18, 36, 39, 58, 41, 50, 72,50],
                   borderColor: tealColor,
                   backgroundColor: tealColor,
                   borderWidth: 2,
                   fill: true
               },
               {
-                  label: '2024',
-                  data: [31, 4, 35, 74, 47, 35, 46, 4, 35, 74],
+                  label: '2025',
+                  data: [31, 4, 35, 74, 47, 35, 46, 4],
                   borderColor: greenColor,
                   backgroundColor: greenColor,
                   borderWidth: 2,

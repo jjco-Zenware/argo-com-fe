@@ -12,16 +12,15 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { OrdencompraService } from '../../../compras/orden-compra-servicio/service/ordencompra.service';
 import { MessageService } from 'primeng/api';
-import { ModalVentaComponent } from '../c-modal-venta/c-modal-venta.component';
 import * as FileSaver from 'file-saver';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 
 @Component({
-    selector: 'app-c-reporte-venta',
-    templateUrl: './c-reporte-venta.component.html',
-    styleUrls: ['./c-reporte-venta.component.scss'],
+    selector: 'app-c-reporte-consolidado',
+    templateUrl: './c-reporte-consolidado.component.html',
+    styleUrls: ['./c-reporte-consolidado.component.scss'],
 })
-export class CReporteVentaComponent implements OnInit, OnDestroy {
+export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
     $listSubcription: Subscription[] = [];
 
     lstCompras: any[] = [];
@@ -50,6 +49,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.createFrm();
         this.getListar();
+        //this.listaProveedores();
         this.listaMonedas();
         this.listarCentroCosto();
     }
@@ -108,14 +108,11 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (rpta: any) => {
                     this.setSpinner(false);
-                     console.log('rpta getListar', rpta);
-                        let lista = rpta.ordenescompra;
+                    console.log('rpta getListar', rpta);
+                    let lista = rpta.ordenescompra;
                     this.lstCompras = lista.filter(
                         (item: any) => item.ind_estado_fel === 1
                     );
-                    if (this.frmDatos.value.idproveedor === 0) {
-                        this.listaProveedores();       
-                        }
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -136,20 +133,6 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
         };
         this.tituloDetalle = 'Factura N° ' + data.nrofactura;
 
-        const objeto = {
-            idordencompra: data.idordencompra,
-        };
-        const ref = this.dialogService.open(ModalVentaComponent, {
-            data: objeto,
-            header: 'Factura N° ' + data.nrofactura,
-            styleClass: 'testDialog',
-            closeOnEscape: false,
-            closable: true,
-            width: '40%',
-        });
-        ref.onClose.subscribe(() => {
-            //this.getListar();
-        });
     }
 
     descargarReporte() {
@@ -257,16 +240,24 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
                 'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
                 'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
                 'DOCUMENTO': this.lstExportExcel[i].nrofactura,
-                'CLIENTE': this.lstExportExcel[i].nomempresa,
+                'RUC': this.lstExportExcel[i].nrodocumento,
+                  'CLIENTE': this.lstExportExcel[i].nomempresa,
                 'CENTRO COSTO': this.lstExportExcel[i].descentrocostoPRY,
+                'TC': this.lstExportExcel[i].tc,
                 'MONEDA': this.lstExportExcel[i].simbmoneda,
-                'BASE IMPONIBLE':  this.lstExportExcel[i].s_monto_rep,
-                'IGV': this.lstExportExcel[i].s_igv_rep,
-                'TOTAL': this.lstExportExcel[i].s_monto_total_rep,
+                'BASE S.': this.lstExportExcel[i].basesol,
+                'IGV S.': this.lstExportExcel[i].igvsol,
+                'TOTAL S.': this.lstExportExcel[i].totalsol,
+                'BASE $': this.lstExportExcel[i].baseDol,
+                'IGV $': this.lstExportExcel[i].igvDol,
+                'TOTAL $': this.lstExportExcel[i].totalDol,
                 'GLOSA': this.lstExportExcel[i].s_glosa,
                 'ESTADO': this.lstExportExcel[i].nomestado,
                 '% DETRACCIÓN': this.lstExportExcel[i].porc_detraccion,
                 'S/ DETRACCIÓN': this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
+                'BASE SOLES': this.lstExportExcel[i].s_monto_valor_venta_CTB,
+                'IGV SOLES': this.lstExportExcel[i].s_monto_igv_CTB,
+                'TOTAL SOLES': this.lstExportExcel[i].s_monto_total_CTB,
             };
             this.lstExportar.push(objeto);
         }
@@ -281,7 +272,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
                 bookType: 'xlsx',
                 type: 'array',
             });
-            this.saveAsExcelFile(excelBuffer, 'REPORTE_VENTA');
+            this.saveAsExcelFile(excelBuffer, 'REPORTE_VENTA_CONSOLIDADO');
         });
     }
 
@@ -296,41 +287,23 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
     }
 
      listaProveedores() {
-        
-        this.lstProveedores = [];
-     const objet = {
-          idcliente: 0,
-          nomcomercial: 'TODOS'
-        }
-        this.lstProveedores.unshift(objet);
 
-        let lista = this.lstCompras.filter(
-          (obj, index, self) => index === self.findIndex((t) => t.idproveedor === obj.idproveedor)
-        );         
-
-        lista.forEach(element => {
-          let objeto ={
-            idcliente: element.idproveedor,
-            nomcomercial: element.nomempresa
-          }
-          this.lstProveedores.unshift(objeto);
-        });  
-        // const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
-        // next: (rpta: any) => {
-        //     this.lstProveedores = rpta;
-        //     const objet = {
-        //     idcliente: 0,
-        //     razonsocial: 'TODOS'
-        //     }
-        //     this.lstProveedores.unshift(objet);
-        //     //console.log('this.lstProveedores', this.lstProveedores);
-        // },
-        // error: (err) => {
-        //     this.serviceSharedApp.messageToast()
-        // },
-        // complete: () => { },
-        // });
-        // this.$listSubcription.push($getClientes);
+        const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
+        next: (rpta: any) => {
+            this.lstProveedores = rpta;
+            const objet = {
+            idcliente: 0,
+            razonsocial: 'TODOS'
+            }
+            this.lstProveedores.unshift(objet);
+            //console.log('this.lstProveedores', this.lstProveedores);
+        },
+        error: (err) => {
+            this.serviceSharedApp.messageToast()
+        },
+        complete: () => { },
+        });
+        this.$listSubcription.push($getClientes);
 
     }
 

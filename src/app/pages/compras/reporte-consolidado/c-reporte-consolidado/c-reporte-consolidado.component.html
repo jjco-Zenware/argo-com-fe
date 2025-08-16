@@ -4,61 +4,62 @@
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
                                 
                 <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">REPORTE DE VENTAS POR PERIODO</span>
+                    <span class="text-base font-semibold">REPORTE CONSOLIDADO DE COMPRAS</span>
                 </div>           
             </div>
         </div>
-        
-        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-10 text-sm">                 
-            <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
-                <label class="font-semibold text-blue-600 text-base">Periodo</label>
-                <p-calendar view="month" dateFormat="mm/yy" [showIcon]="true" inputId="periodo" formControlName="periodo" (onSelect)="changePeriodo($event)"
-                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-            </div>
-            <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
-                <label class="font-semibold text-blue-600 text-base">Desde</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini"
-                    [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
-                </p-calendar>                    
-            </div>
-            <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
-                <label class="font-semibold text-blue-600 text-base">Hasta</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
-                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-            </div>
-            <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">
-                <label class=" font-semibold text-blue-600 text-base">Moneda</label>
-                <span class="p-fluid mt-1">
-                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda"
-                        appendTo="body" class="p-inputtext-sm"></p-dropdown>
-                </span>
-            </div>
-            
-            <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">                            
-                <label class=" font-semibold text-blue-600 text-base">Cliente</label>                            
-                <span>
-                    <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
-                    optionLabel="nomcomercial" optionValue="idcliente" appendTo="body" [filter]="true"></p-dropdown>            
-                </span>
-            </div> 
-            <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">
-                <label class=" font-semibold text-blue-600 text-base">Centro Costo</label>
-                <span class="p-fluid mt-1">
-                        <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto"
-                            placeholder="Seleccionar..." optionLabel="descentrocosto" class="p-inputtext-sm"
-                            optionValue="idcentrocosto" appendTo="body" autoWidth="false"></p-dropdown>
+
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-10 text-sm">
+                 
+                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
+                    <label class="font-semibold text-blue-600 text-base">Periodo</label>
+                    <p-calendar view="month" dateFormat="mm/yy" [showIcon]="true" inputId="periodo" formControlName="periodo" (onSelect)="changePeriodo($event)"
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
+                </div>
+                <!-- <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
+                    <label class="font-semibold text-blue-600 text-base">Desde</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini"
+                        [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
+                    </p-calendar>                    
+                </div>
+                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
+                    <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
+                </div> -->
+                <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">
+                    <label class=" font-semibold text-blue-600 text-base">Moneda</label>
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda"
+                            appendTo="body" class="p-inputtext-sm"></p-dropdown>
                     </span>
-                </span>
-            </div>
-            <div class="field md:col-2 -mt-3 gap-2">
-                <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                    class="font-semibold mt-3 justify-content-center  w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                    <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
-                    class="font-semibold mt-3 justify-content-center w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
-                <button pButton type="button" (click)="descargarReporte()" pTooltip="Exportar Pdf" tooltipPosition="bottom" 
-                    class="font-semibold mt-3 justify-content-center  w-3rem w-auto h-auto bg-red-500 ml-2" icon="pi pi-file-pdf"></button>
-            </div>
+                </div>
+                
+                <!-- <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">                            
+                    <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
+                    <span>
+                        <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+                        optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [filter]="true"></p-dropdown>            
+                    </span>
+                </div> 
+                <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">
+                    <label class=" font-semibold text-blue-600 text-base">Centro Costo</label>
+                    <span class="p-fluid mt-1">
+                         <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto"
+                                placeholder="Seleccionar..." optionLabel="descentrocosto" class="p-inputtext-sm"
+                                optionValue="idcentrocosto" appendTo="body" autoWidth="false"></p-dropdown>
+                        </span>
+                    </span>
+                </div> -->
+                <div class="field md:col-2 -mt-3 gap-2">
+                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                        class="font-semibold mt-3 justify-content-center  w-3rem w-auto h-auto" icon="pi pi-search"></button>
+                        <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                        class="font-semibold mt-3 justify-content-center w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
+                    <button pButton type="button" (click)="descargarReporte()" pTooltip="Exportar Pdf" tooltipPosition="bottom" 
+                        class="font-semibold mt-3 justify-content-center  w-3rem w-auto h-auto bg-red-500 ml-2" icon="pi pi-file-pdf"></button>
+                </div>
         </form> 
 
         <p-table #dt1 [value]="lstCompras" [rows]="25" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
@@ -101,7 +102,12 @@
                    
                     <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
-                            CLIENTE
+                            PROVEEDOR
+                        </div>
+                    </th>
+                    <th style="width: 60px; text-align:right;" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            TC
                         </div>
                     </th>
                     <th style="width: 60px;" class="bg-teal-50 border-1" >
@@ -109,17 +115,17 @@
                             MONEDA
                         </div>
                     </th>
-                    <th style="width: 100px;text-align:right;" class="bg-teal-50 border-1" >
+                    <th style="width: 100px; text-align:right;" class="bg-teal-50 border-1" >
                         <div class="justify-content-end">
                             SUBTOTAL
                         </div>
                     </th>
-                    <th style="width: 100px;text-align:right;" class="bg-teal-50 border-1" >
+                    <th style="width: 100px; text-align:right;" class="bg-teal-50 border-1" >
                         <div class="justify-content-end ">
                             IGV
                         </div>
                     </th>
-                    <th style="width: 100px;text-align:right;" class="bg-teal-50 border-1" >
+                    <th style="width: 100px; text-align:right;" class="bg-teal-50 border-1" >
                         <div class="justify-content-end ">
                             TOTAL
                         </div>
@@ -183,6 +189,11 @@
                     <td>
                         <div [ngStyle]="{'width':'200px'}">
                             {{data.nomempresa | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'40px','text-align':'right'}">
+                            {{data.tc | number: '0.2-4'  }}
                         </div>
                     </td>
                     <td>

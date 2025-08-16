@@ -46,6 +46,11 @@ const routes: Routes = [
     path: 'requerimiento',
     loadChildren: () => import('./requerimiento/requerimiento.module').then(m => m.RequerimientoModule),
     data: { breadcrumb: 'requerimiento' }
+  },
+  {
+    path: 'reporte-consolidado',
+    loadChildren: () => import('./reporte-consolidado/reporte-consolidado.module').then(m => m.ReporteConsolidadoModule),
+    data: { breadcrumb: 'Reporte Consolidado de Compras' }
   }
 ];
 

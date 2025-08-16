@@ -34,13 +34,13 @@
                 </span> 
             </div> 
            
-            <div class="sm:col-12 lg:col-2 md:col-6 col-12 -mt-4">                            
+            <!-- <div class="sm:col-12 lg:col-2 md:col-6 col-12 -mt-4">                            
                 <label class="font-semibold text-blue-600 text-base">Estado</label>  
                 <span class="p-fluid">
                     <p-dropdown [options]="lstEstado" formControlName="estado" placeholder="Seleccionar..." optionLabel="name" 
                     optionValue="value" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
                 </span> 
-            </div> 
+            </div>  -->
             
             <div class="field -mt-2 gap-2">
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
@@ -50,8 +50,8 @@
             </div>
     </form> 
 
-    <p-table #dt1 [value]="lstPorCobrar" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-    [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+    <p-table #dt1 [value]="lstPorCobrar" [rows]="25" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+    [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
     currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
     styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
     <ng-template pTemplate="header">
@@ -61,14 +61,15 @@
                     N°
                 </div>
             </th>
-            <th style="width: 100px;" class="bg-teal-50 border-1" >
-                <div class="justify-content-between align-items-center">
-                    CÓDIGO <br> PROYECTO
-                </div>
-            </th>
             <th style="width: 60px;" class="bg-teal-50 border-1" >
                 <div class="justify-content-between align-items-center">
-                    N° DOCUMENTO
+                    TIPO <br> DOCUMENTO
+                </div>
+            </th>
+            
+            <th style="width: 60px;" class="bg-teal-50 border-1" >
+                <div class="justify-content-between align-items-center">
+                    N° <br> DOCUMENTO
                 </div>
             </th>
             <th style="width: 60px;" class="bg-teal-50 border-1" >
@@ -91,14 +92,34 @@
                     CLIENTE
                 </div>
             </th>
-            <th style="width: 70px;" class="bg-teal-50 border-1" >
+            <th style="width: 50px; text-align:center" class="bg-teal-50 border-1" >
+                <div class="justify-content-between align-items-center">
+                    MONEDA
+                </div>
+            </th>
+            <th style="width: 80px; text-align:right;" class="bg-teal-50 border-1" >
+                <div class="justify-content-end">
+                    BASE <br> IMPONIBLE
+                </div>
+            </th>
+            <th style="width: 70px; text-align:right;" class="bg-teal-50 border-1" >
+                <div class="justify-content-end ">
+                    IGV
+                </div>
+            </th>
+            <th style="width: 70px; text-align:right;" class="bg-teal-50 border-1" >
                 <div [ngStyle]="{'width':'70px','text-align':'center'}">
                     IMPORTE <br> TOTAL
                 </div>
             </th>
-            <th style="width: 70px;" class="bg-teal-50 border-1" >
+            <th style="width: 70px; text-align:right;" class="bg-teal-50 border-1" >
                 <div [ngStyle]="{'width':'70px','text-align':'center'}">
                     MONTO NETO <br> A COBRAR
+                </div>
+            </th>
+            <th style="width: 70px;" class="bg-teal-50 border-1" > 
+                <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                    TIPO <br> CAMBIO
                 </div>
             </th>
             <th style="width: 70px;" class="bg-teal-50 border-1" > 
@@ -111,11 +132,12 @@
                     SALDO <br> DETRACCIÓN
                 </div>
             </th> -->
-            <th style="width: 50px; text-align:center" class="bg-teal-50 border-1" >
+            <th style="width: 100px;" class="bg-teal-50 border-1" >
                 <div class="justify-content-between align-items-center">
-                    MONEDA
+                    CÓDIGO <br> PROYECTO
                 </div>
             </th>
+            
             <th style="width: 70px;" class="bg-teal-50 border-1" >
                 <div [ngStyle]="{'width':'70px','text-align':'center'}">
                     GLOSA
@@ -166,8 +188,8 @@
                 {{rowIndex + 1}}
             </td>
             <td>
-                <div [ngStyle]="{'width':'100px'}">
-                    {{data.codigoproyecto}}
+                <div [ngStyle]="{'width':'70px'}">
+                    {{data.nomtipodoc_ctb}}
                 </div>
             </td>
             <td>
@@ -192,7 +214,22 @@
             </td>
             <td>
                 <div [ngStyle]="{'width':'120px'}">
-                    {{data.nomcomercial | uppercase}}
+                    {{data.nomempresa | uppercase}}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
+                    {{data.simbmoneda }}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'80px','text-align':'right'}">
+                    {{data.s_monto | number: '0.2-2'  }}
+                </div>
+            </td>
+            <td>
+                <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                    {{data.s_igv | number: '0.2-2'  }}
                 </div>
             </td>
             <td>
@@ -206,12 +243,17 @@
                 </div>
             </td>
             <td>
+                <div [ngStyle]="{'width':'80px', 'text-align':'right'}">
+                    {{data.tc | number: '0.2-4' }}
+                </div>
+            </td>
+            <td>
                 <div class="flex gap-1 align-items-center">
                     <div [ngStyle]="{'width':'50px', 'text-align':'right'}" >
                         {{data.s_monto_detraccion_mn_CTB | number: '0.2-2' }}
                     </div>
                     <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-orange-500" (click)="onVerDetra(data)"></button>
-                    <button *ngIf="data.saldo_detraccion !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Pagar Detraccion" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagarDetra(data)"></button>           
+                    <button *ngIf="data.saldo_detraccion !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Cobrar Detraccion" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagarDetra(data)"></button>           
                 </div>                
             </td>
             <!-- <td>
@@ -220,13 +262,13 @@
                 </div>
             </td> -->
             <td>
-                <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
-                    {{data.simbmoneda }}
+                <div [ngStyle]="{'width':'100px'}">
+                    {{data.codigoproyecto}}
                 </div>
             </td>
             <td>
                 <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
-                    {{data.observacion }}
+                    {{data.s_glosa }}
                 </div>
             </td>
             <td>

@@ -36,8 +36,6 @@ export class OrdencompraService {
 
     ordenCompraprc(objeto:any) {
         const url = `${constantesApiWeb.ordencompraprc}`;
-        console.log("ordenCompraprc : ", objeto);   
-        console.log("url : ", url);   
             return  this.http.post<any>(url, objeto)
     }
 
@@ -244,5 +242,15 @@ export class OrdencompraService {
     obtenerTipoDocumento(idtabla: number) {
         const url = `${constantesApiWeb.listaTipoDocumento}${idtabla}`;
         return this.http.get<any>(url);
+    }
+
+    ordenCompraprcMonto(objeto:any) {
+        const url = `${constantesApiWeb.ordencompraprcmonto}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+     centroCostoUPD(objeto:any) {
+        const url = `${constantesApiWeb.centroCostoUPD}`;
+            return  this.http.post<any>(url, objeto)
     }
 }
