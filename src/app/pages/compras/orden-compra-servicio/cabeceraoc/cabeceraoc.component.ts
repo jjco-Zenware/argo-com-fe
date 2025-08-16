@@ -658,9 +658,11 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
 
     fileReader.onload = (e) =>{
         var workBook = XLSX.read(fileReader.result,{type:'binary'});
+        console.log('workBook...', workBook);
         var sheetNames = workBook.SheetNames;
         this.ExcelData = XLSX.utils.sheet_to_json(workBook.Sheets[sheetNames[0]])
-        console.log('ReadExcel...', this.ExcelData.filter((x: { CodProducto: any; })=>x.CodProducto !== undefined));
+        //console.log('ReadExcel...', this.ExcelData.filter((x: { CodProducto: any; })=>x.CodProducto !== undefined));
+        console.log('Excel...', this.ExcelData);
 
         //validar código de producto
       //   const lstCodProducto = this.ExcelData.filter((x: { CodProducto: any})=>x.CodProducto !== undefined ); 

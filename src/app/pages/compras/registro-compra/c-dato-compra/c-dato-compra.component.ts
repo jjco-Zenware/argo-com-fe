@@ -1364,7 +1364,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                 console.info('listarItemsTablaComprobante : ', rpta);
                 this.lstComprobante = rpta.filter(
                     (x: { codsunat: any }) =>
-                        x.codsunat === 1 || x.codsunat === 2
+                        x.codsunat === 1 || x.codsunat === 2 || x.codsunat === 14
                 );
             },
             error: (err) => {
