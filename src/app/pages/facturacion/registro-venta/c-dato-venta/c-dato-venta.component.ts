@@ -840,6 +840,7 @@ createFormRegistro() {
     this.ordencompraService.portipoProyectoList(dato).subscribe({
       next: (rpta: any) => {
       this.lstProyectos = rpta;
+      console.log('rpta...',rpta);
       console.log('cargarProyectos...',this.lstProyectos);
       //this.changeProyecto(this.registerFormRegistro.value.idproyecto)
 
@@ -986,12 +987,6 @@ createFormRegistro() {
     let _error = false;
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
-
-    if (this.registerFormRegistro.value.idproyecto === '' || this.registerFormRegistro.value.idproyecto === null)
-      {
-          this.errorMensaje="Seleccionar Centro de Costos...!";
-          _error = true;
-      }
 
     if (!_error && (this.registerFormRegistro.value.nrodocumento === null ||this.registerFormRegistro.value.nrodocumento ==='' ))
     {

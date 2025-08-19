@@ -439,7 +439,8 @@ createFormTag() {
           this.frmDatosItem.get('despro')?.setValue(rpta.data.despro);
           this.frmDatosItem.get('idtipoprod')?.setValue(rpta.data.idtipoprod);    
           this.frmDatosItem.get('nommarca')?.setValue(rpta.data.nommarca);
-  
+          this.frmDatosItem.get('descripcion')?.setValue(rpta.data.despro);
+
           this.verControles(rpta.data.idtipoprod);
           if (rpta.data.idtipoprod === 3) {
             this.verMarca = false;
