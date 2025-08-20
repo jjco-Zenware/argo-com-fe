@@ -274,7 +274,8 @@ createFormRegistro() {
   mostrarBotones(data:any){
     console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
     switch (data) {
-      case 'PEN':
+      case 'CKI':
+      case 'REG':
         this.verbtnGrabar = true;
         this.verbtnPreliminar= true;
         this.verbtnOrden = false;
@@ -288,7 +289,7 @@ createFormRegistro() {
         this.verbtnAcciones = false;
         this.onlyRead = false;
       break;      
-      case 'EMT':
+      case 'CKO':
         this.verbtnGrabar = true;
         this.verbtnPreliminar= true;
         this.verbtnOrden = true;

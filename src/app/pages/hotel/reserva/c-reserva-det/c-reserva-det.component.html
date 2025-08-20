@@ -137,7 +137,13 @@
                             <input pInputText type="text" formControlName="nrodias"  (blur)="addDiasFec()" (keydown.enter)="addDiasFec()" [readonly]=onlyRead class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
                         </span>
                     </div>      
-                           
+                    <div class="sm:col-12 lg:col-9 md:col-12 col-12 -mt-2">
+                        <label class="block text-900">Observación</label>                        
+                        <span class="p-fluid mb-1">
+                            <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion"
+                                [readonly]=onlyRead class="p-inputtext-sm"></textarea>
+                        </span>
+                    </div>
                 </form>
                 
             </p-tabPanel>             

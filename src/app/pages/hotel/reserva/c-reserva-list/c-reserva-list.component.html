@@ -55,12 +55,12 @@
                         N°
                     </div>
                 </th>
-                <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1" >
+                <th style="width: 60px;" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         FECHA <br> INGRESO
                     </div>
                 </th>
-                <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1" >
+                <th style="width: 60px;" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         FECHA <br> SALIDA
                     </div>
@@ -75,8 +75,8 @@
                         DESCRIPCIÓN
                     </div>
                 </th> 
-                <th style="width: 80px" class="bg-teal-50 border-1">
-                    <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                <th style="width: 70px" class="bg-teal-50 border-1">
+                    <div [ngStyle]="{'width':'70px','text-align':'center'}">
                         ESTADO
                     </div>
                 </th>                               
@@ -119,13 +119,13 @@
                 </td>     
                 <td>
                     <div [ngStyle]="{'width':'100px'}">
-                        {{data.s_glosa | uppercase}}
+                        {{data.observacion | uppercase}}
                     </div>
                 </td>                
-                <td>   
-                    <div [ngStyle]="{'width':'80px','text-align': 'center'}">
-                        {{data.nomestado | uppercase}}
-                    </div>       
+                <td>  
+                    <div [ngStyle]="{'text-align': 'center'}">
+                            <p-tag [style]="{'width':'100%'}" [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
+                        </div>       
                 </td>
                 <td>
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'60px'}">
