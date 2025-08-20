@@ -181,7 +181,7 @@ createFormRegistro() {
   this.registerFormRegistro = this.formBuilder.group({
     idproyecto: [{ value: 0, disabled: false }],
     idtipoproyecto: [{ value: 0, disabled: false }],
-    idtipodocprc: [{ value: 6, disabled: false }],
+    idtipodocprc: [{ value: 23, disabled: false }],
     idoportunidad: [{ value: 0, disabled: false }],
     sustentodoc: [{ value: '', disabled: false }],
     idrequerimiento: [{ value: 0, disabled: false }],

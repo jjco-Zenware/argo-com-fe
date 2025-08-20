@@ -14,13 +14,13 @@
 
         <div class="flex col-12 -mt-3 gap-2">
             <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-7 text-sm">                        
-                <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
+                <div class="md:col-6 sm:col-3 lg:col-3 col-6 -mt-3">
                     <label class="font-semibold text-blue-600 text-base">Desde</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini" [showOnFocus]="false"
                         [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
                     </p-calendar>                    
                 </div>
-                <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
+                <div class="md:col-6 sm:col-3 lg:col-3 col-6 -mt-3">
                     <label class="font-semibold text-blue-600 text-base">Hasta</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
