@@ -10,7 +10,7 @@
     <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-9 col-12 text-sm">
         <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
             <label class="font-semibold text-blue-600 text-base">Año</label>
-            <p-calendar dateFormat="yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
+            <p-calendar view="year" dateFormat="yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
                 [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
             </p-calendar>
         </div>
