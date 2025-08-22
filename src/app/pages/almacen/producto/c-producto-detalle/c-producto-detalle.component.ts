@@ -156,7 +156,7 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
     const $traerUno = this.almacenService.traerunoProducto(this.idprod)
       .subscribe({
         next: (rpta:any) => {
-          console.log('rpta.traerUno', rpta.producto[0]);
+          console.log('rpta.traerUno', rpta);
           this.setSpinner(false);          
           this.getSubFamilia(rpta.producto[0].idfamilia); 
           this.listaTag = rpta.producto[0].tags;
