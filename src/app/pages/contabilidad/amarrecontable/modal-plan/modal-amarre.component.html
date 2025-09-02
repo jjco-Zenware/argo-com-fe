@@ -1,7 +1,7 @@
 <form [formGroup]="registerFormRegistro" class="p-2" >
     <div class="p-fluid mb-3 card p-2 border-round m-2 grid">  
         <div class="sm:col-12 lg:col-7 md:col-12 h-4rem field">
-            <label class="block text-900 font-semibold mb-1">Documento <span class="text-red-500 font-bold"> * </span></label>
+            <label class="block text-900 font-semibold mb-1">Transacción <span class="text-red-500 font-bold"> * </span></label>
             <span>
                 <p-dropdown [options]="lstDocumentoPrc" formControlName="idtipodocprc" optionLabel="nomtipodocprc" placeholder="Seleccionar..."
                     optionValue="idtipodocprc" appendTo="body" class="p-inputtext-sm" (onChange)="listarCategoriaDoc()"></p-dropdown>
