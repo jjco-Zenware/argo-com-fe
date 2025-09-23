@@ -14,7 +14,7 @@ import { RegistroProveedorModule } from '../../compras/registro-proveedor/regist
 import { AlmacenService } from '../service/almacenServices';
 import { TagModule } from 'primeng/tag';
 import { SplitButtonModule } from 'primeng/splitbutton';
-import { CGuiaRemisionComponent } from '../guiaremision/c-guiaremision.component';
+//import { CGuiaRemisionComponent } from '../guiaremision/c-guiaremision.component';
 import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 
@@ -22,7 +22,7 @@ import { ContabilidadService } from '../../contabilidad/service/contabilidad.ser
   declarations: [
     CSalidaTrasladoComponent,
     CDetalleMovSalTrasladoComponent,
-    CGuiaRemisionComponent
+    //CGuiaRemisionComponent
   ],
   imports: [
     CommonModule,

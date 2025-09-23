@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { constantesApiWeb } from '@apiVariables';
+import { map } from 'rxjs';
 
 @Injectable()
 export class AlmacenService {
@@ -135,4 +136,31 @@ export class AlmacenService {
         return this.http.get<any>(url)
     }
     
+    listarUsuarios(objeto:any) {
+        const url = `${constantesApiWeb.listarUsuario}`;
+        return  this.http.post<any>(url, objeto)
+    }
+
+    delUbicaciones(objeto: any) {
+        const url = `${constantesApiWeb.UbicacionAlmacenDel}`;
+        return this.http.post<any>(url, objeto)
+    }
+
+     exportarexcelstock(data: any) {
+    const url = `${constantesApiWeb.exportarexcelstock}`;
+    return this.http
+        .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+        .pipe(
+        map((resp: Blob) => resp));
+    }
+
+    ListarMovimientosPrcSalidas() {
+        const url = `${constantesApiWeb.ListarMovimientosPrcSalidas}`;
+        return this.http.get<any>(url);
+    }
+
+    lstMovimientosConfirmados(codigo: any) {
+        const url = `${constantesApiWeb.lstMovimientosConfirmados}${codigo}`;
+        return this.http.get<any>(url)
+    }
 }

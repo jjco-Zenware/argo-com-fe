@@ -56,7 +56,17 @@ const routes: Routes = [
         path: 'operaciones',
         loadChildren: () => import('./operaciones/operaciones.module').then(m => m.OperacionesModule),
         data: { breadcrumb: 'Operaciones' }
-      }
+      },
+      // {
+      //   path: 'ingreso',
+      //   loadChildren: () => import('./ingreso/ingreso.module').then(m => m.IngresoModule),
+      //   data: { breadcrumb: 'Ingreso' }
+      // },
+      // {
+      //   path: 'salida',
+      //   loadChildren: () => import('./salida/salida.module').then(m => m.SalidaModule),
+      //   data: { breadcrumb: 'Salida' }
+      // }
     ]
   }
 ];

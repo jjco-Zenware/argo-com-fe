@@ -8,7 +8,7 @@
                 </div> 
                 <button pButton type="button" (click)="getListar()" pTooltip="Actualizar Registros" tooltipPosition="bottom" 
                     class="font-semibold mt-2 justify-content-center h-2rem w-3rem w-auto" icon="pi pi-refresh"></button>
-                <button pButton type="button" (click)="getExportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                <button pButton type="button" (click)="exportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom" 
                     class="font-semibold mt-2 justify-content-center h-2rem w-3rem w-auto bg-green-500" icon="pi pi-file-excel"></button>         
                 <div class="mb-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">PRODUCTOS</span>
@@ -128,9 +128,8 @@
                     </td>
                     <td>
                         <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
-                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
-                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar OC" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>
-                            
+                            <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Detalle" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
+                            <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(data)"></button>                       
                         </div>
                     </td>
                 </tr>

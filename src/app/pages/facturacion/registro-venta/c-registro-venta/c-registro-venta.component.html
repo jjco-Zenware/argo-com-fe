@@ -270,7 +270,7 @@
                         <!-- <i class="fa-solid fa-file-pdf text-red-500 cursor-pointer" pTooltip="Vista Preliminar" tooltipPosition="left" (click)="onVerDetalle(data)"></i>
                         <i class="fa-solid fa-binoculars text-blue-500 cursor-pointer" pTooltip="Ver" tooltipPosition="left" (click)="onVer(data)"></i> -->
 
-                        <button *ngIf="data.acciones.length > 0 || visXperfil" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenu($event, data)"
+                        <button *ngIf="(data.acciones.length > 0 || visXperfil) && data.ind_estado_fel != 1" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenu($event, data)"
                             pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
                         <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
                         <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text text-red-500" (click)="onVerDetalle(data)"></button>

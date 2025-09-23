@@ -1,0 +1,10 @@
+:host ::ng-deep .p-selectbutton .p-button {
+  background: #b2c9e0;      /* color por defecto */
+  color: #fff;              /* texto */
+  border: none;
+}
+
+:host ::ng-deep .p-selectbutton .p-button.p-highlight {
+  background: #4281e0;      /* color cuando está seleccionado */
+  color: #fff;
+}

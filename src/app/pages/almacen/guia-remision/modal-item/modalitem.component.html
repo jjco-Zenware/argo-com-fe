@@ -1,0 +1,18 @@
+<form [formGroup]="registerFormCliente" class="p-2 m-2 p-fluid grid" >
+        
+    <div class="lg:col-12 col-12 field ">
+        <label  class="font-semibold">Tipo Proceso (Salidas) <span class="text-red-500 font-bold"> * </span></label>
+        <p-dropdown [options]="lstTipoProcesos" formControlName="idtipodocprc" optionLabel="nomtipodocprc" placeholder="Seleccionar..."
+            optionValue="idtipodocprc" appendTo="body" class="p-inputtext-sm" (onChange)="changeUbicacion()">        
+        </p-dropdown>
+    </div>              
+    <div class="lg:col-12 col-12 field ">
+        <label  class="font-semibold">Movimientos Confirmados <span class="text-red-500 font-bold"> * </span></label>
+        <p-dropdown [options]="lstMovimientos" formControlName="alm_idordencompra" optionLabel="codigonroorden" placeholder="Seleccionar..."
+            optionValue="alm_idordencompra" appendTo="body" class="p-inputtext-sm">        
+        </p-dropdown>
+    </div> 
+</form>
+<div class="flex justify-content-end">
+    <button pButton icon="pi pi-save" label="Guardar" class="p-button-primary" (click)="guardar()"></button>
+</div>
