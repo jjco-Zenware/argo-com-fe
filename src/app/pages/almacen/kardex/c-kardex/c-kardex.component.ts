@@ -1,12 +1,11 @@
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
-import * as FileSaver from 'file-saver';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CBusquedaProductoComponent } from '../../busqueda-producto/c-busqueda-producto.component';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
@@ -152,51 +151,6 @@ export class CKardexComponent implements OnInit, OnDestroy{
           }
         });
       this.$listSubcription.push($getListar)
-    }
-
-    getExportarExcel(data :any) {
-      this.lstExportar = [];
-      console.log(data.filteredValue);
-      if (data.filteredValue !== undefined) {
-        this.lstExportExcel = data.filteredValue;
-      }
-      console.log( 'this.lstExportar...',  this.lstExportar);
-
-      
-      for (let i = 0; i < this.lstExportExcel.length; i++) {       
-          const objeto = {
-              'N°': i + 1,
-              'TIPO': this.lstExportExcel[i].nomtipoorden,
-              'N° ORDEN': this.lstExportExcel[i].codigonroorden,
-              'N° RUC': this.lstExportExcel[i].nrodocumento,
-              'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
-              'COD PROYECTO' : this.lstExportExcel[i].codigoproyecto,
-              'NOM PROYECTO' : this.lstExportExcel[i].nomproyecto,
-              'MONEDA': this.lstExportExcel[i].nommoneda,
-              'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
-              'IGV': this.lstExportExcel[i].s_igv,
-              'TOTAL': this.lstExportExcel[i].s_monto_total,
-              'ESTADO' : this.lstExportExcel[i].nomestado
-              
-          }
-          this.lstExportar.push(objeto);
-      }
-  
-      import('xlsx').then((xlsx) => {
-        const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
-        const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-        const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-        this.saveAsExcelFile(excelBuffer, 'Orden Compra');
-        });
-      }
-  
-    saveAsExcelFile(buffer: any, fileName: string): void {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-          type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
     }
 
     acceptfuncionalidad() {
@@ -360,5 +314,31 @@ export class CKardexComponent implements OnInit, OnDestroy{
         this.$listSubcription.push($getClientes);
     
       }
+
+       exportarExcel() {
+              if(this.lstAlmacen === undefined || this.lstAlmacen.length === 0){
+                  this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'No hay datos para exportar.' });
+                  return;
+                }
+      
+           this.setSpinner(true);
+           this.mensajeSpinner = mensajesSpinner.msjRecuperaLista;
+        
+           const $getListar = this.almacenService.exportarexcelstock(this.frmDatos.value)
+           .subscribe({
+             next: (rpta:any) => {
+                 this.setSpinner(false);
+                 this.utilitariosService.descargarExcel(rpta, 'Stock');
+             },
+             error:(err)=>{
+                 this.setSpinner(false);
+                 this.serviceSharedApp.messageToast()
+             },
+             complete:() => {
+               this.setSpinner(false);
+             }
+           });
+         this.$listSubcription.push($getListar)
+         }
 }
 

@@ -255,4 +255,5 @@ export const constantesApiWeb = {
     ListarMovimientosPrcSalidas: controllerComercial + '/listarmovimientosprcsalidas',
     lstMovimientosConfirmados: controllerComercial + '/ordencompraconfirmada/',
     listarUbigeos: controllerComercial + '/listarubigeos',
+    rdlcProducto: controllerMain + '/productordlc',
 }

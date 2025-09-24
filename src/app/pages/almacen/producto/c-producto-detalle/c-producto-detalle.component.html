@@ -175,7 +175,7 @@
                 <div class="flex align-items-center gap-2">
                     <i class="pi pi-list"></i>
                     <span class="font-bold white-space-nowrap m-0">
-                        Tag
+                        Carasteristicas
                     </span>
                 </div>
             </ng-template>
@@ -183,12 +183,12 @@
             <div class="col-12 sm:col-12 lg:col-2 md:col-12 h-3rem">
 
                 <div class="flex">
-                    <label class="block text-blue-600 font-semibold">Tag</label>
-                    <i class="pi pi-plus-circle cursor-pointer text-blue-600" style="margin-left: 10px;" pTooltip="Agregar Tag"
+                    <label class="block text-blue-600 font-semibold">Etiquetas</label>
+                    <i class="pi pi-plus-circle cursor-pointer text-blue-600" style="margin-left: 10px;" pTooltip="Agregar Etiqueta"
                     tooltipPosition="right" (click)="NuevoTag();"></i>
                 </div>
                 <p-dropdown [options]="lstTag" optionLabel="nomtag" class="p-inputtext-sm"
-                    optionValue="idtag" placeholder="Seleccionar Tag" appendTo="body" (onChange)="addTag($event.value)"></p-dropdown>
+                    optionValue="idtag" placeholder="Seleccionar Etiqueta" appendTo="body" (onChange)="addTag($event.value)"></p-dropdown>
             </div>
             <div class="col-12 sm:col-12 lg:col-6 md:col-12">
                 <!-- <div class="flex">
@@ -199,8 +199,8 @@
                     <ng-template pTemplate="header">
                         <tr>
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th class="surface-200">TAG</th>
-                            <th class="surface-200">VALOR</th>
+                            <th class="surface-200">Etiqueta</th>
+                            <th class="surface-200">Detalle</th>
                             <th class="surface-200"></th>
                         </tr>
                     </ng-template>
@@ -237,11 +237,11 @@
 </div>
 
 <p-dialog [(visible)]="tagVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
-    <p-header> <i class="pi pi-tag" style="margin-right: 10px;"></i>Agregar TAG </p-header>
+    <p-header> <i class="pi pi-tag" style="margin-right: 10px;"></i>Agregar Etiqueta </p-header>
         <form [formGroup]="registerFormTag" (ngSubmit)="guardarTag()">
             <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
                 <div class="mb-3 field">
-                    <label class="font-semibold">Descripción</label>
+                    <label class="font-semibold">Etiqueta</label>
                     <input pInputText type="text" formControlName="nomtag" id="nomtag"/>
                 </div>
             </div>

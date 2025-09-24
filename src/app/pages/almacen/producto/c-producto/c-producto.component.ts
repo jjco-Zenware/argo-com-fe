@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
 import { AlmacenService } from '../../service/almacenServices';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-c-producto',
@@ -35,7 +36,7 @@ export class CProductoComponent implements OnInit, OnDestroy{
         public dialogService: DialogService  ,
         private almacenService: AlmacenService,     
         private serviceSharedApp: SharedAppService,
-        
+        private messageService: MessageService
       ){          
     }
 
@@ -43,12 +44,12 @@ export class CProductoComponent implements OnInit, OnDestroy{
       this.createFrm();
         this.getListar();
         this.cols = [
-          { field: 'idprod', header: 'ID' },
           { field: 'codproducto', header: 'CÓDIGO' },
           { field: 'despro', header: 'DESCRIPCIÓN ' },
           { field: 'nomfamilia', header: 'GRUPO' },
           { field: 'nomsubfamilia', header: 'CATEGORIA' },
           { field: 'nommarca', header: 'MARCA' },
+          { field: 'modelo', header: 'modelo' },
           { field: 'nomunidad', header: 'UNIDAD' }
           
       ];
@@ -110,7 +111,7 @@ export class CProductoComponent implements OnInit, OnDestroy{
     }
 
     onVer(dato: any) {     
-        this.tituloDetalle =  dato.despro;
+        this.tituloDetalle =  dato.codproducto + ' - ' + dato.despro;
         this.data = {
           idcodigo: dato.idprod,
           paramReg:'V'
@@ -119,7 +120,7 @@ export class CProductoComponent implements OnInit, OnDestroy{
     }
 
     onEditar(dato: any) {      
-        this.tituloDetalle = dato.despro;
+        this.tituloDetalle = dato.codproducto + ' - ' + dato.despro;
         this.data = {
           idcodigo: dato.idprod,
           paramReg:'E'
@@ -179,4 +180,51 @@ export class CProductoComponent implements OnInit, OnDestroy{
      });
    this.$listSubcription.push($getListar)
    }
+
+   onVerDetalle(data: any) { 
+             
+             this.setSpinner(true);
+           this.mensajeSpinner = 'Descargando...!';
+       
+           const objeto = {
+             idprod: data.idprod
+           }
+       
+           const $cargarOrdenC = this.almacenService.rdlcProducto(objeto).subscribe({
+             next: (rpta: any) => {
+               this.setSpinner(false);      
+               
+               const mediaType = 'application/pdf';
+                 const blob = new Blob([rpta.body], { type: mediaType });
+                 const filename = 'Producto_'+ data.codproducto;
+         
+                 const url = window.URL.createObjectURL(blob);
+                 const a = document.createElement('a');
+                 a.href = url;
+                 a.download = filename;
+                 document.body.appendChild(a);
+                 a.target = '_blank';
+                 a.click();
+       
+                 window.open(url);
+       
+                 setTimeout(() => {
+                     document.body.removeChild(a);
+                     window.URL.revokeObjectURL(url);
+                 }, 100);
+             },
+                 error: (err) => {
+                   this.setSpinner(false);
+                 this.messageService.clear();
+                 this.messageService.add({
+                     severity: 'error',
+                     summary: 'Error',
+                     detail: mensajesQuestion.msgErrorGenerico,
+                 });
+             },
+                 complete: () => {
+             },
+           });
+           this.$listSubcription.push($cargarOrdenC)
+     }
 }

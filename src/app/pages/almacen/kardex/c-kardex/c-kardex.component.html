@@ -64,9 +64,11 @@
                     optionValue="idordencompra" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
                 </span>
             </div>  -->
-            <div class="field col-12 md:col-2 -mt-3 gap-2">
+            <div class="field col-2 md:col-2 -mt-3 gap-2">
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                    class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
+                <button pButton type="button" (click)="exportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem bg-green-500 ml-2" icon="pi pi-file-excel"></button>
             </div>
         </form> 
 
@@ -170,7 +172,7 @@
                     </td>                    
                     <td>{{sale.nomalmacen}}</td>
                     <td>
-                        <div [ngStyle]="{'text-align': 'right'}">
+                        <div [ngStyle]="{'text-align': 'right'}" class="text-green-500 font-bold">
                             {{sale.cantidad_entrada}}
                         </div>                        
                     </td>
@@ -182,10 +184,10 @@
                     <td>
                         <div [ngStyle]="{'text-align': 'right'}">
                             {{sale.total_entrada | number: '0.2-2'}}
-                        </div> 
+                        </div> 85
                     </td>
                     <td>
-                        <div [ngStyle]="{'text-align': 'right'}">
+                        <div [ngStyle]="{'text-align': 'right'}" class="text-red-500 font-bold">
                             {{sale.cantidad_salida}}
                         </div> 
                     </td>
@@ -200,7 +202,7 @@
                         </div> 
                     </td>
                     <td>
-                        <div [ngStyle]="{'text-align': 'right'}">
+                        <div [ngStyle]="{'text-align': 'right'}" class="text-blue-700 font-bold">
                             {{sale.saldo_item}}
                         </div> 
                     </td>

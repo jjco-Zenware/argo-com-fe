@@ -10,6 +10,7 @@ import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CProductoDetalleComponent } from './c-producto-detalle/c-producto-detalle.component';
 import { AlmacenService } from '../service/almacenServices';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -25,6 +26,6 @@ import { AlmacenService } from '../service/almacenServices';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, MessageService]
 })
 export class ProductoModule { }
