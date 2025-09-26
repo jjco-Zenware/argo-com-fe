@@ -1,5 +1,7 @@
+
+<ng-container *ngIf="vistaLista; else visSecciones">
     <div class="card m-4">
-        <div class="grid mt-2">
+         <div class="grid mt-2">
             <div class="flex justify-content-between col-12 -mt-3 gap-2">   
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-file" label="Nuevo"
@@ -13,6 +15,41 @@
             </div>
         </div>
 
+        <!-- <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm">
+                 
+                <div class="md:col-2 sm:col-2 lg:col-2 col-6 -mt-3">
+                    <label class="font-semibold text-blue-600 text-base">Desde</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini" [showOnFocus]="false"
+                        [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
+                    </p-calendar>                    
+                </div>
+                <div class="md:col-2 sm:col-2 lg:col-2 col-6 -mt-3">
+                    <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
+                </div>
+                <div class="sm:col-8 lg:col-3 md:col-6 col-12 -mt-3">                            
+                    <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
+                    <span>
+                        <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor..."  formControlName="idproveedor" class="p-inputtext-sm"
+                        optionLabel="nomcomercial" optionValue="idcliente" appendTo="body" [filter]="true"></p-dropdown>            
+                    </span>
+                </div> 
+                <div class="sm:col-3 lg:col-2 md:col-6 col-12 -mt-3">                            
+                    <label class="font-semibold text-blue-600 text-base">Moneda</label>  
+                    <span class="p-fluid">
+                        <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda..." optionLabel="desmoneda" 
+                        optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" ></p-dropdown>
+                    </span> 
+                </div> 
+                <div class="field sm:col-2 md:col-2 -mt-3 gap-2">
+                    <button pButton type="button" (click)="getListar(); dt1.reset()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                        class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem" icon="pi pi-search"></button>
+                        <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                    class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem bg-green-500 ml-2" icon="pi pi-file-excel"></button>
+                </div>
+        </form>  -->
+
         <p-table #dt1 [value]="lstAmarreContable" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
             currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
@@ -24,11 +61,9 @@
                             N°
                         </div>
                     </th>
-                    <th style="width: 200px;" class="bg-teal-50 border-1">TRANSACCIÓN</th>
-                    <th style="width: 250px;" class="bg-teal-50 border-1">MOTIVO</th>
-                    <th style="width: 200px;" class="bg-teal-50 border-1">CONCEPTO <br> CTBLE</th>
-                    <th style="width: 200px;" class="bg-teal-50 border-1">CTA <br> CTBLE</th>
-                    <th style="width: 200px;" class="bg-teal-50 border-1">PARTIDA <br> DOBLE</th>
+                    <th style="width: 200px;" class="bg-teal-50 border-1">CÓDGIO</th>
+                    <th style="width: 250px;" class="bg-teal-50 border-1">TIPO PROCESO</th>
+                    <th style="width: 200px;" class="bg-teal-50 border-1">NOMBRE ASIENTO</th>
                     <th style="width: 100px;" class="bg-teal-50 border-1">ACCIÓN</th>
                 </tr>
               
@@ -43,11 +78,9 @@
             <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex"> 
                 <tr class="text-sm">
                     <td>{{rowIndex + 1}}</td>
+                    <td>{{dato.codigoasiento}}</td>
                     <td>{{dato.nomtipodocprc}}</td>
-                    <td>{{dato.nomcategoria}}</td>
-                    <td>{{dato.nomconceptoctble}}</td>
-                    <td>{{dato.nomctactble}}</td>
-                    <td>{{dato.nompartidacfg}}</td>
+                    <td>{{dato.desasiento}}</td>
                     <td>
                         <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'30px'}">
 
@@ -56,13 +89,6 @@
                     </td>
                 </tr>
             </ng-template>
-            <!-- <ng-template pTemplate="footer">
-                <tr>
-                    <td colspan="3" class="text-right">Totals</td>
-                    <td>{{lastYearTotal | currency: 'USD'}}</td>
-                    <td>{{thisYearTotal | currency: 'USD'}}</td>
-                </tr>
-            </ng-template> -->
             <ng-template pTemplate="emptymessage">
                 <tr>
                     <td colspan="12">No se encontraron registros.</td>
@@ -74,9 +100,28 @@
                 </tr>
             </ng-template>
         </p-table>
+
+    </div>
+</ng-container>
+
+<ng-template #visSecciones>
+
+    <div class="p-fluid p-3 mb-1 card m-4" *ngIf="visDetalle" (OB_back)="getDetalle($event)">
+        <div class="grid ">
+            <div class="flex justify-content-between col-12 gap-2">
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
+                        pTooltip="Regresar" tooltipPosition="left" (click)="getBack()" ></button>
+                </div>
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                </div>
+            </div>
+        </div>
+        <app-c-amarrecontabledet [IA_data]="dataPrc"></app-c-amarrecontabledet>
     </div>
 
-
+</ng-template>
 
 <p-toast></p-toast>
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
