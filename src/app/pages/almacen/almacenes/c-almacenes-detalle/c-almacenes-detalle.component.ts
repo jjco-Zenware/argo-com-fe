@@ -28,12 +28,15 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   errorMensaje: string = "";
   idAlmacen: any;
   param:any;
-  lstOficina:any;
   files!: TreeNode[];
   selectedFiles!: TreeNode[];
   verbtnUbicacion: boolean = false; 
   file: any; 
   visUbicacion: boolean = true;
+  lstUsuarios:any;
+  lstTipoAlma:any;
+  events: any[] = [];
+  verAdjunto: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -53,8 +56,17 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
     this.idAlmacen = this.IA_data.idalmacen;
     this.param = this.IA_data.paramReg;
     this.createFormRegistro(); 
-    this.listarOficinas();
-    
+    this.listarTipoAlmacen();
+    this.listaUsuarios();
+
+     this.events = [
+            { status: 'Zona', icon: 'pi pi-arrow-right', color: '#9C27B0' },
+            { status: 'Sector', icon: 'pi pi-arrow-right', color: '#673AB7' },
+            { status: 'Fila', icon: 'pi pi-arrow-right', color: '#FF9800' },
+            { status: 'Estante/Rack', icon: 'pi pi-arrow-right', color: '#607D8B' },
+            { status: 'Nivel/Casillero', icon: 'pi pi-arrow-right', color: '#673AB7' }
+        ];
+
     if (this.idAlmacen > 0) {      
       this.traerUno();
       // if (this.files.length = 0) {        
@@ -78,6 +90,9 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
       diralmacen: [{ value: '', disabled: false }],
       estado: [{ value: 'REG', disabled: false }],
       codUsuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      idresponsable: [{ value: '', disabled: false }],
+      tipoalmacen: [{ value: '', disabled: false }],
+
     });
   }
 
@@ -91,21 +106,12 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
     this.blockedDocument = valor;
   }
 
-  listarOficinas(){
-    const objeto = {
-      idofi : 0
-    }
-
-    const $getListar = this.almacenService.ListarOficina(objeto)
+  listarTipoAlmacen(){  
+    const $getListar = this.almacenService.obtenerItemsTabla(129)
       .subscribe({
         next: (rpta:any) => {
-            
-            this.lstOficina = rpta
-            const objet = {
-              idofi: 0,
-              nomofi: 'TODOS'
-            }
-            this.lstOficina.unshift(objet);
+
+            this.lstTipoAlma = rpta
         },
         error:(err)=>{
             this.serviceSharedApp.messageToast()
@@ -115,6 +121,28 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
       });
     this.$listSubcription.push($getListar)
   }
+
+ listaUsuarios() {
+         const $listaUsuarios = this.almacenService
+             .listarUsuarios([])
+             .subscribe({
+                 next: (rpta: any) => {
+                     console.info('listaUsuarios : ', rpta);
+                     this.lstUsuarios = rpta;
+                 },
+                 error: (err) => {
+                     console.info('error : ', err);
+                     this.messageService.clear();
+                     this.messageService.add({
+                         severity: 'error',
+                         summary: 'Error',
+                         detail: mensajesQuestion.msgErrorGenerico,
+                     });
+                 },
+                 complete: () => {},
+             });
+         this.$listSubcription.push($listaUsuarios);
+     }
 
 
   traerUno(){
@@ -201,9 +229,15 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-      if (this.registerFormRegistro.value.idofi === 0)
+      if (this.registerFormRegistro.value.tipoalmacen === '' || this.registerFormRegistro.value.tipoalmacen === null )
       {
-          this.errorMensaje="Seleccionar Oficina...!";
+          this.errorMensaje="Seleccionar Tipo de Almacén...!";
+          _error = true;
+      }
+
+      if (!_error && (this.registerFormRegistro.value.idresponsable === '' || this.registerFormRegistro.value.idresponsable === null) )
+      {
+          this.errorMensaje="Seleccionar Responsable...!";
           _error = true;
       }
 
@@ -242,9 +276,9 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
   }
 
   nodeSelect(event: any) {
-    this.verbtnUbicacion = true;
-    console.log('nodeSelect', event.node)
-    this.file = event.node;
+    //this.verbtnUbicacion = true;
+    console.log('nodeSelect', event)
+    //this.file = event.node;
   }
 
   private expandRecursive(node: TreeNode, isExpand: boolean) {
@@ -256,23 +290,23 @@ export class CAlmacenesDetalleComponent implements OnInit, OnDestroy{
     }
 }
 
-accionUbicacion(dato:any){
-  let file_ = this.file
-  let title = this.file.label
+accionUbicacion(event: any, dato:any){
+  console.log('accionUbicacion',  event)
+  let file_ = event
+  let title = '';
 
   switch (dato) {
     case 0:
+      title = file_.key === '0' ? 'Nueva Ubicación' : 'Agregar Ubicación a ' + event.label;
       file_.idubicacionpadre = file_.key;
       file_.nomubicacion = '';
       file_.key = 0;
-      title = 'Nueva Ubicación'
-      break;
-      case 1:
-        file_.nomubicacion = file_.label;
-        break;
-        case 2:
-          
-          break;
+      
+    break;
+    case 1:
+      title = 'Editar ' + file_.label;
+      file_.nomubicacion = file_.label;
+    break;
   }
 
   const ref = this.dialogService.open(CModalUbicacionComponent, {
@@ -289,5 +323,46 @@ accionUbicacion(dato:any){
           });
 }
 
+  eliminarUbicacion(node:any){
+    console.log('eliminar...', node);
+    console.log('eliminarUbicacion...', node.children);
+    if (node.children !== undefined){
+      this.messageService.add({severity: 'warn', summary: 'Advertencia', detail: "No se puede eliminar, porque tiene Ubicaciones dependientes..." });
+      return;
+    }
 
+    this.confirmationService.confirm({
+        message: mensajesQuestion.msgPreguntaInactivar,
+        key: "confirm1",
+        header: 'Confirmación',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.setSpinner(true);
+          this.mensajeSpinner = 'Eliminando...!';
+          const objeto = {
+            idubicacion: node.key,
+          }
+
+            const $TraerUbicacion = this.almacenService.delUbicaciones(objeto)
+            .subscribe({
+            next: (rpta:any) => {
+                if (rpta.procesoSwitch === 0){
+                    this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });   
+                    this.TraerUbicacion();
+                  }else{
+                  this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+                  }
+            },
+            error:(err)=>{
+                this.serviceSharedApp.messageToast()
+            },
+            complete:() => { 
+              this.setSpinner(false);
+            }
+            });
+        this.$listSubcription.push($TraerUbicacion)
+        }
+    });
+
+  }
 }

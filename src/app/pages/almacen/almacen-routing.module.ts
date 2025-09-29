@@ -5,7 +5,7 @@ const routes: Routes = [
   {
     path: 'ingreso-oc-proyecto',
     loadChildren: () => import('./ingreso-oc-proyecto/ingreso-oc-proyecto.module').then(m => m.IngresoOcProyectoModule),
-    data: { breadcrumb: 'Ingreso OC Proyecto' }
+    data: { breadcrumb: 'Ingreso por Compras' }
   },
   {
     path: 'ingreso-oc-req-interno',
@@ -35,22 +35,22 @@ const routes: Routes = [
   {
     path: 'ingreso-por-traslado',
     loadChildren: () => import('./ingreso-por-traslado/ingreso-por-traslado.module').then(m => m.IngresoPorTrasladoModule),
-    data: { breadcrumb: 'Ingreso por Traslado' }
+    data: { breadcrumb: 'Ingreso por Transferencia' }
   },
   {
     path: 'ingreso-varios',
     loadChildren: () => import('./ingreso-varios/ingreso-varios.module').then(m => m.IngresoVariosModule),
-    data: { breadcrumb: 'Ingreso Varios' }
+    data: { breadcrumb: 'Ingresos' }
   },
   {
     path: 'salida-varios',
     loadChildren: () => import('./salida-varios/salida-varios.module').then(m => m.SalidaVariosModule),
-    data: { breadcrumb: 'Salida Varios' }
+    data: { breadcrumb: 'Salidas Por Consumo' }
   },
   {
     path: 'salida-por-traslado',
     loadChildren: () => import('./salida-por-traslado/salida-por-traslado.module').then(m => m.SalidaTrasladoModule),
-    data: { breadcrumb: 'Salida por Traslado' }
+    data: { breadcrumb: 'Salida por Transferencia' }
   },
   {
     path: 'catalogo',
@@ -80,7 +80,7 @@ const routes: Routes = [
   {
     path: 'salida-oc-proyecto',
     loadChildren: () => import('./salida-oc-proyecto/salida-oc-proyecto.module').then(m => m.SalidaOcProyectoModule),
-    data: { breadcrumb: 'salida-oc-proyecto' }
+    data: { breadcrumb: 'Salida Por Ventas' }
   },
   {
     path: 'salida-oc-req-interno',
@@ -91,6 +91,31 @@ const routes: Routes = [
     path: 'movProducto',
     loadChildren: () => import('./movProducto/movProducto.module').then(m => m.MovProductoModule),
     data: { breadcrumb: 'Movimientos de Producto' }
+  },
+  {
+    path: 'ingreso-devolucion',
+    loadChildren: () => import('./ingreso-devolucion/ingreso-devoluciones.module').then(m => m.IngresoDevolucionesModule),
+    data: { breadcrumb: 'Ingresos por Devoluciones' }
+  },
+  {
+    path: 'salida-baja',
+    loadChildren: () => import('./salida-baja/salida-baja.module').then(m => m.SalidaBajaModule),
+    data: { breadcrumb: 'Salida Por Baja' }
+  },
+  {
+    path: 'reubicacion',
+    loadChildren: () => import('./reubicacion/reubicacion.module').then(m => m.ReubicacionModule),
+    data: { breadcrumb: 'Reubicacion' }
+  },
+  {
+    path: 'ajustes',
+    loadChildren: () => import('./ajustes/ajustes-inv.module').then(m => m.AjustesInvModule),
+    data: { breadcrumb: 'Ajustes de Inventario' }
+  },
+  {
+    path: 'guia-remision',
+    loadChildren: () => import('./guia-remision/guia-remision.module').then(m => m.GuiaRemisionModule),
+    data: { breadcrumb: 'Guía de Remisión' }
   }
 ];
 

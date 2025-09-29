@@ -14,7 +14,8 @@ export class AppMenuComponent implements OnInit, OnDestroy {
 
   constructor(private serviceAuth: AuthService) { }
 
-  model: any[] = [];
+  model: MenuItem[] = [];
+  activeItem: any;
 
   ngOnInit() {
     const $obtenerMenu = this.serviceAuth.obtenerMenu(moduloAPP, constantesLocalStorage.idusuario)
@@ -22,6 +23,11 @@ export class AppMenuComponent implements OnInit, OnDestroy {
         next: (rpta: any) => {
           console.log('obtenerMenu', rpta);
           this.model = rpta;
+          // for (let i = 0; i < this.model.length; i++) {
+          //   this.model[i].routerLinkActiveOptions = {exact: true};
+          // }
+
+          
         },
         error: (err) => { },
         complete: () => { }

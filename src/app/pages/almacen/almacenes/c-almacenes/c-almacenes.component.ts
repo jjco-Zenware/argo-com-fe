@@ -43,7 +43,7 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
 
     ngOnInit(): void{
       this.createFrm();
-      this.listarOficinas();
+      //this.listarOficinas();
         this.getListar();
     }
 
@@ -55,12 +55,12 @@ export class CAlmacenesComponent implements OnInit, OnDestroy{
             disabled: false,
           },
         ],
-        idofi: [
-          {
-            value: 0,
-            disabled: false,
-          },
-        ],
+        // idofi: [
+        //   {
+        //     value: 0,
+        //     disabled: false,
+        //   },
+        // ],
       })
     }
 

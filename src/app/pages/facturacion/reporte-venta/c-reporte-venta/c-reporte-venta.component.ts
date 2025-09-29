@@ -45,7 +45,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
         private ordencompraService: OrdencompraService,
         private messageService: MessageService,
         private comprasService: ComprasService
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.createFrm();
@@ -108,14 +108,27 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (rpta: any) => {
                     this.setSpinner(false);
-                     console.log('rpta getListar', rpta);
-                        let lista = rpta.ordenescompra;
+                    console.log('rpta getListar', rpta);
+                    let lista = rpta.ordenescompra;
                     this.lstCompras = lista.filter(
-                        (item: any) => item.ind_estado_fel === 1
+                        (item: any) => item.ind_estado_fel === 1 || item.ind_estado_fel === 4
                     );
-                    if (this.frmDatos.value.idproveedor === 0) {
-                        this.listaProveedores();       
+
+                    //poner en cero las anuladas
+                    this.lstCompras.forEach(item => {
+                        if (item.ind_estado_fel === 4) {
+                            item.s_monto = 0;
+                            item.s_igv = 0;
+                            item.s_monto_total = 0;
+                            item.s_monto_rep = 0;
+                            item.s_igv_rep = 0;
+                            item.s_monto_total_rep = 0;
                         }
+                    });
+
+                    if (this.frmDatos.value.idproveedor === 0) {
+                        this.listaProveedores();
+                    }
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -208,7 +221,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
                         detail: mensajesQuestion.msgErrorGenerico,
                     });
                 },
-                complete: () => {},
+                complete: () => { },
             });
         this.$listSubcription.push($cargarOrdenC);
     }
@@ -236,6 +249,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
     }
 
     getExportarExcel(data: any) {
+        console.log('getExportarExcel...', data);
         if (this.lstCompras.length === 0) {
             this.messageService.clear();
             this.messageService.add({
@@ -260,7 +274,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
                 'CLIENTE': this.lstExportExcel[i].nomempresa,
                 'CENTRO COSTO': this.lstExportExcel[i].descentrocostoPRY,
                 'MONEDA': this.lstExportExcel[i].simbmoneda,
-                'BASE IMPONIBLE':  this.lstExportExcel[i].s_monto_rep,
+                'BASE IMPONIBLE': this.lstExportExcel[i].s_monto_rep,
                 'IGV': this.lstExportExcel[i].s_igv_rep,
                 'TOTAL': this.lstExportExcel[i].s_monto_total_rep,
                 'GLOSA': this.lstExportExcel[i].s_glosa,
@@ -295,26 +309,26 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
         FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
     }
 
-     listaProveedores() {
-        
+    listaProveedores() {
+
         this.lstProveedores = [];
-     const objet = {
-          idcliente: 0,
-          nomcomercial: 'TODOS'
+        const objet = {
+            idcliente: 0,
+            nomcomercial: 'TODOS'
         }
         this.lstProveedores.unshift(objet);
 
         let lista = this.lstCompras.filter(
-          (obj, index, self) => index === self.findIndex((t) => t.idproveedor === obj.idproveedor)
-        );         
+            (obj, index, self) => index === self.findIndex((t) => t.idproveedor === obj.idproveedor)
+        );
 
         lista.forEach(element => {
-          let objeto ={
-            idcliente: element.idproveedor,
-            nomcomercial: element.nomempresa
-          }
-          this.lstProveedores.unshift(objeto);
-        });  
+            let objeto = {
+                idcliente: element.idproveedor,
+                nomcomercial: element.nomempresa
+            }
+            this.lstProveedores.unshift(objeto);
+        });
         // const $getClientes = this.proyectosService.obtenerClientes('CLI').subscribe({
         // next: (rpta: any) => {
         //     this.lstProveedores = rpta;
@@ -348,7 +362,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
             error: (err) => {
                 this.serviceSharedApp.messageToast();
             },
-            complete: () => {},
+            complete: () => { },
         });
         this.$listSubcription.push($listaMonedas);
     }
@@ -363,10 +377,10 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
                 next: (rpta: any) => {
                     this.lstCentroCosto = rpta;
                     const objet = {
-                    idcentrocosto: 0,
-                    descentrocosto: 'TODOS'
-                }
-                this.lstCentroCosto.unshift(objet);
+                        idcentrocosto: 0,
+                        descentrocosto: 'TODOS'
+                    }
+                    this.lstCentroCosto.unshift(objet);
                     console.log('listarCentroCosto...', this.lstCentroCosto);
                     this.setSpinner(false);
                 },

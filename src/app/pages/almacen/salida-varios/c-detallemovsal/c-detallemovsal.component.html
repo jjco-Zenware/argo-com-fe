@@ -33,11 +33,18 @@
                             <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="labelnrodocumento"/>
                         </span>
                     </div>      
-                    <div class="col-6 sm:col-6 lg:col-5 md:col-6 -mt-5">                            
+                    <div class="sm:col-6 lg:col-6 md:col-6 -mt-5">                            
                         <label class="block text-900 font-semibold mb-1">Almacen<span class="text-red-500 font-bold"> * </span></label>                            
                         <span>
                             <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
                             optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                        </span>
+                    </div> 
+                    <div class="sm:col-6 lg:col-6 md:col-12 -mt-5">                            
+                        <label class="block text-900 font-semibold mb-1">Tipo Movimiento</label>                            
+                        <span>
+                            <p-dropdown [options]="lstTipoMovimiento" placeholder="Seleccionar Tipo Movimiento"  formControlName="tipomovimiento" 
+                            optionLabel="valoritem" optionValue="iditem" appendTo="body" readonly="true" class="p-inputtext-sm"></p-dropdown>            
                         </span>
                     </div>                         
                     <div class="sm:col-6 lg:col-12 md:col-3 col-12 -mt-3">
@@ -50,7 +57,7 @@
                 </form>
             </p-tabPanel>  
             
-            <p-tabPanel >
+            <!-- <p-tabPanel >
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
                         <i class="pi pi-cog"></i>
@@ -59,7 +66,6 @@
                         </span>
                     </div>
                 </ng-template>    
-                <!-- <app-guiaremision [IA_data]="dataGuia"></app-guiaremision>         -->
                 <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">    
                     <div class="sm:col-4 lg:col-4 md:col-3 col-6 h-4rem field ">
                         <label class="block text-900 font-semibold mb-1">Tipo Documento<span class="text-red-500 font-bold"> * </span></label>
@@ -100,9 +106,6 @@
                             <p-dropdown [options]="lstTipoTransporte" placeholder="Seleccionar..."  formControlName="gre_tipo_de_transporte" 
                             optionLabel="nomitemsunat" optionValue="codsunat" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
                         </span>
-                        <!-- <span class="p-fluid">
-                            <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_tipo_de_transporte"/>
-                        </span> -->
                     </div>  
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Tipo Doc. Transp. <span class="text-red-500 font-bold"> * </span></label>
@@ -211,7 +214,7 @@
                         </span>
                     </div>                             
                 </form>  
-            </p-tabPanel>
+            </p-tabPanel> -->
 
             <p-tabPanel>
                 <ng-template pTemplate="header">

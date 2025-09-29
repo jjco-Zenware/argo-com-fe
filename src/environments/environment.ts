@@ -1,15 +1,17 @@
 export const environment = {
     production: true,
-    //webAPI: 'https://argozenware.com/dev/backend/api/',
-    webAPI: 'https://sigzenware.com/bac/api/',
+    //webAPI: 'https://sigzenware.com/bac/api/',
+    webAPI: 'https://zenwareadmin-001-site3.rtempurl.com/bac/api/',
     msalConfig: {
+        // auth: {
+        //     clientId: 'b65e275c-ca73-4aac-b3e3-fd74c0658fd8',
+        //     authority: 'https://login.microsoftonline.com/02157777-a391-40f4-b293-125e2aee9f72'
+        // }
         auth: {
-            clientId: 'b65e275c-ca73-4aac-b3e3-fd74c0658fd8',
+            clientId: 'ffe8b473-e4f7-4107-9f29-6ae05838f1e2',
             authority: 'https://login.microsoftonline.com/02157777-a391-40f4-b293-125e2aee9f72'
-        
-            //clientId: '4ef23981-3c3f-49a5-8e58-419ed530d5bb',
-            //authority: 'https://login.microsoftonline.com/02157777-a391-40f4-b293-125e2aee9f72'
         }
+       
     },
     apiConfig: {
         scopes: ['user.read'],

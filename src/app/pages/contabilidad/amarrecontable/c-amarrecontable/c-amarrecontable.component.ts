@@ -4,7 +4,6 @@ import { Subscription } from 'rxjs';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { ContabilidadService } from '../../service/contabilidad.services';
-import { ModalAmarreComponent } from '../modal-plan/modal-amarre.component';
 
 @Component({
   selector: 'app-c-amarrecontable',
@@ -13,13 +12,16 @@ import { ModalAmarreComponent } from '../modal-plan/modal-amarre.component';
 })
 export class CAmarreContableComponent implements OnInit, OnDestroy{
 
-    $listSubcription: Subscription[] = [];
-    lstAmarreContable: any;
-    tituloDetalle!: string;
-    blockedDocument: boolean = false;
-    mensajeSpinner: string = "";
-    cols: any[] = [];
-    dataDet: any;
+  vistaLista: boolean = true;
+  visDetalle: boolean = false;
+  $listSubcription: Subscription[] = [];
+  lstAmarreContable: any;
+  tituloDetalle!: string;
+  blockedDocument: boolean = false;
+  mensajeSpinner: string = "";
+  cols: any[] = [];
+  dataDet: any;
+  dataPrc: any;
 
     constructor(
         public dialogService: DialogService  ,
@@ -31,12 +33,9 @@ export class CAmarreContableComponent implements OnInit, OnDestroy{
     ngOnInit(): void{
         this.getListar();
         this.cols = [
+          { field: 'codigoasiento', header: 'codigoasiento' },
           { field: 'nomtipodocprc', header: 'nomtipodocprc' },
-          { field: 'nomcategoria', header: 'nomcategoria' },
-          { field: 'nomconceptoctble', header: 'nomconceptoctble' },
-          { field: 'nomctactble', header: 'nomctactble' },
-          { field: 'nompartidacfg', header: 'nompartidacfg' }
-          
+          { field: 'desasiento', header: 'desasiento' }     
       ];
     }
 
@@ -77,38 +76,66 @@ export class CAmarreContableComponent implements OnInit, OnDestroy{
         });
       this.$listSubcription.push($listarAmarreContable)
     }
+  
 
-    onEditar(dato: any) {
-      //this.tituloDetalle = "NUEVO REGISTRO";
-      dato.parmctactble = 1;
-      const ref = this.dialogService.open(ModalAmarreComponent, {
-          data: dato,
-          header: "Editar Configuración",
-          styleClass: 'testDialog',
-          closeOnEscape: false,
-          closable: true,
-          width: '40%'
-      });
-      ref.onClose.subscribe((rpta: any) => {
-        this.getListar()
-      });
-    } 
+    // onNuevo() {
+    //   const objeto = {
+    //     parmctactble: 0
+    //   }
+    //   const ref = this.dialogService.open(ModalAmarreComponent, {
+    //       data: objeto,
+    //       header: "Nueva Configuración ",
+    //       styleClass: 'testDialog',
+    //       closeOnEscape: false,
+    //       closable: true,
+    //       width: '40%'
+    //   });
+    //   ref.onClose.subscribe((rpta: any) => {
+    //     this.getListar()
+    //   });
+    // }
+
+    onVer(data: any) {
+      console.log('onVer...', data);
+      this.dataPrc = {
+        idasientocfg: data.idasientocfg,
+        paramReg:'V'
+      }
+      this.tituloDetalle = "VER ASIENTO CONTABLE";
+      this.vistaLista = false;
+      this.visDetalle = true;
+  }
+
+    onEditar(data: any) {
+      console.log('onEditar...', data);
+      this.dataPrc = {
+        idasientocfg: data.idasientocfg,
+        paramReg:'E'
+      }
+      this.tituloDetalle = "EDITAR ASIENTO CONTABLE";
+      this.vistaLista = false;
+      this.visDetalle = true;
+  }
+
+  getDetalle(dato:boolean){
+      this.vistaLista = true;
+      this.visDetalle = false;
+  }
+
+  getBack() {
+      this.vistaLista = true;
+      this.getListar();
+      this.visDetalle = false;
+    }
 
     onNuevo() {
-      const objeto = {
-        parmctactble: 0
+      this.tituloDetalle = "REGISTRAR ASIENTO CONTABLE";
+      this.dataPrc = {
+        idasientocfg: 0,
+        paramReg:'N'
       }
-      const ref = this.dialogService.open(ModalAmarreComponent, {
-          data: objeto,
-          header: "Nueva Configuración ",
-          styleClass: 'testDialog',
-          closeOnEscape: false,
-          closable: true,
-          width: '40%'
-      });
-      ref.onClose.subscribe((rpta: any) => {
-        this.getListar()
-      });
+      this.vistaLista = false;
+      this.visDetalle = true;
     }
    
 }

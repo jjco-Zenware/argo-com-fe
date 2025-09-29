@@ -686,10 +686,22 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       //    });  
       //  }
 
+
+
        const _idtipoprod:string =this.lstSubFamilia.filter((x: { idsubfamilia: any; })=>x.idsubfamilia == this.idsubfamilia)[0].idtipoprod;
        const _nomtipoprod:string =this.lstSubFamilia.filter((x: { idsubfamilia: any; })=>x.idsubfamilia == this.idsubfamilia)[0].nomtipoprod;
        const _nommarca:string =this.lstMarcas.filter((x: { idmarca: any; })=>x.idmarca == this.idmarca)[0].nommarca;
        const _nomunidad:string=this.lstUnidades.filter((x: { iditem: number; })=>x.iditem == 130)[0].valoritem;
+
+
+       
+const excelDateToJSDate = (serial:any) => {
+  const utc_days = Math.floor(serial - 25569);
+  const utc_value = utc_days * 86400; // segundos
+  const date_info = new Date(utc_value * 1000);
+  return date_info.toISOString().split('T')[0]; // formato YYYY-MM-DD
+};
+
     
        this.ExcelData.forEach((item: any) => {         
          item.items = item.Item === undefined ? 0 : item.Item,
@@ -700,8 +712,8 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
          item.coditem = item.Item === undefined ? 0 : item.Item,
          item.descuento = 0,
          item.fecact = new Date(),
-         item.fecfin = item.FechaFin === undefined ? null : item.FechaFin,
-         item.fecini = item.FechaInicio === undefined ? null : item.FechaInicio,
+         item.fecfin = item.FechaFin === undefined ? null : excelDateToJSDate(item.FechaFin),
+         item.fecini = item.FechaInicio === undefined ? null : excelDateToJSDate(item.FechaInicio),
          item.fecreg = new Date(),
          item.idordencompra = 0,
          item.idordencompraitem = 0,

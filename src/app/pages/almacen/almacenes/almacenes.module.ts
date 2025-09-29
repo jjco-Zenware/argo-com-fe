@@ -13,6 +13,7 @@ import { AlmacenService } from '../service/almacenServices';
 import { TreeModule } from 'primeng/tree';
 import { CModalUbicacionComponent } from './c-modal-ubicacion/c-modalubicacion.component';
 import { TagModule } from 'primeng/tag';
+import { TimelineModule } from 'primeng/timeline';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { TagModule } from 'primeng/tag';
     FormsModule,
     ReactiveFormsModule,
     TreeModule,
-    TagModule
+    TagModule,
+    TimelineModule
   ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
 })

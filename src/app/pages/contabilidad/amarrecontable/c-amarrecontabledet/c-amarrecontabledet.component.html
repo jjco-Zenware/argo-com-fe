@@ -1,0 +1,126 @@
+<div>
+    <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem"
+            (click)="guardarOC()"></button>
+        <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>        
+        <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItems" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
+    </div>
+    <div class="card p-2">
+        <p-tabView>
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-spin pi-cog"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            Detalle
+                        </span>
+                    </div>
+                </ng-template>
+
+                <form [formGroup]="registerFormRegistro" class="p-fluid grid lg:col-6 col-12">
+                    
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+                        <label class="block text-900 mb-1 font-semibold">Código</label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="surface-300 p-inputtext-sm"
+                                formControlName="codigoasiento" readonly="true" />
+                        </span>
+                    </div>
+                    <div class="lg:col-6"></div>
+                    <div class="sm:col-12 lg:col-7 md:col-12 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Transacción <span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstDocumentoPrc" formControlName="idtipodocprc" optionLabel="nomtipodocprc" placeholder="Seleccionar..."
+                                optionValue="idtipodocprc" appendTo="body" class="p-inputtext-sm" (onChange)="listarCategoriaDoc()"></p-dropdown>
+                        </span>
+                    </div> 
+                    <div class="sm:col-12 lg:col-5 md:col-12 h-4rem field">
+                        <label class="block text-900 font-semibold mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
+                        <span>
+                            <p-dropdown [options]="lstCategoriaDoc" formControlName="idcategoria" optionLabel="nomcategoria" placeholder="Seleccionar..."
+                                optionValue="idcategoria" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div>
+                     <div class="sm:col-6 lg:col-12 md:col-12 h-4rem field">
+                        <label class="block text-900 mb-1 font-semibold">Nombre del Asiento</label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" formControlName="desasiento"  [readonly]="onlyRead" class="p-inputtext-sm" />
+                        </span>
+                    </div>
+                </form>
+
+                <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 col-12 h-1rem text-blue-600">
+                        <div class="text-blue-600 font-bold">Configuración del Asiento</div>
+                </p-divider>
+
+                <p-table #dt1 [value]="lstAmarreContable" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+                    [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+                    currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
+                    styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
+                     <ng-template pTemplate="caption">
+                            <div *ngIf="verItems" class="flex gap-2 mb-2 justify-content-between align-items-center">
+                                <div class="flex gap-2">
+                                    <button pButton class="p-button-outlined w-auto h-2rem" pTooltip="Agregar Item"
+                                        icon="pi pi-plus" label="Agregar" (click)="AgregarAsiento([], 0)"></button>
+                                </div>
+                            </div>
+                        </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr class="text-sm h-1rem">
+                            <th style="width: 20px" class="bg-teal-50 border-1" >
+                                <div class="flex justify-content-between align-items-center">
+                                    N°
+                                </div>
+                            </th>
+                            <th style="width: 200px;" class="bg-teal-50 border-1">TRANSACCIÓN</th>
+                            <th style="width: 250px;" class="bg-teal-50 border-1">MOTIVO</th>
+                            <th style="width: 200px;" class="bg-teal-50 border-1">CONCEPTO <br> CTBLE</th>
+                            <th style="width: 200px;" class="bg-teal-50 border-1">CTA <br> CTBLE</th>
+                            <th style="width: 200px;" class="bg-teal-50 border-1">PARTIDA <br> DOBLE</th>
+                            <th style="width: 100px;" class="bg-teal-50 border-1">ACCIÓN</th>
+                        </tr>
+                    
+                        <tr >
+                            <th></th>
+                            <th *ngFor="let col of cols">
+                                <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>
+                                
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex"> 
+                        <tr class="text-sm">
+                            <td>{{rowIndex + 1}}</td>
+                            <td>{{dato.nomtipodocprc}}</td>
+                            <td>{{dato.nomcategoria}}</td>
+                            <td>{{dato.nomconceptoctble}}</td>
+                            <td>{{dato.nomctactble}}</td>
+                            <td>{{dato.nompartidacfg}}</td>
+                            <td>
+                                <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'30px'}">
+
+                                    <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onEditar(dato)"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="12">No se encontraron registros.</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="loadingbody">
+                        <tr>
+                            <td colspan="12">Cargando datos. Espere por favor.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{ width: '450px' }"
+    acceptButtonStyleClass="p-button p-button-info surface-border"
+    rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>

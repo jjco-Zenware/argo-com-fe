@@ -234,4 +234,90 @@ export class CStockComponent implements OnInit, OnDestroy{
         });
       this.$listSubcription.push($getListar)
     }
+
+     getExportarExcel(data :any) {
+          console.log('filteredValue', data.filteredValue);
+          console.log('_value', data._value);
+          this.lstExportar = [];
+          this.lstExportExcel = [];
+
+           if(data._value === undefined){
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'No hay datos para exportar.' });
+            return;
+          }
+
+          // if (data.filteredValue !== null) {
+          //   this.lstExportExcel = data.filteredValue;
+          // }else{
+          //   this.lstExportExcel = data._value
+          // }
+
+          this.lstExportExcel = data._value
+
+         
+          
+          for (let i = 0; i < this.lstExportExcel.length; i++) {       
+              const objeto = {
+                  'N°': i + 1,
+                  'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
+                  'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
+                  'DOCUMENTO': this.lstExportExcel[i].nrofactura,
+                  'RUC': this.lstExportExcel[i].nrodocumento,
+                  'PROVEEDOR': this.lstExportExcel[i].nomempresa,
+                  'CENTRO COSTO' : this.lstExportExcel[i].descentrocosto,
+                  'MONEDA': this.lstExportExcel[i].simbmoneda,
+                  'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
+                  'IGV': this.lstExportExcel[i].s_igv,
+                  'TOTAL': this.lstExportExcel[i].s_monto_total,
+                  'GLOSA': this.lstExportExcel[i].s_glosa,
+                  'ESTADO' : this.lstExportExcel[i].nomestado,
+                  '% DETRACCIÓN' : this.lstExportExcel[i].porc_detraccion,
+                  'S/ DETRACCIÓN' : this.lstExportExcel[i].s_monto_detraccion_mn_CTB,
+                  
+              }
+              this.lstExportar.push(objeto);
+          }
+      
+          import('xlsx').then((xlsx) => {
+            const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
+            const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+            const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+            this.saveAsExcelFile(excelBuffer, 'REGISTRO_COMPRA');
+            });
+        }
+    
+      saveAsExcelFile(buffer: any, fileName: string): void {
+        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        let EXCEL_EXTENSION = '.xlsx';
+        const data: Blob = new Blob([buffer], {
+            type: EXCEL_TYPE
+        });
+        FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+      }
+
+      exportarExcel() {
+        if(this.lstCatalogo === undefined || this.lstCatalogo.length === 0){
+            this.messageService.add({ severity: 'warn', summary: 'Alerta', detail: 'No hay datos para exportar.' });
+            return;
+          }
+
+     this.setSpinner(true);
+     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista;
+  
+     const $getListar = this.almacenService.exportarexcelstock(this.frmDatos.value)
+     .subscribe({
+       next: (rpta:any) => {
+           this.setSpinner(false);
+           this.utilitariosService.descargarExcel(rpta, 'Stock');
+       },
+       error:(err)=>{
+           this.setSpinner(false);
+           this.serviceSharedApp.messageToast()
+       },
+       complete:() => {
+         this.setSpinner(false);
+       }
+     });
+   this.$listSubcription.push($getListar)
+   }
 }

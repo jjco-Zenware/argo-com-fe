@@ -248,4 +248,12 @@ export const constantesApiWeb = {
     ordencompraprcmonto: controllerComercial + '/ordencompraprcmonto',
     centroCostoUPD: controllerComercial + '/ordendocumentoupdcentrocosto',
     listarFlujoCaja: controllerTesoreria + '/flujocaja/',
+    
+    UbicacionAlmacenDel: controllerAlmacen + '/UbicacionAlmacenDel',
+    exportarexcelstock: controllerMain + '/exportarexcelstock',
+    
+    ListarMovimientosPrcSalidas: controllerComercial + '/listarmovimientosprcsalidas',
+    lstMovimientosConfirmados: controllerComercial + '/ordencompraconfirmada/',
+    listarUbigeos: controllerComercial + '/listarubigeos',
+    rdlcProducto: controllerMain + '/productordlc',
 }

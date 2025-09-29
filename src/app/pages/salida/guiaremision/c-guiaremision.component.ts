@@ -4,7 +4,6 @@ import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 import { MessageService, TreeNode } from 'primeng/api';
-import { AlmacenService } from '../service/almacenServices';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 @Component({

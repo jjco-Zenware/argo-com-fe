@@ -111,8 +111,26 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
                     console.log('rpta getListar', rpta);
                     let lista = rpta.ordenescompra;
                     this.lstCompras = lista.filter(
-                        (item: any) => item.ind_estado_fel === 1
+                        (item: any) => item.ind_estado_fel === 1 || item.ind_estado_fel === 4
                     );
+
+                    //poner en cero las anuladas
+                    this.lstCompras.forEach(item => {
+                        if (item.ind_estado_fel === 4) {
+                            item.s_monto = 0;
+                            item.s_igv = 0;
+                            item.s_monto_total = 0;
+                            item.basesol = 0;
+                            item.igvsol = 0;
+                            item.totalsol = 0;
+                            item.baseDol = 0;
+                            item.igvDol = 0;
+                            item.totalDol = 0;
+                            item.s_monto_valor_venta_CTB = 0;
+                            item.s_monto_igv_CTB = 0;
+                            item.s_monto_total_CTB = 0;
+                        }
+                    });
                 },
                 error: (err) => {
                     this.setSpinner(false);

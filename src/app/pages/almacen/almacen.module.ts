@@ -40,6 +40,12 @@ import { ContabilidadService } from '../contabilidad/service/contabilidad.servic
     TreeModule
     
   ],
+  exports: [
+    CItemOrdenesComponent,
+    CBusquedaProductoComponent,
+    CItemAlmacenComponent,
+    CModalUbicacionComponent
+  ],
   providers : [OrdencompraService, ComprasService, ProyectosService, ContabilidadService]
 })
 export class AlmacenModule { }

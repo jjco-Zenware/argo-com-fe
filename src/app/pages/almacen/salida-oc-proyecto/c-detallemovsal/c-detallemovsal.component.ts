@@ -48,11 +48,7 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
   verItems: boolean = true;
   ordenCompra: any;
   verCotizacion: boolean = true;
-  lstTipo = [
-    { name: 'COMPRA', code: 'OC' },
-    { name: 'SERVICIO', code: 'OS' }
-  ];
-  lstTermino: any;
+  //lstTermino: any;
   lstQuotes: any[]=[];
   verAdjunto: boolean = false;
   ExcelData: any;
@@ -70,11 +66,6 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
   listadoArchivos: any[]=[];
   verbtnPreliminar: boolean = false;
   verOc: boolean = true;
-  lstTipoND: any[] = [];
-  lstTipoTransporte: any[] = [];
-  lstTipoMotivo: any[] = [];
-  lstTipoDoc: any[] = [];
-  lstComprobante: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -98,14 +89,8 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
     this.createFormRegistro();
     this.ListarAlamcen();  
     this.listaClientes();
-    this.listaProveedores();
-    this.listarItemsTabla(); 
+    this.listaProveedores(); 
     this.listaProyectoTipo();
-    this.listarItemsTablaSunat();
-    this.listarTipoTransporteTablaSunat();
-    this.listarMotivoTrasladoTablaSunat();
-    this.listarItemsTablaTipoDocumento();
-    this.listarItemsTablaComprobante();
     
     if (this.idMovimiento > 0) {   
       if (this.IA_data.paramReg === 'V') {
@@ -460,21 +445,7 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
   });
   }
 
-  listarItemsTabla() {
-    this.comprasService.obtenerItemsTabla(104).subscribe({
-        next: (rpta: any) => {
-          console.info('listarItemsTabla : ', rpta);
-            this.lstTermino = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });
-  
-    }
+
 
   listaProveedores() {
 
@@ -789,11 +760,6 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && this.registerFormRegistro.value.idproyecto === null)
-        {
-            this.errorMensaje="Seleccionar Proyecto...!";
-            _error = true;
-        }
 
       if (!_error && (this.registerFormRegistro.value.idproveedor === null || this.registerFormRegistro.value.idproveedor === ''))
       {
@@ -805,103 +771,7 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
       {
           this.errorMensaje="Seleccionar Orden Compra...!";
           _error = true;
-      }
-
-      
-      if (!_error && (this.registerFormRegistro.value.gre_peso_bruto_total === null || this.registerFormRegistro.value.gre_peso_bruto_total === 0))
-        {
-            this.errorMensaje="Ingresar Peso Bruto...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_numero_de_bultos === null || this.registerFormRegistro.value.gre_numero_de_bultos === 0))
-        {
-            this.errorMensaje="Ingresar N° Bultos...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_tipo_de_transporte === null || this.registerFormRegistro.value.gre_tipo_de_transporte === ''))
-        {
-            this.errorMensaje="Seleccionar Tipo de Transporte...!";
-            _error = true;
-            }
-
-      if (!_error && (this.registerFormRegistro.value.gre_tipo_de_transporte === 0 || this.registerFormRegistro.value.gre_tipo_de_transporte === ''))
-      {
-          this.errorMensaje="Seleccionar Documento del Transporte...!";
-          _error = true;
-      }
-
-      if (!_error && (this.registerFormRegistro.value.gre_transportista_documento_tipo === 0 || this.registerFormRegistro.value.gre_transportista_documento_tipo === ''))
-        {
-            this.errorMensaje="Seleccionar Documento del Conductor...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_punto_de_partida_ubigeo === '' && this.registerFormRegistro.value.gre_punto_de_partida_ubigeo === null) )
-      {
-          this.errorMensaje="Ingresar Punto de Partida...!";
-          _error = true;
-      }
-
-      if (!_error && (this.registerFormRegistro.value.gre_punto_de_llegada_ubigeo === '' && this.registerFormRegistro.value.gre_punto_de_llegada_ubigeo === null) )
-        {
-            this.errorMensaje="Ingresar Punto de Llegada...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_ruc_emp_transporte === " " || this.registerFormRegistro.value.gre_ruc_emp_transporte === null))
-      {
-          this.errorMensaje="Ingresar Ruc Transportista...!";
-          _error = true;
-      }
-
-      if (!_error && (this.registerFormRegistro.value.gre_nom_emp_transporte === " " || this.registerFormRegistro.value.gre_nom_emp_transporte === null))
-        {
-            this.errorMensaje="Ingresar Nombre Transportista...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_marca_placa_unid_transporte === " " || this.registerFormRegistro.value.gre_marca_placa_unid_transporte === null))
-        {
-            this.errorMensaje="Ingresar Placa...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_punto_partida === " " || this.registerFormRegistro.value.gre_punto_partida === null))
-        {
-            this.errorMensaje="Ingresar Partida...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_punto_llegada === " " || this.registerFormRegistro.value.gre_punto_llegada === null))
-        {
-            this.errorMensaje="Ingresar Llegada...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_motivo_de_traslado === null || this.registerFormRegistro.value.gre_motivo_de_traslado === ''))
-        {
-            this.errorMensaje="Seleccionar Motivo...!";
-            _error = true;
-        }
-
-      if (!_error && (this.registerFormRegistro.value.gre_conductor_nombre === " " || this.registerFormRegistro.value.gre_conductor_nombre === null))
-        {
-            this.errorMensaje="Ingresar Nombre Conductor...!";
-            _error = true;
-        }
-      if (!_error && (this.registerFormRegistro.value.gre_conductor_apellidos === " " || this.registerFormRegistro.value.gre_conductor_apellidos === null))
-        {
-            this.errorMensaje="Ingresar Apellido Conductor...!";
-            _error = true;
-        }
-      if (!_error && (this.registerFormRegistro.value.gre_conductor_numero_licencia === " " || this.registerFormRegistro.value.gre_conductor_numero_licencia === null))
-        {
-            this.errorMensaje="Ingresar N° Licencia...!";
-            _error = true;
-        }
-      
+      }      
        return _error;
      }
      
@@ -1100,84 +970,5 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
     this.$listSubcription.push($cargarOrdenC)
 }
 
-listarItemsTablaSunat() {
-  this.contabilidadService.listarItemsTablaSunat(4).subscribe({
-      next: (rpta: any) => {
-        console.info('listarItemsTablaSunat : ', rpta);
-          this.lstTipoND = rpta;
-      },
-      error: (err) => {
-      console.info('error : ', err);
-      this.serviceSharedApp.messageToast()
-      },
-      complete: () => {
-      },
-  });
-
-  }
-
-  listarTipoTransporteTablaSunat() {
-    this.contabilidadService.listarTipoTransporteTablaSunat().subscribe({
-        next: (rpta: any) => {
-          console.info('lstTipoTransporte : ', rpta);
-            this.lstTipoTransporte = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });
-  
-  }
-
-  listarMotivoTrasladoTablaSunat() {
-    this.contabilidadService.listarMotivoTrasladoTablaSunat().subscribe({
-        next: (rpta: any) => {
-          console.info('lstTipoTransporte : ', rpta);
-            this.lstTipoMotivo = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });
-  
-    }
-
-    listarItemsTablaTipoDocumento() {
-      this.contabilidadService.listarTipoDocumentoTablaSunat("N").subscribe({
-          next: (rpta: any) => {
-            console.info('listarItemsTablaTipoDocumento : ', rpta);
-              this.lstTipoDoc = rpta;
-          },
-          error: (err) => {
-          console.info('error : ', err);
-          this.serviceSharedApp.messageToast()
-          },
-          complete: () => {
-          },
-      });
-    
-      }
-
-
-      listarItemsTablaComprobante() {
-        this.contabilidadService.listarItemsTablaSunat(2).subscribe({
-          next: (rpta: any) => {
-            console.info('listarItemsTablaComprobante : ', rpta);
-              this.lstComprobante = rpta;
-          },
-          error: (err) => {
-          console.info('error : ', err);
-          this.serviceSharedApp.messageToast()
-          },
-          complete: () => {
-          },
-      });     
-      }
 
 }

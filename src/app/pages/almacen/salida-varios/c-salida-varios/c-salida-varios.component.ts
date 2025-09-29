@@ -116,7 +116,7 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
       console.log('this.frmDatos...', this.frmDatos.value);
       const objeto = {
         ...this.frmDatos.value,
-        idtipodocprc: 4
+        idtipodocprc: 24
       }
 
       const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
@@ -143,7 +143,7 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'V',
-          idtipodocprc: 4
+          idtipodocprc: 24
         } 
         this.vistaLista = false;
     }
@@ -154,7 +154,7 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
         this.dataDet = {
           idcodigo: dato.idordencompra,
           paramReg:'E',
-          idtipodocprc: 4
+          idtipodocprc: 24
         }
         this.vistaLista = false;
     }
@@ -174,11 +174,11 @@ export class CSalidaVariosComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR SALIDA VARIOS";
+      this.tituloDetalle = "REGISTRAR SALIDA POR CONSUMO";
       this.dataDet = {
         idcodigo: 0,
         paramReg:'N',
-        idtipodocprc: 4
+        idtipodocprc: 24
       }
       this.vistaLista = false;
     }
