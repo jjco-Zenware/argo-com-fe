@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Cliente, KanbanCard } from '@interfaces';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -15,7 +15,7 @@ import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
   templateUrl: './modal-amarre.component.html',
   styleUrls: ['./modal-amarre.component.scss']
 })
-export class ModalAmarreComponent {
+export class ModalAmarreComponent implements OnInit, OnDestroy {
 
   $listSubcription: Subscription[] = [];
   registerFormRegistro: any= FormGroup;
@@ -62,6 +62,12 @@ ngOnInit(): void {
   }
 }
 
+ngOnDestroy() {
+    if (this.$listSubcription != undefined) {
+      this.$listSubcription.forEach((sub) => sub.unsubscribe());
+    }
+  }
+
 setSpinner(valor: boolean) {
   this.blockedDocument = valor;
 }
@@ -70,7 +76,7 @@ get formRegistro() { return this.registerFormRegistro.controls; }
   createFormRegistro() {
     //Agregar validaciones de formulario
     this.registerFormRegistro = this.formBuilder.group({
-      idasientocfg: [{ value: this.config.data.codctactble, disabled: false }],
+      idasientocfgitem: [{ value: this.config.data.idasientocfgitem, disabled: false }],
       idtipodocprc: [{ value: 0, disabled: false }],
       idcategoria: [{ value: 0, disabled: false }],
       conceptoctble: [{ value: 0, disabled: false }],
@@ -87,34 +93,43 @@ guardarRegistro() {
         return;
     }
 
-  console.log('this.guardarRegistro...', this.registerFormRegistro.value); 
+    this.refDatoItem.close(null);
 
-  this.contabilidadService.amarrecontablePrc(this.registerFormRegistro.value).subscribe({
-    next: (rpta: any) => {
-    //this.lstProyecto = rpta;
-    if (rpta.procesoSwitch === 0) {
-      console.info('lstProyecto : ', rpta );
-      this.refDatoItem.close();
-    }else{
-      this.messageService.add({severity: 'info', summary: 'Validación', detail: rpta.mensaje});
-    }
+
+//   this.contabilidadService.amarrecontablePrc(this.registerFormRegistro.value).subscribe({
+//     next: (rpta: any) => {
+//     if (rpta.procesoSwitch === 0) {
+//       console.info('lstProyecto : ', rpta );
+//       this.refDatoItem.close();
+//     }else{
+//       this.messageService.add({severity: 'info', summary: 'Validación', detail: rpta.mensaje});
+//     }
     
-    },
-    error: (err) => {
-    console.info('error : ', err);
-    this.messageService.clear();
-    this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: mensajesQuestion.msgErrorGenerico,
-    });
-    },
-    complete: () => {
-    },
-});
+//     },
+//     error: (err) => {
+//     console.info('error : ', err);
+//     this.messageService.clear();
+//     this.messageService.add({
+//         severity: 'error',
+//         summary: 'Error',
+//         detail: mensajesQuestion.msgErrorGenerico,
+//     });
+//     },
+//     complete: () => {
+//     },
+// });
 
   
-}
+ //this.cerrar({...this.registerFormRegistro.value})
+
+  }
+
+  // cerrar(data:any) {
+  //   const objeto = {
+  //     ...data
+  //   }
+  //   this.refDatoItem.close({objeto});
+  // }
 
 validarDatos():boolean{
   let _error = false;

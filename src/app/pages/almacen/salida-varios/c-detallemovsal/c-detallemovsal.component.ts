@@ -74,6 +74,7 @@ export class CDetalleMovSalComponent implements OnInit, OnDestroy{
   lstTipoMotivo: any[] = [];
   lstTipoDoc: any[] = [];
   lstComprobante: any[] = [];
+  lstTipoMovimiento: any;
 
   constructor(
     private fb: FormBuilder,
@@ -99,6 +100,7 @@ export class CDetalleMovSalComponent implements OnInit, OnDestroy{
     this.listaClientes();
     this.listaProveedores();
     this.listarItemsTabla(); 
+    this.listarTipoMovimiento();
 
     this.listarItemsTablaSunat();
     this.listarTipoTransporteTablaSunat();
@@ -201,7 +203,8 @@ export class CDetalleMovSalComponent implements OnInit, OnDestroy{
       nroserie_ctb:[{ value: '', disabled: false }],
       nrodocumento_ctb:[{ value: '', disabled: false }],
       fecemision: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
-      tipodoc_ctb: [{ value: 7, disabled: false }],
+      tipodoc_ctb: [{ value: 7, disabled: false }],      
+      tipomovimiento: [{ value: 587, disabled: false }],
     });
   }
 
@@ -461,6 +464,22 @@ export class CDetalleMovSalComponent implements OnInit, OnDestroy{
         },
     });
   
+    }
+
+    listarTipoMovimiento() {
+      this.comprasService.obtenerItemsTabla(133).subscribe({
+          next: (rpta: any) => {
+            console.info('lstTipoMovimiento : ', rpta);
+              this.lstTipoMovimiento = rpta.filter((x: { coditem: any; }) => x.coditem === 'S');
+          },
+          error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+          },
+          complete: () => {
+          },
+      });
+    
     }
 
   listaProveedores() {
@@ -749,99 +768,104 @@ export class CDetalleMovSalComponent implements OnInit, OnDestroy{
           _error = true;
       }
 
-      if (!_error && (this.registerFormRegistro.value.gre_peso_bruto_total === null || this.registerFormRegistro.value.gre_peso_bruto_total === 0))
-        {
-            this.errorMensaje="Ingresar Peso Bruto...!";
-            _error = true;
-        }
+      if (!_error && (this.registerFormRegistro.value.tipomovimiento === null || this.registerFormRegistro.value.tipomovimiento === 0)) {
+      this.errorMensaje = "Seleccionar Tipo Movimiento...!";
+      _error = true;
+    }
 
-      if (!_error && (this.registerFormRegistro.value.gre_numero_de_bultos === null || this.registerFormRegistro.value.gre_numero_de_bultos === 0))
-        {
-            this.errorMensaje="Ingresar N° Bultos...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_peso_bruto_total === null || this.registerFormRegistro.value.gre_peso_bruto_total === 0))
+      //   {
+      //       this.errorMensaje="Ingresar Peso Bruto...!";
+      //       _error = true;
+      //   }
 
-      if (!_error && (this.registerFormRegistro.value.gre_tipo_de_transporte === null || this.registerFormRegistro.value.gre_tipo_de_transporte === ''))
-        {
-            this.errorMensaje="Seleccionar Tipo de Transporte...!";
-            _error = true;
-            }
+      // if (!_error && (this.registerFormRegistro.value.gre_numero_de_bultos === null || this.registerFormRegistro.value.gre_numero_de_bultos === 0))
+      //   {
+      //       this.errorMensaje="Ingresar N° Bultos...!";
+      //       _error = true;
+      //   }
 
-      if (!_error && (this.registerFormRegistro.value.gre_tipo_de_transporte === 0 || this.registerFormRegistro.value.gre_tipo_de_transporte === ''))
-      {
-          this.errorMensaje="Seleccionar Documento del Transporte...!";
-          _error = true;
-      }
+      // if (!_error && (this.registerFormRegistro.value.gre_tipo_de_transporte === null || this.registerFormRegistro.value.gre_tipo_de_transporte === ''))
+      //   {
+      //       this.errorMensaje="Seleccionar Tipo de Transporte...!";
+      //       _error = true;
+      //       }
 
-      if (!_error && (this.registerFormRegistro.value.gre_transportista_documento_tipo === 0 || this.registerFormRegistro.value.gre_transportista_documento_tipo === ''))
-        {
-            this.errorMensaje="Seleccionar Documento del Conductor...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_tipo_de_transporte === 0 || this.registerFormRegistro.value.gre_tipo_de_transporte === ''))
+      // {
+      //     this.errorMensaje="Seleccionar Documento del Transporte...!";
+      //     _error = true;
+      // }
 
-      if (!_error && (this.registerFormRegistro.value.gre_punto_de_partida_ubigeo === '' && this.registerFormRegistro.value.gre_punto_de_partida_ubigeo === null) )
-      {
-          this.errorMensaje="Ingresar Punto de Partida...!";
-          _error = true;
-      }
+      // if (!_error && (this.registerFormRegistro.value.gre_transportista_documento_tipo === 0 || this.registerFormRegistro.value.gre_transportista_documento_tipo === ''))
+      //   {
+      //       this.errorMensaje="Seleccionar Documento del Conductor...!";
+      //       _error = true;
+      //   }
 
-      if (!_error && (this.registerFormRegistro.value.gre_punto_de_llegada_ubigeo === '' && this.registerFormRegistro.value.gre_punto_de_llegada_ubigeo === null) )
-        {
-            this.errorMensaje="Ingresar Punto de Llegada...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_punto_de_partida_ubigeo === '' && this.registerFormRegistro.value.gre_punto_de_partida_ubigeo === null) )
+      // {
+      //     this.errorMensaje="Ingresar Punto de Partida...!";
+      //     _error = true;
+      // }
 
-      if (!_error && (this.registerFormRegistro.value.gre_ruc_emp_transporte === " " || this.registerFormRegistro.value.gre_ruc_emp_transporte === null))
-      {
-          this.errorMensaje="Ingresar Ruc Transportista...!";
-          _error = true;
-      }
+      // if (!_error && (this.registerFormRegistro.value.gre_punto_de_llegada_ubigeo === '' && this.registerFormRegistro.value.gre_punto_de_llegada_ubigeo === null) )
+      //   {
+      //       this.errorMensaje="Ingresar Punto de Llegada...!";
+      //       _error = true;
+      //   }
 
-      if (!_error && (this.registerFormRegistro.value.gre_nom_emp_transporte === " " || this.registerFormRegistro.value.gre_nom_emp_transporte === null))
-        {
-            this.errorMensaje="Ingresar Nombre Transportista...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_ruc_emp_transporte === " " || this.registerFormRegistro.value.gre_ruc_emp_transporte === null))
+      // {
+      //     this.errorMensaje="Ingresar Ruc Transportista...!";
+      //     _error = true;
+      // }
 
-      if (!_error && (this.registerFormRegistro.value.gre_marca_placa_unid_transporte === " " || this.registerFormRegistro.value.gre_marca_placa_unid_transporte === null))
-        {
-            this.errorMensaje="Ingresar Placa...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_nom_emp_transporte === " " || this.registerFormRegistro.value.gre_nom_emp_transporte === null))
+      //   {
+      //       this.errorMensaje="Ingresar Nombre Transportista...!";
+      //       _error = true;
+      //   }
 
-      if (!_error && (this.registerFormRegistro.value.gre_punto_partida === " " || this.registerFormRegistro.value.gre_punto_partida === null))
-        {
-            this.errorMensaje="Ingresar Partida...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_marca_placa_unid_transporte === " " || this.registerFormRegistro.value.gre_marca_placa_unid_transporte === null))
+      //   {
+      //       this.errorMensaje="Ingresar Placa...!";
+      //       _error = true;
+      //   }
 
-      if (!_error && (this.registerFormRegistro.value.gre_punto_llegada === " " || this.registerFormRegistro.value.gre_punto_llegada === null))
-        {
-            this.errorMensaje="Ingresar Llegada...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_punto_partida === " " || this.registerFormRegistro.value.gre_punto_partida === null))
+      //   {
+      //       this.errorMensaje="Ingresar Partida...!";
+      //       _error = true;
+      //   }
 
-      if (!_error && (this.registerFormRegistro.value.gre_motivo_de_traslado === null || this.registerFormRegistro.value.gre_motivo_de_traslado === ''))
-        {
-            this.errorMensaje="Seleccionar Motivo...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_punto_llegada === " " || this.registerFormRegistro.value.gre_punto_llegada === null))
+      //   {
+      //       this.errorMensaje="Ingresar Llegada...!";
+      //       _error = true;
+      //   }
 
-      if (!_error && (this.registerFormRegistro.value.gre_conductor_nombre === " " || this.registerFormRegistro.value.gre_conductor_nombre === null))
-        {
-            this.errorMensaje="Ingresar Nombre Conductor...!";
-            _error = true;
-        }
-      if (!_error && (this.registerFormRegistro.value.gre_conductor_apellidos === " " || this.registerFormRegistro.value.gre_conductor_apellidos === null))
-        {
-            this.errorMensaje="Ingresar Apellido Conductor...!";
-            _error = true;
-        }
-      if (!_error && (this.registerFormRegistro.value.gre_conductor_numero_licencia === " " || this.registerFormRegistro.value.gre_conductor_numero_licencia === null))
-        {
-            this.errorMensaje="Ingresar N° Licencia...!";
-            _error = true;
-        }
+      // if (!_error && (this.registerFormRegistro.value.gre_motivo_de_traslado === null || this.registerFormRegistro.value.gre_motivo_de_traslado === ''))
+      //   {
+      //       this.errorMensaje="Seleccionar Motivo...!";
+      //       _error = true;
+      //   }
+
+      // if (!_error && (this.registerFormRegistro.value.gre_conductor_nombre === " " || this.registerFormRegistro.value.gre_conductor_nombre === null))
+      //   {
+      //       this.errorMensaje="Ingresar Nombre Conductor...!";
+      //       _error = true;
+      //   }
+      // if (!_error && (this.registerFormRegistro.value.gre_conductor_apellidos === " " || this.registerFormRegistro.value.gre_conductor_apellidos === null))
+      //   {
+      //       this.errorMensaje="Ingresar Apellido Conductor...!";
+      //       _error = true;
+      //   }
+      // if (!_error && (this.registerFormRegistro.value.gre_conductor_numero_licencia === " " || this.registerFormRegistro.value.gre_conductor_numero_licencia === null))
+      //   {
+      //       this.errorMensaje="Ingresar N° Licencia...!";
+      //       _error = true;
+      //   }
        return _error;
      }
      

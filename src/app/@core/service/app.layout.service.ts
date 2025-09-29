@@ -39,7 +39,7 @@ export class LayoutService {
         ripple: true,
         inputStyle: 'outlined',
         //menuMode: 'slim',
-        menuMode: 'drawer',
+        menuMode: 'static',
         colorScheme: 'light',
         componentTheme: 'indigo',
         scale: 10,

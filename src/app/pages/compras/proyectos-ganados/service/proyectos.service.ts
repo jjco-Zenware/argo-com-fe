@@ -268,4 +268,9 @@ export class ProyectosService {
         const url = `${constantesApiWeb.ordenCompraTraerItems}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    listarUbigeos() {
+        const url = `${constantesApiWeb.listarUbigeos}`;
+        return this.http.get<any>(url);
+    }
 }

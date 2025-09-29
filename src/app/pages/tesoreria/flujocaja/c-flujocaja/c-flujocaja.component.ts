@@ -77,8 +77,8 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
   getListar(){
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-    //console.log('this.frmDatos...', this.frmDatos.value);
-    let anio = 2025;
+    console.log('this.frmDatos...', (this.frmDatos.value.fecini).getFullYear());
+    let anio = (this.frmDatos.value.fecini).getFullYear();
 
     const $getListar = this.tesoreriaService.listarFlujoCaja(anio)
       .subscribe({

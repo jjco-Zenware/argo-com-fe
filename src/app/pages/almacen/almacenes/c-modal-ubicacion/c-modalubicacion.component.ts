@@ -12,7 +12,9 @@ import { AlmacenService } from '../../service/almacenServices';
 export class CModalUbicacionComponent implements OnInit, OnDestroy {
   $listSubcription: Subscription[] = [];
   registerFormCliente!: FormGroup;
-  lstIcons: any; 
+  //lstIcons: any; 
+  lstUbicaciones: any; 
+  lstIcons: any;
 
   constructor(
     public refDatoItem: DynamicDialogRef,
@@ -28,9 +30,9 @@ export class CModalUbicacionComponent implements OnInit, OnDestroy {
   get formCliente() { return this.registerFormCliente.controls; }
 
   ngOnInit(): void {
-    console.log('this.config.data...', this.config.data);
+    //console.log('this.config.data...', this.config.data);
     this.createFormCliente();
-    this.listarItemsTabla();
+    this.listarUbicaciones();
   }
 
   ngOnDestroy() {
@@ -46,7 +48,8 @@ export class CModalUbicacionComponent implements OnInit, OnDestroy {
         idalmacen :  [{ value: this.config.data.idalmacen, disabled: false }],
         nomubicacion : [{ value: this.config.data.nomubicacion, disabled: false }],
         idubicacionpadre : [{ value: this.config.data.idubicacionpadre, disabled: false }],
-        idiconotree: [{ value: this.config.data.idiconotree, disabled: false }],
+        idiconotree: [{ value: 401, disabled: false }],
+        ubicacion: [{ value: 0, disabled: false }],
     });
 }
 
@@ -107,4 +110,25 @@ export class CModalUbicacionComponent implements OnInit, OnDestroy {
   
     }
  
+     listarUbicaciones() {
+    this.almacenService.obtenerItemsTabla(132).subscribe({
+        next: (rpta: any) => {
+          console.info('listarItemsTabla : ', rpta);
+            this.lstUbicaciones = rpta;
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
+    }
+
+    changeUbicacion(value:any) {
+      const selectedUbicacion = this.lstUbicaciones.find((item: any) => item.iditem === value); 
+      console.log('selectedUbicacion...', selectedUbicacion);
+      this.registerFormCliente.get('nomubicacion')?.setValue(selectedUbicacion ? selectedUbicacion.valoritem : '');
+    }
 }

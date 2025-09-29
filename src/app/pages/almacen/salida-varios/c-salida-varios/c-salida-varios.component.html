@@ -7,7 +7,7 @@
                         pTooltip="Nuevo" tooltipPosition="left" (click)="onNuevo()" ></button>
                 </div>                 
                 <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">SALIDA VARIOS</span>
+                    <span class="text-base font-semibold">SALIDA POR CONSUMO</span>
                 </div>  
                        
             </div>
@@ -44,7 +44,7 @@
                         N°
                     </div>
                 </th>
-                <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1" >
+                <!-- <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                        ENVIO <br> SUNAT  
                     </div>
@@ -53,12 +53,12 @@
                     <div class="justify-content-between align-items-center">
                        ESTADO <br> SUNAT  
                     </div>
-                </th>
+                </th> 
                 <th style="width: 80px;" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         N° <br> DOCUMENTO
                     </div>
-                </th>
+                </th>-->
                 <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         ID  
@@ -72,6 +72,11 @@
                 <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         ALMACÉN 
+                    </div>
+                </th>
+                <th style="width: 80px;" class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        TIPO <br> MOVIMIENTO
                     </div>
                 </th>
                 <!--<th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
@@ -108,7 +113,7 @@
                 <td [ngStyle]="{'width':'10px'}">
                     {{rowIndex + 1}}
                 </td>
-                <td>
+                <!-- <td>
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
                         <button *ngIf="data.estado === 'EMI' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3" pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom" pTooltip="Generar Documento" class="p-button-rounded p-button-text text-blue-500" (click)="emitirDocumento(data)"></button>
                         <button *ngIf="data.ind_estado_fel === 1" pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom" pTooltip="Descargar Documento" class="p-button-rounded p-button-text text-green-500" (click)="verDocumento(data)"></button>
@@ -121,12 +126,12 @@
                     <div *ngIf="data.ind_estado_fel !== 0" [ngStyle]="{'width':'50px','text-align': 'center'}">
                         <p-tag [value]="data.nomestadofel" [severity]="getSeverity(data.ind_estado_fel)"></p-tag>
                     </div>
-                </td>
+                </td> 
                 <td>
                     <div [ngStyle]="{'width':'50px'}">
                         {{data.nrofactura }}
                     </div>
-                </td>
+                </td>-->
                 <td >
                     <div [ngStyle]="{'width':'20px'}">
                         {{data.idordencompra}}
@@ -140,6 +145,11 @@
                 <td>
                     <div [ngStyle]="{'width':'70px'}">
                         {{data.nomalmacen | uppercase}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'70px'}">
+                        {{data.destipomovimiento | uppercase}}
                     </div>
                 </td>
                 <!--<td>

@@ -7,12 +7,14 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { AlmacenService } from '../../almacen/service/almacenServices';import { AmarreContableRoutingModule } from './amarrecontable-routing.module';
 import { CAmarreContableComponent } from './c-amarrecontable/c-amarrecontable.component';
+import { CAmarreContableDetComponent } from './c-amarrecontabledet/c-amarrecontabledet.component';
 import { ModalAmarreComponent } from './modal-plan/modal-amarre.component';
 
 @NgModule({
   declarations: [
-    CAmarreContableComponent,
-    ModalAmarreComponent
+    CAmarreContableComponent,    
+    ModalAmarreComponent,
+    CAmarreContableDetComponent
   ],
   imports: [
     CommonModule,

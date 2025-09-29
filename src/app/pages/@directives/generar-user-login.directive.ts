@@ -10,7 +10,6 @@ export class GenerarUserLoginDirective {
   constructor(private el: ElementRef) {}
 
   ngOnInit() {
-    debugger;
     if (this.inputText) {
       const words = this.inputText.split(' ');
       let initials = '';

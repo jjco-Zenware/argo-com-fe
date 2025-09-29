@@ -5,7 +5,11 @@
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
                     <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-file" label="Nuevo"
                         pTooltip="Nuevo" tooltipPosition="left" (click)="onNuevo()" ></button>
-                </div>                
+                </div>         
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-refresh"
+                        pTooltip="Actualizar" tooltipPosition="bottom" (click)="getListar()" ></button>
+                </div>        
                 <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
                     <span class="text-base font-semibold">ALMACENES</span>
                 </div>  
@@ -13,7 +17,7 @@
             </div>
         </div>
 
-        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-12 lg:col-9">
+        <!-- <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid col-12 lg:col-9">
             <div class="col-6 sm:col-6 lg:col-3 md:col-3 -mt-4 h-4rem field">
                 <label class="text-blue-600 font-semibold mb-1 text-base">Oficina</label>
                 <span class="p-fluid mt-1">
@@ -25,7 +29,7 @@
                 <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                     class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
             </div>
-        </form> 
+        </form>  -->
 
         <p-table #dt1 [value]="lstAlmacen" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
@@ -38,16 +42,6 @@
                             N°
                         </div>
                     </th>
-                    <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            ID ALMACEN
-                        </div>
-                    </th>
-                    <th [ngStyle]="{'width':'70px'}" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            OFICINA 
-                        </div>
-                    </th>
                     <th [ngStyle]="{'width':'70px'}" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             NOMBRE 
@@ -58,7 +52,17 @@
                             DIRECCIÓN
                         </div>
                     </th>
-                    <th style="width: 20px;"  class="bg-teal-50 border-1" >
+                    <th style="width: 70px;" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            TIPO
+                        </div>
+                    </th>
+                    <th style="width: 100px;" class="bg-teal-50 border-1" >
+                        <div class="justify-content-between align-items-center">
+                            RESPONSABLE
+                        </div>
+                    </th>
+                    <th style="width: 30px;"  class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             ESTADO
                         </div>
@@ -82,16 +86,6 @@
                     <td [ngStyle]="{'width':'10px'}">
                         {{rowIndex + 1}}
                     </td>
-                    <td >
-                        <div [ngStyle]="{'width':'50px'}">
-                            {{data.idalmacen}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'70px'}">
-                            {{data.nomofi}}
-                        </div>
-                    </td>
                     <td>
                         <div [ngStyle]="{'width':'100px'}">
                             {{data.nomalmacen | uppercase}}
@@ -100,6 +94,16 @@
                     <td>
                         <div [ngStyle]="{'width':'60px'}">
                             {{data.diralmacen | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'60px'}">
+                            {{data.nomtipoalmacen | uppercase}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'60px'}">
+                            {{data.nomusuario | uppercase}}
                         </div>
                     </td>
                     <td>                       
@@ -151,5 +155,5 @@
 
 <p-toast></p-toast>
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
-<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
-acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '350px'}"
+acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined bg-red-500 surface-border text-white"></p-confirmDialog>

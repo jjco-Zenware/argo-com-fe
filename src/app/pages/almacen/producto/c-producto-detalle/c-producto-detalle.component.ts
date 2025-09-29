@@ -43,6 +43,7 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
   registerFormMarca: any = FormGroup;
   lstUnidades: any[]=[];
   lstMonedas: Moneda[] = [];
+lstControlInventario: any;
 
   constructor(
     private fb: FormBuilder,
@@ -70,6 +71,7 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
     this.listarFamilia();    
     this.listarItemsTabla();
     this.listaMonedas() ;
+    this.listarControlInventario();
     
     if (this.idprod > 0) {     
       this.traerUno();
@@ -101,6 +103,9 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
       idmoneda: [{ value: 1, disabled: false }],
       indctrlunidad: [{ value: true, disabled: false }],
       modelo:[{ value: '', disabled: false }],
+      serie:[{ value: '', disabled: false }],
+      lote:[{ value: '', disabled: false }],
+      controlinven:[{ value: '', disabled: false }],
     });
   }
 
@@ -156,7 +161,7 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
     const $traerUno = this.almacenService.traerunoProducto(this.idprod)
       .subscribe({
         next: (rpta:any) => {
-          console.log('rpta.traerUno', rpta.producto[0]);
+          console.log('rpta.traerUno', rpta);
           this.setSpinner(false);          
           this.getSubFamilia(rpta.producto[0].idfamilia); 
           this.listaTag = rpta.producto[0].tags;
@@ -285,13 +290,7 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
     this.errorMensaje="";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-      if (this.registerFormRegistro.value.codproducto === null || this.registerFormRegistro.value.codproducto === '')
-      {
-          this.errorMensaje="Ingresar Código...!";
-          _error = true;
-      }
-
-      if (!_error && this.registerFormRegistro.value.despro === null || this.registerFormRegistro.value.despro === '')
+      if (this.registerFormRegistro.value.despro === null || this.registerFormRegistro.value.despro === '')
       {
           this.errorMensaje="Ingresar Descripción...!";
           _error = true;
@@ -315,9 +314,9 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
           _error = true;
       }
     
-      if (!_error && this.registerFormRegistro.value.codformapago === null)
+      if (!_error && (this.registerFormRegistro.value.controlinven === null || this.registerFormRegistro.value.controlinven === ''))
       {
-            this.errorMensaje="Seleccionar Termino de Pago...!";
+            this.errorMensaje="Seleccionar Control de Inventario...!";
             _error = true;
       }
 
@@ -554,5 +553,21 @@ export class CProductoDetalleComponent implements OnInit, OnDestroy{
         this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Precio Venta Máximo no puede ser Menor que Precio Venta Mínimo..."});  
         //this.registerFormRegistro.get('preciovenmax').setValue( this.premax);
       }
+    }
+
+    listarControlInventario() {
+    this.comprasService.obtenerItemsTabla(134).subscribe({
+        next: (rpta: any) => {
+            this.lstControlInventario = rpta;
+            console.log('lstControlInventario : ', rpta);
+        },
+        error: (err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+    });
+  
     }
 }

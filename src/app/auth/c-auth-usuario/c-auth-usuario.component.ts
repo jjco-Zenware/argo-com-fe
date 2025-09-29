@@ -112,11 +112,9 @@ export class CAuthUsuarioComponent implements OnInit, OnDestroy {
   }
 
   validarloginAzure(nombreUser:string|undefined, emailUser:string){
-    debugger;
     const $validarloginAzure = this.authService.validarloginAzure({ loginUser: this.loginUser.value, nombreUser: nombreUser, emailUser: emailUser, moduloAPP})
     .subscribe({
       next: (rpta: I_rptaDataLogin) => {
-        debugger;
         this.isLoading = false;
         if (rpta.estado != 1) {
           this.messageService.clear();
