@@ -29,7 +29,7 @@ export class LocalStorageService {
 
   obtenerLogin(): string {
     //return this.obtenerDataGeneral().login??'';
-    return 'ZenWare';
+    return 'HR Huascaran';
   }
 
   obtenerToken():string {

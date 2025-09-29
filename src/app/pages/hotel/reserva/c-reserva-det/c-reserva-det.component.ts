@@ -16,11 +16,11 @@ import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/mo
 import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 
 @Component({
-  selector: 'app-c-dato-venta',
-  templateUrl: './c-dato-venta.component.html',
-  styleUrls: ['./c-dato-venta.component.scss']
+  selector: 'app-c-reserva-det',
+  templateUrl: './c-reserva-det.component.html',
+  styleUrls: ['./c-reserva-det.component.scss']
 })
-export class DatoVentaComponent implements OnInit, OnDestroy{
+export class CReservaDetComponent implements OnInit, OnDestroy{
   @Input() IA_data: any;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
@@ -130,12 +130,6 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
     this.listarItemsTabla(); 
     this.listarItemsTablaUnidad() ;
     this.listarItemsTablaComprobante();
-    this.listarCentroCosto();
-    this.listarItemsTablaSunat();
-    this.listarTipoDetraccion();
-    this.listarTipoPagoDetraccion();
-    this.getMontoAnticipo(0);
-    this.listarTipoRetencion();
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -157,10 +151,6 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
       this.verAdjunto = true;      
       this.traerUno();
     }else{
-      //this.verControles('NOA');
-      this.cargarProyectos(1); 
-      this.gettipocambiodia(new Date);
-      this.changeAplicaDetra(false);
       this.dataAdjunto ={
         idCliente: 0,
         codtipoproc: 8,
@@ -191,7 +181,7 @@ createFormRegistro() {
   this.registerFormRegistro = this.formBuilder.group({
     idproyecto: [{ value: 0, disabled: false }],
     idtipoproyecto: [{ value: 0, disabled: false }],
-    idtipodocprc: [{ value: 6, disabled: false }],
+    idtipodocprc: [{ value: 23, disabled: false }],
     idoportunidad: [{ value: 0, disabled: false }],
     sustentodoc: [{ value: '', disabled: false }],
     idrequerimiento: [{ value: 0, disabled: false }],
@@ -284,7 +274,8 @@ createFormRegistro() {
   mostrarBotones(data:any){
     console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
     switch (data) {
-      case 'PEN':
+      case 'CKI':
+      case 'REG':
         this.verbtnGrabar = true;
         this.verbtnPreliminar= true;
         this.verbtnOrden = false;
@@ -298,7 +289,7 @@ createFormRegistro() {
         this.verbtnAcciones = false;
         this.onlyRead = false;
       break;      
-      case 'EMT':
+      case 'CKO':
         this.verbtnGrabar = true;
         this.verbtnPreliminar= true;
         this.verbtnOrden = true;
@@ -370,8 +361,7 @@ createFormRegistro() {
              if (rpta.ordencompra[0].cuotas !== undefined) {
               this.listaCuotas =  rpta.ordencompra[0].cuotas; 
             }   
-
-            this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
+ 
           this.visibleDocument = false; 
           this.visibleAsiento = false;
 
@@ -389,13 +379,7 @@ createFormRegistro() {
           this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
           this.nrocuotas = rpta.ordencompra[0].nrocuotas 
           this.getBusquedaRUC();
-          this.changeAplicaDetra(rpta.ordencompra[0].inddetraccion_ctb);
-          this.getMontoAnticipo(rpta.ordencompra[0].monto_anticipo);
           this.setSpinner(false);       
-          this.changeEditaDetra(rpta.ordencompra[0].indmanualdetraccion);
-          this.changeProyecto(rpta.ordencompra[0].idproyecto);
-          this.gettipocambiodia(new Date(this.serviceUtilitario.formatFecha(rpta.ordencompra[0].fecemision)));
-          this.changeAplicaSunat2(rpta.ordencompra[0].indsunatreg);
          },
          error:(err)=>{
              this.setSpinner(false);
@@ -559,8 +543,7 @@ createFormRegistro() {
               if (rpta.ordencompra[0].cuotas !== undefined) {
                 this.listaCuotas =  rpta.ordencompra[0].cuotas; 
               }   
-  
-              this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
+   
             this.visibleDocument = false; 
             this.visibleAsiento = false;
   
@@ -576,9 +559,6 @@ createFormRegistro() {
             this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
             this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
             this.nrocuotas = rpta.ordencompra[0].nrocuotas
-            //agregar cuotas
-            this.prcCuota2(1);
-            
             this.setSpinner(false);
           },
           error:(err)=>{
@@ -734,38 +714,6 @@ createFormRegistro() {
   });
   }
    
-  getOrigen(data:any){
-    console.log('getOrigen...', data);
-    //this.registerFormRegistro.get('idcentrocosto')?.setValue('');
-    switch (data) {
-      case 'OPO':
-        this.cargarProyectos(1);
-        //this.verReferencia = false;
-        this.verProyecto = true;
-        break;
-      case 'REQ':
-        this.cargarProyectos(4);
-        //this.verReferencia = true;
-        this.verProyecto = true;
-        break;        
-      case 'OTR':
-        this.cargarProyectos(0);
-        //this.verReferencia = false;
-        this.verProyecto = true;
-        break;
-      // case 'VED':
-      //   this.cargarProyectos(3);
-      //   break;
-      // case 'NOA':
-      //   this.registerFormRegistro.get('idproyecto').setValue(0);
-      //   break;
-    }    
-    //this.registerFormRegistro.get('sustentodoc').setValue('');  
-    
-    //this.verControles(data);
-
-  }
-
   getItem(data: any,index: number) {
     data.nroindex = index;
     data.idordencompra = this.idOrdenC;
@@ -790,7 +738,6 @@ createFormRegistro() {
         this.lstItemOC.push(rpta.objeto);
         console.log('this.lstItemOC',this.lstItemOC);
       }
-      this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
     });
   }
 
@@ -827,39 +774,12 @@ createFormRegistro() {
         this.s_igv = 0;
         this.montoTotal = 0;
       }else{
-        this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
       }
       
       }
   });
   }
-
-  cargarProyectos(dato:any){
-    let idcliente = this.registerFormRegistro.value.idproveedor;
-    console.log('dato...',dato,idcliente);
-    this.ordencompraService.portipoProyectoList(dato).subscribe({
-      next: (rpta: any) => {
-      this.lstProyectos = rpta;
-      console.log('rpta...',rpta);
-      console.log('cargarProyectos...',this.lstProyectos);
-      //this.changeProyecto(this.registerFormRegistro.value.idproyecto)
-
-          },
-
-      error: (err) => {
-      this.messageService.clear();
-      this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-          });
-      },
-      complete: () => {
-      },
-  });
-  } 
-
-
+  
   NuevoPersona(){
     const objet = {
       idrolpersona:'PRO'
@@ -1161,111 +1081,12 @@ createFormRegistro() {
   });     
   }
 
-  prcCuota(data:number)  {
-    console.log('prcCuota...', data);
-    if (this.registerFormRegistro.value.monto_pen_pago === 0) {
-      this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Aún no existe Monto de Pago para agregar cuotas'});
-      this.registerFormRegistro.get('nrocuotas')?.setValue(data);
-      this.nrocuotas = 0;
-          return;
-    }
-    this.nrocuotas = data;
-    this.listaCuotas=[];
-  const _monto = this.registerFormRegistro.value.monto_pen_pago/data;
-
-  let fecemision;
-    fecemision = this.registerFormRegistro.value.fecemision;
-
-    if (fecemision.toString().length === 10) {
-        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision)); 
-      }
-
-  //const _fecha =new Date(this.serviceUtilitario.formatFecha(this.registerFormRegistro.value.fecemision));
-  console.log('_fecha...', fecemision);
-  console.log('_monto...', _monto);
-  let tot_dia = this.registerFormRegistro.value.nrodias/data;
-  console.log('tot_dia...', tot_dia);
-
-  //let dia_tot = 0;
-
-   for(let i = 0; i < data; i++) {
-    console.log('index...', i);
-    console.log('tot_dia...', tot_dia);
-
-    let dias = (tot_dia * i) + tot_dia
-    
-    const newDate = this.addDays(fecemision, dias );
-    const objet = {
-      fechacuota: newDate,
-      monto: _monto,
-      idcuotadoc:0
-    }
-    
-    //tot_dia = tot_dia + tot_dia;    
-    this.listaCuotas.push(objet);
-   }
-
-    // 
-    // let _monto = 0;
-
-    // let total = this.listaCuotas.map(({monto}) => monto).reduce((acc, value) => acc + value, 0);
-    // console.log('total', total);
-    // if (total > this.registerFormRegistro.value.monto_pen_pago) {
-    //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'El Monto de cuotas no debe exceder el Monto Neto Pago'});
-    //       return;
-    // }
-
-    // if (this.listaCuotas.length === 0) {
-    //   _monto = this.registerFormRegistro.value.monto_pen_pago
-    // }else{
-    //   _monto = this.registerFormRegistro.value.monto_pen_pago - total
-    // }
-
-    // const objet = {
-    //   fechacuota: newDate,
-    //   monto: _monto,
-    //   idcuotadoc:0
-    // }
-    // this.listaCuotas.push(objet);
-  }
-
-  prcCuota2(data:number)  {    
-    this.nrocuotas = data;
-    console.log('monto_pen_pago...', this.registerFormRegistro.value.monto_pen_pago);
-    this.listaCuotas=[];
-    const _monto = this.registerFormRegistro.value.monto_pen_pago/data;
-    console.log('_monto...', _monto);
-    let tot_dia = this.registerFormRegistro.value.nrodias
-    console.log('tot_dia...', tot_dia);
-
-     let fecemision;
-    fecemision = this.registerFormRegistro.value.fecemision;
-
-    if (fecemision.toString().length === 10) {
-        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision)); 
-      }
-
-    const newDate = this.addDays(fecemision, tot_dia);
-    const objet = {
-      fechacuota: newDate,
-      monto: _monto,
-      idcuotadoc:0
-    }  
-    this.listaCuotas.push(objet);
-  }
-  
-  eliminarCuota(data:any, index :number)  {
-    console.log('index', index);
-    this.listaCuotas.splice(index, 1)
-  }
-
   editarRegistro(data: any) {
     this.mensajeSpinner = "Actualizando...";
     console.log('editarRegistro...', data);   
   }
 
   changeFechaDesde(event: Date) {
-    this.gettipocambiodia(event);
     this.minimaFechaHasta = event;
     console.log('changeFechaDesde event', event);
     let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
@@ -1285,7 +1106,6 @@ createFormRegistro() {
     // var diff = fin - inicio;
     // let numerDiff = (diff/(1000*60*60*24))+1;
     this.registerFormRegistro.get('nrodias')?.setValue(diferenci);
-    this.prcCuota(this.nrocuotas);
   }
 
   changeFechaHasta(event: Date) {
@@ -1306,7 +1126,6 @@ createFormRegistro() {
     // var diff = fin - inicio;
     // let numerDiff = (diff/(1000*60*60*24))+1;
     this.registerFormRegistro.get('nrodias')?.setValue(diferenci);
-    this.prcCuota(this.nrocuotas);
   }
 
   addDays(date: Date, days: number): Date {
@@ -1324,7 +1143,6 @@ createFormRegistro() {
 
     let fecha = this.addDays(fecemision, parseInt(this.registerFormRegistro.value.nrodias));
     this.registerFormRegistro.get('fecvencimiento')?.setValue( fecha );
-    this.prcCuota(this.nrocuotas);
   }
 
 
@@ -1340,302 +1158,10 @@ createFormRegistro() {
     this.registerFormRegistro.get('nrodias')?.setValue( diff/(1000*60*60*24) );
   }
 
-  listarCentroCosto(){    
-    this.setSpinner(true);
-      this.mensajeSpinner = 'Cargando...!';
-
-    const $getListarOrdenCompra = this.comprasService.listarCentroCosto()
-      .subscribe({
-        next: (rpta:any) => {
-            this.lstCentroCosto = rpta;
-            console.log('listarCentroCosto...', this.lstCentroCosto);
-            this.setSpinner(false);
-        },
-        error:(err)=>{
-            this.serviceSharedApp.messageToast()
-        },
-        complete:() => {
-            this.setSpinner(false);
-        }
-      });
-    this.$listSubcription.push($getListarOrdenCompra)
-  }
-
-  changeProyecto(value:any){
-    console.log('changeProyecto...', value);
-    console.log('this.lstProyectos...', this.lstProyectos);
-    //let _codcentrocosto = this.lstProyectos.filter((x: { idproyecto: number; }) => x.idproyecto === value);
-    //console.log('_codcentrocosto...', _codcentrocosto);
-    //this.registerFormRegistro.get('idcentrocosto')?.setValue(_codcentrocosto[0].idcentrocosto);
-    
-    this.cargarOrdenCompra();
-  }
-
-  cargarOrdenCompra(){
-    let id = this.registerFormRegistro.get('idproyecto')?.value;
-    this.ordencompraService.ordenCompraProyectoList(id).subscribe({
-      next: (rpta: any) => {
-        console.info('lstOrdenC : ', rpta.ordenescompra);
-          this.lstOrdenC = rpta.ordenescompra;
-      },
-      error: (err) => {
-      console.info('error : ', err);
-      this.serviceSharedApp.messageToast()
-      },
-      complete: () => {
-      },
-  }); 
-  }
-
-  recalcularRegistro(dato:any){    
-
-    console.log('recalcularRegistro...', dato);
-    if (this.idOrdenC > 0) {
-      this.setSpinner(true);
-    this.mensajeSpinner = 'Recalculando...!';
-      let subtotal = this.lstItemOC.map(({preciocostototal}) => preciocostototal).reduce((acc, value) => acc + value, 0);
-
-      const objeto = {
-        subtotal: subtotal,
-        porc_detraccion : dato,
-        tc : this.registerFormRegistro.get('tc')?.value,
-        idmoneda : this.registerFormRegistro.get('idmoneda')?.value,
-        nrocuotas : this.nrocuotas,
-        nrodias : this.registerFormRegistro.get('nrodias')?.value,
-      }
-      const $recalcularRegistro = this.comprasService.recalcularRegistro(objeto)
-      .subscribe({
-        next: (rpta:any) => {
-            console.log('recalcularRegistro...', rpta);
-            this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(rpta[0].s_monto_valor_venta_CTB);
-            this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(rpta[0].s_monto_igv_CTB);
-            this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(rpta[0].s_monto_total_CTB);
-            this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(rpta[0].monto_detraccion_mn_CTB);
-            this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta[0].s_monto_neto_CTB);
-
-            /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
-            this.s_monto = rpta[0].s_monto_valor_venta_CTB;
-            this.s_igv = rpta[0].s_monto_igv_CTB;
-            this.montoTotal = rpta[0].s_monto_total_CTB;
-
-            this.listaCuotas=[];
-
-            const lista = rpta[0].cuotas
-            
-            for(let i = 0; i < lista; i++) {                  
-              const objet = {
-                fechacuota: new Date(lista[i].fechacuota),
-                monto: lista[i].monto,
-                idcuotadoc:0
-              }
-              this.listaCuotas.push(objet);
-            }
-
-            this.listaCuotas =  rpta[0].cuotas; 
-            this.setSpinner(false);
-        },
-        error:(err)=>{
-          this.setSpinner(false);
-            this.serviceSharedApp.messageToast()
-        },
-        complete:() => {
-            this.setSpinner(false);
-        }
-      });
-    this.$listSubcription.push($recalcularRegistro)
-    }
-  }
-
-  listarItemsTablaSunat() {
-    this.contabilidadService.listarItemsTablaSunat(1).subscribe({
-        next: (rpta: any) => {
-          console.info('listarItemsTablaSunat : ', rpta);
-          if (this.registerFormRegistro.get('inddetraccion_ctb')?.value === true) {
-            this.lstSunatTrans = rpta.filter((x: { codsunat: number; }) => (x.codsunat === 30 || x.codsunat === 31 || x.codsunat === 32|| x.codsunat === 33));
-            this.registerFormRegistro.get('fel_sunat_transaction')?.setValue(30);
-          }else{
-            this.lstSunatTrans = rpta.filter((x: { codsunat: number; }) => (x.codsunat === 1 || x.codsunat === 2 || x.codsunat === 4|| x.codsunat === 29 || x.codsunat === 34|| x.codsunat === 35));
-            this.registerFormRegistro.get('fel_sunat_transaction')?.setValue(1);
-          }
-            
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });
-  
-    }
- 
-    gettipocambiodia(fecha:any){     
-       const objeto = {
-            anio: fecha.getFullYear(),
-            mes: fecha.getMonth() + 1,
-            dia: fecha.getDate(),
-        };   
-                console.log('gettipocambiodia', objeto);
-
-      // let fecha = new Date();
-      //   const objeto = {
-      //     anio: fecha.getFullYear(),
-      //     mes: fecha.getMonth()+1,
-      //     dia: fecha.getDate()
-      //   }
-    
-        const $gettipocambio = this.proyectosService.gettipocambiodia(objeto)
-          .subscribe({
-            next: (rpta:any) => {
-                this.setSpinner(false);
-                console.log('rpta gettipocambiodia', rpta);
-                console.log('rpta valTipo', rpta.valTipo);
-                this.registerFormRegistro.get('tc')?.setValue(parseFloat( rpta.valTipo));
-            },
-            error:(err)=>{
-                this.setSpinner(false);
-                this.serviceSharedApp.messageToast()
-            },
-            complete:() => {
-              this.setSpinner(false);
-            }
-          });
-        this.$listSubcription.push($gettipocambio)
-    
-      }
-
-    listarTipoDetraccion() {
-      this.contabilidadService.listarItemsTablaSunat(6).subscribe({
-        next: (rpta: any) => {
-          console.info('listarTipoDetraccion : ', rpta);
-            this.lstTipoDetra = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });     
-    }
-
-    listarTipoPagoDetraccion() {
-      this.contabilidadService.listarItemsTablaSunat(7).subscribe({
-        next: (rpta: any) => {
-          console.info('listarTipoPagoDetraccion : ', rpta);
-            this.lstTipoPagoDetra = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });     
-    }
-
-    changeAplicaDetra(value:any){
-      console.log('changeAplicaDetra...', value);
-      this.listarItemsTablaSunat();
-      if (!value) {
-      console.log('entro...', value);
-        this.verDetraccion = false;
-        this.registerFormRegistro.get('porc_detraccion').disable();
-        this.registerFormRegistro.get('monto_detraccion_mn_CTB').disable();
-        this.registerFormRegistro.get('indmanualdetraccion').disable();
-        this.registerFormRegistro.get('detraccion_tipo').disable();
-        this.registerFormRegistro.get('detraccion_tipo_pago').disable();
-
-        this.registerFormRegistro.get('retencion_tipo').enable();
-        this.registerFormRegistro.get('monto_retencion').enable();
-        this.registerFormRegistro.get('retencion_base_imponible').enable();
-
-        this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
-        this.registerFormRegistro.get('porc_detraccion')?.setValue(0);
-        this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(0);
-      }else{
-      console.log('false...', value);
-        this.verDetraccion = true;
-        this.registerFormRegistro.get('porc_detraccion').enable();
-        this.registerFormRegistro.get('monto_detraccion_mn_CTB').enable();
-        this.registerFormRegistro.get('indmanualdetraccion').enable();
-        this.registerFormRegistro.get('detraccion_tipo').enable();
-        this.registerFormRegistro.get('detraccion_tipo_pago').enable();
-
-        this.registerFormRegistro.get('retencion_tipo').disable();
-        this.registerFormRegistro.get('monto_retencion').disable();
-        this.registerFormRegistro.get('retencion_base_imponible').disable();
-
-        this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
-        this.registerFormRegistro.get('monto_retencion')?.setValue(0);
-        this.registerFormRegistro.get('retencion_base_imponible')?.setValue(0);
-      }
-      
-    }
-
-    getMontoAnticipo(value:any){
-      if (value === 4) {
-        this.registerFormRegistro.get('monto_anticipo').enable();
-      }else{
-        this.registerFormRegistro.get('monto_anticipo').disable();
-      }
-     }
-
-     listarTipoRetencion() {
-      this.contabilidadService.listarItemsTablaSunat(8).subscribe({
-        next: (rpta: any) => {
-          console.info('listarTipo : ', rpta);
-            this.lstTipoRetencion = rpta;
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });     
-    }
-
-    changeEditaDetra(value:any){  
-      if (value) {
-        this.onlyReadMonto = false;
-      }else{
-        this.onlyReadMonto = true;
-      }
-    }
-
     getDatos(dato:any){
         console.log('getDatos...', dato);
         let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
         this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
         this.registerFormRegistro.get('direccion')?.setValue(provee[0].direcresumen);
-    }
-
-    changeAplicaSunat(value:any){
-      console.log('changeAplicaSunat...', value);
-      
-      if (value) {
-      console.log('entro...', value);
-      this.onlyReadSunat = false;
-      }else{
-      console.log('false...', value);
-      this.onlyReadSunat = true;
-      this.registerFormRegistro.get('nroserie_ctb')?.setValue('');
-      this.registerFormRegistro.get('nrodocumento_ctb')?.setValue('');
-      }
-      
-    }
-
-    changeAplicaSunat2(value:any){
-      console.log('changeAplicaSunat...', value);
-      
-      if (value) {
-      console.log('entro...', value);
-      this.onlyReadSunat = false;
-      }else{
-      console.log('false...', value);
-      this.onlyReadSunat = true;
-      }
-      
     }
 }
