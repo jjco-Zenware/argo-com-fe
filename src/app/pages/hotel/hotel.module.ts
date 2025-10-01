@@ -9,9 +9,7 @@ import { HotelRoutingModule } from './hotel-routing.module';
 
 
 @NgModule({
-  declarations: [   
-         
-  ],
+  declarations: [ ],
   imports: [
     CommonModule,
     SharedAppModule,

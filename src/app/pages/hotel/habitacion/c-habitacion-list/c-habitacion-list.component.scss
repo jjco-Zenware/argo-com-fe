@@ -1,0 +1,123 @@
+.habitacion-card {
+  background: #ffffff;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    border-color: #007ad9;
+  }
+
+  &.disponible {
+    border-color: #28a745;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fff9 100%);
+    
+    &:hover {
+      border-color: #1e7e34;
+    }
+  }
+
+  &.ocupada {
+    border-color: #dc3545;
+    background: linear-gradient(135deg, #ffffff 0%, #fff8f8 100%);
+    
+    &:hover {
+      border-color: #c82333;
+    }
+  }
+
+  &.mantenimiento {
+    border-color: #ffc107;
+    background: linear-gradient(135deg, #ffffff 0%, #fffef7 100%);
+    
+    &:hover {
+      border-color: #e0a800;
+    }
+  }
+
+  &.limpieza {
+    border-color: #17a2b8;
+    background: linear-gradient(135deg, #ffffff 0%, #f7feff 100%);
+    
+    &:hover {
+      border-color: #138496;
+    }
+  }
+}
+
+.habitacion-icon {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+
+  i {
+    font-size: 2.5rem;
+    transition: all 0.3s ease;
+  }
+}
+
+.habitacion-nombre {
+  margin-bottom: 0.5rem;
+  
+  span {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333333;
+    display: block;
+    line-height: 1.2;
+  }
+}
+
+.habitacion-estado {
+  display: flex;
+  justify-content: center;
+  
+  .p-badge {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .habitacion-card {
+    height: 130px;
+    padding: 0.75rem;
+  }
+  
+  .habitacion-icon i {
+    font-size: 2rem;
+  }
+  
+  .habitacion-nombre span {
+    font-size: 0.85rem;
+  }
+}
+
+.p-blockui {
+  .flex {
+    color: #007ad9;
+    font-weight: 500;
+  }
+  
+  .p-progress-spinner {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+.pi-home.text-6xl {
+  color: #dee2e6 !important;
+}

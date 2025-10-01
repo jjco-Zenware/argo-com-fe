@@ -1,0 +1,56 @@
+    <div class="card m-4">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">                 
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-base font-semibold">HABITACIONES</span>
+                </div>           
+            </div>
+        </div>
+    </div>
+
+    <div class="card m-4">
+        <div class="grid" *ngIf="listadoHabitacion.length > 0; else noHabitaciones">
+            <div class="col-6 md:col-4 lg:col-3 xl:col-2" 
+                 *ngFor="let habitacion of listadoHabitacion; trackBy: trackByHabitacion">
+                <div class="habitacion-card" 
+                     [class.ocupada]="habitacion.estadoHabitacion === 'OCUPADA'"
+                     [class.disponible]="habitacion.estadoHabitacion === 'DISPONIBLE'"
+                     [class.mantenimiento]="habitacion.estadoHabitacion === 'MANTENIMIENTO'"
+                     [class.limpieza]="habitacion.estadoHabitacion === 'LIMPIEZA'"
+                     pTooltip="{{habitacion.tipoHabitacion}} - {{habitacion.estadoHabitacion}}"
+                     tooltipPosition="top"
+                     (click)="getHabitacion(habitacion)">
+                    
+                    <div class="habitacion-icon">
+                        <i [class]="habitacion.icono || 'pi pi-home'" 
+                           [style.color]="getEstadoColor(habitacion.estadoHabitacion)"></i>
+                    </div>
+                    
+                    <div class="habitacion-nombre">
+                        <span>{{habitacion.nomHabitacion}}</span>
+                    </div>
+                    
+                    <div class="habitacion-estado">
+                        <p-badge [value]="habitacion.estadoHabitacion" 
+                                [severity]="getEstadoSeverity(habitacion.estadoHabitacion)"
+                                [style.fontSize]="'0.7rem'">
+                        </p-badge>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <ng-template #noHabitaciones>
+            <div class="flex flex-column align-items-center justify-content-center p-6">
+                <i class="pi pi-home text-6xl text-400 mb-3"></i>
+                <span class="text-xl text-500">No hay habitaciones disponibles</span>
+            </div>
+        </ng-template>
+    </div>
+
+    <p-blockUI [blocked]="blockedDocument">
+        <div class="flex align-items-center justify-content-center">
+            <p-progressSpinner></p-progressSpinner>
+            <span class="ml-2">{{mensajeSpinner}}</span>
+        </div>
+    </p-blockUI>
