@@ -1,3 +1,14 @@
+.custom-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 1rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+  min-width: 60px;
+  box-shadow: none;
+  letter-spacing: 0.5px;
+}
 .habitacion-card {
   background: #ffffff;
   border: 2px solid #e9ecef;
@@ -19,7 +30,7 @@
     border-color: #007ad9;
   }
 
-  &.disponible {
+  /*&.disponible {
     border-color: #28a745;
     background: linear-gradient(135deg, #ffffff 0%, #f8fff9 100%);
     
@@ -53,7 +64,7 @@
     &:hover {
       border-color: #138496;
     }
-  }
+  }*/
 }
 
 .habitacion-icon {
@@ -82,15 +93,26 @@
 }
 
 .habitacion-estado {
+.habitacion-estado {
   display: flex;
   justify-content: center;
-  
-  .p-badge {
-    font-size: 0.7rem !important;
-    padding: 0.25rem 0.5rem !important;
-  }
 }
 
+.habitacion-estado .p-badge {
+  font-size: 0.7rem !important;
+  padding: 0.25rem 0.5rem !important;
+  background: none !important;
+  background-color: inherit !important;
+  box-shadow: none !important;
+}
+.habitacion-estado .p-badge, .habitacion-estado .p-badge.p-badge {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.5rem !important;
+    background: inherit !important;
+    background-color: inherit !important;
+    box-shadow: none !important;
+}
+  
 @media (max-width: 768px) {
   .habitacion-card {
     height: 130px;
@@ -120,4 +142,5 @@
 
 .pi-home.text-6xl {
   color: #dee2e6 !important;
+}
 }

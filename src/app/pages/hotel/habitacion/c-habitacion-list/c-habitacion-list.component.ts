@@ -76,7 +76,7 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     console.log('Habitación seleccionada:', habitacion);
   }
 
-  getEstadoColor(estado: string): string {
+  /*getEstadoColor(estado: string): string {
     switch (estado?.toUpperCase()) {
       case 'DISPONIBLE':
         return '#28a745';
@@ -104,6 +104,6 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       default:
         return 'secondary';
     }
-  }
+  }*/
 
 }
