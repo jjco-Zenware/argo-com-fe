@@ -124,7 +124,7 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     console.log('Reservar habitación:', item);
     const ref = this.dialogService.open(CmReservaHabitacionComponent, {
       data: item,
-      header: item.nomtrx + ' - ' + item.nomHabitacion,
+      header: item.nomHabitacion,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '40%'

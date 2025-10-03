@@ -121,3 +121,15 @@
         </div>
     </div>
 </form>
+<div class="flex justify-content-end mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+    <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem"
+        (click)="guardar()"></button>
+</div>
+
+<p-blockUI [blocked]="blockedDocument">
+    <div class="flex align-items-center justify-content-center">
+        <p-progressSpinner></p-progressSpinner>
+        <span class="ml-2">{{mensajeSpinner}}</span>
+    </div>
+</p-blockUI>
+<p-toast></p-toast>
