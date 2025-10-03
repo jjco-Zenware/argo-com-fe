@@ -74,7 +74,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     this.frmDatos = this.fb.group({
       idproyecto: [{ value: 0, disabled: false }],
       idtipoproyecto: [{ value: 0, disabled: false }],
-      idtipodocprc: [{ value: 23, disabled: false }],
+      idtipodocprc: [{ value: 201, disabled: false }],
       idoportunidad: [{ value: 0, disabled: false }],
       sustentodoc: [{ value: '', disabled: false }],
       idrequerimiento: [{ value: 0, disabled: false }],
