@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
+import { c_habitacion, constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { dOperacion, Moneda } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
@@ -150,7 +150,7 @@ visXperfil: boolean = true;
     
     const objeto = {
       ...this.frmDatos.value,
-      idtipodocprc: 23
+      idtipodocprc: c_habitacion.tipoDocPRC //23
     }
 
     const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)

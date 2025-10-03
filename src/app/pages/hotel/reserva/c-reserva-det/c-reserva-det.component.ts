@@ -1,7 +1,7 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { constantesLocalStorage, mensajesQuestion } from '@constantes';
+import { c_habitacion, constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -181,7 +181,7 @@ createFormRegistro() {
   this.registerFormRegistro = this.formBuilder.group({
     idproyecto: [{ value: 0, disabled: false }],
     idtipoproyecto: [{ value: 0, disabled: false }],
-    idtipodocprc: [{ value: 201, disabled: false }],
+    idtipodocprc: [{ value: c_habitacion.tipoDocPRC, disabled: false }],
     idoportunidad: [{ value: 0, disabled: false }],
     sustentodoc: [{ value: '', disabled: false }],
     idrequerimiento: [{ value: 0, disabled: false }],

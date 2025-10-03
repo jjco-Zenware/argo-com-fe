@@ -62,3 +62,6 @@ export const globalVariable = {
   oportunidadId: 0,
 }
 
+export const c_habitacion = {
+  tipoDocPRC: 201
+}
