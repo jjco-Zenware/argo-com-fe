@@ -67,7 +67,7 @@ export class CModalExcTransacHotelComponent {
       idtrx: codigo,
       idusuario: constantesLocalStorage.idusuario,
       descripcion: this.descripcion,
-      iddocumentoprc: this.habitacion.idordencompra,
+      iddocumentoprc: this.habitacion.idnrooperacion,
     }
 
     const $procesarTrx = this.ordencompraService.procesarTrx(objeto).subscribe({
