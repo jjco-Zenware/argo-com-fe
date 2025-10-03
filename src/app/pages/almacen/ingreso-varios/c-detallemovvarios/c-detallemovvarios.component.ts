@@ -165,7 +165,7 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
       terminosdepago: [{ value: '', disabled: false }],
       idalmacen: [{ value: 0, disabled: false }],
       alm_idordencompra: [{ value: 0, disabled: false }],
-      tipomovimiento: [{ value: 0, disabled: false }],
+      tipomovimiento: [{ value: 585, disabled: false }],
     });
   }
 
@@ -907,7 +907,7 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
       this.comprasService.obtenerItemsTabla(133).subscribe({
           next: (rpta: any) => {
             console.info('lstTipoMovimiento : ', rpta);
-              this.lstTipoMovimiento = rpta.filter((x: { coditem: any; }) => x.coditem === 'I');
+              this.lstTipoMovimiento = rpta.filter((x: {iditem: number; coditem: any; }) => x.coditem === 'I' && x.iditem === 585);
           },
           error: (err) => {
           console.info('error : ', err);

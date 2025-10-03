@@ -5,10 +5,10 @@ import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
-import * as FileSaver from 'file-saver';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TesoreriaService } from '../../service/tesoreriaServices';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
+import * as  XLSX  from 'xlsx';
 
 @Component({
   selector: 'app-c-importacion',
@@ -28,7 +28,9 @@ export class CImportacionComponent implements OnInit, OnDestroy{
   lstMonedas: any;
   lstProveedor: any;
   products:any[] = [];
-  selectedColumns:any[] = [];
+  verImportar: boolean = true;
+  ExcelData: any;
+  lstItem: any;
 
   constructor(
       private fb: FormBuilder,
@@ -47,23 +49,6 @@ export class CImportacionComponent implements OnInit, OnDestroy{
   ngOnInit(): void{
       this.createFrm();
       this.listaMonedas();
-      this.cols = [
-        { field: 'enero', header: 'Enero' },
-        { field: 'febrero', header: 'Febrero ' },
-        { field: 'marzo', header: 'Marzo' },
-        { field: 'abril', header: 'Abril' },
-        { field: 'mayo', header: 'Mayo' },
-        { field: 'junio', header: 'Junio' },
-        { field: 'julio', header: 'Julio' },
-        { field: 'agosto', header: 'Agosto' },
-        { field: 'setiembre', header: 'Setiembre' },
-        { field: 'octubre', header: 'Octubre' },
-        { field: 'noviembre', header: 'Noviembre' },
-        { field: 'diciembre', header: 'Diciembre' }
-        
-    ];
-
-    this.selectedColumns = this.cols;
   }
 
   createFrm(){
@@ -109,61 +94,7 @@ export class CImportacionComponent implements OnInit, OnDestroy{
         }
       });
     this.$listSubcription.push($getListar)
-  }
-
-  selectHeaders(tabNumber: any) {
-    if (tabNumber.index === 0) {
-      this.lstExportExcel = this.products;
-    }else{
-      this.lstExportExcel = this.products;
-    }
-  }
-
-
-  getExportarExcel(data :any) {
-    this.lstExportar = [];
-    console.log(data.filteredValue);
-    if (data.filteredValue !== undefined) {
-      this.lstExportExcel = data.filteredValue;
-    }
-    console.log( 'this.lstExportar...',  this.lstExportar);
-
-    
-    for (let i = 0; i < this.lstExportExcel.length; i++) {       
-        const objeto = {
-            'N°': i + 1,
-            'TIPO': this.lstExportExcel[i].nomtipoorden,
-            'N° ORDEN': this.lstExportExcel[i].codigonroorden,
-            'N° RUC': this.lstExportExcel[i].nrodocumento,
-            'PROVEEDOR': this.lstExportExcel[i].nomcomercial,
-            'COD PROYECTO' : this.lstExportExcel[i].codigoproyecto,
-            'NOM PROYECTO' : this.lstExportExcel[i].nomproyecto,
-            'MONEDA': this.lstExportExcel[i].nommoneda,
-            'BASE IMPONIBLE': this.lstExportExcel[i].s_monto,
-            'IGV': this.lstExportExcel[i].s_igv,
-            'TOTAL': this.lstExportExcel[i].s_monto_total,
-            'ESTADO' : this.lstExportExcel[i].nomestado
-            
-        }
-        this.lstExportar.push(objeto);
-    }
-
-    import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, 'Orden Compra');
-      });
-    }
-
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + '_export_'+ EXCEL_EXTENSION);
-  }  
+  } 
   
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
@@ -181,5 +112,77 @@ export class CImportacionComponent implements OnInit, OnDestroy{
 
   }
 
+  ReadExcel(event: any, fubauto: any){
+      let file = event.files[0];
+      let s_nombre = file.name.split('.').pop();  
+          console.log('s_nombre...', s_nombre);
   
+      if (s_nombre != "xlsx" && s_nombre != "xls") {
+          this.messageService.add({severity: 'info', summary: 'Info', detail: "Archivo Incorrecto..." });
+          fubauto.clear();
+          return;
+      }
+  
+      let fileReader = new FileReader();
+      fileReader.readAsBinaryString(file);
+  
+      fileReader.onload = (e) =>{
+          var workBook = XLSX.read(fileReader.result,{type:'binary'});
+          console.log('workBook...', workBook);
+          var sheetNames = workBook.SheetNames;
+          this.ExcelData = XLSX.utils.sheet_to_json(workBook.Sheets[sheetNames[0]])
+          console.log('Excel...', this.ExcelData);
+         
+      // const excelDateToJSDate = (serial:any) => {
+      //   const utc_days = Math.floor(serial - 25569);
+      //   const utc_value = utc_days * 86400; // segundos
+      //   const date_info = new Date(utc_value * 1000);
+      //   return date_info.toISOString().split('T')[0]; // formato YYYY-MM-DD
+      // };
+  
+      
+         this.ExcelData.forEach((item: any) => {        
+           this.lstItem.push(item)
+         });
+      }
+     
+      console.log( 'listaitems...' ,this.lstItem);
+      fubauto.clear();
+    }
+
+  ReadExcel2(event: any, fubauto: any){
+      let file = event.files[0];
+      let s_nombre = file.name.split('.').pop();  
+          console.log('s_nombre...', s_nombre);
+  
+      if (s_nombre != "xlsx" && s_nombre != "xls") {
+          this.messageService.add({severity: 'info', summary: 'Info', detail: "Archivo Incorrecto..." });
+          fubauto.clear();
+          return;
+      }
+  
+       const reader = new FileReader();
+
+        reader.onload = (e) => {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          console.log(jsonData);
+
+          jsonData.forEach((item: any) => {       
+            item.descripcion = item.DESCRIPCIÓN; 
+           this.lstItem.push(item)
+         });
+
+        };
+
+        reader.readAsArrayBuffer(file);
+     
+      
+      fubauto.clear();
+    }
 }

@@ -18,7 +18,7 @@ import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 export class ModalAmarreComponent implements OnInit, OnDestroy {
 
   $listSubcription: Subscription[] = [];
-  registerFormRegistro: any= FormGroup;
+  registerFormRegistro!: FormGroup;
   lstDocumentoPrc: any[]=[];
   annio: Date = new Date;
   errorMensaje!: string;

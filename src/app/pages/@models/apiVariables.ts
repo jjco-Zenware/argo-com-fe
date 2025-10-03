@@ -258,5 +258,7 @@ export const constantesApiWeb = {
     listarUbigeos: controllerComercial + '/listarubigeos',
     rdlcProducto: controllerMain + '/productordlc',
 
+     asientocfgTraeruno: controllerContabilidad + '/asientocfgtraeruno/',
+    asientoPrc: controllerContabilidad + '/asientoprc',
     listarhabitacion: controllerHotel + '/listarhabitacion',
 }

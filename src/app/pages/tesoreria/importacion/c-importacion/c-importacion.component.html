@@ -26,93 +26,69 @@
                 optionValue="idmoneda" appendTo="body" class="p-inputtext-sm"></p-dropdown>
             </span>                                      
         </div>           -->
+          
         
-        <div class="field col-12 md:col-2 -mt-4 gap-2">
+        <div class="field flex col-12 md:col-2 -mt-4 gap-2">
             <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                 class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
             <!-- <button pButton type="button" pTooltip="Exportar Excel" tooltipPosition="bottom" 
                 class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button> -->
+            <div class="flex justify-content-end">
+                <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" 
+                    (uploadHandler)="ReadExcel2($event, fubauto)" [auto]="true" chooseLabel="Seleccionar Archivo" 
+                    chooseIcon="pi pi-folder" class="text-sm w-auto" pTooltip="Importar Archivo">
+                </p-fileUpload>
+            </div>
         </div>
     </form> 
 
-    <!-- <p-tabView (onChange)="selectHeaders($event);" styleClass="-mt-4">
+    <p-tabView >
         <p-tabPanel>
             <ng-template pTemplate="header">
                 <div class="flex align-items-center gap-2">
                     <i class="fa-solid fa-money-bill-transfer"></i>
                     <span class="font-bold white-space-nowrap m-0">
-                        Ingresos
+                        BBVA
                     </span>
                 </div>
             </ng-template>
-            <p-table [columns]="selectedColumns" [value]="products" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
-            styleClass="p-datatable-sm card border-1 border-round surface-border ">
-    
-            <ng-template pTemplate="caption">       
-                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" appendTo="body"
-                selectedItemsLabel="{0} Columnas Seleccionadas" styleClass="p-inputtext-sm text-blue-600" placeholder="Seleccionar Columnas"></p-multiSelect>        
-            </ng-template>
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th  class="bg-teal-50 border-1">Razón Social</th>
-                    <th  class="bg-teal-50 border-1" *ngFor="let col of columns" >
-                        {{col.header}}
-                    </th>
-                </tr>
-            </ng-template>
            
-            <ng-template pTemplate="body" let-product let-columns="columns">
-                <tr>
-                    <td>{{product.name}}</td>
-                    <td *ngFor="let col of columns">
-                        {{product[col.field]}}
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
+            <p-table [value]="lstItem"  class="ml-2" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                styleClass="p-datatable-sm">
+                <!-- [paginator]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[20,40,60]" currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" [rows]="10" -->
+
+                    <ng-template pTemplate="header">
+                        <tr class="text-sm">
+                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
+                            <th class="surface-200">FECHA</th>
+                            <th class="surface-200">DESCRIPCIÓN</th>
+                            <th class="surface-200">N° OPERACIÓN</th>
+                            <th class="surface-200">CARGO/ABONO</th>
+                            <th class="surface-200">ITF</th>
+                            <th class="surface-200">SALDO CONTABLE</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                        <tr class="text-sm">
+                            <td>{{rowIndex + 1}}</td>
+                            <td>{{ product.descripcion | uppercase}}</td>
+                            <td>{{ product.codproducto }}</td>
+                            <td>{{ product.nommarca | uppercase}}</td>
+                            <td>{{ product.sku }}</td>
+                            <td>{{ product.fecfin }}</td>
+                            <td>{{ product.preciocostototal | number: '0.2'}}</td>
+                            <!-- <td>
+                                <div *ngIf="verItems" class="flex justify-content-end">
+                                    <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                </div>
+                            </td> -->
+                        </tr>
+                    </ng-template>
+                </p-table>  
             
         </p-tabPanel> 
-        <p-tabPanel>
-            <ng-template pTemplate="header">
-                <div class="flex align-items-center gap-2">
-                    <i class="fa-solid fa-cash-register"></i>
-                    <span class="font-bold white-space-nowrap m-0">
-                        Egresos 
-                    </span>
-                </div>
-            </ng-template>
-            <p-table [columns]="selectedColumns" [value]="products" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
-            styleClass="p-datatable-sm card border-1 border-round surface-border ">
-    
-            <ng-template pTemplate="caption">       
-                <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" appendTo="body"
-                selectedItemsLabel="{0} Columnas Seleccionadas" styleClass="p-inputtext-sm text-blue-600" placeholder="Seleccionar Columnas"></p-multiSelect>        
-            </ng-template>
-            <ng-template pTemplate="header" let-columns>
-                <tr>
-                    <th  class="bg-teal-50 border-1">Razón Social</th>
-                    <th  class="bg-teal-50 border-1" *ngFor="let col of columns" >
-                        {{col.header}}
-                    </th>
-                </tr>
-            </ng-template>
-           
-            <ng-template pTemplate="body" let-product let-columns="columns">
-                <tr>
-                    <td>{{product.name}}</td>
-                    <td *ngFor="let col of columns">
-                        {{product[col.field]}}
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
-            
-        </p-tabPanel> 
-    </p-tabView> -->
+    </p-tabView>
 
 </div>
 
