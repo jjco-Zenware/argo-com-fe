@@ -18,6 +18,7 @@ const controllerAdministracion: string = webApi+'Administracion';
 const controllerMarketing: string = webApi +'Marketing'
 const controllerEventos: string = webApi +'Evento'
 const controllerLogger: string = webApi + 'Logger'
+const controllerHotel: string = webApi + 'Hotel'
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -259,4 +260,5 @@ export const constantesApiWeb = {
 
      asientocfgTraeruno: controllerContabilidad + '/asientocfgtraeruno/',
     asientoPrc: controllerContabilidad + '/asientoprc',
+    listarhabitacion: controllerHotel + '/listarhabitacion',
 }

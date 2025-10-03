@@ -6,12 +6,12 @@ import { SharedPrimeNgModule } from '@primeNgModule';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { ComprasService } from '../compras/Service/compraServices';
 import { HotelRoutingModule } from './hotel-routing.module';
+import { SharedAppService } from '@sharedAppService';
+import { ConfirmationService } from 'primeng/api';
 
 
 @NgModule({
-  declarations: [   
-         
-  ],
+  declarations: [ ],
   imports: [
     CommonModule,
     SharedAppModule,
@@ -20,6 +20,6 @@ import { HotelRoutingModule } from './hotel-routing.module';
     ReactiveFormsModule,
     HotelRoutingModule
   ],
-  providers: [ComprasService]
+  providers: [ComprasService, SharedAppService, ConfirmationService]
 })
 export class HotelModule { }
