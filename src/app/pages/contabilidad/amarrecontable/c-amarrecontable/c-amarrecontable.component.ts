@@ -108,10 +108,7 @@ export class CAmarreContableComponent implements OnInit, OnDestroy{
 
     onEditar(data: any) {
       console.log('onEditar...', data);
-      this.dataPrc = {
-        idasientocfg: data.idasientocfg,
-        paramReg:'E'
-      }
+      this.dataPrc = data.idasientocfg
       this.tituloDetalle = "EDITAR ASIENTO CONTABLE";
       this.vistaLista = false;
       this.visDetalle = true;

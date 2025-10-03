@@ -45,33 +45,36 @@
                             <input pInputText type="text" formControlName="codproducto" class="p-inputtext-sm"/>
                         </span>
                     </div>
-                    <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-2 field">
-                        <label class="font-semibold mb-1">Nombre del Producto<span class="text-red-500 font-bold"> * </span></label>                        
-                        <span class="p-fluid">
-                            <textarea type="text" pInputTextarea [rows]="2" formControlName="despro" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
-                        </span>
-                    </div>
-                    <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-5 field">
-                        <label class="font-semibold mb-1">Descripción</label>                        
-                        <span class="p-fluid">
-                            <textarea type="text" pInputTextarea [rows]="3" formControlName="desdet" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
-                        </span>
-                    </div>
-                    <div class="sm:col-12 lg:col-4 md:col-6 col-6 h-4rem mb-3 -mt-5 field">                            
+                    <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 col-12 h-2rem">
+                    </p-divider>
+                    <div class="sm:col-12 lg:col-6 md:col-6 col-6 h-4rem field">                            
                         <label class="font-semibold mb-1">Grupo <span class="text-red-500 font-bold"> * </span></label>                            
                         <span>
                             <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..."  formControlName="idfamilia" class="p-inputtext-sm"
                             optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body" [readonly]=onlyRead (onChange)="getSubFamilia($event.value)"></p-dropdown>            
                         </span>
                     </div> 
-                    <div class="sm:col-12 lg:col-4 md:col-6 col-6 h-4rem mb-3 -mt-5 field">                            
+                    <div class="sm:col-12 lg:col-6 md:col-6 col-6 h-4rem field">                            
                         <label class="font-semibold mb-1">Categoria <span class="text-red-500 font-bold"> * </span></label>                            
                         <span>
                             <p-dropdown [options]="lstSubFamilia" placeholder="Seleccionar..."  formControlName="idsubfamilia" class="p-inputtext-sm"
                             optionLabel="nomsubfamilia" optionValue="idsubfamilia" appendTo="body" [readonly]=onlyRead></p-dropdown>            
                         </span>
                     </div> 
-                    <div class="sm:col-12 lg:col-4 md:col-6 col-12 h-4rem mb-3 -mt-5 field">                            
+                    <div class="sm:col-12 lg:col-12 md:col-12 col-12 field h-5rem">
+                        <label class="font-semibold mb-1">Nombre del Producto<span class="text-red-500 font-bold"> * </span></label>                        
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="2" formControlName="despro" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                        </span>
+                    </div>
+                    <!-- <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-5 field">
+                        <label class="font-semibold mb-1">Descripción</label>                        
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="3" formControlName="desdet" style="resize: none" class="w-full p-inputtext-sm" [readonly]=onlyRead></textarea>
+                        </span>
+                    </div> -->
+                    
+                    <div class="sm:col-12 lg:col-3 md:col-6 col-12 h-4rem field">                            
                         <div class="flex">
                             <label class="block text-900 font-semibold">Marca</label>
                             <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Marca"
@@ -80,12 +83,35 @@
                         <p-dropdown [options]="lstMarcas" formControlName="idmarca" optionLabel="nommarca" class="p-inputtext-sm"
                             optionValue="idmarca" placeholder="Seleccionar Marca" appendTo="body" [readonly]=onlyRead></p-dropdown>
                     </div> 
+                    <div class="sm:col-6 lg:col-3 md:col-12 field h-4rem">
+                        <label class="block text-900 font-semibold mb-1">Modelo <span class="text-red-500 font-bold"> * </span></label>   
+                            <input pInputText type="text" formControlName="modelo" [readonly]=onlyRead class="p-inputtext-sm"/>                        
+                    </div>  
+                    <div class="sm:col-6 lg:col-3 md:col-12 field h-4rem">
+                        <label class="block text-900 font-semibold mb-1">Serie </label>      
+                            <input pInputText type="text" formControlName="serie" [readonly]=onlyRead class="p-inputtext-sm"/>                        
+                    </div>
+                    <div class="sm:col-6 lg:col-3 md:col-12 field h-4rem">
+                        <label class="block text-900 font-semibold mb-1">Lote </label>          
+                            <input pInputText type="text" formControlName="lote" [readonly]=onlyRead class="p-inputtext-sm"/>                        
+                    </div>
                     <div class="sm:col-12 lg:col-3 md:col-6 col-6 h-4rem field">
                         <label class="font-semibold">Uni. Medida</label>
                         <span>
                             <p-dropdown [options]="lstUnidades" formControlName="idunidad" optionLabel="valoritem" placeholder="Seleccionar..."
                             optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
                         </span>
+                    </div> 
+                    <div class="sm:col-6 lg:col-3 md:col-6 col-6 field h-4rem">
+                        <label class="font-semibold">Costo U.</label>
+                        <p-inputNumber formControlName="valorunit" mode="decimal" locale="en-US" [minFractionDigits]="2" class="p-inputtext-sm"></p-inputNumber>
+                    </div>
+                    <div class="sm:col-12 lg:col-4 md:col-6 col-6 h-4rem field">
+                        <label class="font-semibold">Moneda <span class="text-red-500 font-bold"> * </span></label>  
+                        <span >
+                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
+                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                        </span>                                      
                     </div> 
                      <div class="sm:col-12 lg:col-4 md:col-6 col-6 h-4rem field">
                         <label class="font-semibold">Control Inventario <span class="text-red-500 font-bold"> * </span></label>  
@@ -107,42 +133,6 @@
                         </span>
                     </div>
                     
-                    <div class="sm:col-12 lg:col-4 md:col-6 col-6 h-4rem field">
-                        <label class="font-semibold">Moneda <span class="text-red-500 font-bold"> * </span></label>  
-                        <span >
-                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" 
-                            optionValue="idmoneda" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                        </span>                                      
-                    </div> 
-                    <div class="sm:col-6 lg:col-3 md:col-6 col-6 field h-4rem">
-                        <label class="font-semibold">Costo U.</label>
-                        <p-inputNumber formControlName="valorunit" mode="decimal" locale="en-US" [minFractionDigits]="2" class="p-inputtext-sm"></p-inputNumber>
-                    </div>
-                   
-                    <div class=" sm:col-8 lg:col-5 md:col-12"></div>
-                    <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 col-12 h-3rem">
-                            <div class="text-blue-600 font-bold">Datos para Trazabilidad</div>
-                    </p-divider>
-                    <div class="sm:col-6 lg:col-3 md:col-12 field h-4rem">
-                        <label class="block text-900 font-semibold mb-1">Modelo <span class="text-red-500 font-bold"> * </span></label>                        
-                        
-                            <input pInputText type="text" formControlName="modelo" [readonly]=onlyRead class="p-inputtext-sm"/>
-                        
-                    </div>  
-                    <div class="sm:col-6 lg:col-3 md:col-12 field h-4rem">
-                        <label class="block text-900 font-semibold mb-1">Serie </label>                        
-                        
-                            <input pInputText type="text" formControlName="serie" [readonly]=onlyRead class="p-inputtext-sm"/>
-                        
-                    </div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 field h-4rem">
-                        <label class="block text-900 font-semibold mb-1">Lote </label>                        
-                        
-                            <input pInputText type="text" formControlName="lote" [readonly]=onlyRead class="p-inputtext-sm"/>
-                        
-                    </div>
-                    <div class=" sm:col-8 lg:col-2 md:col-12"></div>
-                    <!-- <div class=" sm:col-8 lg:col-2 md:col-12 "></div> -->
                     <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 col-12 h-3rem">
                             <div class="text-blue-600 font-bold">Parámetros de Stock y Venta</div>    
                     </p-divider>

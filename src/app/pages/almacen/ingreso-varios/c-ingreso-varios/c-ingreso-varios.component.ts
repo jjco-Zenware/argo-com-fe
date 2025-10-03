@@ -160,7 +160,7 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR INGRESO VARIOS";
+      this.tituloDetalle = "REGISTRAR INGRESO";
       this.dataDet = {
         idcodigo: 0,
         paramReg:'N',

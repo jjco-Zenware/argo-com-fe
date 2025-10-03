@@ -12,8 +12,8 @@
             <div class="sm:col-6 lg:col-3 md:col-3 col-9 -mt-4 field h-4rem">
                 <label class="text-blue-600 font-semibold mb-1">GRUPOS</label>                
                 <span class="p-fluid mt-1">
-                    <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..."  formControlName="idfamilia" class="p-inputtext-sm"
-                    optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body"  (onChange)="getSubFamilia($event.value)"></p-dropdown> 
+                    <p-dropdown [options]="lstFamilia" placeholder="Seleccionar..." formControlName="idfamilia" class="p-inputtext-sm"
+                    optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body" (onChange)="getSubFamilia($event.value)" [filter]="true"></p-dropdown> 
                 </span>
             </div> 
             <div class="field col-3 md:col-2 -mt-4 gap-2 h-4rem">
@@ -42,8 +42,6 @@
                 </th>
                 <th style="width: 100px;" class="bg-teal-50 border-1">CÓDIGO</th>
                 <th style="width: 200px;" class="bg-teal-50 border-1">CATEGORÍA</th>
-                <th style="width: 150px;" class="bg-teal-50 border-1">TIPO PRODUCTO</th>
-                <th style="width: 150px;" class="bg-teal-50 border-1">CTA CONTABLE </th>
                 <th style="width: 20px;" class="bg-teal-50 border-1">ACCIONES</th>
             </tr>
             
@@ -55,8 +53,6 @@
                 </td>
                 <td>{{data.codsubfamilia}}</td>
                 <td>{{data.nomsubfamilia}}</td>
-                <td>{{data.nomtipoprod}}</td>
-                <td>{{data.codctactble}}</td>
                 <td>
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'160px'}">
                         <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar Categoria" 
@@ -83,10 +79,10 @@
     <p-header >{{ headerTitle }} </p-header>
         <form [formGroup]="frmDatos" (ngSubmit)="prcGrupo()">
             <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
-                <div class="mb-3 field">
+                <!-- <div class="mb-3 field">
                     <label class="font-semibold">CÓDIGO</label>
                     <input pInputText type="text" formControlName="codfamilia" class="p-inputtext-sm"/>
-                </div>
+                </div> -->
                 <div class="mb-3 field">
                     <label class="font-semibold">DESCRIPCIÓN</label>
                     <input pInputText type="text" formControlName="nomfamilia" class="p-inputtext-sm"/>
@@ -102,26 +98,19 @@
     <p-header >{{ headerTitle }} </p-header>
         <form [formGroup]="frmDatos" (ngSubmit)="prcClase()">
             <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
-                <div class="mb-3 field">
+                <!-- <div class="mb-3 field">
                     <label class="font-semibold">CÓDIGO<span class="text-red-500 font-bold"> * </span></label>
                     <input pInputText type="text" formControlName="codsubfamilia" class="p-inputtext-sm"/>
-                </div>
+                </div> -->
                 <div class="mb-3 field">
                     <label class="font-semibold">DESCRIPCIÓN<span class="text-red-500 font-bold"> * </span></label>
                     <input pInputText type="text" formControlName="nomsubfamilia" class="p-inputtext-sm"/>
                 </div>
-                <div class="mb-3 field">
+                <!-- <div class="mb-3 field">
                     <label class="font-semibold">TIPO PRODUCTO<span class="text-red-500 font-bold"> * </span></label>
                     <p-dropdown [options]="lstTipoProducto" formControlName="idtipoprod" optionLabel="nomtipoprod"
                         optionValue="idtipoprod" placeholder="Seleccionar Producto" appendTo="body"></p-dropdown>
-                </div>
-                <div class="mb-3 field">
-                    <label class="font-semibold">CUENTA CONTABLE<span class="text-red-500 font-bold"> * </span></label>
-                    <span class="p-fluid">
-                        <p-autoComplete formControlName="codctactble" [dropdown]="true" [suggestions]="filteredCtaCtble" (completeMethod)="filterCtaCtble($event)" 
-                        field="s_desctactble" appendTo="body" (onSelect)="selectCuenta($event)" ></p-autoComplete>
-                    </span> 
-                </div>
+                </div> -->
             </div>
             <div class="flex justify-content-end">
                 <button pButton icon="pi pi-save" label="Grabar" type="submit" class="p-button-primary w-auto"></button>

@@ -10,7 +10,7 @@
             <p-tabPanel>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
-                        <i class="pi pi-building"></i>
+                        <i class="pi pi-spin pi-cog"></i>
                         <span class="font-bold white-space-nowrap m-0">
                             Datos Generales
                         </span>
@@ -513,61 +513,7 @@
                     </p-table>                
                 </div> -->
             </p-tabPanel>
-
-            <!-- <p-tabPanel >
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-exclamation-circle"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Información Adicional
-                        </span>
-                    </div>
-                </ng-template>   
-                <form [formGroup]="registerFormRegistro" class="p-fluid grid lg:col-7 col-12 border-1 border-round surface-border p-2 m-2">                    
-                                                                    
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field ">
-                        <label class="block text-900  mb-1">N° Contrato</label>                        
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nrocontrato_ctb" [readonly]=onlyRead class="p-inputtext-sm"/>
-                        </span>
-                    </div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field ">
-                        <label class="block text-900  mb-1">N° Orden Compra</label>                        
-                        <span class="p-fluid">
-                            <p-dropdown [options]="lstOrdenC" formControlName="idordencompra_origen_ctb" placeholder="Seleccionar Orden" optionLabel="codigonroorden" 
-                            optionValue="idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                        </span>
-                    </div>                    
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field ">
-                        <label class="block text-900  mb-1">N° Expediente</label>                        
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nroexpediente_ctb" [readonly]=onlyRead class="p-inputtext-sm"/>
-                        </span>
-                    </div> 
-                    <div class="col-3"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field ">
-                        <label class="block text-900  mb-1">Código Unidad Ejecutora</label>                        
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="codunidadejecutora_ctb" [readonly]=onlyRead class="p-inputtext-sm"/>
-                        </span>
-                    </div>  
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field ">
-                        <label class="block text-900  mb-1">N° Proceso de Selección</label>                        
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nroprocesoseleccion_ctb" [readonly]=onlyRead class="p-inputtext-sm"/>
-                        </span>
-                    </div>  
-                    <div class="col-6"></div>             
-                    <div class="sm:col-12 lg:col-9 md:col-12 col-12 -mt-2">
-                        <label class="block text-900 ">Observación</label>                        
-                        <span class="p-fluid mb-1">
-                            <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion" style="resize: none" class="w-full" id="observacion"
-                                [readonly]=onlyRead class="p-inputtext-sm"></textarea>
-                        </span>
-                    </div>       
-                </form>                         
-            </p-tabPanel> -->
-
+           
             <p-tabPanel [disabled]="visibleDocument">
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
@@ -580,29 +526,31 @@
                 <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto"></app-c-adjuntos>
             </p-tabPanel>
 
-            <!-- <p-tabPanel [disabled]=visibleAsiento>
+            <p-tabPanel [disabled]=visibleAsiento>
                 <ng-template pTemplate="header">
                     <div class="flex align-items-center gap-2">
-                        <i class="pi pi-table"></i>
+                        <i class="pi pi-book"></i>
                         <span class="font-bold white-space-nowrap m-0">
                             Asiento Contable
                         </span>
                     </div>
                 </ng-template>             
-                <p-table #dt1 [value]="lstAsientos" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-                    [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-                    currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
+                <p-table #dt1 [value]="lstAsientos" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"                    
                     styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
                     <ng-template pTemplate="header">
                         <tr class="text-sm h-1rem">
+                            <th rowspan="2" [ngStyle]="{ width: '20px' }" class="bg-teal-50 border-1">
+                                    N°
+                                </th>
                             <th rowspan="2" style="width: 20px" class="bg-teal-50 border-1" >
                                 <div class="flex justify-content-between align-items-center">
                                     CORRELATIVO
                                 </div>
                             </th>
-                            <th rowspan="2" style="width: 100px;" class="bg-teal-50 border-1">FECHA</th>
+                            <th rowspan="2" style="width: 80px;" class="bg-teal-50 border-1">FECHA</th>
                             <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">GLOSA</th>
-                           
+                            <th rowspan="2" style="width: 80px;" class="bg-teal-50 border-1">TC</th>
+
                             <th colspan="2" style="width: 200px; text-align:center" class="bg-teal-50 border-1">
                                 CTA CTBLE
                             </th>
@@ -623,12 +571,12 @@
                                 </div>
                             </th>
                             <th colspan="1" class="bg-teal-50 border-1">
-                                <div [ngStyle]="{'width':'100px','text-align': 'center'}">
+                                <div [ngStyle]="{'width':'80px','text-align': 'center'}">
                                     DEBE
                                 </div>
                             </th>
                             <th colspan="1" class="bg-teal-50 border-1">
-                                <div [ngStyle]="{'width':'100px','text-align': 'center'}">
+                                <div [ngStyle]="{'width':'80px','text-align': 'center'}">
                                     HABER
                                 </div>
                             </th>
@@ -638,15 +586,31 @@
                     <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex"> 
                         <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
-                            <td>{{dato.razonsocial}}</td>
-                            <td>{{dato.idtipodoc}}</td>
-                            <td>{{dato.nrodoc}}</td>
-                            <td>{{dato.codctactble}}</td>
-                            <td>{{dato.nrodoc}}</td>
-                            <td>{{dato.nrodoc}}</td>
+                            <td>{{dato.nroasiento}}</td>
+                            <td>{{dato.fecasiento}}</td>
+                            <td>{{dato.glosaasiento}}</td>
+                            <td>{{dato.tc | number: '0.4' }}</td>
+                            <td [ngStyle]="{'width':'100px','text-align': 'center'}">{{dato.ctactble}}</td>
+                            <td>{{dato.desctactble}}</td>
+                            <td [ngStyle]="{'width':'80px','text-align': 'right'}">{{dato.mtodebe | number: '0.2' }}</td>
+                            <td [ngStyle]="{'width':'80px','text-align': 'right'}">{{dato.mtohaber | number: '0.2' }}</td>
                         </tr>
                     </ng-template>
-                   
+                   <ng-template pTemplate="footer">
+                        <tr>
+                            <td colspan="7" class="text-right">Totales: </td>
+                            <td>
+                                <div [ngStyle]="{'text-align':'right'}">
+                                    {{tot_debe | number: '0.2-2'}}
+                                </div>
+                            </td>
+                                <td>
+                                <div [ngStyle]="{'text-align':'right'}">
+                                    {{tot_haber | number: '0.2-2'}}
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
                     <ng-template pTemplate="emptymessage">
                         <tr>
                             <td colspan="12">No se encontraron registros.</td>
@@ -658,7 +622,7 @@
                         </tr>
                     </ng-template>
                 </p-table>              
-            </p-tabPanel> -->
+            </p-tabPanel>
         </p-tabView>
     </div>
 </div>

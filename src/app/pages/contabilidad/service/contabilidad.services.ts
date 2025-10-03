@@ -93,4 +93,19 @@ export class ContabilidadService {
         const url = `${constantesApiWeb.amarrecontablePrc}`;
         return this.http.post<any>(url, objeto)
     }
+
+     obtenerItemsTabla(id:number) {
+        const url = `${constantesApiWeb.lstItemsTabla}${id}`;
+        return this.http.get<any>(url);
+    }
+
+    traerunoAsiento(codigo: any) {
+        const url = `${constantesApiWeb.asientocfgTraeruno}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
+     asientoPrc(objeto: any) {
+        const url = `${constantesApiWeb.asientoPrc}`;
+        return this.http.post<any>(url, objeto)
+    }
 }
