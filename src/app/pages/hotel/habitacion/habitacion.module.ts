@@ -6,17 +6,37 @@ import { CHabitacionListComponent } from './c-habitacion-list/c-habitacion-list.
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { HabitacionesService } from './habitaciones.service';
 import { SharedAppService } from '@sharedAppService';
+import { CModalExcTransacHotelComponent } from './modal-exc-transac-hotel/modal-exc-transac-hotel.component';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { CmReservaHabitacionComponent } from './cm-reserva-habitacion/cm-reserva-habitacion.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { FieldsetModule } from 'primeng/fieldset';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TagModule } from 'primeng/tag';
+import { AlmacenModule } from '../../almacen/almacen.module';
+import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 
 
 @NgModule({
   declarations: [
-    CHabitacionListComponent
+    CHabitacionListComponent,
+    CModalExcTransacHotelComponent,
+    CmReservaHabitacionComponent
   ],
   imports: [
     CommonModule,
     HabitacionRoutingModule,
-    SharedPrimeNgModule
+    FormsModule,
+    ReactiveFormsModule,
+    SharedPrimeNgModule,
+    FieldsetModule,
+    AlmacenModule,
+    InputNumberModule,
+    TagModule,
+    RegistroProveedorModule,
+    DropdownModule
   ],
-  providers: [HabitacionesService, SharedAppService]
+  providers: [HabitacionesService, SharedAppService, ConfirmationService, MessageService]
 })
 export class HabitacionModule { }

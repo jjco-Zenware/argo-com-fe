@@ -1,0 +1,123 @@
+<form [formGroup]="frmDatos" class="p-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="m-0 text-primary">Reserva de Habitación</h5>
+        </div>
+
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label class="block text-900 font-medium">
+                        <i class="pi pi-calendar text-orange-600 mr-2"></i>
+                        Fecha Registro
+                    </label>
+                    <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false"
+                        [showIcon]="true" [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
+                        [readonlyInput]="true">
+                    </p-calendar>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label class="block text-900 font-medium">ID Registro</label>
+                    <input pInputText type="text" class="w-full surface-100 font-semibold"
+                        formControlName="idordencompra" readonly />
+                </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">
+                        RUC <span class="text-red-500 font-bold">*</span>
+                    </label>
+                    <span class="p-input-icon-right w-full">
+                        <i class="pi pi-search cursor-pointer text-primary" pTooltip="Buscar por RUC"
+                            tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
+                        <input pInputText type="text" formControlName="nrodocumento" class="w-full" maxlength="11"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="Ingrese RUC" />
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-8">
+                <div class="field">
+                    <label class="block text-900 font-medium">
+                        Cliente
+                        <i class="pi pi-user-plus cursor-pointer text-primary ml-2" pTooltip="Nuevo Cliente"
+                            tooltipPosition="right" (click)="NuevoPersona()"></i>
+                    </label>
+                    <p-dropdown [options]="lstCliente" placeholder="Seleccione cliente..." formControlName="idproveedor"
+                        styleClass="w-full" optionLabel="razonsocial" optionValue="idcliente" appendTo="body"
+                        [filter]="true" [showClear]="true" (onChange)="getDatos($event.value)">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="field">
+                    <label class="block text-900 font-medium">Dirección</label>
+                    <input pInputText type="text" formControlName="direccion" readonly class="w-full surface-100"
+                        placeholder="Dirección del cliente" />
+                </div>
+            </div>
+
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label class="block text-900 font-medium">
+                        Tipo Documento <span class="text-red-500 font-bold">*</span>
+                    </label>
+                    <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb"
+                        placeholder="Seleccione tipo documento" optionLabel="nomitemsunat" optionValue="codsunat"
+                        styleClass="w-full">
+                    </p-dropdown>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">
+                        <i class="pi pi-calendar text-orange-600 mr-2"></i>
+                        Fecha Ingreso
+                    </label>
+                    <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true"
+                        [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
+                        [minDate]="minimaFechaDesde" [maxDate]="maximaFechaDesde" [readonlyInput]="true"
+                        (onSelect)="changeFechaDesde($event)">
+                    </p-calendar>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">
+                        <i class="pi pi-calendar text-orange-600 mr-2"></i>
+                        Fecha Salida
+                    </label>
+                    <p-calendar formControlName="fecvencimiento" dateFormat="dd/mm/yy" [showTime]="false"
+                        [showIcon]="true" [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
+                        [minDate]="minimaFechaHasta" [readonlyInput]="true" (onSelect)="changeFechaHasta($event)">
+                    </p-calendar>
+                </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">N° Días</label>
+                    <input pInputText type="text" formControlName="nrodias" class="w-full text-center font-semibold"
+                        (blur)="addDiasFec()" (keydown.enter)="addDiasFec()"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="0" />
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="field">
+                    <label class="block text-900 font-medium">Observación</label>
+                    <textarea pInputTextarea [rows]="3" formControlName="observacion" style="resize: none"
+                        class="w-full" placeholder="Ingrese observaciones adicionales...">
+                    </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

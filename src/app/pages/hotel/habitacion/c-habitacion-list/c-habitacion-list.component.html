@@ -12,9 +12,8 @@
     <div class="grid" *ngIf="listadoHabitacion.length > 0; else noHabitaciones">
         <div class="col-6 md:col-4 lg:col-3 xl:col-2"
             *ngFor="let item of listadoHabitacion; trackBy: trackByHabitacion">
-            <div class="habitacion-card"
-                pTooltip="{{item.tipoHabitacion}} - {{item.estadoHabitacion}}" tooltipPosition="top"
-                (click)="getHabitacion(item)">
+            <div class="habitacion-card" pTooltip="{{item.tipoHabitacion}} - {{item.estadoHabitacion}}"
+                tooltipPosition="top" (click)="getHabitacion(item)">
 
                 <div class="habitacion-icon">
                     <i [class]="item.icono || 'pi pi-home'" [style.color]="item.color"></i>
@@ -25,11 +24,22 @@
                 </div>
 
                 <div class="habitacion-estado">
-                    <span class="custom-badge"
-                          [style.backgroundColor]="item.color"
-                          [style.color]="'#fff'">
+                    <span class="custom-badge" [style.backgroundColor]="item.color" [style.color]="'#fff'">
                         {{item.estadoHabitacion}}
                     </span>
+                </div>
+
+                <p-divider></p-divider>
+                <div class="habitacion-actions">
+                    <button pButton
+                        [disabled]="item.puedeReservar === 0"
+                        class="p-button-outlined p-button-sm" icon="pi pi-file"
+                        pTooltip="Reservar" tooltipPosition="bottom"
+                        (click)="reservarHabitacion(item)"></button>
+                    <button *ngIf="item.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v"
+                        class="p-button-rounded p-button-text p-button-sm" (click)="toggleMenu($event, item)"
+                        pTooltip="Acciones" tooltipPosition="bottom"></button>
+                    <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
                 </div>
             </div>
         </div>

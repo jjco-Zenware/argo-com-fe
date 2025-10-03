@@ -1,8 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HabitacionesService } from '../habitaciones.service';
 import { Subscription } from 'rxjs';
-import { mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { SharedAppService } from '@sharedAppService';
+import { MenuItem } from 'primeng/api';
+import { Menu } from 'primeng/menu';
+import { DialogService } from 'primeng/dynamicdialog';
+import { CModalExcTransacHotelComponent } from '../modal-exc-transac-hotel/modal-exc-transac-hotel.component';
+import { CmReservaHabitacionComponent } from '../cm-reserva-habitacion/cm-reserva-habitacion.component';
 
 @Component({
   selector: 'app-c-habitacion-list',
@@ -15,8 +20,12 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   listadoHabitacion: any[] = [];
+  menuItems: MenuItem[] = [];
+  @ViewChild('menu') menu!: Menu;
+  ordenHabitacion: any;
 
   constructor(
+    public dialogService: DialogService,
     private serviceHabitacion: HabitacionesService,
     private serviceSharedApp: SharedAppService,
   ) { }
@@ -46,7 +55,8 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       idsubfamilia: 525,
       desproducto: "",
       idalmacen: 0,
-      idprod: 0
+      idprod: 0,
+      idusuario: constantesLocalStorage.idusuario
     }
 
     const $listarhabitacion = this.serviceHabitacion.listarhabitacion(objeto)
@@ -54,8 +64,7 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
         next: (rpta: any) => {
           this.setSpinner(false);
           console.log('rpta getListar', rpta);
-          this.listadoHabitacion = rpta
-
+          this.listadoHabitacion = rpta.habitaciones;
         },
         error: (err) => {
           this.setSpinner(false);
@@ -76,34 +85,54 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     console.log('Habitación seleccionada:', habitacion);
   }
 
-  /*getEstadoColor(estado: string): string {
-    switch (estado?.toUpperCase()) {
-      case 'DISPONIBLE':
-        return '#28a745';
-      case 'OCUPADA':
-        return '#dc3545';
-      case 'MANTENIMIENTO':
-        return '#ffc107';
-      case 'LIMPIEZA':
-        return '#17a2b8';
-      default:
-        return '#6c757d';
+  toggleMenu(event: Event, data: any) {
+    if (data.acciones) {
+      this.cargarMenu(data.acciones);
+      this.ordenHabitacion = data;
+      this.menu.toggle(event);
     }
   }
 
-  getEstadoSeverity(estado: string): string {
-    switch (estado?.toUpperCase()) {
-      case 'DISPONIBLE':
-        return 'success';
-      case 'OCUPADA':
-        return 'danger';
-      case 'MANTENIMIENTO':
-        return 'warning';
-      case 'LIMPIEZA':
-        return 'info';
-      default:
-        return 'secondary';
-    }
-  }*/
+  cargarMenu(data: any) {
+    this.menuItems = [];
+    data.forEach((item: any) => {
+      this.menuItems.push({
+        label: item.nomtrx,
+        icon: 'pi pi-cog',
+        command: () => this.onAccion(item)
+      })
+    });
+  }
+
+  onAccion(item: any) {
+    this.ordenHabitacion.idtrx = item.idtrx;
+    console.log('onAccion', item);
+    const ref = this.dialogService.open(CModalExcTransacHotelComponent, {
+      data: this.ordenHabitacion,
+      header: item.nomtrx + ' - ' + this.ordenHabitacion.nomHabitacion,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+
+    ref.onClose.subscribe(() => {
+      this.listarHabitacion();
+    });
+  }
+
+  reservarHabitacion(item: any){
+    console.log('Reservar habitación:', item);
+    const ref = this.dialogService.open(CmReservaHabitacionComponent, {
+      data: item,
+      header: item.nomtrx + ' - ' + item.nomHabitacion,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+
+    ref.onClose.subscribe(() => {
+      this.listarHabitacion();
+    });
+  }
 
 }
