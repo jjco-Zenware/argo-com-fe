@@ -103,6 +103,9 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
   onlyReadMonto: boolean = true;
   lstOrdenC: any;
   verDetraccion: boolean = false;
+    lstCategoriaDoc: any;
+    tot_debe: number = 0;
+    tot_haber: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -136,6 +139,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
     this.listarTipoPagoDetraccion();
     this.getMontoAnticipo(0);
     this.listarTipoRetencion();
+    this.listarCategoriaDoc();
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -257,7 +261,7 @@ createFormRegistro() {
     retencion_base_imponible:[{ value: 0, disabled: false }],
     indmanualdetraccion:[{ value: false, disabled: false }],
     indsunatreg:[{ value: false, disabled: false }],
-    //codctactble:[{ value: '0', disabled: false }],
+    idcategoria: [{ value: null, disabled: false }],
   });
 
   
@@ -370,6 +374,11 @@ createFormRegistro() {
              if (rpta.ordencompra[0].cuotas !== undefined) {
               this.listaCuotas =  rpta.ordencompra[0].cuotas; 
             }   
+            if (rpta.ordencompra[0].asientos !== undefined) {
+                this.lstAsientos = rpta.ordencompra[0].asientos;
+                this.tot_debe = this.lstAsientos.reduce((acc: number, item: any) => acc + item.mtodebe, 0);
+                this.tot_haber = this.lstAsientos.reduce((acc: number, item: any) => acc + item.mtohaber, 0);
+            }
 
             this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
           this.visibleDocument = false; 
@@ -491,7 +500,7 @@ createFormRegistro() {
             this.idOrdenC = rpta.resultProceso;  
             this.registerFormRegistro.get('idordencompra').setValue(rpta.resultProceso);
             this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);            
-           
+          this.generarAsiento();
             this.dataAdjunto ={
               idCliente: this.idOrdenC,
               codtipoproc: 8,
@@ -499,6 +508,7 @@ createFormRegistro() {
             }   
             this.verAdjunto = true;  
             //agregar una cuota por defecto
+            
             this.traerUno2();             
             
             //preguntar si desea emitir el documento con una cuota
@@ -515,7 +525,8 @@ createFormRegistro() {
             this.traerUno();
           }
           
-         
+          
+          
         this.visibleDocument = false;
         this.visibleAsiento = false;
         }else{
@@ -1055,6 +1066,11 @@ createFormRegistro() {
             _error = true;
       }   
       
+      if (!_error && this.registerFormRegistro.value.idcategoria === null)
+      {
+            this.errorMensaje="Seleccionar Motivo...!";
+            _error = true;
+      }
       
       if (!_error && this.registerFormRegistro.value.inddetraccion_ctb)
         {
@@ -1642,5 +1658,55 @@ createFormRegistro() {
       this.onlyReadSunat = true;
       }
       
+    }
+
+    listarCategoriaDoc() {
+    let tipo = this.registerFormRegistro.value.idtipodocprc;
+    const $listarCategoriaDoc = this.contabilidadService
+        .listarCategoriasDoc(tipo)
+        .subscribe({
+            next: (rpta: any) => {
+                console.log('listarCategoriasDoc...', rpta);
+                this.setSpinner(false);
+                this.lstCategoriaDoc = rpta;
+            },
+            error: (err) => { 
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {},
+        });
+    this.$listSubcription.push($listarCategoriaDoc);
+  }
+
+    generarAsiento() {
+
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Generando Asientos...!';
+        let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.registerFormRegistro.value.idcategoria);
+        console.log('s_categoria...', s_categoria);
+
+        const objeto = {
+            idasiento: 0,
+            idreferencia: this.idOrdenC,
+            glosaasiento: 'ASIENTO GENERADO DESDE FACTURACIÓN ' + s_categoria[0].nomcategoria,
+            idusuario: constantesLocalStorage.idusuario
+        }
+        const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
+            next: (rpta: any) => {
+                if (rpta.procesoSwitch === 0) {
+                    this.setSpinner(false);
+                    this.messageService.add({ severity: 'success', summary: 'Exito', detail: rpta.mensaje });                    
+                }else{
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.mensaje });
+                }
+            },
+            error: (err) => {
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {},
+        });
+        this.$listSubcription.push($listaMonedas);
     }
 }

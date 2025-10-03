@@ -118,6 +118,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     verOportunidad: boolean = false;
     lstOportunidades: any;
     lstCategoriaDoc: any;
+     tot_debe: number = 0;
+    tot_haber: number = 0;
 
     constructor(
         private fb: FormBuilder,
@@ -387,6 +389,11 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     if (rpta.ordencompra[0].cuotas !== undefined) {
                         this.listaCuotas = rpta.ordencompra[0].cuotas;
                     }
+                    if (rpta.ordencompra[0].asientos !== undefined) {
+                        this.lstAsientos = rpta.ordencompra[0].asientos;
+                        this.tot_debe = this.lstAsientos.reduce((acc: number, item: any) => acc + item.mtodebe, 0);
+                this.tot_haber = this.lstAsientos.reduce((acc: number, item: any) => acc + item.mtohaber, 0);
+                    }
 
                     this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);
                     this.visibleDocument = false;
@@ -566,6 +573,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                             veracciones: 0,
                         };
                         this.verAdjunto = true;
+                        this.generarAsiento();
 
                         //agregar una cuota por defecto
                         //this.traerUno2();
@@ -584,7 +592,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     // else {
                     //     this.traerUno();
                     // }
-
+                    
                     this.traerUno();
 
                     this.visibleDocument = false;
@@ -1869,7 +1877,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                 this.setSpinner(false);
                 this.lstCategoriaDoc = rpta;
             },
-            error: (err) => {
+            error: (err) => { 
                 this.setSpinner(false);
                 this.serviceSharedApp.messageToast();
             },
@@ -1941,5 +1949,36 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                 complete: () => {},
             });
         this.$listSubcription.push($prcMontosCabecera);
+    }
+
+      generarAsiento() {
+
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Generando Asientos...!';
+        let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.registerFormRegistro.value.idcategoria);
+        console.log('s_categoria...', s_categoria);
+
+        const objeto = {
+            idasiento: 0,
+            idreferencia: this.idOrdenC,
+            glosaasiento: 'ASIENTO GENERADO DESDE COMPRAS ' + s_categoria[0].nomcategoria,
+            idusuario: constantesLocalStorage.idusuario
+        }
+        const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
+            next: (rpta: any) => {
+                if (rpta.procesoSwitch === 0) {
+                    this.setSpinner(false);
+                    this.messageService.add({ severity: 'success', summary: 'Exito', detail: rpta.mensaje });                    
+                }else{
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.mensaje });
+                }
+            },
+            error: (err) => {
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {},
+        });
+        this.$listSubcription.push($listaMonedas);
     }
 }
