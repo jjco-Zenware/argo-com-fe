@@ -82,7 +82,7 @@ export class CCatalogoComponent implements OnInit, OnDestroy{
       const objeto = {
         ...this.frmDatos.value,
         // idfamilia: this.frmDatos.value.idfamilia === null ? 0 : this.frmDatos.value.idfamilia,
-        // idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia
+        idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia
       }
       console.log('this.objeto...', objeto);
 
