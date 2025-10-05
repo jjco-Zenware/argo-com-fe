@@ -116,6 +116,11 @@ const routes: Routes = [
     path: 'guia-remision',
     loadChildren: () => import('./guia-remision/guia-remision.module').then(m => m.GuiaRemisionModule),
     data: { breadcrumb: 'Guía de Remisión' }
+  },
+  {
+    path: 'catalogo-productos',
+    loadChildren: () => import('./catalogo-producto/catalogo-producto.module').then(m => m.CatalogoProductoModule),
+    data: { breadcrumb: 'Catálogo de Productos' }
   }
 ];
 

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, OrdenCompraItem } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
