@@ -90,7 +90,7 @@ export class CItemAlmacenComponent implements OnInit, OnDestroy {
     this.frmDatosItem = this.fb.group({
       idordencompraitem: [{ value: 0, disabled: false }],
       idordencompra: [{ value: 0, disabled: false }],
-      idtipoprod: [{ value: '', disabled: false }, [Validators.required]],
+      idtipoprod: [{ value: 0, disabled: false }, [Validators.required]],
       idprod: [{ value: 0, disabled: false }],
       descripcion: [{ value: '', disabled: false }, [Validators.required]],
       cantidad: [{ value: 1, disabled: false }, [Validators.required]],
@@ -302,8 +302,8 @@ createFormTag() {
 
       
 
-    const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
-    this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
+    // const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
+    // this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
 
     const _marca:string=this.lstMarcas.filter(x=>x.idmarca == this.frmDatosItem.get('idmarca')?.value)[0].nommarca;
     this.frmDatosItem.get('nommarca')?.setValue(_marca)
