@@ -16,7 +16,7 @@
                 </ng-template>
                 <form [formGroup]="registerFormRegistro" class="border-1 border-round surface-border p-fluid grid col-12 lg:col-6 mt-2">                    
                                               
-                    <div class="sm:col-6 lg:col-3 md:col-12 h-4rem field -mt-1">
+                    <div class="sm:col-6 lg:col-3 md:col-12 h-4rem field">
                         <div class="flex mb-1">
                             <label class="block text-900 font-semibold">Fecha</label>    
                             <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;" ></i> 
@@ -27,26 +27,43 @@
                         </span>
                     </div> 
                     <div class="lg:col-6"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field">
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field h-4rem">
                         <label class="block text-900 font-semibold mb-1">N° </label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="labelnrodocumento"/>
                         </span>
                     </div> 
-                    <div class="sm:col-6 lg:col-6 md:col-12 -mt-5">                            
+                    <div class="sm:col-6 lg:col-6 md:col-12 field h-4rem">                            
                         <label class="block text-900 font-semibold mb-1">Almacen Ingreso<span class="text-red-500 font-bold"> * </span></label>                            
                         <span>
                             <p-dropdown [options]="lstAlmacen" placeholder="Seleccionar Almacen"  formControlName="idalmacen" 
                             optionLabel="nomalmacen" optionValue="idalmacen" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
                         </span>
                     </div> 
-                    <div class="sm:col-6 lg:col-6 md:col-12 -mt-5">                            
-                        <label class="block text-900 font-semibold mb-1">Tipo Movimiento<span class="text-red-500 font-bold"> * </span></label>                            
-                        <span>
-                            <p-dropdown [options]="lstTipoMovimiento" placeholder="Seleccionar Tipo Movimiento"  formControlName="tipomovimiento" 
-                            optionLabel="valoritem" optionValue="iditem" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>            
+                    <div class=" sm:col-8 lg:col-3 md:col-12"></div> 
+                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field h-4rem">
+                        <label class="block text-900 font-semibold mb-1">N° Guia </label>
+                        <span class="p-fluid">
+                            <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="sustentodoc"/>
                         </span>
                     </div> 
+                        
+                        <div class="sm:col-6 lg:col-5 md:col-6 col-12 field h-4rem">                            
+                            <label class="block text-900 font-semibold mb-1">Proveedor </label>                            
+                            <span>
+                                <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+                                optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead [filter]="true"></p-dropdown>            
+                            </span>
+                        </div>   
+                        <div class="sm:col-6 lg:col-7 md:col-3 col-12 field h-4remfield h-4rem">
+                            <div class="flex">
+                                <label class="block text-900 font-semibold mb-1">Orden Compra </label>
+                            </div>                            
+                            <span >
+                                <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
+                                optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div> 
                     <div class="lg:col-7"></div>
                         <div class="sm:col-6 lg:col-12 md:col-3 -mt-5 col-12">
                             <label class="block text-900 font-semibold">Justificación</label>                        
@@ -88,8 +105,8 @@
                             <th class="bg-teal-50 border-1">SERVICE TAG</th>
                             <th class="bg-teal-50 border-1">U. MED</th>
                             <th class="bg-teal-50 border-1">CANT.</th>
-                            <th class="bg-teal-50 border-1">ACCIÓN.</th>
                             <th class="bg-teal-50 border-1">UBICACIÓN</th>
+                            <th class="bg-teal-50 border-1">ACCIÓN.</th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
@@ -138,12 +155,15 @@
                            
                             <td>{{ product.nomunidad }}</td>
                             <td>{{ product.cantidad }}</td>
+                            <td>{{ product.rutaubicacion }}</td>
                             <td>
                                 <div *ngIf="verItems" class="flex">
                                     <button pButton pRipple icon="pi pi-map" pTooltip="Ubicación Item" tooltipPosition="left" (click)="verUbicacion(product, product)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+
                                 </div>
                             </td>
-                            <td>{{ product.rutaubicacion }}</td>
+                            
                             
                         </tr>
                     </ng-template>

@@ -92,7 +92,6 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
     this.createFrm();
     this.createFormRegistro();
     this.ListarAlamcen();
-    this.listaClientes();
     this.listaProveedores();
     this.listarItemsTabla();
     this.listarItemsTablaExistencia();
@@ -336,6 +335,14 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
       }
     }
 
+    if (this.registerFormRegistro.value.idproveedor === null) {
+      this.registerFormRegistro.get('idproveedor').setValue(0);
+    }
+
+    if (this.registerFormRegistro.value.alm_idordencompra === null) {
+      this.registerFormRegistro.get('alm_idordencompra').setValue(0);
+    }
+
     const objeto = {
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
@@ -441,24 +448,24 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
 
   }
 
-  listaClientes() {
-    let tiporol = "CLI";
-    this.proyectosService.obtenerClientes(tiporol).subscribe({
-      next: (rpta: any) => {
-        this.lstCliente = rpta;
-      },
-      error: (err) => {
-        this.messageService.clear();
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-        });
-      },
-      complete: () => {
-      },
-    });
-  }
+  // listaClientes() {
+  //   let tiporol = "CLI";
+  //   this.proyectosService.obtenerClientes(tiporol).subscribe({
+  //     next: (rpta: any) => {
+  //       this.lstCliente = rpta;
+  //     },
+  //     error: (err) => {
+  //       this.messageService.clear();
+  //       this.messageService.add({
+  //         severity: 'error',
+  //         summary: 'Error',
+  //         detail: mensajesQuestion.msgErrorGenerico,
+  //       });
+  //     },
+  //     complete: () => {
+  //     },
+  //   });
+  // }
 
   getItem(data: any, index: number) {
     data.nroindex = index;
@@ -653,6 +660,14 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
       }
     }
 
+    if (this.registerFormRegistro.value.idproveedor === null) {
+      this.registerFormRegistro.get('idproveedor').setValue(0);
+    }
+
+    if (this.registerFormRegistro.value.alm_idordencompra === null) {
+      this.registerFormRegistro.get('alm_idordencompra').setValue(0);
+    }
+
     const objeto = {
       ...this.registerFormRegistro.getRawValue(),
       items: this.lstItemOC,
@@ -677,6 +692,7 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
             width: '40%'
           });
           ref.onClose.subscribe(() => {
+            console.log('transaccion...');
             this.traerUnoOrdenC();
           });
 
@@ -724,46 +740,11 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
       _error = true;
     }
 
-    if (!_error && (this.registerFormRegistro.value.tipomovimiento === null || this.registerFormRegistro.value.tipomovimiento === 0)) {
-      this.errorMensaje = "Seleccionar Tipo Movimiento...!";
+    if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === '')) {
+      this.errorMensaje = "Ingresar N° de Guia...!";
       _error = true;
     }
 
-    // if (!_error && this.registerFormRegistro.value.idproveedor === null)
-    // {
-    //     this.errorMensaje="Seleccionar Proveedor...!";
-    //     _error = true;
-    // }
-
-    // if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null))
-    // {
-    //     this.errorMensaje="Seleccionar Orden Compra...!";
-    //     _error = true;
-    // }
-
-    // if (!_error && (this.registerFormRegistro.value.codtipodoc === 'REQ' && this.registerFormRegistro.value.sustentodoc === '') )
-    // {
-    //     this.errorMensaje="Ingresar N° de Referencia...!";
-    //     _error = true;
-    // }
-
-    // if (!_error && this.registerFormRegistro.value.idmoneda === null)
-    // {
-    //       this.errorMensaje="Seleccionar Moneda...!";
-    //       _error = true;
-    // }
-
-    // if (!_error && this.registerFormRegistro.value.codformapago === null)
-    // {
-    //       this.errorMensaje="Seleccionar Termino de Pago...!";
-    //       _error = true;
-    // }
-
-    // if (!_error && (this.registerFormRegistro.value.condicionescomerciales === " " || this.registerFormRegistro.value.condicionescomerciales === null))
-    // {
-    //     this.errorMensaje="Ingresar Condiciones Comerciales...!";
-    //     _error = true;
-    // }
     return _error;
   }
 
@@ -785,47 +766,6 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
         }
       });
     this.$listSubcription.push($getListar)
-  }
-
-  getOCtraerItems(dato: any) {
-    console.info('dato : ', dato);
-    //this._alm_idordencompra = dato;
-    this.lstItemOC = []
-    this.selectedItems = [];
-    const objeto = {
-      idordencompra: dato,
-      idusuario: constantesLocalStorage.idusuario
-    }
-    const $personaProveedorlist = this.proyectosService.ordenCompraTraeruno(objeto).subscribe({
-      next: (rpta: any) => {
-        this.setSpinner(false);
-        console.info('getOCtraerItems : ', rpta);
-
-        if (rpta.ordencompra[0].items !== undefined) {
-
-          const data = rpta.ordencompra[0].items.map((item: any) => ({
-            ...item,
-            idordencompraitem: 0,
-            idordencompra: this.idMovimiento,
-            coditem: 1,
-          }))
-          this.lstItemOC = data;
-        }
-        console.info('lstItemOC : ', this.lstItemOC);
-      },
-      error: (err) => {
-        this.setSpinner(false);
-        console.info('error : ', err);
-        this.messageService.clear();
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-        });
-      },
-      complete: () => { },
-    });
-    this.$listSubcription.push($personaProveedorlist);
   }
 
   selectCheckbox(dato: any) {
