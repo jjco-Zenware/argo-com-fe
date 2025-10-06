@@ -311,8 +311,8 @@ createFormTag() {
 
       
 
-    const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
-    this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
+    // const _nomtipoprod:string=this.lstTipoProducto.filter(x=>x.idtipoprod == this.frmDatosItem.get('idtipoprod')?.value)[0].nomtipoprod;
+    // this.frmDatosItem.get('nomtipoprod')?.setValue(_nomtipoprod)
 
     const _marca:string=this.lstMarcas.filter(x=>x.idmarca == this.frmDatosItem.get('idmarca')?.value)[0].nommarca;
     this.frmDatosItem.get('nommarca')?.setValue(_marca)

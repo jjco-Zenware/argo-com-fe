@@ -61,6 +61,11 @@ const routes: Routes = [
     path: 'pagosprogramados',
     loadChildren: () => import('./pagosprogramados/pagosprogramados.module').then(m => m.PagosProgramadosModule),
     data: { breadcrumb: 'Pagos Programados' }
+  },
+  {
+    path: 'detraccion',
+    loadChildren: () => import('./detraccion/detraccion.module').then(m => m.DetraccionModule),
+    data: { breadcrumb: 'Detracción' }
   }
  
 ];
