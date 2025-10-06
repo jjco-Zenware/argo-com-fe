@@ -1,3 +1,22 @@
 {
-    "angular.enable-strict-mode-prompt": false
+    "angular.enable-strict-mode-prompt": false,
+    "sqltools.connections": [
+        {
+            "oracleOptions": {
+                "privilege": "Normal",
+                "thickMode": false,
+                "autoCommit": false,
+                "lowerCase": false,
+                "limitPrefetchRows": false
+            },
+            "previewLimit": 50,
+            "server": "213.199.51.251",
+            "port": 1521,
+            "driver": "Oracle",
+            "name": "MIDP-VPS",
+            "database": "xe",
+            "username": "SISMIDPMI",
+            "password": "SISMIDPMI1"
+        }
+    ]
 }

@@ -18,7 +18,7 @@ import { ErrorInterceptor } from './services/error.interceptor';
         BrowserAnimationsModule
     ],
     providers: [
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: ErrorInterceptor,
