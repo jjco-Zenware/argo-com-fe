@@ -10,6 +10,7 @@ import { ProyectosService } from '../../compras/proyectos-ganados/service/proyec
 import { TagModule } from 'primeng/tag';
 import { CDetraccionComponent } from './c-detraccion/c-detraccion.component';
 import { DetraccionRoutingModule } from './detraccion-routing.module';
+import { OrdencompraService } from '../../compras/orden-compra-servicio/service/ordencompra.service';
 
 
 
@@ -26,6 +27,6 @@ import { DetraccionRoutingModule } from './detraccion-routing.module';
     DetraccionRoutingModule,
     TagModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService,OrdencompraService]
 })
 export class DetraccionModule { }

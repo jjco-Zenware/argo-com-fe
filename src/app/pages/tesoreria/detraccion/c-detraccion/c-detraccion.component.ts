@@ -12,6 +12,7 @@ import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/servic
 import { CModalListPAgosComponent } from '../../modallistpagos/c-modallistpagos.component';
 import { CModalRegPAgosComponent } from '../../modalregpagos/c-modalregpagos.component';
 import { CModalProgramacionComponent } from '../../modalfecprogramacion/c-modalfecprogramacion.component';
+import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 
 @Component({
   selector: 'app-c-detraccion',
@@ -34,6 +35,7 @@ export class CDetraccionComponent implements OnInit, OnDestroy{
   saldo_documento_dol: number = 0;
   s_monto_recaudado_sol: number = 0;
   s_monto_recaudado_dol: number = 0;
+  s_monto: number = 0;
   
   @Output() OB_back = new EventEmitter<boolean>();
 
@@ -53,7 +55,7 @@ export class CDetraccionComponent implements OnInit, OnDestroy{
       private messageService: MessageService,
       private tesoreriaService: TesoreriaService, 
       private proyectosService: ProyectosService,
-      
+      private ordencompraService: OrdencompraService,
     ){    
       
   }
@@ -110,7 +112,9 @@ export class CDetraccionComponent implements OnInit, OnDestroy{
             this.lstCuentas = lista.filter((item:any) => item.monto_detraccion_mn > 0);
 
             //this.lstCuentas = rpta.ordenescompra;
-
+            if (this.frmDatos.value.idproveedor === 0) {
+              this.listaProveedores();       
+            }
           
         },
         error:(err)=>{
@@ -119,10 +123,11 @@ export class CDetraccionComponent implements OnInit, OnDestroy{
         },
         complete:() => {
           this.setSpinner(false);
-          this.saldo_documento_sol = this.lstCuentas.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.saldo_documento, 0);
-          this.saldo_documento_dol = this.lstCuentas.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.saldo_documento, 0);
-          this.s_monto_recaudado_sol = this.lstCuentas.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.s_monto_recaudado, 0);
-          this.s_monto_recaudado_dol = this.lstCuentas.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.s_monto_recaudado, 0);
+          // this.saldo_documento_sol = this.lstCuentas.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.saldo_documento, 0);
+          // this.saldo_documento_dol = this.lstCuentas.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.saldo_documento, 0);
+          // this.s_monto_recaudado_sol = this.lstCuentas.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.s_monto_recaudado, 0);
+          // this.s_monto_recaudado_dol = this.lstCuentas.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.s_monto_recaudado, 0);
+          this.s_monto = this.lstCuentas.reduce((acc:any, item:any) => acc + item.monto_detraccion_mn, 0);
         }
       });
     this.$listSubcription.push($getListar)
@@ -149,27 +154,51 @@ export class CDetraccionComponent implements OnInit, OnDestroy{
 
   }
   
+listaProveedores() {
 
-  listaProveedores() {
-
-    const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
-      next: (rpta: any) => {
-        this.lstProveedores = rpta;
-        const objet = {
+    this.lstProveedores = [];
+     const objet = {
           idcliente: 0,
           nomcomercial: 'TODOS'
         }
         this.lstProveedores.unshift(objet);
-        //console.log('this.lstProveedores', this.lstProveedores);
-      },
-      error: (err) => {
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => { },
-    });
-    this.$listSubcription.push($getClientes);
+
+        let lista = this.lstCuentas.filter(
+          (obj, index, self) => index === self.findIndex((t) => t.idproveedor === obj.idproveedor)
+        );     
+        
+        console.log('lista', lista);
+
+        lista.forEach(element => {
+          let objeto ={
+            idcliente: element.idproveedor,
+            nomcomercial: element.nomcomercial
+          }
+          this.lstProveedores.unshift(objeto);
+        });   
+
 
   }
+  // listaProveedores() {
+
+  //   const $getClientes = this.proyectosService.obtenerClientes('PRO').subscribe({
+  //     next: (rpta: any) => {
+  //       this.lstProveedores = rpta;
+  //       const objet = {
+  //         idcliente: 0,
+  //         nomcomercial: 'TODOS'
+  //       }
+  //       this.lstProveedores.unshift(objet);
+  //       console.log('this.lstProveedores', this.lstProveedores);
+  //     },
+  //     error: (err) => {
+  //       this.serviceSharedApp.messageToast()
+  //     },
+  //     complete: () => { },
+  //   });
+  //   this.$listSubcription.push($getClientes);
+
+  // }
 
   getBack(){
     this.OB_back.emit(true);
@@ -264,23 +293,29 @@ export class CDetraccionComponent implements OnInit, OnDestroy{
   
 
   getExportarExcel() {
+    if (this.lstCuentas.length === 0) {
+            this.messageService.clear();
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No hay registros para exportar Excel',
+            });
+            return;
+        }
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
 
     const objeto = {
       ...this.frmDatos.value,
       idtipodocprc: 18,
-      saldo_documento_sol:this.saldo_documento_sol,
-      saldo_documento_dol:this.saldo_documento_dol,
-      s_monto_recaudado_sol: this.s_monto_recaudado_sol,
-      s_monto_recaudado_dol: this.s_monto_recaudado_dol,
+      lstDetra: this.lstCuentas
     }
 
-    const $getListar = this.tesoreriaService.exportarexcelcuentas(objeto)
+    const $getListar = this.tesoreriaService.exportarexceldetracciones(objeto)
     .subscribe({
       next: (rpta:any) => {
           this.setSpinner(false);
-          this.utilitariosService.descargarExcel(rpta, 'CuentasPorPagar');
+          this.utilitariosService.descargarExcel(rpta, 'DetraccionesPorPagar');
       },
       error:(err)=>{
           this.setSpinner(false);
@@ -292,4 +327,82 @@ export class CDetraccionComponent implements OnInit, OnDestroy{
     });
   this.$listSubcription.push($getListar)
   }
+
+  seleccionarRegistro(data: any){
+    console.log('Registro seleccionado:', data);
+  }
+
+  descargarReporte() {
+        if (this.lstCuentas.length === 0) {
+            this.messageService.clear();
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'No hay registros para descargar',
+            });
+            return;
+        }
+
+        console.log('Registro seleccionado:', this.lstCuentas);
+        let listaPdf: any[] = [];
+
+        this.lstCuentas.forEach((item) => {
+          if (item.completo) {
+            listaPdf.push(item);
+          }
+        });
+
+        console.log(' listaPdf:', listaPdf);
+
+        // this.setSpinner(true);
+        // this.mensajeSpinner = 'Descargando...!';
+
+        // const objeto = {
+        //     idusuario: constantesLocalStorage.idusuario,
+        //     idtipodocprc: 7,
+        //     fecini: this.frmDatos.value.fecini,
+        //     fecfin: this.frmDatos.value.fecfin,
+        // };
+
+        // const $cargarOrdenC = this.ordencompraService
+        //     .prcReporte(objeto)
+        //     .subscribe({
+        //         next: (rpta: any) => {
+        //             this.setSpinner(false);
+
+        //             console.log('descargarReporte', rpta);
+
+        //             const mediaType = 'application/pdf';
+        //             const blob = new Blob([rpta.body], { type: mediaType });
+        //             const filename = 'PAGO-DETRACCIONES';
+
+        //             const url = window.URL.createObjectURL(blob);
+        //             const a = document.createElement('a');
+        //             a.href = url;
+        //             a.download = filename;
+        //             document.body.appendChild(a);
+        //             a.target = '_blank';
+        //             a.click();
+
+        //             window.open(url);
+
+        //             setTimeout(() => {
+        //                 document.body.removeChild(a);
+        //                 window.URL.revokeObjectURL(url);
+        //             }, 100);
+        //         },
+        //         error: (err) => {
+        //             this.setSpinner(false);
+        //             this.messageService.clear();
+        //             this.messageService.add({
+        //                 severity: 'error',
+        //                 summary: 'Error',
+        //                 detail: mensajesQuestion.msgErrorGenerico,
+        //             });
+        //         },
+        //         complete: () => {},
+        //     });
+        // this.$listSubcription.push($cargarOrdenC);
+    }
+
 }

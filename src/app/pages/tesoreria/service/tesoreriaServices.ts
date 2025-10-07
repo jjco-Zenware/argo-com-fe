@@ -165,5 +165,11 @@ export class TesoreriaService {
         return this.http.get<any>(url);
     }
 
-    
+    exportarexceldetracciones(data: any) {
+    const url = `${constantesApiWeb.exportarexceldetracciones}`;
+    return this.http
+        .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+        .pipe(
+        map((resp: Blob) => resp));
+    }
 }
