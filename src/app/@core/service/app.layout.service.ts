@@ -43,8 +43,8 @@ export class LayoutService {
         colorScheme: 'light',
         componentTheme: 'indigo',
         scale: 10,
-        menuTheme: 'light',
-        topbarTheme: 'indigo',
+        menuTheme: 'brown',
+        topbarTheme: 'grey',
         menuProfilePosition: 'end'
     };
 
