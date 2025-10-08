@@ -4,7 +4,7 @@ import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, OrdenCompraItem } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
 import { MessageService, ConfirmationService } from 'primeng/api';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
@@ -40,6 +40,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   ordenCompra: any;
   montoTotal: number = 0;
   lstQuotes: any[] = [];
+  data: any;
 
   constructor(
     private fb: FormBuilder,
@@ -48,6 +49,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     private serviceUtilitario: UtilitariosService,
     public dialogService: DialogService,
     public ref: DynamicDialogRef,
+    public config: DynamicDialogConfig,
     private confirmationService: ConfirmationService,
     private ordencompraService: OrdencompraService,
     private proyectosService: ProyectosService,
@@ -55,6 +57,9 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.data = this.config.data;
+    console.log('data config: ', this.data);
+    
     this.createFrm();
     this.listaClientes();
     this.listarItemsTablaComprobante();
@@ -410,13 +415,24 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     }
     //}
 
-    for (let i = 0; i < this.lstItemOC.length; i++) {
-      if (this.lstItemOC[i].cantidad.toString() === '') {
-        this.lstItemOC[i].cantidad = 0;
+    let _lstItemOC:any[]=[]
+    if (this.lstItemOC.length !== 0) {
+      for (let i = 0; i < this.lstItemOC.length; i++) {
+        if (this.lstItemOC[i].cantidad.toString() === '') {
+          this.lstItemOC[i].cantidad = 0;
+        }
+        if (this.lstItemOC[i].preciocosto.toString() === '') {
+          this.lstItemOC[i].preciocosto = 0;
+        }
       }
-      if (this.lstItemOC[i].preciocosto.toString() === '') {
-        this.lstItemOC[i].preciocosto = 0;
-      }
+    } else {
+      const { idprod, idtipoprod, nomHabitacion } = this.data;
+      _lstItemOC = [{
+        idtipoprod,
+        idprod,
+        descripcion: nomHabitacion,
+        cantidad: 1
+      }]
     }
 
     let retencion_tipo = this.frmDatos.value.retencion_tipo;
@@ -426,7 +442,8 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
 
     const objeto = {
       ...this.frmDatos.getRawValue(),
-      items: this.lstItemOC,
+      //items: this.lstItemOC,
+      items: this.lstItemOC.length === 0 ? _lstItemOC : this.lstItemOC,
       fechaingreso,
       fecemision,
       fecvencimiento,
