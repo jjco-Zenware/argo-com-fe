@@ -431,7 +431,8 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
         idtipoprod,
         idprod,
         descripcion: nomHabitacion,
-        cantidad: 1
+        cantidad: 1,
+        idmarca:112
       }]
     }
 
