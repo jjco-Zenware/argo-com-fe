@@ -115,7 +115,13 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       width: '40%'
     });
 
-    ref.onClose.subscribe(() => {
+    ref.onClose.subscribe((rpta:any) => {
+      this.serviceSharedApp.messageToast({
+        severity: rpta.data.procesoSwitch === 0 ? 'success' : 'info',
+        summary: rpta.data.procesoSwitch === 0 ? 'Exito' : 'Validación...!',
+        detail: rpta.data.mensaje
+      });
+
       this.listarHabitacion();
     });
   }

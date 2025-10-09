@@ -76,16 +76,17 @@ export class CModalExcTransacHotelComponent {
         next: (rpta: any) => {
             console.log('prcReunion', rpta);
             this.setSpinner(false);
+            this.cerrar(rpta);
+            /*this.serviceSharedApp.messageToast({
+              severity: rpta.procesoSwitch === 0 ? 'success' : 'info',
+              summary: rpta.procesoSwitch === 0 ? 'Exito' : 'Validación...!',
+              detail: rpta.mensaje
+            });
+
             if (rpta.procesoSwitch === 0) {
                 console.log('entro procesoSwitch....');
                 this.cerrar(objeto)
-            }
-
-            this.serviceSharedApp.messageToast({
-                severity: rpta.procesoSwitch === "0" ? 'success' : 'info',
-                summary: rpta.procesoSwitch === "0" ? 'Exito' : 'Validación...!',
-                detail: rpta.mensaje
-            });
+            }*/
         },
         error: (err) => {
           this.setSpinner(false);
