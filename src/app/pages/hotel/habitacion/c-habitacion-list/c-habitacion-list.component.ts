@@ -81,6 +81,20 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     return habitacion.id || habitacion.nomHabitacion || index;
   }
 
+  getUbicaciones(listado: any[]): any[] {
+    const map = new Map();
+    listado.forEach(h => {
+      if (!map.has(h.rutaubicacion)) {
+        map.set(h.rutaubicacion, { rutaubicacion: h.rutaubicacion, idubicacion: h.idubicacion });
+      }
+    });
+    return Array.from(map.values());
+  }
+
+  getHabitacionesPorUbicacion(rutaubicacion: string): any[] {
+    return this.listadoHabitacion.filter(h => h.rutaubicacion === rutaubicacion);
+  }
+
   getHabitacion(habitacion: any): void {
     console.log('Habitación seleccionada:', habitacion);
   }
