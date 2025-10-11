@@ -9,12 +9,19 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { CModalExcTransacHotelComponent } from '../modal-exc-transac-hotel/modal-exc-transac-hotel.component';
 import { CmReservaHabitacionComponent } from '../cm-reserva-habitacion/cm-reserva-habitacion.component';
 
+export interface I_GrupoHabitacionesPorUbicacion {
+  idubicacion: number;
+  rutaubicacion: string;
+  habitaciones: any[];
+}
+
 @Component({
   selector: 'app-c-habitacion-list',
   templateUrl: './c-habitacion-list.component.html',
   styleUrls: ['./c-habitacion-list.component.scss']
 })
 export class CHabitacionListComponent implements OnInit, OnDestroy {
+  habitacionesAgrupadas: I_GrupoHabitacionesPorUbicacion[] = [];
   $listSubcription: Subscription[] = [];
 
   blockedDocument: boolean = false;
@@ -65,6 +72,7 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
           this.setSpinner(false);
           console.log('rpta getListar', rpta);
           this.listadoHabitacion = rpta.habitaciones;
+          this.habitacionesAgrupadas = this.getHabitacionesAgrupadasPorUbicacion(this.listadoHabitacion);
         },
         error: (err) => {
           this.setSpinner(false);
@@ -76,23 +84,24 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       });
     this.$listSubcription.push($listarhabitacion)
   }
+  
+  getHabitacionesAgrupadasPorUbicacion(listado: any[]): I_GrupoHabitacionesPorUbicacion[] {
+    const grupos: { [key: string]: I_GrupoHabitacionesPorUbicacion } = {};
+    listado.forEach(h => {
+      if (!grupos[h.rutaubicacion]) {
+        grupos[h.rutaubicacion] = {
+          idubicacion: h.idubicacion,
+          rutaubicacion: h.rutaubicacion,
+          habitaciones: []
+        };
+      }
+      grupos[h.rutaubicacion].habitaciones.push(h);
+    });
+    return Object.values(grupos);
+  }
 
   trackByHabitacion(index: number, habitacion: any): any {
     return habitacion.id || habitacion.nomHabitacion || index;
-  }
-
-  getUbicaciones(listado: any[]): any[] {
-    const map = new Map();
-    listado.forEach(h => {
-      if (!map.has(h.rutaubicacion)) {
-        map.set(h.rutaubicacion, { rutaubicacion: h.rutaubicacion, idubicacion: h.idubicacion });
-      }
-    });
-    return Array.from(map.values());
-  }
-
-  getHabitacionesPorUbicacion(rutaubicacion: string): any[] {
-    return this.listadoHabitacion.filter(h => h.rutaubicacion === rutaubicacion);
   }
 
   getHabitacion(habitacion: any): void {
@@ -130,6 +139,8 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     });
 
     ref.onClose.subscribe((rpta:any) => {
+      if(!rpta) { return; }
+      
       this.serviceSharedApp.messageToast({
         severity: rpta.data.procesoSwitch === 0 ? 'success' : 'info',
         summary: rpta.data.procesoSwitch === 0 ? 'Exito' : 'Validación...!',
