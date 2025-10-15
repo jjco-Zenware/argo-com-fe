@@ -102,7 +102,7 @@ export class CCatalogoHabitacionDetalleComponent implements OnInit, OnDestroy {
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idfamilia: [{ value: 0, disabled: false }],
       idsubfamilia: [{ value: 0, disabled: false }],
-      idmarca: [{ value: 0, disabled: false }],
+      idmarca: [{ value: 101, disabled: false }],
       idunidad: [{ value: 0, disabled: false }],
       stockmin: [{ value: 0, disabled: false }],
       stockmax: [{ value: 0, disabled: false }],
