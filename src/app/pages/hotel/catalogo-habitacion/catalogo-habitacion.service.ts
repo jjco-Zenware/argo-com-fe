@@ -19,4 +19,14 @@ export class CatalogoHabitacionService {
     return this.http.get<any>(url);
   }
 
+  habitacionPrc(objeto: any) {
+    const url = `${constantesApiWeb.prcHabitacion}`;
+    return this.http.post<any>(url, objeto)
+  }
+
+  traerunoHabitacion(codigo: any) {
+        const url = `${constantesApiWeb.traerunoHabitacion}${codigo}`;
+        return this.http.get<any>(url);
+    }
+
 }

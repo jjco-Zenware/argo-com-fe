@@ -208,7 +208,7 @@ export class CCatalogoHabitacionDetalleComponent implements OnInit, OnDestroy {
     this.setSpinner(true);
     this.mensajeSpinner = 'Cargando...!';
 
-    const $traerUno = this.almacenService.traerunoProducto(this.idprod)
+    const $traerUno = this.serviceCatalogoHabitacion.traerunoHabitacion(this.idprod)
       .subscribe({
         next: (rpta: any) => {
           console.log('rpta.traerUno', rpta);
@@ -258,7 +258,7 @@ export class CCatalogoHabitacionDetalleComponent implements OnInit, OnDestroy {
 
     console.log('guardarOC...', objeto);
 
-    this.almacenService.prcProducto(objeto).subscribe({
+    this.serviceCatalogoHabitacion.habitacionPrc(objeto).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
         if (rpta.procesoSwitch === 0) {
