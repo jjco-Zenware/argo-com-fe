@@ -216,6 +216,7 @@ export class CCatalogoHabitacionDetalleComponent implements OnInit, OnDestroy {
           this.getSubFamilia(rpta.producto[0].idfamilia);
           this.listaTag = rpta.producto[0].tags;
           this.registerFormRegistro.patchValue(rpta.producto[0]);
+          this.registerFormRegistro.get('descUbicacion').setValue(rpta.producto[0].rutaubicacion);
           this.mostrarBotones(this.IA_data.paramReg);
         },
         error: (err) => {
