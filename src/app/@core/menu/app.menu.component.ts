@@ -23,11 +23,27 @@ export class AppMenuComponent implements OnInit, OnDestroy {
         next: (rpta: any) => {
           console.log('obtenerMenu', rpta);
           this.model = rpta;
+
+          this.model.forEach(element => {
+            if (element.items && element.items.length > 0) {
+              element.items.forEach((subElement: any) => {
+                if (subElement.items && subElement.items.length > 0) {
+                  subElement.items.forEach((subSubElement: any) => {
+                    subSubElement.routerLinkActiveOptions = { exact: true };
+                  });
+                }
+                subElement.routerLinkActiveOptions = { exact: true };
+              });
+            }
+          });
+
+
           // for (let i = 0; i < this.model.length; i++) {
-          //   this.model[i].routerLinkActiveOptions = {exact: true};
+          //   this.model[i]['routerLinkActiveOptions'] = { exact: true };
           // }
 
           
+          console.log('model', this.model);
         },
         error: (err) => { },
         complete: () => { }

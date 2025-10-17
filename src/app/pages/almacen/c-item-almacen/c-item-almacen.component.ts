@@ -33,7 +33,7 @@ export class CItemAlmacenComponent implements OnInit, OnDestroy {
   verSku: boolean = false;
   lstUnidades: any[]=[];
   lstTag: any[]=[];
-  listaTag: any = [];
+  listaTag: any[]= [];
   tagVisible: boolean = false;
   registerFormTag!: FormGroup;  
   verporLicContrato  : boolean = false;
@@ -134,6 +134,7 @@ export class CItemAlmacenComponent implements OnInit, OnDestroy {
       idubicacion: [{ value: 0, disabled: false }],
       rutaubicacion: [{ value: '', disabled: false }],
       nomtipoexistencia: [{ value:'', disabled: false }],
+      valorunit: [{ value: 0, disabled: true }],
     })
   }
 
@@ -154,6 +155,7 @@ createFormTag() {
   getRegistro(){
     console.log('getRegistro : ', this.param);
     this.frmDatosItem.patchValue(this.param);
+    this.frmDatosItem.get('preciocosto')?.setValue(this.param.valorunit);
     // if (this.param.idordencompra > 0) {
        this.listaTag = this.param.tags;
     // }
@@ -540,6 +542,7 @@ createFormTag() {
             this.frmDatosItem.get('idmarca')?.setValue(rpta.producto[0].idmarca);      
             this.frmDatosItem.get('codproducto')?.setValue(rpta.producto[0].codproducto);  
             this.frmDatosItem.get('idtipoprod')?.setValue(rpta.producto[0].idtipoprod); 
+            this.listaTag = rpta.producto[0].tags;
             
             this.verControles(rpta.producto[0].idtipoprod);
         },
@@ -559,6 +562,7 @@ createFormTag() {
         next: (rpta:any) => {
           console.log('rpta.traerUno', rpta.producto[0]);  
             this.frmDatosItem.get('despro')?.setValue(rpta.producto[0].despro); 
+            this.listaTag = rpta.producto[0].tags;
             
             this.verControles(rpta.producto[0].idtipoprod);
         },
