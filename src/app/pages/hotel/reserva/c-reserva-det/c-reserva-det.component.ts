@@ -103,6 +103,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
   onlyReadMonto: boolean = true;
   lstOrdenC: any;
   verDetraccion: boolean = false;
+  lstTransacciones: any[]=[];
 
   constructor(
     private fb: FormBuilder,
@@ -150,6 +151,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
       }  
       this.verAdjunto = true;      
       this.traerUno();
+      this.listarTransacciones();
     }else{
       this.dataAdjunto ={
         idCliente: 0,
@@ -1163,5 +1165,21 @@ createFormRegistro() {
         let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
         this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
         this.registerFormRegistro.get('direccion')?.setValue(provee[0].direcresumen);
+    }
+
+    listarTransacciones() {
+      const $lstTransacciones = this.proyectosService.listarTrasacciones(this.idOrdenC).subscribe({
+        next: (rpta: any) => {
+          console.log('lstTransacciones', rpta);
+          this.lstTransacciones = rpta;       
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+      });
+      this.$listSubcription.push($lstTransacciones);
+  
     }
 }

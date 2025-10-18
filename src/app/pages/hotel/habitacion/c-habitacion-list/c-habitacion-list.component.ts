@@ -129,6 +129,8 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
 
   onAccion(item: any) {
     this.ordenHabitacion.idtrx = item.idtrx;
+    this.ordenHabitacion.idoperacion = item.idnrooperacion;
+    this.ordenHabitacion.idoperacion_item = item.idnrooperacion_item;
     console.log('onAccion', item);
     const ref = this.dialogService.open(CModalExcTransacHotelComponent, {
       data: this.ordenHabitacion,

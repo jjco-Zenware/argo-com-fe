@@ -36,7 +36,7 @@ export class CModalExcTransacHotelComponent {
 
   ngOnInit(): void {
     this.habitacion = this.config.data;
-    console.log('habitacion', this.habitacion);
+    console.log('habitacion Modal', this.habitacion);
     this._transaccion = this.config.data.acciones.filter((x: { idtrx: any; }) => x.idtrx === this.config.data.idtrx);
     this.cargarData();
   }
@@ -67,8 +67,8 @@ export class CModalExcTransacHotelComponent {
       idtrx: codigo,
       idusuario: constantesLocalStorage.idusuario,
       descripcion: this.descripcion,
-      iddocumentoprc: this.habitacion.idnrooperacion,
-      iddocumentoprc_item: this.habitacion.idnrooperacion_item,
+      iddocumentoprc: this.habitacion.idoperacion, //his.habitacion.idnrooperacion,
+      iddocumentoprc_item: this.habitacion.idoperacion_item, //this.habitacion.idnrooperacion_item,
       idprod: this.habitacion.idprod,
     }
 
