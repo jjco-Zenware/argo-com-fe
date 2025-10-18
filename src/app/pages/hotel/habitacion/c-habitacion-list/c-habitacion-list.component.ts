@@ -27,8 +27,10 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   listadoHabitacion: any[] = [];
-  menuItems: MenuItem[] = [];
-  @ViewChild('menu') menu!: Menu;
+  menuItemsAcciones: MenuItem[] = [];
+  menuItemsReservas: MenuItem[] = [];
+  @ViewChild('menuAccion') menuAccion!: Menu;
+  @ViewChild('menuReserva') menuReserva!: Menu;
   ordenHabitacion: any;
 
   constructor(
@@ -84,7 +86,7 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       });
     this.$listSubcription.push($listarhabitacion)
   }
-  
+
   getHabitacionesAgrupadasPorUbicacion(listado: any[]): I_GrupoHabitacionesPorUbicacion[] {
     const grupos: { [key: string]: I_GrupoHabitacionesPorUbicacion } = {};
     listado.forEach(h => {
@@ -108,26 +110,26 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     console.log('Habitación seleccionada:', habitacion);
   }
 
-  toggleMenu(event: Event, data: any) {
+  toggleMenuAcciones(event: Event, data: any) {
     if (data.acciones) {
-      this.cargarMenu(data.acciones);
+      this.cargarMenuAcciones(data.acciones);
       this.ordenHabitacion = data;
-      this.menu.toggle(event);
+      this.menuAccion.toggle(event);
     }
   }
 
-  cargarMenu(data: any) {
-    this.menuItems = [];
+  cargarMenuAcciones(data: any) {
+    this.menuItemsAcciones = [];
     data.forEach((item: any) => {
-      this.menuItems.push({
+      this.menuItemsAcciones.push({
         label: item.nomtrx,
         icon: 'pi pi-cog',
-        command: () => this.onAccion(item)
+        command: () => this.onAccionAcciones(item)
       })
     });
   }
 
-  onAccion(item: any) {
+  onAccionAcciones(item: any) {
     this.ordenHabitacion.idtrx = item.idtrx;
     this.ordenHabitacion.idoperacion = item.idnrooperacion;
     this.ordenHabitacion.idoperacion_item = item.idnrooperacion_item;
@@ -140,9 +142,9 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       width: '40%'
     });
 
-    ref.onClose.subscribe((rpta:any) => {
-      if(!rpta) { return; }
-      
+    ref.onClose.subscribe((rpta: any) => {
+      if (!rpta) { return; }
+
       this.serviceSharedApp.messageToast({
         severity: rpta.data.procesoSwitch === 0 ? 'success' : 'info',
         summary: rpta.data.procesoSwitch === 0 ? 'Exito' : 'Validación...!',
@@ -153,11 +155,46 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     });
   }
 
-  reservarHabitacion(item: any){
+  reservarHabitacion(item: any) {
     console.log('Reservar habitación:', item);
     const ref = this.dialogService.open(CmReservaHabitacionComponent, {
       data: item,
       header: item.nomHabitacion,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+
+    ref.onClose.subscribe(() => {
+      this.listarHabitacion();
+    });
+  }
+
+  toggleMenuReservas(event: Event, data: any) {
+    debugger
+    if (data.reservas) {
+      this.cargarMenuReservas(data.reservas);
+      this.ordenHabitacion = data;
+      this.menuReserva.toggle(event);
+    }
+  }
+
+  cargarMenuReservas(data: any) {
+    this.menuItemsReservas = [];
+    data.forEach((item: any) => {
+      this.menuItemsReservas.push({
+        label: item.lineareserva,
+        icon: 'pi pi-cog',
+        command: () => this.onAccionReservas(item)
+      })
+    });
+  }
+
+  onAccionReservas(item: any) {
+    console.log('Reservar habitación:', item);
+    const ref = this.dialogService.open(CmReservaHabitacionComponent, {
+      data: item,
+      header: item.lineareserva,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '40%'

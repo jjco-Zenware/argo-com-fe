@@ -426,7 +426,14 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-      const { idprod, idtipoprod, nomHabitacion } = this.data;
+      let idprod, idtipoprod, nomHabitacion;
+      let idcliente, idnrooperacion, idnrooperacion_item, lineareserva, rasonsocial;
+      if ('idprod' in this.data && 'idtipoprod' in this.data && 'nomHabitacion' in this.data) {
+        ({ idprod, idtipoprod, nomHabitacion } = this.data);
+      } else if ('idcliente' in this.data && 'idnrooperacion' in this.data && 'idnrooperacion_item' in this.data && 'lineareserva' in this.data && 'rasonsocial' in this.data) {
+        ({ idcliente, idnrooperacion, idnrooperacion_item, lineareserva, rasonsocial } = this.data);
+      }
+      //TODO: MZR - ajustar para que tome los datos de la reserva
       _lstItemOC = [{
         idtipoprod,
         idprod,

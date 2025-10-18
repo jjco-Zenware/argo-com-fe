@@ -31,15 +31,19 @@
                             </div>
                             <p-divider></p-divider>
                             <div class="habitacion-actions">
+                                <button *ngIf="item.reservas.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v"
+                                    class="p-button-rounded p-button-text p-button-sm" (click)="toggleMenuReservas($event, item)"
+                                    pTooltip="Reservas" tooltipPosition="bottom"></button>
+                                <p-tieredMenu #menuReserva [model]="menuItemsReservas" appendTo="body" [popup]="true"></p-tieredMenu>
                                 <button pButton
                                     [disabled]="item.puedeReservar === 0"
                                     class="p-button-outlined p-button-sm" icon="pi pi-file"
                                     pTooltip="Reservar" tooltipPosition="bottom"
                                     (click)="reservarHabitacion(item)"></button>
                                 <button *ngIf="item.acciones.length > 0" pButton pRipple type="button" icon="pi pi-ellipsis-v"
-                                    class="p-button-rounded p-button-text p-button-sm" (click)="toggleMenu($event, item)"
+                                    class="p-button-rounded p-button-text p-button-sm" (click)="toggleMenuAcciones($event, item)"
                                     pTooltip="Acciones" tooltipPosition="bottom"></button>
-                                <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
+                                <p-tieredMenu #menuAccion [model]="menuItemsAcciones" appendTo="body" [popup]="true"></p-tieredMenu>
                             </div>
                         </div>
                     </div>
