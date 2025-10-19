@@ -359,6 +359,7 @@ createFormRegistro() {
      const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
        .subscribe({
          next: (rpta:any) => {
+          debugger
            console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
              this.ordenCompra = rpta.ordencompra[0];     
              //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
@@ -387,7 +388,8 @@ createFormRegistro() {
           this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);     
           this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
           this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
-          this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
+          this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );  
+          this.registerFormRegistro.get('direccion').setValue(rpta.ordencompra[0].direcresumen); 
           this.nrocuotas = rpta.ordencompra[0].nrocuotas 
           this.getBusquedaRUC();
           this.setSpinner(false);       
@@ -811,7 +813,7 @@ createFormRegistro() {
          this.listaClientes();
          this.registerFormRegistro.get('nrodocumento').setValue(parseInt(rpta.objeto.nrodocumento));
          this.registerFormRegistro.get('idproveedor').setValue(parseInt(rpta.objeto.idpersona));     
-         this.registerFormRegistro.get('direccion').setValue(rpta.objeto.direcresumen);           
+         this.registerFormRegistro.get('direccion').setValue(rpta.objeto.direcresumen);
        }
      });
    }
@@ -1053,6 +1055,7 @@ createFormRegistro() {
 
     this.ordencompraService.buscarporRUC(objet).subscribe({
       next: (rpta: any) => {
+        debugger
         this.setSpinner(false);
         console.log('rpta...', rpta); 
         if(rpta.length === 0){
@@ -1063,6 +1066,7 @@ createFormRegistro() {
         this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);
       },
       error: (err) => {
+        debugger
         this.setSpinner(false);
       this.messageService.clear();
       this.messageService.add({
@@ -1170,6 +1174,7 @@ createFormRegistro() {
   }
 
     getDatos(dato:any){
+      debugger
         console.log('getDatos...', dato);
         let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
         this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);

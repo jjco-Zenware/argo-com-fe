@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { constantesLocalStorage, mensajesQuestion } from '@constantes';
+import { c_habitacion, constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, OrdenCompraItem } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
 import { MessageService, ConfirmationService } from 'primeng/api';
@@ -79,7 +79,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     this.frmDatos = this.fb.group({
       idproyecto: [{ value: 0, disabled: false }],
       idtipoproyecto: [{ value: 0, disabled: false }],
-      idtipodocprc: [{ value: 201, disabled: false }],
+      idtipodocprc: [{ value: c_habitacion.tipoDocPRC, disabled: false }],
       idoportunidad: [{ value: 0, disabled: false }],
       sustentodoc: [{ value: '', disabled: false }],
       idrequerimiento: [{ value: 0, disabled: false }],
@@ -95,7 +95,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       idcontacto: [{ value: 0, disabled: false }],
       codtipodoc: [{ value: 'OPO', disabled: false }],
       tiempoentrega: [{ value: 0, disabled: false }],
-      codformapago: [{ value: 14328, disabled: false }],
+      codformapago: [{ value: c_habitacion.formaPagoContado, disabled: false }],
       validezoferta: [{ value: 0, disabled: false }],
       lugarentrega: [{ value: '', disabled: false }],
       garantia: [{ value: 0, disabled: false }],
@@ -129,7 +129,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       nrodias: [{ value: 1, disabled: false }],
       idordencompra_origen_ctb: [{ value: 0, disabled: false }],
       monto_pen_pago: [{ value: 0, disabled: false }],
-      idcentrocosto: [{ value: 225, disabled: false }],
+      idcentrocosto: [{ value: c_habitacion.idCentroCosto, disabled: false }],
       s_monto_neto_CTB: [{ value: 0, disabled: false }],
       direccion: [{ value: null, disabled: false }],
       fel_sunat_transaction: [{ value: 1, disabled: false }],
@@ -426,20 +426,15 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-      let idprod, idtipoprod, nomHabitacion;
-      let idcliente, idnrooperacion, idnrooperacion_item, lineareserva, rasonsocial;
-      if ('idprod' in this.data && 'idtipoprod' in this.data && 'nomHabitacion' in this.data) {
-        ({ idprod, idtipoprod, nomHabitacion } = this.data);
-      } else if ('idcliente' in this.data && 'idnrooperacion' in this.data && 'idnrooperacion_item' in this.data && 'lineareserva' in this.data && 'rasonsocial' in this.data) {
-        ({ idcliente, idnrooperacion, idnrooperacion_item, lineareserva, rasonsocial } = this.data);
-      }
-      //TODO: MZR - ajustar para que tome los datos de la reserva
+      const { idprod, idtipoprod, nomHabitacion } = this.data;
       _lstItemOC = [{
         idtipoprod,
         idprod,
         descripcion: nomHabitacion,
         cantidad: 1,
-        idmarca:112
+        idmarca: c_habitacion.marcaOtros,
+        tipoigv: c_habitacion.gravadoOperacionOnerosa,
+        idUnidad: c_habitacion.unidad
       }]
     }
 
