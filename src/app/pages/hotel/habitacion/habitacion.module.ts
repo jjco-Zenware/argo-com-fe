@@ -16,6 +16,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TagModule } from 'primeng/tag';
 import { AlmacenModule } from '../../almacen/almacen.module';
 import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
+import { ReservaModule } from '../reserva/reserva.module';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { RegistroProveedorModule } from '../../compras/registro-proveedor/regist
     InputNumberModule,
     TagModule,
     RegistroProveedorModule,
-    DropdownModule
+    DropdownModule,
+    ReservaModule
   ],
   providers: [HabitacionesService, SharedAppService, ConfirmationService, MessageService]
 })

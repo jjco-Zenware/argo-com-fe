@@ -120,6 +120,8 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
   ) { }
 
   ngOnInit(): void {
+    console.log("ngOnInit IA_data : ", this.IA_data);
+    
     this.idOrdenC = this.IA_data.idordencompra;
 
     this.createFrm();
@@ -322,7 +324,14 @@ createFormRegistro() {
         this.verbtnAcciones = true;
         this.onlyRead = true;
       break;
-    
+      case 'CFM':
+        this.verbtnGrabar = true;
+        this.onlyRead = false;
+        /*this.verbtnPreliminar= true;
+        this.verbtnOrden = false;
+        this.verbtnAcciones = true;
+        this.verItems = false;*/
+      break;
       default:
         break;
     }

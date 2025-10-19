@@ -32,6 +32,8 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   @ViewChild('menuAccion') menuAccion!: Menu;
   @ViewChild('menuReserva') menuReserva!: Menu;
   ordenHabitacion: any;
+  vistaLista: boolean = true;
+  dataPrc:any;
 
   constructor(
     public dialogService: DialogService,
@@ -171,7 +173,6 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   }
 
   toggleMenuReservas(event: Event, data: any) {
-    debugger
     if (data.reservas) {
       this.cargarMenuReservas(data.reservas);
       this.ordenHabitacion = data;
@@ -191,18 +192,16 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   }
 
   onAccionReservas(item: any) {
-    console.log('Reservar habitación:', item);
-    const ref = this.dialogService.open(CmReservaHabitacionComponent, {
-      data: item,
-      header: item.lineareserva,
-      closeOnEscape: false,
-      styleClass: 'testDialog',
-      width: '40%'
-    });
+    this.vistaLista = false;
+    this.dataPrc = {
+      idordencompra: item.idnrooperacion,
+      paramReg:'E'
+    }
+  }
 
-    ref.onClose.subscribe(() => {
-      this.listarHabitacion();
-    });
+  getBack() {
+    this.vistaLista = true;
+    this.listarHabitacion();
   }
 
 }

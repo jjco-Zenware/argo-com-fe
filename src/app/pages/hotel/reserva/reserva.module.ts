@@ -49,6 +49,9 @@ import { CReservaDetComponent } from './c-reserva-det/c-reserva-det.component';
     AlmacenService, 
     ContabilidadService,
     ConfirmationService
+  ],
+  exports: [
+    CReservaDetComponent
   ]
 })
 export class ReservaModule { }
