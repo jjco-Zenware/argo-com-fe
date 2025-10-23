@@ -8,6 +8,7 @@ import { Menu } from 'primeng/menu';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CModalExcTransacHotelComponent } from '../modal-exc-transac-hotel/modal-exc-transac-hotel.component';
 import { CmReservaHabitacionComponent } from '../cm-reserva-habitacion/cm-reserva-habitacion.component';
+import { CmTransferenciaReservaComponent } from '../cm-transferencia-reserva/cm-transferencia-reserva.component';
 
 export interface I_GrupoHabitacionesPorUbicacion {
   idubicacion: number;
@@ -240,6 +241,21 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       paramReg:'E',
       visBtnFacturacion: true
     }
+  }
+
+  getTransferenciaReserva(idnrooperacion:number){
+    console.log('getTransferenciaReserva:', idnrooperacion);
+    const ref = this.dialogService.open(CmTransferenciaReservaComponent, {
+      data: {idnrooperacion, habitacionesAgrupadas: this.habitacionesAgrupadas},
+      header: 'Transferencia de Reserva',
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '70%'
+    });
+
+    ref.onClose.subscribe(() => {
+      this.listarHabitacion();
+    });
   }
 
 }

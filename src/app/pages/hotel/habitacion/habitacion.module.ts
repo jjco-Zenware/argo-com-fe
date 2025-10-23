@@ -18,13 +18,15 @@ import { AlmacenModule } from '../../almacen/almacen.module';
 import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 import { ReservaModule } from '../reserva/reserva.module';
 import { HotelModule } from '../hotel.module';
+import { CmTransferenciaReservaComponent } from './cm-transferencia-reserva/cm-transferencia-reserva.component';
 
 
 @NgModule({
   declarations: [
     CHabitacionListComponent,
     CModalExcTransacHotelComponent,
-    CmReservaHabitacionComponent
+    CmReservaHabitacionComponent,
+    CmTransferenciaReservaComponent
   ],
   imports: [
     CommonModule,
