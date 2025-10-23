@@ -8,6 +8,7 @@ import { ComprasService } from '../compras/Service/compraServices';
 import { HotelRoutingModule } from './hotel-routing.module';
 import { SharedAppService } from '@sharedAppService';
 import { ConfirmationService } from 'primeng/api';
+import { FacturacionModule } from '../facturacion/facturacion.module';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { ConfirmationService } from 'primeng/api';
     SharedPrimeNgModule,
     FormsModule,
     ReactiveFormsModule,
-    HotelRoutingModule
+    HotelRoutingModule,
+    FacturacionModule
   ],
   providers: [ComprasService, SharedAppService, ConfirmationService]
 })

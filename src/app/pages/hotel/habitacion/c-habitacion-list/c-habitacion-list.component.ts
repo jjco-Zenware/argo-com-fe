@@ -29,11 +29,15 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   listadoHabitacion: any[] = [];
   menuItemsAcciones: MenuItem[] = [];
   menuItemsReservas: MenuItem[] = [];
+  menuItemsFacturacion: MenuItem[] = [];
   @ViewChild('menuAccion') menuAccion!: Menu;
   @ViewChild('menuReserva') menuReserva!: Menu;
+  @ViewChild('menuFacturacion') menuFacturacion!: Menu;
   ordenHabitacion: any;
   vistaLista: boolean = true;
   dataPrc:any;
+  visSeccionReserva : boolean = false;
+  visSeccionFacturacion : boolean = false;
 
   constructor(
     public dialogService: DialogService,
@@ -193,15 +197,49 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
 
   onAccionReservas(item: any) {
     this.vistaLista = false;
+    this.visSeccionReserva = true;
+    this.visSeccionFacturacion = false;
     this.dataPrc = {
       idordencompra: item.idnrooperacion,
-      paramReg:'E'
+      paramReg:'E',
+      visBtnFacturacion: true
     }
   }
 
   getBack() {
     this.vistaLista = true;
     this.listarHabitacion();
+  }
+
+  toggleMenuFacturacion(event: Event, data: any) {
+    if (data.facturacion) {
+      this.cargarMenuFacturacion(data.facturacion);
+      this.ordenHabitacion = data;
+      this.menuFacturacion.toggle(event);
+    }
+  }
+
+  cargarMenuFacturacion(data: any) {
+    this.menuItemsFacturacion = [];
+    data.forEach((item: any) => {
+      this.menuItemsFacturacion.push({
+        label: item.lineareserva,
+        icon: 'pi pi-cog',
+        command: () => this.onAccionFacturacion(item)
+      })
+    });
+  }
+
+  onAccionFacturacion(item: any) {
+    debugger
+    this.vistaLista = false;
+    this.visSeccionReserva = false;
+    this.visSeccionFacturacion = true;
+    this.dataPrc = {
+      iddocumentoprc_origen: item.idnrooperacion,
+      paramReg:'E',
+      visBtnFacturacion: true
+    }
   }
 
 }

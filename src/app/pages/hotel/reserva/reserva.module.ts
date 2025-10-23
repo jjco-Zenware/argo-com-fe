@@ -20,11 +20,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CReservaListComponent } from './c-reserva-list/c-reserva-list.component';
 import { ReservaRoutingModule } from './reserva-routing.module';
 import { CReservaDetComponent } from './c-reserva-det/c-reserva-det.component';
+import { RegistroVentaModule } from '../../facturacion/registro-venta/registro-venta.module';
+import { CFacturacionHabitacionComponent } from './c-facturacion-habitacion/c-facturacion-habitacioncomponent';
 
 @NgModule({
   declarations: [
     CReservaListComponent,
-    CReservaDetComponent
+    CReservaDetComponent,
+    CFacturacionHabitacionComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,9 @@ import { CReservaDetComponent } from './c-reserva-det/c-reserva-det.component';
     InputNumberModule ,
     TagModule,
     RegistroProveedorModule,
-    DropdownModule 
+    DropdownModule,
+    //FacturacionModule
+    RegistroVentaModule
   ],
   providers: [
     SharedAppService, 
@@ -51,7 +56,8 @@ import { CReservaDetComponent } from './c-reserva-det/c-reserva-det.component';
     ConfirmationService
   ],
   exports: [
-    CReservaDetComponent
+    CReservaDetComponent,
+    CFacturacionHabitacionComponent
   ]
 })
 export class ReservaModule { }

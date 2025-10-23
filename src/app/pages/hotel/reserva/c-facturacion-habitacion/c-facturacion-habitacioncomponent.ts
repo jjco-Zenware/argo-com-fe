@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { c_habitacion, constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
-import { dOperacion, Moneda } from '@interfaces';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
+import { Moneda } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
@@ -12,14 +12,18 @@ import * as FileSaver from 'file-saver';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-registro/modal-transac.component';
+import { CMotivoComponent } from 'src/app/pages/facturacion/modalanular/c-modalanular.component';
+
+//import { CMotivoComponent } from '../../modalanular/c-modalanular.component';
 
 @Component({
-  selector: 'app-c-reserva-list',
-  templateUrl: './c-reserva-list.component.html',
-  styleUrls: ['./c-reserva-list.component.scss']
+  selector: 'app-c-facturacion-habitacion',
+  templateUrl: './c-facturacion-habitacion.component.html',
+  styleUrls: ['./c-facturacion-habitacion.component.scss']
 })
-export class CReservaListComponent implements OnInit, OnDestroy{
+export class CFacturacionHabitacionComponent implements OnInit, OnDestroy{
 
+  @Input() IA_Data: any;
   $listSubcription: Subscription[] = [];
 
 
@@ -89,7 +93,8 @@ visXperfil: boolean = true;
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
     ){
-
+      console.log("entro facturacion");
+      
   }
 
   ngOnInit(): void{
@@ -144,21 +149,29 @@ visXperfil: boolean = true;
   }
 
   getListar(){
-   
+    debugger
+    const {iddocumentoprc_origen} = this.IA_Data;
+    console.log("iddocumentoprc_origen recibido: ", iddocumentoprc_origen);
+    
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     
     const objeto = {
       ...this.frmDatos.value,
-      idtipodocprc: c_habitacion.tipoDocPRC //23
+      idtipodocprc: 6,
+      iddocumentoprc_origen
     }
-
+    console.log("objeto recibido: ", objeto);
     const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
       .subscribe({
         next: (rpta:any) => {
             this.setSpinner(false);
             console.log('rpta getListar', rpta);
+            if(rpta.length === 0){ return }
             this.lstCompras = rpta.ordenescompra
+            if (this.frmDatos.value.idproveedor === 0) {
+              this.listaClientes();       
+            }
             
         },
         error:(err)=>{
@@ -196,10 +209,9 @@ visXperfil: boolean = true;
   onVer(data: any) {
       this.dataPrc = {
         idordencompra: data.idordencompra,
-        paramReg:'V',
-        visBtnFacturacion: false
+        paramReg:'V'
       }
-      this.tituloDetalle = "RESERVA N° " + data.nrofactura;
+      this.tituloDetalle = "Ver Factura N° " + data.nrofactura;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
@@ -272,7 +284,7 @@ visXperfil: boolean = true;
         idordencompra: data.idordencompra,
         paramReg:'E'
       }
-      this.tituloDetalle = "RESERVA N° " + data.nrofactura;
+      this.tituloDetalle = "Editar Factura N° " + data.nrofactura;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
@@ -292,7 +304,7 @@ visXperfil: boolean = true;
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR DE RESERVAS";
+      this.tituloDetalle = "REGISTRAR VENTA";
       this.dataPrc = {
         idordencompra: 0,
         paramReg:'N'
@@ -322,18 +334,8 @@ visXperfil: boolean = true;
       }
     
       onAccion(item: any) {
-        this.ordenCompra.idtrx = item.idtrx;
-        const ref = this.dialogService.open(CModalTransacComponent, {
-            data: this.ordenCompra,
-            header: item.nomtrx,
-            closeOnEscape: false,
-            styleClass: 'testDialog',
-            width: '40%'
-        });
-    
-        ref.onClose.subscribe(() => {
-            this.getListar();
-          });
+        this.guardarOC(item);
+        
       }
 
     getExportarExcel(data :any) {
@@ -539,7 +541,56 @@ visXperfil: boolean = true;
         }
         console.log('objeto', objeto);
 
+        if (item.operacion === "generar_anulacion") {
+          const ref = this.dialogService.open(CMotivoComponent, {
+            data: this.ordenCompra,
+            header: "Motivo de Anulación",
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '30%'
+          });
       
+          ref.onClose.subscribe((rpta: any) => {
+            this.setSpinner(false);
+              console.log('onClose',rpta);
+              const objeto2 = {
+                operacion: item.operacion,
+                tipo_de_comprobante: tipo_de_comprobante,
+                serie : serie,
+                numero : numero,
+                idusuario: constantesLocalStorage.idusuario,
+                idordendocumento: this.ordenCompra.idordencompra,
+                motivo: rpta.data.descripcion
+              }
+              if (rpta != undefined) {
+                const $operacionFel = this.proyectosService.operacionFel(objeto2)
+                .subscribe({
+                  next: (rpta:any) => {
+                    console.log('operacionFel', rpta);
+                    if (rpta.estado === 2) {
+                      this.messageService.add({severity: 'error', summary: 'Error', detail: rpta.errors });
+                    }else{
+                      this.messageService.add({severity: 'info', summary: 'Info', detail: rpta.sunat_description });
+                    
+                    }
+                    this.getListar();
+                    this.setSpinner(false);
+                    return;
+                  },
+                  error:(err)=>{
+                      this.setSpinner(false);
+                      this.serviceSharedApp.messageToast()
+                  },
+                  complete:() => {
+                    this.setSpinner(false);
+                  }
+                });
+              this.$listSubcription.push($operacionFel)
+              }
+            });
+          return;
+       }
+
         const $operacionFel = this.proyectosService.operacionFel(objeto)
           .subscribe({
             next: (rpta:any) => {
@@ -564,6 +615,68 @@ visXperfil: boolean = true;
           });
         this.$listSubcription.push($operacionFel)
       }
+
+       guardarOC(item:any){
+
+        let _fechaingreso;
+    let _fecemision;
+    let _fecvencimiento;
+    _fechaingreso = this.ordenCompra.fechaingreso;
+    _fecemision = this.ordenCompra.fecemision;
+    _fecvencimiento = this.ordenCompra.fecvencimiento;
+
+    //if (this.idOrdenC > 0) {
+      if (_fechaingreso.toString().length === 10) {
+        _fechaingreso = new Date(this.utilitariosService.formatFecha(_fechaingreso)); 
+      }
+      if (_fecemision.toString().length === 10) {
+        _fecemision = new Date(this.utilitariosService.formatFecha(_fecemision));    
+      } 
+      if (_fecvencimiento.toString().length === 10) {
+        _fecvencimiento = new Date(this.utilitariosService.formatFecha(_fecvencimiento));    
+      }         
+    //}
+
+    this.ordenCompra.fechaingreso = _fechaingreso;
+    this.ordenCompra.fecemision = _fecemision;
+    this.ordenCompra.fecvencimiento = _fecvencimiento;
+    this.ordenCompra.tipodoc_ctb = (this.ordenCompra.tipodoc_ctb).toString();
+
+        this.setSpinner(true);
+        this.mensajeSpinner = mensajesSpinner.msjProcesando;
+
+    this.ordencompraService.ordenCompraprc(this.ordenCompra).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        if (rpta.procesoSwitch === 0){
+          this.ordenCompra.idtrx = item.idtrx;
+        const ref = this.dialogService.open(CModalTransacComponent, {
+            data: this.ordenCompra,
+            header: item.nomtrx,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '40%'
+        });
+    
+        ref.onClose.subscribe(() => {
+            this.getListar();
+          });          
+        }else{
+        this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+        }
+      },
+      error: (err) => {
+      this.messageService.clear();
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+          });
+      },
+      complete: () => {
+      },
+  });
+  }
 
       
 }

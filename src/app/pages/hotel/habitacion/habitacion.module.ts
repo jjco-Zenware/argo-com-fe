@@ -17,6 +17,7 @@ import { TagModule } from 'primeng/tag';
 import { AlmacenModule } from '../../almacen/almacen.module';
 import { RegistroProveedorModule } from '../../compras/registro-proveedor/registro-proveedor.module';
 import { ReservaModule } from '../reserva/reserva.module';
+import { HotelModule } from '../hotel.module';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { ReservaModule } from '../reserva/reserva.module';
     TagModule,
     RegistroProveedorModule,
     DropdownModule,
-    ReservaModule
+    ReservaModule,
+    HotelModule
   ],
   providers: [HabitacionesService, SharedAppService, ConfirmationService, MessageService]
 })

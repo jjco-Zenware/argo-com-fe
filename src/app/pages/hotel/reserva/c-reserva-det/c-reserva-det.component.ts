@@ -104,6 +104,9 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
   lstOrdenC: any;
   verDetraccion: boolean = false;
   lstTransacciones: any[]=[];
+  verbtnFacturacion: boolean = false;
+  vistaPrincipal: boolean = true;
+  dataFacturacion: any;
 
   constructor(
     private fb: FormBuilder,
@@ -123,6 +126,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
     console.log("ngOnInit IA_data : ", this.IA_data);
     
     this.idOrdenC = this.IA_data.idordencompra;
+    this.verbtnFacturacion = this.IA_data.visBtnFacturacion || false;
 
     this.createFrm();
     this.createFormRegistro();
@@ -1196,4 +1200,5 @@ createFormRegistro() {
       this.$listSubcription.push($lstTransacciones);
   
     }
+
 }

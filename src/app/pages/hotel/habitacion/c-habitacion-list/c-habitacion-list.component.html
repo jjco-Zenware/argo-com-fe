@@ -34,8 +34,14 @@
                                 </div>
                                 <p-divider></p-divider>
                                 <div class="habitacion-actions">
+                                    <button *ngIf="item.facturacion.length > 0" pButton pRipple type="button"
+                                        icon="pi pi-money-bill" class="p-button-rounded p-button-text p-button-sm"
+                                        (click)="toggleMenuFacturacion($event, item)" pTooltip="Facturación"
+                                        tooltipPosition="bottom"></button>
+                                    <p-tieredMenu #menuFacturacion [model]="menuItemsFacturacion" appendTo="body"
+                                        [popup]="true"></p-tieredMenu>
                                     <button *ngIf="item.reservas.length > 0" pButton pRipple type="button"
-                                        icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text p-button-sm"
+                                        icon="pi pi-lock" class="p-button-rounded p-button-text p-button-sm"
                                         (click)="toggleMenuReservas($event, item)" pTooltip="Reservas"
                                         tooltipPosition="bottom"></button>
                                     <p-tieredMenu #menuReserva [model]="menuItemsReservas" appendTo="body"
@@ -66,21 +72,40 @@
     </div>
 </ng-container>
 <ng-template #visSecciones>
-    <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
-        <div class="grid ">
-            <div class="flex justify-content-between col-12 gap-2">
-                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
-                        label="Regresar" pTooltip="Regresar a Bandeja" tooltipPosition="left"
-                        (click)="getBack()"></button>
-                </div>
-                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+    <ng-container *ngIf="visSeccionReserva">
+        <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
+            <div class="grid ">
+                <div class="flex justify-content-between col-12 gap-2">
+                    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
+                        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
+                            label="Regresar" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                            (click)="getBack()"></button>
+                    </div>
+                    <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                        <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                    </div>
                 </div>
             </div>
+            <app-c-reserva-det [IA_data]="dataPrc"></app-c-reserva-det>
         </div>
-        <app-c-reserva-det [IA_data]="dataPrc"></app-c-reserva-det>
-    </div>
+    </ng-container>
+    <ng-container *ngIf="visSeccionFacturacion">
+        <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
+            <div class="grid ">
+                <div class="flex justify-content-between col-12 gap-2">
+                    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
+                        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
+                            label="Regresar" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                            (click)="getBack()"></button>
+                    </div>
+                    <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                        <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                    </div>
+                </div>
+            </div>
+            <app-c-facturacion-habitacion [IA_Data]="dataPrc"></app-c-facturacion-habitacion>
+        </div>
+    </ng-container>
 </ng-template>
 
 <p-blockUI [blocked]="blockedDocument">
