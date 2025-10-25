@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { DialogService, DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 import { HabitacionesService } from '../habitaciones.service';
@@ -18,6 +18,7 @@ export class CmTransferenciaReservaComponent implements OnInit, OnDestroy {
 
   data: any;
   habitacionesAgrupadas: any[] = [];
+  existeHabitacionTransferible: boolean = false;
 
   constructor(
     public dialogService: DialogService,
@@ -29,10 +30,21 @@ export class CmTransferenciaReservaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.data = this.config.data;
-    console.log('data config: ', this.data);
     this.habitacionesAgrupadas = this.data.habitacionesAgrupadas;
-    
+
+    this.existeHabitacionTransferible = false;
     for (const grupo of this.habitacionesAgrupadas) {
+      for (const habitacion of grupo.habitaciones) {
+        if (habitacion.idnrooperacion && habitacion.idnrooperacion > 0) {
+          this.existeHabitacionTransferible = true;
+          break;
+        }
+      }
+      if (this.existeHabitacionTransferible) break;
+    }
+
+    for (const grupo of this.habitacionesAgrupadas) {
+      grupo.habitaciones = grupo.habitaciones.filter((habitacion: any) => habitacion.idnrooperacion && habitacion.idnrooperacion > 0);
       for (const habitacion of grupo.habitaciones) {
         habitacion.chkActivo = false;
       }
@@ -52,7 +64,6 @@ export class CmTransferenciaReservaComponent implements OnInit, OnDestroy {
   }
 
   guardar() {
-    debugger
     const habitacionesSeleccionadas: any[] = [];
     
     for (const grupo of this.habitacionesAgrupadas) {

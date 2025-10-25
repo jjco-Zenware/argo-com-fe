@@ -1,19 +1,26 @@
 <div class="card">
     <div class="card-header">
-        <h5 class="m-0 text-primary">Reserva de Habitación</h5>
+        <h5 class="m-0 text-primary mb-4">Reserva de Habitación</h5>
     </div>
 
-        <div class="card m-4">
-        <ng-container *ngIf="habitacionesAgrupadas.length > 0; else noHabitaciones">
-            <ng-container *ngFor="let grupo of habitacionesAgrupadas">
-                <section class="mb-3">
+    <div class="flex justify-content-end mb-4 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <button pButton [disabled]="!existeHabitacionTransferible" icon="pi pi-save" label="Transferir"
+            class="p-button-primary w-auto h-2rem" (click)="guardar()"></button>
+    </div>
+
+    <ng-container *ngIf="habitacionesAgrupadas.length > 0; else noHabitaciones">
+        <ng-container *ngFor="let grupo of habitacionesAgrupadas">
+            <section class="mb-3">
+
+                <ng-container *ngIf="grupo.habitaciones.length > 0">
                     <div class="font-semibold text-lg mb-4 -mt-1 ml-3">{{grupo.rutaubicacion}}</div>
                     <div class="grid border-1 border-round surface-border p-2 mx-2">
                         <div class="col-6 md:col-4 lg:col-3 xl:col-2"
                             *ngFor="let item of grupo.habitaciones; trackBy: trackByHabitacion">
                             <div class="habitacion-card border-1 border-round surface-border"
                                 pTooltip="{{item.tipoHabitacion}} - {{item.estadoHabitacion}}" tooltipPosition="top"
-                                (click)="getHabitacion(item)" (keydown)="getHabitacion(item)" role="button" tabindex="0">
+                                (click)="getHabitacion(item)" (keydown)="getHabitacion(item)" role="button"
+                                tabindex="0">
                                 <div class="habitacion-icon">
                                     <i [class]="item.icono || 'pi pi-home'" [style.color]="item.color"></i>
                                 </div>
@@ -28,29 +35,25 @@
                                 </div>
                                 <p-divider></p-divider>
                                 <div class="habitacion-actions flex justify-content-end pr-2 pb-2">
-                                    <p-checkbox [(ngModel)]="item.chkActivo" [binary]="true" 
-                                               pTooltip="Seleccionar para transferir" tooltipPosition="top">
+                                    <p-checkbox [(ngModel)]="item.chkActivo" [binary]="true"
+                                        pTooltip="Seleccionar para transferir" tooltipPosition="top">
                                     </p-checkbox>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </section>
-            </ng-container>
+                </ng-container>
+            </section>
         </ng-container>
+    </ng-container>
 
-        <ng-template #noHabitaciones>
-            <div class="flex flex-column align-items-center justify-content-center p-6">
-                <i class="pi pi-home text-6xl text-400 mb-3"></i>
-                <span class="text-xl text-500">No hay habitaciones disponibles</span>
-            </div>
-        </ng-template>
-    </div>
+    <ng-template #noHabitaciones>
+        <div class="flex flex-column align-items-center justify-content-center p-6">
+            <i class="pi pi-home text-6xl text-400 mb-3"></i>
+            <span class="text-xl text-500">No hay habitaciones para transferir disponibles</span>
+        </div>
+    </ng-template>
 
-</div>
-<div class="flex justify-content-end mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
-    <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem"
-        (click)="guardar()"></button>
 </div>
 
 <p-blockUI [blocked]="blockedDocument">
