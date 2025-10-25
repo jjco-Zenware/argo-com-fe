@@ -101,9 +101,9 @@ export class CmTransferenciaReservaComponent implements OnInit, OnDestroy {
       next: (rpta: any) => {
         this.setSpinner(false);
         this.messageService.add({
-          severity: 'success',
-          summary: 'Éxito',
-          detail: 'Reservas transferidas correctamente'
+          severity: rpta.procesoSwitch === 0 ? 'success' : 'error',
+          summary: rpta.procesoSwitch === 0 ? 'Éxito' : 'Error',
+          detail: rpta.mensaje
         });
         this.ref.close(true);
       },
