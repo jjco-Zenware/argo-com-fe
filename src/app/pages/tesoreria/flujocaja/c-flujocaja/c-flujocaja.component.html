@@ -57,6 +57,7 @@
                 <th class="bg-teal-50 border-1">Octubre</th>
                 <th class="bg-teal-50 border-1">Noviembre</th>
                 <th class="bg-teal-50 border-1">Diciembre</th>
+                <th class="bg-teal-50 border-1 font-bold">ACUMULADO</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="groupheader" let-customer>
@@ -114,6 +115,9 @@
                 </td>
                 <td [ngClass]="{'text-red-500': customer.diciembre < 0, 'font-bold': customer.tipo === 'C'}">
                     {{customer.diciembre | number :'0.2-2'}}
+                </td>
+                <td [ngClass]="{'text-red-500': customer.diciembre < 0, 'font-bold': customer.tipo === 'C'}">
+                    {{customer.total | number :'0.2-2'}}
                 </td>
             </tr>
         </ng-template>

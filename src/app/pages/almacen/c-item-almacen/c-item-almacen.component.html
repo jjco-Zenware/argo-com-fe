@@ -31,11 +31,11 @@
                 </div>                     
             </div>
             <div class="flex grid mb-2">  
-                <!-- <div class="sm:col-12 lg:col-2 md:col-12">
+                <div class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Serial N</label>
                     <input pInputText type="text" formControlName="serialnumber" [readonly]=true class="p-inputtext-sm surface-100"/>
                 </div>
-                <div class="sm:col-12 lg:col-2 md:col-12">
+                <!-- <div class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Service T</label>
                     <input pInputText type="text" formControlName="servicetag" [readonly]=true class="p-inputtext-sm surface-100"/>
                 </div> -->
@@ -58,7 +58,7 @@
                     <label class="font-semibold">Ubicación</label>
                     <input pInputText type="text" formControlName="rutaubicacion" [readonly]=true class="p-inputtext-sm surface-100"/>
                 </div> -->
-                <div *ngIf="!verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12 ">
+                <!-- <div *ngIf="!verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12 ">
                     <label class="font-semibold">P. Unitario</label>
                     <p-inputNumber (onInput)="calcularBCPu($event)" formControlName="preciocosto" 
                     mode="decimal" locale="en-US" [minFractionDigits]="2" [readonly]=true class="p-inputtext-sm surface-100"></p-inputNumber>
@@ -67,7 +67,7 @@
                     <label class="font-semibold">Total</label>
                     <p-inputNumber class="p-inputtext-sm" formControlName="preciocostototal" 
                     mode="decimal" locale="en-US" [minFractionDigits]="2" [readonly]=true class="p-inputtext-sm surface-100"></p-inputNumber>
-                </div>                
+                </div>                 -->
             </div>
             <div *ngIf="verMovAlmacen" class="flex grid">
                 

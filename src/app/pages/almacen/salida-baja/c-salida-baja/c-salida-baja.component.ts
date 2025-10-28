@@ -174,7 +174,7 @@ export class CSalidaBajaComponent implements OnInit, OnDestroy{
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR SALIDA POR BAJA/DAÑOS/OTROS";
+      this.tituloDetalle = "REGISTRAR DE SALIDAS";
       this.dataDet = {
         idcodigo: 0,
         paramReg:'N',

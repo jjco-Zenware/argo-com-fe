@@ -46,8 +46,8 @@
             </div>
         </form>        
 
-        <p-table #dt1 [value]="lstOrdenCompra" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
+        <p-table #dt1 [value]="lstOrdenCompra" [rows]="25" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
+            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
             currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
 
             <ng-template pTemplate="header">
@@ -112,7 +112,7 @@
                             ESTADO
                         </div>
                     </th>
-                    <th style="width: 70px" class="bg-teal-50 border-1" >
+                    <!-- <th style="width: 70px" class="bg-teal-50 border-1" >
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
                             RECIBIDO
                         </div>
@@ -121,17 +121,17 @@
                         <div [ngStyle]="{'width':'80px','text-align':'center'}">
                             ENTREGADO
                         </div>
-                    </th>
+                    </th> -->
                     <th style="width: 80px;" class="bg-teal-50 border-1" >
                         <div class="flex justify-content-between align-items-center">
                             ACCIONES
                         </div>
                     </th>
                 </tr>
-                <tr >
+                 <tr >
                     <th></th>
                     <th *ngFor="let col of cols">
-                        <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
+                        <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, 'contains')" class="w-full h-2rem"/>                    
                     </th>
                 </tr>
            
@@ -195,7 +195,7 @@
                             <!-- {{data.estado | uppercase}} -->
                         </div>
                     </td>
-                    <td>                       
+                    <!-- <td>                       
                         <div [ngStyle]="{'width':'70px','text-align': 'center'}">
                             <p-tag [value]="data.estadoentrada" [severity]="data.serevity_estadoentrada"></p-tag>
                         </div>
@@ -204,7 +204,7 @@
                         <div [ngStyle]="{'width':'70px','text-align': 'center'}">
                             <p-tag [value]="data.estadosalida" [severity]="data.serevity_estadosalida"></p-tag>
                         </div>
-                    </td>
+                    </td> -->
                     <td>
                         <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'70px'}">
                             <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onVerDetalle(data)"></button>
