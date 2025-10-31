@@ -16,6 +16,11 @@ const routes: Routes = [
     path: 'habitaciones',
     loadChildren: () => import('./habitacion/habitacion.module').then(m => m.HabitacionModule),
     data: { breadcrumb: 'Habitación' }
+  },
+  {
+    path: 'listar-produccion-hotel',
+    loadChildren: () => import('./produccion/produccion.module').then(m => m.ProduccionModule),
+    data: { breadcrumb: 'Producción' }
   }
 ];
 
