@@ -52,7 +52,12 @@
             <tr class="text-sm">
                 <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1">
                     <div class="flex justify-content-between align-items-center">
-                        N°
+                        #
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1">
+                    <div class="flex justify-content-between align-items-center">
+                        N° Reserva
                     </div>
                 </th>
                 <th style="width: 60px;" class="bg-teal-50 border-1" >
@@ -100,6 +105,11 @@
                 <td>                        
                     <div [ngStyle]="{'width':'20px'}">
                         {{rowIndex + 1}}
+                    </div>
+                </td>
+                <td>                        
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.idordencompra}}
                     </div>
                 </td>
                 <td >
