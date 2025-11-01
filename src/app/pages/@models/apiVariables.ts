@@ -267,5 +267,10 @@ export const constantesApiWeb = {
     prcHabitacion: controllerHotel + '/actualizarhabitacion/',
     traerunoHabitacion: controllerHotel + '/traerUnoHabitacion/',
     TransferirReservaItems: controllerHotel + '/TransferirReservaItems',
-    listarProduccionHotel: controllerHotel + '/ListarProduccionHotel'
+    listarProduccionHotel: controllerHotel + '/ListarProduccionHotel',
+    listarPAX: controllerHotel + '/listarpax',
+    registrarPaxPRC: controllerHotel + '/paxprc',
+    eliminarPaxDel: controllerHotel + '/paxdel',
+    personaTraerUnoTipoDoc: controllerMain + '/personatraerunotipodoc',
+    listarHabitacionesCombo: controllerHotel + '/listarhabitacionescombo'
 }

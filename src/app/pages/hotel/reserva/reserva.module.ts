@@ -22,12 +22,15 @@ import { ReservaRoutingModule } from './reserva-routing.module';
 import { CReservaDetComponent } from './c-reserva-det/c-reserva-det.component';
 import { RegistroVentaModule } from '../../facturacion/registro-venta/registro-venta.module';
 import { CFacturacionHabitacionComponent } from './c-facturacion-habitacion/c-facturacion-habitacioncomponent';
+import { ReservaService } from './reserva.service';
+import { CmPersonaPaxComponent } from './cm-persona-pax/cm-persona-pax.component';
 
 @NgModule({
   declarations: [
     CReservaListComponent,
     CReservaDetComponent,
-    CFacturacionHabitacionComponent
+    CFacturacionHabitacionComponent,
+    CmPersonaPaxComponent
   ],
   imports: [
     CommonModule,
@@ -53,7 +56,8 @@ import { CFacturacionHabitacionComponent } from './c-facturacion-habitacion/c-fa
     OrdencompraService, 
     AlmacenService, 
     ContabilidadService,
-    ConfirmationService
+    ConfirmationService,
+    ReservaService
   ],
   exports: [
     CReservaDetComponent,

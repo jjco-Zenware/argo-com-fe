@@ -42,8 +42,8 @@
                         <label class="block text-900  mb-1">RUC <span class="text-red-500 font-bold"> *
                             </span></label>
                         <span class="p-input-icon-right">
-                            <i class="pi pi-search cursor-pointer" pTooltip="Busqueda por RUC"
-                                tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
+                            <i class="pi pi-search cursor-pointer" pTooltip="Busqueda por RUC" tooltipPosition="bottom"
+                                (click)="getBusquedaRUC()"></i>
                             <input pInputText type="text" formControlName="nrodocumento" [readonly]=onlyRead
                                 class="p-inputtext-sm" maxlength="11"
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
@@ -57,10 +57,9 @@
                         </div>
 
                         <span inputStyleClass="font-semibold surface-300">
-                            <p-dropdown [options]="lstCliente" placeholder="Cliente..."
-                                formControlName="idproveedor" class="p-inputtext-sm" optionLabel="razonsocial"
-                                optionValue="idcliente" appendTo="body" [readonly]=onlyRead [filter]="true"
-                                (onChange)="getDatos($event.value)"></p-dropdown>
+                            <p-dropdown [options]="lstCliente" placeholder="Cliente..." formControlName="idproveedor"
+                                class="p-inputtext-sm" optionLabel="razonsocial" optionValue="idcliente" appendTo="body"
+                                [readonly]=onlyRead [filter]="true" (onChange)="getDatos($event.value)"></p-dropdown>
                         </span>
                     </div>
                     <div class="lg:col-3 "></div>
@@ -91,8 +90,8 @@
                     <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
                         <label class="block text-900 mb-1">N° Documento</label>
                         <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nrodocumento_ctb"
-                                [readonly]=onlyReadSunat class="p-inputtext-sm surface-100"
+                            <input pInputText type="text" formControlName="nrodocumento_ctb" [readonly]=onlyReadSunat
+                                class="p-inputtext-sm surface-100"
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
                         </span>
                     </div>
@@ -121,9 +120,9 @@
                         <label class="block text-900 mb-1">Forma de Pago <span class="text-red-500 font-bold"> *
                             </span></label>
                         <span>
-                            <p-dropdown [options]="lstTermino" formControlName="codformapago"
-                                optionLabel="valoritem" placeholder="Seleccionar..." optionValue="iditem"
-                                appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem"
+                                placeholder="Seleccionar..." optionValue="iditem" appendTo="body" [readonly]=onlyRead
+                                class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div>
                     <div class="lg:col-4"></div>
@@ -447,6 +446,186 @@
                 </p-table>
             </p-tabPanel>
 
+            <p-tabPanel>
+                <ng-template pTemplate="header">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-cog"></i>
+                        <span class="font-bold white-space-nowrap m-0">
+                            PAX
+                        </span>
+                    </div>
+                </ng-template>
+                <!-- <div class="flex col-12 -mt-3 gap-2">
+                    <form [formGroup]="frmDatos"
+                        class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-7 text-sm">
+                        <div class="md:col-6 sm:col-3 lg:col-3 col-6 -mt-3">
+                            <label class="font-semibold text-blue-600 text-base">Desde</label>
+                            <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio"
+                                formControlName="fechaInicio" [showOnFocus]="false" [readonlyInput]="true"
+                                appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
+                            </p-calendar>
+                        </div>
+                        <div class="md:col-6 sm:col-3 lg:col-3 col-6 -mt-3">
+                            <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                            <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin"
+                                formControlName="fechaFin" [readonlyInput]="true" appendTo="body"
+                                class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
+                        </div>
+                        <div class="sm:col-3 md:col-2 lg:col-3 -mt-3 gap-2">
+                            <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros"
+                                tooltipPosition="bottom"
+                                class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem"
+                                icon="pi pi-search"></button>
+                            <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel"
+                                tooltipPosition="bottom"
+                                class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem bg-green-500 ml-2"
+                                icon="pi pi-file-excel"></button>
+                        </div>
+                    </form>
+                </div> -->
+                <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+                    <button pButton icon="pi pi-save" label="Agregar" class="p-button-primary w-auto h-2rem"
+                    (click)="clientePAX()"></button>
+                </div>
+                <p-table #dt1 [value]="listadoPAX" [rows]="25" [rowHover]="true" responsiveLayout="stack"
+                    [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+                    [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
+                    currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+                    styleClass="p-datatable-sm card border-1 border-round surface-border">
+
+                    <ng-template pTemplate="header">
+                        <tr class="text-sm">
+                            <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
+                                <div class="flex justify-content-between align-items-center">
+                                    N°
+                                </div>
+                            </th>
+                            <th style="width: 60px;" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    CODIGO ITEM PAX
+                                </div>
+                            </th>
+                            <th style="width: 60px;" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    CODIGO RESERVA
+                                </div>
+                            </th>
+                            <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    CODIGO PERSONA
+                                </div>
+                            </th>
+                            <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    RAZON SOCIAL
+                                </div>
+                            </th>
+                            <th style="width: 70px" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    TIPO DOCUMENTO
+                                </div>
+                            </th>
+                            <th style="width: 70px" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    NUMERO DOCUMENTO
+                                </div>
+                            </th>
+                            <th style="width: 70px" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    DESCRIPCION PRODUCTO
+                                </div>
+                            </th>
+                            <th style="width: 70px" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    USUARIO
+                                </div>
+                            </th>
+                            <th style="width: 70px" class="bg-teal-50 border-1">
+                                <div class="justify-content-between align-items-center">
+                                    FECHA
+                                </div>
+                            </th>
+                            <th style="width: 30px;" class="bg-teal-50 border-1">
+                                <div class="flex justify-content-between align-items-center">
+                                    ACCIONES
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                        <tr class="text-sm">
+                            <td>
+                                <div [ngStyle]="{'width':'20px'}">
+                                    {{rowIndex + 1}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'60px'}">
+                                    {{data.iditempax}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'60px'}">
+                                    {{data.idreserva}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'150px'}">
+                                    {{data.idpersona}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'100px'}">
+                                    {{data.razonsocial | uppercase}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'100px'}">
+                                    {{data.idtipodoc}}
+                                </div>
+                            </td>
+
+                            <td>
+                                <div [ngStyle]="{'width':'100px'}">
+                                    {{data.nrodocumento}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'100px'}">
+                                    {{data.despro | uppercase}} 
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'100px'}">
+                                    {{data.usuario}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'100px'}">
+                                    {{data.fecha | date:'dd/MM/yyyy'}}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex" [ngStyle]="{'width':'30px','text-align':'right'}">
+                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
+                                        tooltipPosition="left" (click)="eliminaPAX()"
+                                        class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6">No se encontraron registros.</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="loadingbody">
+                        <tr>
+                            <td colspan="6">Cargando datos. Espere por favor.</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </p-tabPanel>
         </p-tabView>
     </div>
 </div>

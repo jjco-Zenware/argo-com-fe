@@ -14,6 +14,8 @@ import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/modalPersona/c-modalpersona.component';
 import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
+import { ReservaService } from '../reserva.service';
+import { CmPersonaPaxComponent } from '../cm-persona-pax/cm-persona-pax.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -107,6 +109,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
   verbtnFacturacion: boolean = false;
   vistaPrincipal: boolean = true;
   dataFacturacion: any;
+  listadoPAX: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -120,6 +123,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
     private ordencompraService: OrdencompraService,
     private comprasService: ComprasService,
     private contabilidadService: ContabilidadService,
+    private serviceReserva: ReservaService,
   ) { }
 
   ngOnInit(): void {
@@ -137,6 +141,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
     this.listarItemsTabla(); 
     this.listarItemsTablaUnidad() ;
     this.listarItemsTablaComprobante();
+    this.listarPAX();
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -1201,4 +1206,87 @@ createFormRegistro() {
   
     }
 
+  listarPAX() {
+    console.log("data entrada: ", this.IA_data);
+    
+    const objeto = {
+      idreserva: this.IA_data.idordencompra,
+      idprod: 0,
+      idusuario : constantesLocalStorage.idusuario,
+      indvig: true
+    }
+    const $listarPAX = this.serviceReserva.listarPAX(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          this.setSpinner(false);
+          console.log('rpta listarPAX: ', rpta);
+          this.listadoPAX = rpta;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($listarPAX)
+  }
+
+  eliminaPAX(item:any){
+    this.confirmationService.confirm({
+      key: 'confirm1',
+      header: 'Confirmación',
+      message:  '¿Desea Eliminar Item ' + '<b>' + item.razonsocial + '</b>' + '?' ,
+      accept: () => {
+        const objeto = { 
+          iditempax: item.iditempax,
+          idreserva: item.idreserva,
+          idpersona: item.idpersona,
+          idprod: 0,
+          idusuario: constantesLocalStorage.idusuario,
+        }
+
+      const $eliminarPaxDel = this.serviceReserva.eliminarPaxDel(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          this.setSpinner(false);
+          console.log('rpta listarPAX: ', rpta);
+          this.listadoPAX = rpta;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+      this.$listSubcription.push($eliminarPaxDel)
+      }
+    });
+  }
+
+  clientePAX(){
+    const objet = {
+      idreserva: this.IA_data.idordencompra,
+      idprod: 0,
+      idrolpersona:'PRO'
+    }
+
+    const refItem = this.dialogService.open(CmPersonaPaxComponent, {
+    
+      data: objet,
+      header: "Agregar Cliente PAX",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      console.log('onClose',rpta);
+      if (rpta != undefined) {
+        this.listarPAX();
+      }
+    });
+  }
 }
