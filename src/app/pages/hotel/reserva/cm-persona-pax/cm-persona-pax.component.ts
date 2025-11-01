@@ -183,7 +183,7 @@ listaHabitacion: any[] = [];
         const objeto = {
           ...this.registerFormCliente.getRawValue(),
           idreserva: this.param.idreserva,
-          idprod: 0,
+          idprod: this.registerFormCliente.get('idprod')?.value,
         }
         const $registrarPaxPRC = this.serviceReserva.registrarPaxPRC(objeto)
         .subscribe({
@@ -248,7 +248,7 @@ listaHabitacion: any[] = [];
       idsubfamilia: 525,
       desproducto: "",
       idalmacen: 0,
-      idprod: this.registerFormCliente.get('idprod')?.value,
+      idprod: 0,
       idusuario: constantesLocalStorage.idusuario
     }
 
