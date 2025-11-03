@@ -52,7 +52,7 @@ export class CAmarreContableDetComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
 
         console.log('this.IA_data', this.IA_data);
-        this.idAsiento = this.IA_data;
+        this.idAsiento = this.IA_data.idasientocfg;
         this.createFormRegistro();
         this.listarDocumentoPrc();
 

@@ -111,19 +111,11 @@ export class CDetalleMovSalTrasladoComponent implements OnInit, OnDestroy{
     // this.listarItemsTablaComprobante();
     
     if (this.idMovimiento > 0) {   
-      if (this.IA_data.paramReg === 'V') {
-        this.dataAdjunto ={
-          idCliente: this.idMovimiento,
-          codtipoproc: 7,
-          veracciones: 1
-        }
-      }  else{
-        this.dataAdjunto ={
+      this.dataAdjunto ={
           idCliente: this.idMovimiento,
           codtipoproc: 7,
           veracciones: 0
-        }
-      }  
+        } 
       this.verAdjunto = true;     
       this.traerUnoOrdenC();
       this.listarTransacciones();

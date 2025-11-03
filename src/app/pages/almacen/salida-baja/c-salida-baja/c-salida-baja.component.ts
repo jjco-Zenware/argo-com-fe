@@ -273,10 +273,10 @@ export class CSalidaBajaComponent implements OnInit, OnDestroy{
             this.listadoArchivos = rpta;
             console.log('this.listadoArchivos ...', this.listadoArchivos );
 
-            if (this.listadoArchivos.length === 0) {
-              this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
-                  return;
-            }else{
+            // if (this.listadoArchivos.length === 0) {
+            //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+            //       return;
+            // }else{
               this.ordenCompra.idtrx = valor.idtrx;
         console.log('onAccion', valor);
         const ref = this.dialogService.open(CModalExcAlmacenComponent, {
@@ -290,7 +290,7 @@ export class CSalidaBajaComponent implements OnInit, OnDestroy{
         ref.onClose.subscribe(() => {
             this.getListar();
           });
-            }
+           // }
           },
           error: (err) => {
             this.serviceSharedApp.messageToast();

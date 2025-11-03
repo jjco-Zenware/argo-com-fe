@@ -991,7 +991,7 @@ lstUbigeo: any;
       const objeto = {
         idusuario : constantesLocalStorage.idusuario,
         iddocumentoprc: this.idMovimiento,
-        codtipoprc: 12,
+        codtipoprc: 27,
         idplantilla: 0
       }
   
@@ -1001,7 +1001,7 @@ lstUbigeo: any;
           
           const mediaType = 'application/pdf';
             const blob = new Blob([rpta.body], { type: mediaType });
-            const filename = 'PECOSA-' + this.ordenCompra.codigonroorden;
+            const filename = 'GUIA-' + this.ordenCompra.codigonroorden;
     
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');

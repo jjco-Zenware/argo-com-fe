@@ -868,12 +868,13 @@ export class CModalGastosComponent implements OnInit, OnDestroy {
         console.log('changeTipo...', item);
         let motivo = '';
         let tipo = '';
+        console.log('this.lstcategoria...', this.lstcategoria);
 
         const motivoArr = this.lstcategoria.filter(
-            (x: { iditem: any }) => x.iditem == item.value
+            (x: { idcategoria: any }) => x.idcategoria == item.value
         );
         console.log('motivoArr...', motivoArr);
-        motivo = motivoArr.length > 0 ? motivoArr[0].valoritem || '' : '';
+        motivo = motivoArr.length > 0 ? motivoArr[0].nomcategoria || '' : '';
         tipo = motivoArr.length > 0 ? motivoArr[0].codlabel || '' : '';
         console.log('motivo...', motivo);
         console.log('tipo...', tipo);

@@ -33,6 +33,7 @@ import { CModalGastosComponent } from '../modal-gastos/c-modalgastos.component';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { CAdjuntosComponent } from 'src/app/pages/compras/registro-proveedor/c-adjuntos/c-adjuntos.component';
+import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 
 @Component({
     selector: 'app-c-evento-detalle',
@@ -155,6 +156,9 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
     maximaFechaDesde!: Date;
     minimaFechaHasta!: Date;
     maximaFechaHasta: Date = this.serviceUtilitario.obtenerFechaFinMesTotal();
+    idReferencia: any;
+    lstCategoriaDoc: any;
+    idcategoriaGasto: any;
 
     constructor(
         private messageService: MessageService,
@@ -166,7 +170,8 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         private marketingService: MarketingService,
         private confirmationService: ConfirmationService,
         private ordencompraService: OrdencompraService,
-        private proyectosService: ProyectosService
+        private proyectosService: ProyectosService,
+        private contabilidadService: ContabilidadService
     ) {
         //this.comprasService.emitirEvento(0);
     }
@@ -269,6 +274,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         this.listaMonedas();
         this.listarItemsTabla();
         this.listaClientes();
+        this.listarCategoriaDoc();
 
         if (this.idCodigo > 0) {
             console.log('this.constantesLocalStorage', constantesLocalStorage);
@@ -1197,6 +1203,12 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         this.setSpinner(true);
         this.mensajeSpinner = 'Guardando...!';
 
+        console.log('objeto...', objeto);
+        console.log('OBJETO.idcategoria...', objeto.idcategoria);
+        this.idcategoriaGasto = objeto.idcategoria;
+
+        //this.registerForm.get('idcategoria').setValue(objeto.idcategoria); // categoria gasto
+
         const obj = {
             ...objeto,
             idproyecto: this.registerForm.get('idproyecto').value,
@@ -1210,6 +1222,10 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
         this.ordencompraService.ordenDocumentoprc(obj).subscribe({
             next: (rpta: any) => {
                 this.setSpinner(false);
+
+                console.log('guardarGasto...', rpta);
+                this.idReferencia = rpta.resultProceso;
+
                 if (rpta.procesoSwitch === 0) {
                     this.messageService.add({
                         severity: 'success',
@@ -1218,6 +1234,7 @@ export class CEventoDetalleComponent implements OnInit, OnDestroy {
                     });
 
                     this.getListarGasto();
+                    this.generarAsiento();
                     // this.dataAdjunto ={
                     //   idCliente: this.idOrdenC,
                     //   codtipoproc: 8,
@@ -1704,5 +1721,59 @@ const objeto = {
   changeFechaHasta(event: Date) {
     
     this.maximaFechaDesde = event;
+  }
+
+  generarAsiento() {
+
+        this.setSpinner(true);
+        this.mensajeSpinner = 'Generando Asientos...!';
+        console.log('this.idcategoria...', this.registerForm.value.idcategoria);
+        console.log('this.lstCategoriaDoc...', this.lstCategoriaDoc);
+
+
+        let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.idcategoriaGasto);
+        console.log('s_categoria...', s_categoria);
+
+        const objeto = {
+            idasiento: 0,
+            idreferencia: this.idReferencia,
+            glosaasiento: 'ASIENTO GENERADO DESDE FACTURACIÓN ' + s_categoria[0].nomcategoria,
+            idusuario: constantesLocalStorage.idusuario
+        }
+        const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
+            next: (rpta: any) => {
+                if (rpta.procesoSwitch === 0) {
+                    this.setSpinner(false);
+                    this.messageService.add({ severity: 'success', summary: 'Exito', detail: rpta.mensaje });                    
+                }else{
+                    this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.mensaje });
+                }
+            },
+            error: (err) => {
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {},
+        });
+        this.$listSubcription.push($listaMonedas);
+    }
+
+    listarCategoriaDoc() {
+    let tipo = 7;
+    const $listarCategoriaDoc = this.contabilidadService
+        .listarCategoriasDoc(tipo)
+        .subscribe({
+            next: (rpta: any) => {
+                console.log('listarCategoriasDoc...', rpta);
+                this.setSpinner(false);
+                this.lstCategoriaDoc = rpta;
+            },
+            error: (err) => { 
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {},
+        });
+    this.$listSubcription.push($listarCategoriaDoc);
   }
 }
