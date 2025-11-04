@@ -1,0 +1,69 @@
+
+
+::ng-deep .fonthead {
+    background:#0288d1;
+    color: #ffffff;
+  }
+
+  /* Cambiar el color de fondo de los eventos */
+::ng-deep .fc-event {
+  //background-color: #0e71d4 !important;
+  border: none;
+  color: rgb(61, 56, 56) !important;
+}
+
+/* Estilo para los días del calendario */
+::ng-deep .fc-daygrid-day {
+  background-color: #fdfdfd;
+}
+
+/* Hover sobre eventos */
+::ng-deep .fc-event:hover {
+  background-color: #598fcc !important;
+  cursor: pointer;
+}
+
+/* Estilo para el encabezado del calendario */
+::ng-deep .fc-toolbar-title {
+  font-size: 2rem;
+  color: #614444;
+}
+
+::ng-deep .fin-semana-style {
+  background-color: #f1f1ec; /* Fondo suave verde */
+  //color: #b30000; /* Texto rojo */
+  //font-weight: bold;
+}
+
+
+::ng-deep .testDialogAge {
+    .p-dialog-header{
+        background:#45b95e;
+        height: 3.5rem;
+        color: white;
+
+      .p-dialog-header-icons{
+        .p-dialog-header-icon{
+            color: white;
+        }
+      }
+    }
+  }
+
+::ng-deep .fc-col-header-cell-cushion {
+  text-transform: uppercase;   /* Convierte a MAYÚSCULAS */
+  font-weight: bold;           /* Opcional: resaltar */
+}
+
+
+::ng-deep .fc-scroller {
+  max-height: 600px !important;
+  overflow-y: auto !important;
+}
+
+
+/* Altura mínima de cada cuadro */
+::ng-deep .fc-daygrid-day-frame {
+  min-height: 40px !important; /* por defecto ~100px */
+  height: 40px !important;
+}

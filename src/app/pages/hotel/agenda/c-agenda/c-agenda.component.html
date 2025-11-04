@@ -1,0 +1,32 @@
+
+<div class="p-fluid p-formgrid grid card lg:col-12 md:col-12 sm:col-12 gap-2 m-3 p-3">      
+    <div class="h-2rem flex border-round fonthead w-full align-items-center">
+        <span class="text-base font-semibold ml-2">DETALLE DE AGENDA</span>
+    </div>     
+    <div class="grid align-items-center lg:col-8 sm:col-12 md:col-12 h-5rem -mt-6">
+        <div class="md:col-6 sm:col-12 lg:col-2 col-6 field h-3rem">
+            <label class="font-semibold text-blue-600 text-base">Mes</label>
+            <p-calendar view="month" dateFormat="mm/yy" [showIcon]="true" inputId="periodo" [(ngModel)]="periodo" (onSelect)="changePeriodo($event)"
+                [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
+        </div>
+        <div *ngIf="verVendedor" class="sm:col-6 lg:col-4 md:col-12 field h-3rem">
+            <label class="font-semibold text-blue-600 text-base">Vendedor</label>
+            <span class="p-fluid">
+                <p-dropdown [options]="Vendedor" [(ngModel)]="idvendedor" id="idvendedor" placeholder="Seleccionar Vendedor" optionLabel="name"
+                    [ngModelOptions]="{standalone: true}" optionValue="idusuario" class="p-inputtext-sm" appendTo="body"></p-dropdown>
+            </span>                                      
+        </div>                 
+        <div class="lg:col-2 h-3rem field mt-6">
+            <button pButton type="button" pTooltip="Consultar" icon="pi pi-search" class="p-inputtext-sm h-3rem w-3rem" (click)="getBuscar()"></button>
+        </div>
+    </div>
+    <div class="col-12 p-2 mt-6">
+        <div class="card">
+            <full-calendar [options]="calendarOptions" [events]="events" #calendar></full-calendar>
+        </div>
+    </div>
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-confirmDialog [style]="{width: '30vw'}" [position]="'top'" [baseZIndex]="10000"></p-confirmDialog>
+<p-toast></p-toast>
