@@ -18,6 +18,7 @@ const controllerAdministracion: string = webApi+'Administracion';
 const controllerMarketing: string = webApi +'Marketing'
 const controllerEventos: string = webApi +'Evento'
 const controllerLogger: string = webApi + 'Logger'
+const controllerHotel: string = webApi + 'Hotel'
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -260,4 +261,17 @@ export const constantesApiWeb = {
      asientocfgTraeruno: controllerContabilidad + '/asientocfgtraeruno/',
     asientoPrc: controllerContabilidad + '/asientoprc',
     exportarexceldetracciones: controllerMain + '/exportarexceldetracciones',
+    listarhabitacion: controllerHotel + '/listarhabitaciones',
+    productoComponentePRC: controllerHotel + '/productocomponenteprc',
+    listarComponentesProducto: controllerHotel + '/listarcomponentesproducto',
+    productoComponenteDel: controllerHotel + '/productocomponentedel',
+    prcHabitacion: controllerHotel + '/actualizarhabitacion/',
+    traerunoHabitacion: controllerHotel + '/traerUnoHabitacion/',
+    TransferirReservaItems: controllerHotel + '/TransferirReservaItems',
+    listarProduccionHotel: controllerHotel + '/ListarProduccionHotel',
+    listarPAX: controllerHotel + '/listarpax',
+    registrarPaxPRC: controllerHotel + '/paxprc',
+    eliminarPaxDel: controllerHotel + '/paxdel',
+    personaTraerUnoTipoDoc: controllerMain + '/personatraerunotipodoc',
+    listarHabitacionesCombo: controllerHotel + '/listarhabitacionescombo'
 }

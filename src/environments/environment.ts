@@ -1,10 +1,6 @@
 export const environment = {
     production: true,
-    /*PRODUCCIÓN*/
-    //webAPI: 'https://sigzenware.com/bac/api/',
-
-    /*DESARROLLO*/
-    webAPI: 'https://zenwareadmin-001-site3.rtempurl.com/bac/api/',
+    webAPI: 'https://ion.net.pe/huascaran-backend/api/',
     msalConfig: {
         
         /*PRODUCCIÓN*/

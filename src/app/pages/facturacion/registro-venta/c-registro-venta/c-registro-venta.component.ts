@@ -325,18 +325,8 @@ visXperfil: boolean = true;
       }
     
       onAccion(item: any) {
-        this.ordenCompra.idtrx = item.idtrx;
-        const ref = this.dialogService.open(CModalTransacComponent, {
-            data: this.ordenCompra,
-            header: item.nomtrx,
-            closeOnEscape: false,
-            styleClass: 'testDialog',
-            width: '40%'
-        });
-    
-        ref.onClose.subscribe(() => {
-            this.getListar();
-          });
+        this.guardarOC(item);
+        
       }
 
     getExportarExcel(data :any) {
@@ -616,6 +606,68 @@ visXperfil: boolean = true;
           });
         this.$listSubcription.push($operacionFel)
       }
+
+       guardarOC(item:any){
+
+        let _fechaingreso;
+    let _fecemision;
+    let _fecvencimiento;
+    _fechaingreso = this.ordenCompra.fechaingreso;
+    _fecemision = this.ordenCompra.fecemision;
+    _fecvencimiento = this.ordenCompra.fecvencimiento;
+
+    //if (this.idOrdenC > 0) {
+      if (_fechaingreso.toString().length === 10) {
+        _fechaingreso = new Date(this.utilitariosService.formatFecha(_fechaingreso)); 
+      }
+      if (_fecemision.toString().length === 10) {
+        _fecemision = new Date(this.utilitariosService.formatFecha(_fecemision));    
+      } 
+      if (_fecvencimiento.toString().length === 10) {
+        _fecvencimiento = new Date(this.utilitariosService.formatFecha(_fecvencimiento));    
+      }         
+    //}
+
+    this.ordenCompra.fechaingreso = _fechaingreso;
+    this.ordenCompra.fecemision = _fecemision;
+    this.ordenCompra.fecvencimiento = _fecvencimiento;
+    this.ordenCompra.tipodoc_ctb = (this.ordenCompra.tipodoc_ctb).toString();
+
+        this.setSpinner(true);
+        this.mensajeSpinner = mensajesSpinner.msjProcesando;
+
+    this.ordencompraService.ordenCompraprc(this.ordenCompra).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        if (rpta.procesoSwitch === 0){
+          this.ordenCompra.idtrx = item.idtrx;
+        const ref = this.dialogService.open(CModalTransacComponent, {
+            data: this.ordenCompra,
+            header: item.nomtrx,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '40%'
+        });
+    
+        ref.onClose.subscribe(() => {
+            this.getListar();
+          });          
+        }else{
+        this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+        }
+      },
+      error: (err) => {
+      this.messageService.clear();
+      this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+          });
+      },
+      complete: () => {
+      },
+  });
+  }
 
       
 }

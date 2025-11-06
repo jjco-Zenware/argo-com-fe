@@ -62,3 +62,11 @@ export const globalVariable = {
   oportunidadId: 0,
 }
 
+export const c_habitacion = {
+  tipoDocPRC: 201,
+  formaPagoContado: 14328,
+  idCentroCosto: 225,
+  marcaOtros: 101,
+  gravadoOperacionOnerosa: 1,
+  unidad: 130
+}

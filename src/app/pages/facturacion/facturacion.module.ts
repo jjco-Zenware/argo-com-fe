@@ -21,6 +21,9 @@ import { CMotivoComponent } from './modalanular/c-modalanular.component';
     ReactiveFormsModule,
     FacturacionRoutingModule
   ],
+  exports: [
+    CMotivoComponent
+  ],
   providers: [ComprasService]
 })
 export class FacturacionModule { }

@@ -319,4 +319,9 @@ export class UtilitariosService {
   return Math.floor(diferenciaMs / milisegundosPorDia);
 }
 
+  obtenerFechaFormatoISO(fecha?: Date): string {
+    const fechaObj = fecha || new Date();
+    return fechaObj.toISOString().split('T')[0]; // yyyy-MM-dd
+  }
+
 }

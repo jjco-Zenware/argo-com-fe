@@ -34,7 +34,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
   handleError(error: HttpErrorResponse) {
     let _title: string = '';
-    let _text: string = 'ZenWare';
+    let _text: string = 'Empresa';
     switch (error.status) {
       case 0: {
         _title = 'Verifique Conexion'

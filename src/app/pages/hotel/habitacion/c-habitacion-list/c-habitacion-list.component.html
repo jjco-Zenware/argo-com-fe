@@ -1,0 +1,120 @@
+<ng-container *ngIf="vistaLista; else visSecciones">
+    <div class="card m-4">
+        <div class="grid mt-2">
+            <div class="flex justify-content-between col-12 -mt-3 gap-2">
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-base font-semibold">HABITACIONES</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card m-4">
+        <ng-container *ngIf="habitacionesAgrupadas.length > 0; else noHabitaciones">
+            <ng-container *ngFor="let grupo of habitacionesAgrupadas">
+                <section class="mb-3">
+                    <div class="font-semibold text-lg mb-4 -mt-1 ml-3">{{grupo.rutaubicacion}}</div>
+                    <div class="grid border-1 border-round surface-border p-2 mx-2">
+                        <div class="col-6 md:col-4 lg:col-3 xl:col-2"
+                            *ngFor="let item of grupo.habitaciones; trackBy: trackByHabitacion">
+                            <div class="habitacion-card border-1 border-round surface-border"
+                                pTooltip="{{item.tipoHabitacion}} - {{item.estadoHabitacion}}" tooltipPosition="top"
+                                (click)="getHabitacion(item)">
+                                <div class="habitacion-icon">
+                                    <i [class]="item.icono || 'pi pi-home'" [style.color]="item.color"></i>
+                                </div>
+                                <div class="habitacion-nombre">
+                                    <span>{{item.nomHabitacion}}</span>
+                                </div>
+                                <div class="habitacion-estado">
+                                    <span class="custom-badge" [style.backgroundColor]="item.color"
+                                        [style.color]="'#fff'">
+                                        {{item.estadoHabitacion}}
+                                    </span>
+                                </div>
+                                <p-divider></p-divider>
+                                <div class="habitacion-actions">
+                                    <button pButton
+                                        class="p-button-outlined p-button-sm" icon="pi pi-arrow-right-arrow-left" pTooltip="Transferir"
+                                        tooltipPosition="bottom" (click)="getTransferenciaReserva(item.idnrooperacion)"></button>
+                                    <button *ngIf="item.facturacion.length > 0" pButton pRipple type="button"
+                                        icon="pi pi-money-bill" class="p-button-rounded p-button-text p-button-sm"
+                                        (click)="toggleMenuFacturacion($event, item)" pTooltip="Facturación"
+                                        tooltipPosition="bottom"></button>
+                                    <p-tieredMenu #menuFacturacion [model]="menuItemsFacturacion" appendTo="body"
+                                        [popup]="true"></p-tieredMenu>
+                                    <button *ngIf="item.reservas.length > 0" pButton pRipple type="button"
+                                        icon="pi pi-align-justify" class="p-button-rounded p-button-text p-button-sm"
+                                        (click)="toggleMenuReservas($event, item)" pTooltip="Reservas"
+                                        tooltipPosition="bottom"></button>
+                                    <p-tieredMenu #menuReserva [model]="menuItemsReservas" appendTo="body"
+                                        [popup]="true"></p-tieredMenu>
+                                    <button pButton [disabled]="item.puedeReservar === 0"
+                                        class="p-button-outlined p-button-sm" icon="pi pi-file" pTooltip="Reservar"
+                                        tooltipPosition="bottom" (click)="reservarHabitacion(item)"></button>
+                                    <button *ngIf="item.acciones.length > 0" pButton pRipple type="button"
+                                        icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text p-button-sm"
+                                        (click)="toggleMenuAcciones($event, item)" pTooltip="Acciones"
+                                        tooltipPosition="bottom"></button>
+                                    <p-tieredMenu #menuAccion [model]="menuItemsAcciones" appendTo="body"
+                                        [popup]="true"></p-tieredMenu>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </ng-container>
+        </ng-container>
+
+        <ng-template #noHabitaciones>
+            <div class="flex flex-column align-items-center justify-content-center p-6">
+                <i class="pi pi-home text-6xl text-400 mb-3"></i>
+                <span class="text-xl text-500">No hay habitaciones disponibles</span>
+            </div>
+        </ng-template>
+    </div>
+</ng-container>
+<ng-template #visSecciones>
+    <ng-container *ngIf="visSeccionReserva">
+        <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
+            <div class="grid ">
+                <div class="flex justify-content-between col-12 gap-2">
+                    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
+                        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
+                            label="Regresar" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                            (click)="getBack()"></button>
+                    </div>
+                    <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                        <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                    </div>
+                </div>
+            </div>
+            <app-c-reserva-det [IA_data]="dataPrc"></app-c-reserva-det>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="visSeccionFacturacion">
+        <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
+            <div class="grid ">
+                <div class="flex justify-content-between col-12 gap-2">
+                    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
+                        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
+                            label="Regresar" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                            (click)="getBack()"></button>
+                    </div>
+                    <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                        <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                    </div>
+                </div>
+            </div>
+            <app-c-facturacion-habitacion [IA_Data]="dataPrc"></app-c-facturacion-habitacion>
+        </div>
+    </ng-container>
+</ng-template>
+
+<p-blockUI [blocked]="blockedDocument">
+    <div class="flex align-items-center justify-content-center">
+        <p-progressSpinner></p-progressSpinner>
+        <span class="ml-2">{{mensajeSpinner}}</span>
+    </div>
+</p-blockUI>
+<p-toast></p-toast>

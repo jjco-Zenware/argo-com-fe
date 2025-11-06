@@ -176,4 +176,14 @@ export class AlmacenService {
                 responseType: 'blob'
               })
         }
+
+    buscarComponentesProducto(idprod: number) {
+        const url = `${constantesApiWeb.listarComponentesProducto}/${idprod}`;
+        return this.http.get<any>(url);
+    }
+
+    eliminarComponenteProducto(objeto: any) {
+        const url = `${constantesApiWeb.productoComponenteDel}`;
+        return this.http.post<any>(url, objeto);
+    }
 }

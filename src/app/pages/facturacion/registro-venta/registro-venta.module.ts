@@ -40,6 +40,10 @@ import { DropdownModule } from 'primeng/dropdown';
     RegistroProveedorModule,
     DropdownModule 
   ],
+  exports: [
+    CRegistroVentaComponent,
+    DatoVentaComponent
+  ],
   providers: [
     SharedAppService, 
     DynamicDialogRef, 

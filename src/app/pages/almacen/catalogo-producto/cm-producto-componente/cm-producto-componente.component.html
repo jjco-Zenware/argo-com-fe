@@ -1,0 +1,71 @@
+<form [formGroup]="frmDatos" class="p-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="m-0 text-primary">COMPONENTE</h5>
+        </div>
+
+        <div class="grid">
+            <div class="col-12 md:col-6">
+                <div class="field">
+                    <label class="block text-900 font-medium">CODIGO</label>
+                    <input pInputText type="text" class="w-full surface-100 font-semibold"
+                        formControlName="codigo" readonly />
+                </div>
+            </div>
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">ID</label>
+                    <input pInputText type="text" class="w-full surface-100 font-semibold"
+                        formControlName="id" readonly />
+                </div>
+            </div>
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">PRODUCTO</label>
+                    <input pInputText type="text" class="w-full surface-100 font-semibold"
+                        formControlName="producto" readonly />
+                </div>
+            </div>
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">GRUPO</label>
+                    <input pInputText type="text" formControlName="familia" readonly class="w-full surface-100"
+                        placeholder="Grupo" />
+                </div>
+            </div>
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">CATEGORÍA</label>
+                    <input pInputText type="text" formControlName="subfamilia" readonly class="w-full surface-100"
+                        placeholder="Categoría" />
+                </div>
+            </div>
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">UNIDAD</label>
+                    <input pInputText type="text" formControlName="unidad" readonly class="w-full surface-100"
+                        placeholder="Unidad" />
+                </div>
+            </div>
+            <div class="col-12 md:col-4">
+                <div class="field">
+                    <label class="block text-900 font-medium">CANTIDAD</label>
+                    <input pInputText type="text" formControlName="cantidad" class="w-full surface-100"
+                        placeholder="Cantidad" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="flex justify-content-end mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+    <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem"
+        (click)="guardar()"></button>
+</div>
+
+<p-blockUI [blocked]="blockedDocument">
+    <div class="flex align-items-center justify-content-center">
+        <p-progressSpinner></p-progressSpinner>
+        <span class="ml-2">{{mensajeSpinner}}</span>
+    </div>
+</p-blockUI>
+<p-toast></p-toast>
