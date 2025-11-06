@@ -1,0 +1,39 @@
+
+
+
+    <form [formGroup]="registerFormRegistro" class="p-fluid grid lg:col-12 p-2 m-1" > 
+          <!-- <div class="lg:col-4 col-12 field flex flex-column h-4rem">
+            <label class="font-semibold pi pi-wallet text-blue-600"> Cliente: </label>
+            <span>{{ registerFormRegistro.get('cliente')?.value }}</span>
+        </div>
+        <div class="lg:col-8 col-12 field flex flex-column h-3rem">
+            <label class="font-semibold pi pi-list text-blue-600"> Oportunidad: </label>
+            <span>{{ registerFormRegistro.get('s_oportunidad')?.value }}</span>
+        </div>  -->
+        <!--<div class="lg:col-12 field flex flex-column h-4rem">
+            <label class="font-semibold pi pi-check-square text-green-600"> Tarea: </label>
+            <span>{{ registerFormRegistro.get('descripcion')?.value }}</span>
+        </div>   -->
+        <div class="lg:col-12 col-12 field flex flex-column h-4rem">
+            <label class="font-semibold pi pi-clock text-blue-600"> Tiempo </label>
+            <div>
+                <span> Del </span>
+                <span>{{ registerFormRegistro.get('inicio')?.value }}</span>
+                <span> al </span>
+                <span>{{ registerFormRegistro.get('fin')?.value }}</span>
+                <span> Desde </span>
+                <span>{{ registerFormRegistro.get('horaini')?.value }}</span>
+                <span> Hasta </span>
+                <span>{{ registerFormRegistro.get('horafin')?.value }}</span>
+            </div>
+        </div> 
+        <!-- <div class="lg:col-4 col-12 field flex flex-column h-3rem">
+            <label class="font-semibold" >Fin: </label>
+            <span>{{ registerFormRegistro.get('fin')?.value }}</span>
+        </div>    -->
+        <div class="lg:col-12 md:col-12 sm:col-12 field flex flex-column h-4rem">
+            <label class="font-semibold pi pi-user text-blue-600"> Account </label>
+            <span>{{ registerFormRegistro.get('nomusuario')?.value }}</span>
+        </div>    
+           
+    </form>

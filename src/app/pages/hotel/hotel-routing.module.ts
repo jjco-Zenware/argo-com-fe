@@ -21,6 +21,11 @@ const routes: Routes = [
     path: 'listar-produccion-hotel',
     loadChildren: () => import('./produccion/produccion.module').then(m => m.ProduccionModule),
     data: { breadcrumb: 'Producción' }
+  },
+  {
+    path: 'agenda',
+    loadChildren: () => import('./agenda/agenda.module').then(m => m.AgendaModule),
+    data: { breadcrumb: 'Agenda' }
   }
 ];
 
