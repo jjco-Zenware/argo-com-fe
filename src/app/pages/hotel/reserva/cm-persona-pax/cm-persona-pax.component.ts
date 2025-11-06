@@ -266,5 +266,43 @@ listaHabitacion: any[] = [];
     this.$listSubcription.push($listarHabitacionesCombo)
   }
 
+  getBuscarPersonaPAX() {
+    const { idtipodoc, nrodocumento, tipopersona } = this.registerFormCliente.getRawValue();
+    if(!idtipodoc) {
+      this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Seleccione Tipo Documento" });
+      return;
+    }
 
+    if(!nrodocumento) {
+      this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Ingrese Número de Documento" });
+      return;
+    }
+
+    const objeto = {
+      idusuario: 0,
+      idrolpersona: "",
+      idpersona: 0,
+      nrodocumento,
+      tipodocumento: idtipodoc
+    }
+    const $personaTraerUnoTipoDoc = this.serviceReserva.personaTraerUnoTipoDoc(objeto)
+    .subscribe({
+      next: (rpta: any) => {
+        console.log('rpta personaTraerUnoTipoDoc: ', rpta);
+        const {appaterno,apmaterno,nombres, razonsocial}= rpta;
+        if(tipopersona === 'N') {
+          this.registerFormCliente.get('appaterno')?.setValue(appaterno);
+          this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);
+          this.registerFormCliente.get('nombres')?.setValue(nombres);
+        } else {
+          this.registerFormCliente.get('razonsocial')?.setValue(razonsocial);
+        }
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => { }
+    });
+    this.$listSubcription.push($personaTraerUnoTipoDoc)
+  }
 }
