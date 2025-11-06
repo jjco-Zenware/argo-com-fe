@@ -574,26 +574,14 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                         };
                         this.verAdjunto = true;
                         this.generarAsiento();
-
-                        //agregar una cuota por defecto
-                        //this.traerUno2();
-
-                        //preguntar si desea emitir el documento con una cuota
-                        // this.confirmationService.confirm({
-                        //   key: 'confirm1',
-                        //   header: 'Confirmación',
-                        //   message:  '¿Desea Emitir el Documento con una Cuota...?' ,
-                        //   accept: () => {
-                        //     this.guardarOC();
-                        //     this.procesarTRX();
-                        //     }
-                        // });
                     }
-                    // else {
-                    //     this.traerUno();
-                    // }
+
+                    if (this.lstAsientos.length === 0) {
+                        this.generarAsiento();
+                    }
+                        this.traerUno();
                     
-                    this.traerUno();
+                    
 
                     this.visibleDocument = false;
                     this.visibleAsiento = false;
@@ -1968,7 +1956,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
             next: (rpta: any) => {
                 if (rpta.procesoSwitch === 0) {
                     this.setSpinner(false);
-                    this.messageService.add({ severity: 'success', summary: 'Exito', detail: rpta.mensaje });                    
+                    this.messageService.add({ severity: 'success', summary: 'Exito', detail: rpta.mensaje });   
+                    this.traerUno();                 
                 }else{
                     this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.mensaje });
                 }

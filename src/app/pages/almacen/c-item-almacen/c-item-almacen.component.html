@@ -35,10 +35,10 @@
                     <label class="font-semibold">Serial N</label>
                     <input pInputText type="text" formControlName="serialnumber" [readonly]=true class="p-inputtext-sm surface-100"/>
                 </div>
-                <div class="sm:col-12 lg:col-2 md:col-12">
+                <!-- <div class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Service T</label>
                     <input pInputText type="text" formControlName="servicetag" [readonly]=true class="p-inputtext-sm surface-100"/>
-                </div>
+                </div> -->
                 <div class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Modelo</label>
                     <input pInputText type="text" formControlName="modelo" [readonly]=true class="p-inputtext-sm surface-100"/>
@@ -54,18 +54,20 @@
                         optionValue="iditem" appendTo="body" class="p-inputtext-sm"></p-dropdown>
                     </span>
                 </div>
-                <div class="sm:col-12 lg:col-6 md:col-12">
+                <!-- <div class="sm:col-12 lg:col-6 md:col-12">
                     <label class="font-semibold">Ubicación</label>
                     <input pInputText type="text" formControlName="rutaubicacion" [readonly]=true class="p-inputtext-sm surface-100"/>
-                </div>
-                <div *ngIf="verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12 ">
+                </div> -->
+                <!-- <div *ngIf="!verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12 ">
                     <label class="font-semibold">P. Unitario</label>
-                    <p-inputNumber (onInput)="calcularBCPu($event)" class="p-inputtext-sm" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
+                    <p-inputNumber (onInput)="calcularBCPu($event)" formControlName="preciocosto" 
+                    mode="decimal" locale="en-US" [minFractionDigits]="2" [readonly]=true class="p-inputtext-sm surface-100"></p-inputNumber>
                 </div>
-                <div *ngIf="verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12">
+                <div *ngIf="!verMovAlmacen" class="sm:col-12 lg:col-2 md:col-12">
                     <label class="font-semibold">Total</label>
-                    <p-inputNumber class="surface-100 font-bold" class="p-inputtext-sm" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="2"></p-inputNumber>
-                </div>                
+                    <p-inputNumber class="p-inputtext-sm" formControlName="preciocostototal" 
+                    mode="decimal" locale="en-US" [minFractionDigits]="2" [readonly]=true class="p-inputtext-sm surface-100"></p-inputNumber>
+                </div>                 -->
             </div>
             <div *ngIf="verMovAlmacen" class="flex grid">
                 
@@ -100,12 +102,12 @@
                 </div>
                 <div class="sm:col-12 lg:col-3 md:col-12">
                     <div class="flex">
-                        <label class="block text-900 font-semibold">Tag</label>
-                        <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Tag"
+                        <label class="block text-900 font-semibold">Etiquetas</label>
+                        <i class="pi pi-tag cursor-pointer" style="margin-left: 10px;" pTooltip="Agregar Etiqueta"
                         tooltipPosition="right" (click)="NuevoTag();"></i>
                     </div>
                     <p-dropdown [options]="lstTag" optionLabel="valoritem" class="p-inputtext-sm"
-                        optionValue="iditem" placeholder="Seleccionar Tag" appendTo="body" (onChange)="addTag($event.value)"></p-dropdown>
+                        optionValue="iditem" placeholder="Seleccionar Etiqueta" appendTo="body" (onChange)="addTag($event.value)"></p-dropdown>
                 </div>
                 <div class="sm:col-12 lg:col-9 md:col-12">
                     <p-table [value]="listaTag" class="ml-2" responsiveLayout="sc" [breakpoint]="'560px'" [tableStyle]="{'min-width': '30rem'}"
@@ -113,8 +115,8 @@
                         <ng-template pTemplate="header">
                             <tr>
                                 <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                                <th class="surface-200">TAG</th>
-                                <th class="surface-200">VALOR</th>
+                                <th class="surface-200">Etiqueta</th>
+                                <th class="surface-200">Detalle</th>
                                 <th class="surface-200"></th>
                             </tr>
                         </ng-template>

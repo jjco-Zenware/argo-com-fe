@@ -81,6 +81,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
   lstFamilia:any;
   lstSubFamilia:any;
   fecha = this.serviceUtilitario.obtenerFechaFormateadoDMA();
+  claseVisible:boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -196,6 +197,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       idsubfamilia: [{ value: 0, disabled: false }],
       tc: [{ value: 0, disabled: false }],
       fecprogramacion: [{ value: null, disabled: false }],
+      nomsubfamilia: [{ value: '', disabled: false }],
     });
   }
 
@@ -1266,4 +1268,70 @@ const excelDateToJSDate = (serial:any) => {
         this.$listSubcription.push($gettipocambio)
     
       }
+
+    NuevoCategoria(){
+      if (this.idfamilia === null || this.idfamilia === 0) {
+        this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Seleccionar Grupo...!' });
+            return;
+      }
+
+      this.claseVisible = true;
+      this.registerFormRegistro.patchValue({
+        idsubfamilia: 0,
+        nomsubfamilia: ''
+      });
+    }
+
+    prcClase() {
+        if (this.validarClase())
+        {
+            this.setSpinner(false);
+            this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+            return;
+        }
+
+        const objeto = {
+          idsubfamilia: 0,
+          idfamilia: this.idfamilia,
+          idtipoprod: 0,
+          codsubfamilia: '',
+          codfamilia: '',
+          nomsubfamilia: this.registerFormRegistro.value.nomsubfamilia,
+        }
+
+        const $listarFamilia = this.almacenService.prcSubFamilia(objeto).subscribe({
+            next: (rpta: any) => {                
+            console.log('prcClase...', rpta);
+            if (rpta.procesoSwitch === 0){
+                this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+                this.getSubFamilia(this.idfamilia);
+                this.claseVisible = false;
+              }else{
+              this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+              }
+            
+            },
+            error: (err) => {
+            console.info('error : ', err);
+            this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+            },
+        });
+        this.$listSubcription.push($listarFamilia);
+    }
+
+     validarClase():boolean{
+        let _error = false;
+        this.errorMensaje="";
+        console.log('this.formValue...', this.registerFormRegistro.value);      
+
+        if (this.registerFormRegistro.value.nomsubfamilia === '' || this.registerFormRegistro.value.nomsubfamilia === null)
+        {
+            this.errorMensaje="Ingresar Descripción...!";
+            _error = true;
+        }
+
+        return _error;
+    }
 }

@@ -160,7 +160,7 @@
                     <ng-template pTemplate="header">
                         <tr class="text-sm">
                             <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th class="surface-200">PRODUCTO</th>
+                            <!-- <th class="surface-200">PRODUCTO</th> -->
                             <th class="surface-200">CÓDIGO</th>
                             <th class="surface-200">DESCRIPCIÓN</th>
                             <th class="surface-200">MARCA</th>
@@ -178,7 +178,7 @@
                     <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
                         <tr class="text-sm">
                             <td>{{rowIndex + 1}}</td>
-                            <td>{{ product.nomtipoprod | uppercase}}</td>
+                            <!-- <td>{{ product.nomtipoprod | uppercase}}</td> -->
                             <td>{{ product.codproducto }}</td>
                             <!-- <td>{{ product.descripcion | uppercase}}</td> -->
                             <td>{{(product.descripcion.length > 60 ) ? ((product.descripcion ).slice(0, 60) + '...') : product.descripcion }} </td>
@@ -343,8 +343,14 @@
                             optionLabel="nomfamilia" optionValue="idfamilia" appendTo="body"  (onChange)="getSubFamilia($event.value)" [ngModelOptions]="{standalone: true}"></p-dropdown>            
                         </span>
                     </div>
-                    <div class="mb-3 field">
-                        <label class="font-semibold">Categoría</label>                            
+                    <div class="mb-3 field">   
+                        <div class="flex">
+                            <label class="block text-900 mb-1">Categoría
+                            </label>
+                            <i *ngIf="verItems" class="pi pi-file cursor-pointer text-blue-600"
+                                style="margin-left: 10px" pTooltip="Nueva Categoría" tooltipPosition="right"
+                                (click)="NuevoCategoria()"></i>
+                        </div>                       
                         <span>
                             <p-dropdown [options]="lstSubFamilia" placeholder="Seleccionar..."  [(ngModel)]="idsubfamilia" class="p-inputtext-sm"
                             optionLabel="nomsubfamilia" optionValue="idsubfamilia" appendTo="body" [ngModelOptions]="{standalone: true}" (onChange)="disabelImportar()"></p-dropdown>            
@@ -364,6 +370,22 @@
                 </div>
             </form>
     </p-dialog>
+
+    <p-dialog styleClass="testDialog" [(visible)]="claseVisible" [modal]="true" [closeOnEscape]="false" showEffect="fade" [style]="{width: '20vw'}" [breakpoints]="{'960px': '75vw'}">
+    <p-header >Nueva Categoría</p-header>
+        <form [formGroup]="registerFormRegistro" (ngSubmit)="prcClase()">
+            <div class="p-fluid py-4 border-1 surface-border mb-3 p-3 border-round mt-2">
+                <div class="mb-3 field">
+                    <label class="font-semibold">DESCRIPCIÓN<span class="text-red-500 font-bold"> * </span></label>
+                    <input pInputText type="text" formControlName="nomsubfamilia" class="p-inputtext-sm"/>
+                </div>
+            </div>
+            <div class="flex justify-content-end">
+                <button pButton icon="pi pi-save" label="Grabar" type="submit" class="p-button-primary w-auto"></button>
+            </div>
+            
+        </form>
+</p-dialog>
 
 </div>
 

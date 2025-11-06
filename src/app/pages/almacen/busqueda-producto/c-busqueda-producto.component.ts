@@ -178,6 +178,7 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
       }
 
       seleccionarProducto(dato: any){
+        dato.serialnumber = dato.serie == null ? '' : dato.serie;
         this.cerrar({...dato})
       }
 

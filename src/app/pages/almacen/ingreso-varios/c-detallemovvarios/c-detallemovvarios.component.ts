@@ -615,13 +615,14 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
               return;
             }
           }
-
-          if (this.listadoArchivos.length === 0) {
-            this.messageService.add({ severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
-            return;
-          } else {
-            this.guardarOC2(valor);
-          }
+          /*COMENTADO PARA PASAR A PRODUCCIÓN, LUEGO DE INGRESAR SU INVENTARIO SE AGREGA LAS VALIDACIONES*/
+          // if (this.listadoArchivos.length === 0) {
+          //   this.messageService.add({ severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+          //   return;
+          // } else {
+          //   this.guardarOC2(valor);
+          // }
+          this.guardarOC2(valor);
         },
         error: (err) => {
           this.serviceSharedApp.messageToast();
@@ -740,10 +741,10 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
       _error = true;
     }
 
-    if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === '')) {
-      this.errorMensaje = "Ingresar N° de Guia...!";
-      _error = true;
-    }
+    // if (!_error && (this.registerFormRegistro.value.sustentodoc === null || this.registerFormRegistro.value.sustentodoc === '')) {
+    //   this.errorMensaje = "Ingresar N° de Guia...!";
+    //   _error = true;
+    // }
 
     return _error;
   }

@@ -260,6 +260,7 @@ export const constantesApiWeb = {
 
      asientocfgTraeruno: controllerContabilidad + '/asientocfgtraeruno/',
     asientoPrc: controllerContabilidad + '/asientoprc',
+    exportarexceldetracciones: controllerMain + '/exportarexceldetracciones',
     listarhabitacion: controllerHotel + '/listarhabitaciones',
     productoComponentePRC: controllerHotel + '/productocomponenteprc',
     listarComponentesProducto: controllerHotel + '/listarcomponentesproducto',
