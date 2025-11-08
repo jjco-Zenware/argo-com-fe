@@ -35,7 +35,7 @@
                                 <p-divider></p-divider>
                                 <div class="habitacion-actions">
                                     <button pButton
-                                        class="p-button-outlined p-button-sm" icon="pi pi-file" pTooltip="Reservar"
+                                        class="p-button-outlined p-button-sm" icon="pi pi-arrow-right-arrow-left" pTooltip="Transferir"
                                         tooltipPosition="bottom" (click)="getTransferenciaReserva(item.idnrooperacion)"></button>
                                     <button *ngIf="item.facturacion.length > 0" pButton pRipple type="button"
                                         icon="pi pi-money-bill" class="p-button-rounded p-button-text p-button-sm"
@@ -44,7 +44,7 @@
                                     <p-tieredMenu #menuFacturacion [model]="menuItemsFacturacion" appendTo="body"
                                         [popup]="true"></p-tieredMenu>
                                     <button *ngIf="item.reservas.length > 0" pButton pRipple type="button"
-                                        icon="pi pi-lock" class="p-button-rounded p-button-text p-button-sm"
+                                        icon="pi pi-align-justify" class="p-button-rounded p-button-text p-button-sm"
                                         (click)="toggleMenuReservas($event, item)" pTooltip="Reservas"
                                         tooltipPosition="bottom"></button>
                                     <p-tieredMenu #menuReserva [model]="menuItemsReservas" appendTo="body"
