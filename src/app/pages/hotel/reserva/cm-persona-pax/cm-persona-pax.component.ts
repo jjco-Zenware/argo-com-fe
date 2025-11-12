@@ -18,36 +18,36 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
   param: any;
   registerFormRegistro!: FormGroup;
   headerTitle?: string;
-  submitted?: boolean;  
+  submitted?: boolean;
   lstProyectos: any;
   idProgramacion: any;
   lstOrigen: any;
   onlyRead: boolean = false;
   registerFormCliente!: FormGroup;
   personaNatural: boolean = false;
-  lstRol:any[] = [];
+  lstRol: any[] = [];
 
   dropdownItemsTipPer = [
     { name: 'Jurídica', code: 'J' },
     { name: 'Natural', code: 'N' }
-];
+  ];
 
-dropdownItemsNac = [
+  dropdownItemsNac = [
     { name: 'Extranjero', code: '0' },
     { name: 'Peruano', code: '1' }
-];
+  ];
 
-dropdownItemsTipNro = [
+  dropdownItemsTipNro = [
     { name: 'RUC', code: 'RUC' },
     { name: 'DNI', code: 'DNI' }
-];
+  ];
 
-lstEnti = [
-    { id:'P', name: 'PRIVADO' },
+  lstEnti = [
+    { id: 'P', name: 'PRIVADO' },
     { id: 'E', name: 'ESTADO' },
-];
+  ];
 
-listaHabitacion: any[] = [];
+  listaHabitacion: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -84,43 +84,43 @@ listaHabitacion: any[] = [];
   createFormCliente() {
     //Agregar validaciones de formulario
     this.registerFormCliente = this.formBuilder.group({
-    idrolpersona: [{ value: this.param.idrolpersona, disabled: false }],
-    tipopersona :  [{ value: 'J', disabled: false }],
-    tipoalta : [{ value: 'NOR', disabled: false }],
-    indnacionalidad: [{ value: null, disabled: false }, [Validators.required]],
-    idpais: [{ value: '1', disabled: false }],
-    idtipodoc: [{ value: null, disabled: false }, [Validators.required]],
-    nrodocumento: [{ value: null, disabled: false }, [Validators.required]],
-    appaterno: [{ value: null, disabled: false }, [Validators.required]],
-    apmaterno: [{ value: null, disabled: false }, [Validators.required]],
-    apcasada: [{ value: null, disabled: false }],
-    nombres: [{ value: null, disabled: false }, [Validators.required]],
-    razonsocial: [{ value: null, disabled: false }, [Validators.required]],
-    nomcomercial: [{ value: null, disabled: false }],
-    direcresumen: [{ value: null, disabled: false }, [Validators.required]],
-    telefresumen: [{ value: null, disabled: false }],
-    telefmovil: [{ value: null, disabled: false }],
-    email: ['', [Validators.required, Validators.email]],
-    paginaweb: [{ value: null, disabled: false }],
-    facebook: [{ value: null, disabled: false }],
-    youtube: [{ value: null, disabled: false }],
-    indmigrado :  [{ value: false, disabled: false }],
-    indestado:  [{ value: '1', disabled: false }],
-    indvig :  [{ value: true, disabled: false }],
-    fechareg: [{ value: new Date(), disabled: false }],
-    iduserreg : [{ value: 1, disabled: false }],
-    fechaact: [{ value: new Date(), disabled: false }],
-    iduseract: [{ value: 1, disabled: false }],
-    idpersona: [{ value: 0, disabled: false }],
-    tipocambio: [{ value: 0, disabled: false }],
-    tipoentidad: [{ value: null, disabled: false }, [Validators.required]],
-    nroctadetraccion: [{ value: null, disabled: false }],
-    idprod: [{ value: null, disabled: false }],
+      idrolpersona: [{ value: this.param.idrolpersona, disabled: false }],
+      tipopersona: [{ value: 'J', disabled: false }],
+      tipoalta: [{ value: 'NOR', disabled: false }],
+      indnacionalidad: [{ value: null, disabled: false }, [Validators.required]],
+      idpais: [{ value: '1', disabled: false }],
+      idtipodoc: [{ value: null, disabled: false }, [Validators.required]],
+      nrodocumento: [{ value: null, disabled: false }, [Validators.required]],
+      appaterno: [{ value: null, disabled: false }, [Validators.required]],
+      apmaterno: [{ value: null, disabled: false }, [Validators.required]],
+      apcasada: [{ value: null, disabled: false }],
+      nombres: [{ value: null, disabled: false }, [Validators.required]],
+      razonsocial: [{ value: null, disabled: false }, [Validators.required]],
+      nomcomercial: [{ value: null, disabled: false }],
+      direcresumen: [{ value: null, disabled: false }, [Validators.required]],
+      telefresumen: [{ value: null, disabled: false }],
+      telefmovil: [{ value: null, disabled: false }],
+      email: ['', [Validators.required, Validators.email]],
+      paginaweb: [{ value: null, disabled: false }],
+      facebook: [{ value: null, disabled: false }],
+      youtube: [{ value: null, disabled: false }],
+      indmigrado: [{ value: false, disabled: false }],
+      indestado: [{ value: '1', disabled: false }],
+      indvig: [{ value: true, disabled: false }],
+      fechareg: [{ value: new Date(), disabled: false }],
+      iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      fechaact: [{ value: new Date(), disabled: false }],
+      iduseract: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      idpersona: [{ value: 0, disabled: false }],
+      tipocambio: [{ value: 0, disabled: false }],
+      tipoentidad: [{ value: null, disabled: false }, [Validators.required]],
+      nroctadetraccion: [{ value: null, disabled: false }],
+      idprod: [{ value: null, disabled: false }],
     });
-}
+  }
 
 
-  
+
   cambioTipoPer(dato: any) {
     if (dato === 'J') {
       this.personaNatural = false;
@@ -137,7 +137,7 @@ listaHabitacion: any[] = [];
 
       this.registerFormCliente.get('apmaterno')?.clearValidators();
       this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();
-      }else{
+    } else {
       this.personaNatural = true;
 
       this.registerFormCliente.get('nombres')?.clearValidators();
@@ -154,93 +154,94 @@ listaHabitacion: any[] = [];
 
       this.registerFormCliente.get('razonsocial')?.clearValidators();
       this.registerFormCliente.get('razonsocial')?.updateValueAndValidity();
-  }
+    }
   }
 
   cambioTipoDoc(dato: any) {
-      if (dato == 'RUC') {
-          //this.idtipodoc
-      }else{
-          //this.cliente.tipopersona == 'N';
-      }
+    if (dato == 'RUC') {
+      //this.idtipodoc
+    } else {
+      //this.cliente.tipopersona == 'N';
+    }
   }
 
   guardarCliente() {
-      this.submitted = true;
-      console.log('guardarCliente...', this.registerFormCliente.getRawValue());
+    this.submitted = true;
+    console.log('guardarCliente...', this.registerFormCliente.getRawValue());
 
-      // deténgase aquí si el formulario no es válido
-      if (this.registerFormCliente.invalid) {
-          console.log('deténgase aquí si el formulario no es válido');
-          this.messageService.add({severity: 'info', summary: 'Aviso', detail: "Faltan Ingresar Datos..." });
+    this.registerFormCliente.get('iduserreg')?.setValue(constantesLocalStorage.idusuario);
+    this.registerFormCliente.get('iduseract')?.setValue(constantesLocalStorage.idusuario);
+    // deténgase aquí si el formulario no es válido
+    if (this.registerFormCliente.invalid) {
+      console.log('deténgase aquí si el formulario no es válido');
+      this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "Faltan Ingresar Datos..." });
 
-          return;
+      return;
+    }
+
+    //Verdadero si todos los campos están llenos
+    if (this.submitted) {
+      const objeto = {
+        ...this.registerFormCliente.getRawValue(),
+        idreserva: this.param.idreserva,
+        idprod: this.registerFormCliente.get('idprod')?.value,
       }
-
-      //Verdadero si todos los campos están llenos
-      if(this.submitted)
-      {
-        const objeto = {
-          ...this.registerFormCliente.getRawValue(),
-          idreserva: this.param.idreserva,
-          idprod: this.registerFormCliente.get('idprod')?.value,
-        }
-        const $registrarPaxPRC = this.serviceReserva.registrarPaxPRC(objeto)
+      const $registrarPaxPRC = this.serviceReserva.registrarPaxPRC(objeto)
         .subscribe({
-        next: (rpta:any) => {
+          next: (rpta: any) => {
             console.log("rpta registrarPaxPRC : ", rpta);
-            if (rpta.procesoSwitch == 0){
-                this.messageService.add({severity: 'success', detail: "Operación exitosa" });
-                this.registerFormCliente.get('idpersona')?.setValue(rpta.resultProceso);
-                this.cerrar({...this.registerFormCliente.getRawValue()})
-                }else{
-                    this.messageService.add({severity: 'error', detail: rpta.mensaje });
-                }
-        },
-        error:(err)=>{
-            console.error('error : ',err)
+            if (rpta.procesoSwitch == 0) {
+              this.messageService.add({ severity: 'success', detail: "Operación exitosa" });
+              this.registerFormCliente.get('idpersona')?.setValue(rpta.resultProceso);
+              this.cerrar({ ...this.registerFormCliente.getRawValue() })
+            } else {
+              this.messageService.add({ severity: 'error', detail: rpta.mensaje });
+            }
+          },
+          error: (err) => {
+            console.error('error : ', err)
             this.messageService.clear();
             this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: mensajesQuestion.msgErrorGenerico
+              severity: 'error',
+              summary: 'Error',
+              detail: mensajesQuestion.msgErrorGenerico
             })
-        },
-        complete:() => {}
-      });
+          },
+          complete: () => { }
+        });
       this.$listSubcription.push($registrarPaxPRC)
-      }
+    }
   }
 
-  cerrar(data:any) {
+  cerrar(data: any) {
     const objeto = {
       ...data
     }
-    this.refDatoItem.close({objeto});
+    this.refDatoItem.close({ objeto });
   }
 
   listarItemsTabla() {
     this.ordencompraService.obtenerItemsTabla(115).subscribe({
-        next: (rpta: any) => {
-          console.info('this.param.idrolpersona : ', this.param.idrolpersona);
-          console.info('listarItemsTabla : ', rpta);
-          let lista = rpta
-          //this.lstRol = rpta;
-  
-          this.lstRol = lista.filter((x: { coditem: string; }) => x.coditem !== this.param.idrolpersona);
-            
-        },
-        error: (err) => {
+      next: (rpta: any) => {
+        console.info('this.param.idrolpersona : ', this.param.idrolpersona);
+        console.info('listarItemsTabla : ', rpta);
+        let lista = rpta
+        //this.lstRol = rpta;
+
+        this.lstRol = lista.filter((x: { coditem: string; }) => x.coditem !== this.param.idrolpersona);
+
+      },
+      error: (err) => {
         console.info('error : ', err);
         this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
+      },
+      complete: () => {
+      },
     });
-  
-    }
 
-  listarHabitacion() {  
+  }
+
+  listarHabitacion() {
     const objeto =
     {
       codproducto: "",
@@ -253,18 +254,65 @@ listaHabitacion: any[] = [];
     }
 
     const $listarHabitacionesCombo = this.serviceReserva.listarHabitacionesCombo(objeto)
-    .subscribe({
-      next: (rpta: any) => {
-        console.log('rpta listarHabitacionesCombo: ', rpta);
-        this.listaHabitacion = rpta.habitaciones;
-      },
-      error: (err) => {
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => { }
-    });
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta listarHabitacionesCombo: ', rpta);
+          this.listaHabitacion = rpta.habitaciones;
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { }
+      });
     this.$listSubcription.push($listarHabitacionesCombo)
   }
 
+  getBuscarPersonaPAX() {
+    const { idtipodoc, nrodocumento, tipopersona } = this.registerFormCliente.getRawValue();
+    if (!idtipodoc) {
+      this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "Seleccione Tipo Documento" });
+      return;
+    }
 
+    if (!nrodocumento) {
+      this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "Ingrese Número de Documento" });
+      return;
+    }
+
+    const objeto = {
+      idusuario: constantesLocalStorage.idusuario,
+      idrolpersona: "",
+      idpersona: 0,
+      nrodocumento,
+      tipodocumento: idtipodoc
+    }
+    const $personaTraerUnoTipoDoc = this.serviceReserva.personaTraerUnoTipoDoc(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta personaTraerUnoTipoDoc: ', rpta);
+          const { idpersona, appaterno, apmaterno, nombres, razonsocial, direcresumen, telefresumen, email } = rpta;
+          this.registerFormCliente.get('idpersona')?.setValue(idpersona);
+
+          this.registerFormCliente.get('appaterno')?.setValue(appaterno);
+          this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);
+          this.registerFormCliente.get('nombres')?.setValue(nombres);
+          this.registerFormCliente.get('razonsocial')?.setValue(razonsocial);
+          this.registerFormCliente.get('direcresumen')?.setValue(direcresumen);
+          this.registerFormCliente.get('telefresumen')?.setValue(telefresumen);
+          this.registerFormCliente.get('email')?.setValue(email);
+          /*if (tipopersona === 'N') {
+            this.registerFormCliente.get('appaterno')?.setValue(appaterno);
+            this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);
+            this.registerFormCliente.get('nombres')?.setValue(nombres);
+          } else {
+            this.registerFormCliente.get('razonsocial')?.setValue(razonsocial);
+          }*/
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { }
+      });
+    this.$listSubcription.push($personaTraerUnoTipoDoc)
+  }
 }

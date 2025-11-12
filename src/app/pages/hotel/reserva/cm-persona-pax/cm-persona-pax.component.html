@@ -34,13 +34,15 @@
                 <label class="font-semibold">Tipo Documento</label>
                 <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="name" placeholder="Seleccionar Documento"
                     optionValue="code" (onChange)="cambioTipoDoc($event.value)"class="p-inputtext-sm"></p-dropdown>
-                <!-- <p class="p-error" *ngIf="submitted && formCliente.idtipodoc.errors" >Tipo Documento es requerido.</p> -->
             </div>
             <div class="lg:col-4 col-12 field -mt-5">
                 <label class="font-semibold">N° Documento</label>
-                <input pInputText type="text" formControlName="nrodocumento" maxlength="11"
-                    oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="p-inputtext-sm"/>
-                    <!-- <p class="p-error" *ngIf="submitted && formCliente.nrodocumento.errors">N° Documento es requerido.</p> -->
+                <span class="p-inputgroup">
+                    <input pInputText type="text" formControlName="nrodocumento" maxlength="11"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'');" class="p-inputtext-sm"/>
+                    <button pButton type="button" icon="pi pi-search" (click)="getBuscarPersonaPAX()" class="p-button-sm p-button-outlined" 
+                    pTooltip="Buscar documento" tooltipPosition="top"></button>
+                </span>
             </div>
             <div class="lg:col-4 col-12 field -mt-5">
                 <label class="font-semibold">Tipo Entidad</label>
