@@ -194,12 +194,13 @@ visXperfil: boolean = true;
   }
 
   onVer(data: any) {
+    debugger
       this.dataPrc = {
         idordencompra: data.idordencompra,
         paramReg:'V',
         visBtnFacturacion: false
       }
-      this.tituloDetalle = "RESERVA N° " + data.nrofactura;
+      this.tituloDetalle = "RESERVA N° " + data.idordencompra;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
@@ -268,11 +269,12 @@ visXperfil: boolean = true;
   
 
   onEditar(data: any) {
+    debugger
       this.dataPrc = {
         idordencompra: data.idordencompra,
         paramReg:'E'
       }
-      this.tituloDetalle = "RESERVA N° " + data.nrofactura;
+      this.tituloDetalle = "RESERVA N° " + data.idordencompra;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
