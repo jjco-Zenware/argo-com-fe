@@ -86,6 +86,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     this.idMovimiento = this.IA_data.idcodigo;
+    console.log('idMovimiento...', this.idMovimiento);
 
     this.createFrm();
     this.createFormRegistro();
@@ -96,19 +97,19 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
     //this.getOcproveedor(0);     
     
     if (this.idMovimiento > 0) {   
-      if (this.IA_data.paramReg === 'V') {
-        this.dataAdjunto ={
-          idCliente: this.idMovimiento,
-          codtipoproc: 7,
-          veracciones: 1
-        }
-      }  else{
-        this.dataAdjunto ={
-          idCliente: this.idMovimiento,
-          codtipoproc: 7,
-          veracciones: 0
-        }
-      }     
+      // if (this.IA_data.paramReg === 'V') {
+      //   this.dataAdjunto ={
+      //     idCliente: this.idMovimiento,
+      //     codtipoproc: 7,
+      //     veracciones: 1
+      //   }
+      // }  else{
+      //   this.dataAdjunto ={
+      //     idCliente: this.idMovimiento,
+      //     codtipoproc: 7,
+      //     veracciones: 0
+      //   }
+      // }     
       this.traerUnoOrdenC();
       this.listarTransacciones();
     }
@@ -549,7 +550,7 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
     const objeto = {
       idoportunidad: 0,
       codtipoproc: 7 , 
-      idnroproceso: this.idMovimiento, 
+      idnroproceso: this.ordenCompra.alm_idordencompra, 
     }
     console.log('this.objeto ...', objeto );
   
@@ -692,11 +693,11 @@ export class CDetalleMovTrasladoComponent implements OnInit, OnDestroy{
       //       _error = true;
       //   }
 
-      if (!_error && (this.registerFormRegistro.value.alm_idordencompra === null || this.registerFormRegistro.value.alm_idordencompra === ''))
-      {
-          this.errorMensaje="Seleccionar Documento...!";
-          _error = true;
-      }
+      // if (!_error && (this.registerFormRegistro.value.alm_idordencompra === null || this.registerFormRegistro.value.alm_idordencompra === ''))
+      // {
+      //     this.errorMensaje="Seleccionar Documento...!";
+      //     _error = true;
+      // }
 
       // if (!_error && (this.registerFormRegistro.value.alm_idordencompra === 0 || this.registerFormRegistro.value.alm_idordencompra === null))
       // {

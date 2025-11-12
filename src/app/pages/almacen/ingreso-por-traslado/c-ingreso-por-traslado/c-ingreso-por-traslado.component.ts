@@ -277,7 +277,7 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
         const objeto = {
           idoportunidad: 0,
           codtipoproc: 7 , 
-          idnroproceso: this.ordenCompra.idordencompra, 
+          idnroproceso: this.ordenCompra.alm_idordencompra, 
         }
         console.log('this.objeto ...', objeto );
       
