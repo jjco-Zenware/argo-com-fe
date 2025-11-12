@@ -290,13 +290,16 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (rpta: any) => {
           console.log('rpta personaTraerUnoTipoDoc: ', rpta);
-          const { idpersona, appaterno, apmaterno, nombres, razonsocial } = rpta;
+          const { idpersona, appaterno, apmaterno, nombres, razonsocial, direcresumen, telefresumen, email } = rpta;
           this.registerFormCliente.get('idpersona')?.setValue(idpersona);
 
           this.registerFormCliente.get('appaterno')?.setValue(appaterno);
           this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);
           this.registerFormCliente.get('nombres')?.setValue(nombres);
           this.registerFormCliente.get('razonsocial')?.setValue(razonsocial);
+          this.registerFormCliente.get('direcresumen')?.setValue(direcresumen);
+          this.registerFormCliente.get('telefresumen')?.setValue(telefresumen);
+          this.registerFormCliente.get('email')?.setValue(email);
           /*if (tipopersona === 'N') {
             this.registerFormCliente.get('appaterno')?.setValue(appaterno);
             this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);

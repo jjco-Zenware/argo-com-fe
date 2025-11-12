@@ -16,6 +16,7 @@ import { AgendaRoutingModule } from './agenda-routing.module';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CModalAgendaComponent } from './modalagenda/c-modalagenda.component';
 import { DialogService } from 'primeng/dynamicdialog';
+import { CatalogoHabitacionService } from '../catalogo-habitacion/catalogo-habitacion.service';
 
 
 @NgModule({
@@ -40,8 +41,8 @@ import { DialogService } from 'primeng/dynamicdialog';
   providers: [
     
     SharedAppService,
-    //ListatareasService,
-    DialogService
+    DialogService,
+    CatalogoHabitacionService
   ]
 })
 export class AgendaModule { }

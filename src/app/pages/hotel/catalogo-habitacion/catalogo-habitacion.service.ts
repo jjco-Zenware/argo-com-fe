@@ -29,4 +29,9 @@ export class CatalogoHabitacionService {
         return this.http.get<any>(url);
     }
 
+    listaAgenda(objeto:any) {
+    const url = `${constantesApiWeb.listaAgenda}`;
+      return  this.http.post<any>(url, objeto)
+  }
+
 }
