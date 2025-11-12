@@ -50,7 +50,7 @@
                                     <p-tieredMenu #menuReserva [model]="menuItemsReservas" appendTo="body"
                                         [popup]="true"></p-tieredMenu>
                                     <button pButton [disabled]="item.puedeReservar === 0"
-                                        class="p-button-outlined p-button-sm" icon="pi pi-file" pTooltip="Reservar"
+                                        class="p-button-outlined p-button-sm" icon="pi pi-file" pTooltip="Nueva Reserva"
                                         tooltipPosition="bottom" (click)="reservarHabitacion(item)"></button>
                                     <button *ngIf="item.acciones.length > 0" pButton pRipple type="button"
                                         icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text p-button-sm"
@@ -85,7 +85,7 @@
                             (click)="getBack()"></button>
                     </div>
                     <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                        <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                        <span class="text-lg font-semibold">RESERVA N° {{dataPrc.idordencompra}}</span>
                     </div>
                 </div>
             </div>

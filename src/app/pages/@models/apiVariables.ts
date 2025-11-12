@@ -260,6 +260,7 @@ export const constantesApiWeb = {
 
      asientocfgTraeruno: controllerContabilidad + '/asientocfgtraeruno/',
     asientoPrc: controllerContabilidad + '/asientoprc',
+    exportarexceldetracciones: controllerMain + '/exportarexceldetracciones',
     listarhabitacion: controllerHotel + '/listarhabitaciones',
     productoComponentePRC: controllerHotel + '/productocomponenteprc',
     listarComponentesProducto: controllerHotel + '/listarcomponentesproducto',
@@ -273,6 +274,6 @@ export const constantesApiWeb = {
     eliminarPaxDel: controllerHotel + '/paxdel',
     personaTraerUnoTipoDoc: controllerMain + '/personatraerunotipodoc',
     listarHabitacionesCombo: controllerHotel + '/listarhabitacionescombo',
-
     listaAgenda: controllerHotel + '/agendalist',
+    procesarTrxPago: controllerMain + '/prctrxdocpago',
 }

@@ -261,7 +261,7 @@ export class CGuiaRemisionListaComponent implements OnInit, OnDestroy{
                   const objeto = {
                     idusuario : constantesLocalStorage.idusuario,
                     iddocumentoprc: data.idordencompra,
-                    codtipoprc: 12,
+                    codtipoprc: 27,
                     idplantilla: 0
                   }
               
@@ -271,7 +271,7 @@ export class CGuiaRemisionListaComponent implements OnInit, OnDestroy{
                       
                       const mediaType = 'application/pdf';
                         const blob = new Blob([rpta.body], { type: mediaType });
-                        const filename = 'PECOSA-' + data.codigonroorden;
+                        const filename = 'GUIA-' + data.codigonroorden;
                 
                         const url = window.URL.createObjectURL(blob);
                         const a = document.createElement('a');

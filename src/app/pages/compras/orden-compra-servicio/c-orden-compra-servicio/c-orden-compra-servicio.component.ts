@@ -60,20 +60,19 @@ export class COrdenCompraServicioComponent implements OnInit, OnDestroy{
         this.createFrm();
         this.getListarOrdenCompra();
         this.cols = [
-          { field: 'idordencompra', header: 'ID OC' },
           { field: 'fechaingreso', header: 'FECHA INGRESO' },
           { field: 'nomtipoorden', header: 'TIPO ORDEN' },
-          { field: 'codigonroorden', header: 'N ORDEN' },
-          { field: 'nomcomercial', header: 'PROVEEDOR' },
+          { field: 'codigonroorden', header: 'codigonroorden' },
+          { field: 'nomcomercial', header: 'nomcomercial' },
           { field: 'codigoproyecto', header: 'COD PROYECTO' },
           { field: 'nomproyecto', header: 'PROYECTO' },
-          { field: 'nommoneda', header: 'MONEDA' },
+          { field: 'simbmoneda', header: 'MONEDA' },
           { field: 's_monto', header: 'SUBTOTAL' },
-          { field: 's_monto', header: 'IGV' },
-          { field: 's_monto', header: 'TOTAL' },
-          { field: 'nomestado', header: 'ESTADO' },
-          { field: 'estadoentrada', header: 'ESTADO' },
-          { field: 'estadosalida', header: 'ESTADO' }
+          { field: 's_igv', header: 'IGV' },
+          { field: 's_monto_total', header: 'TOTAL' },
+          { field: 'nomestado', header: 'ESTADO' }
+          // { field: 'estadoentrada', header: 'ESTADO' },
+          // { field: 'estadosalida', header: 'ESTADO' }
           
       ];
       this.listaProveedores();

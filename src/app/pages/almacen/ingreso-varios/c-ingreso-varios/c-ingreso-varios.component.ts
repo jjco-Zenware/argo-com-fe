@@ -267,25 +267,39 @@ export class CIngresosVariosComponent implements OnInit, OnDestroy{
           next: (rpta: any) => {
             this.listadoArchivos = rpta;
             console.log('this.listadoArchivos ...', this.listadoArchivos );
+
+             this.ordenCompra.idtrx = valor.idtrx;
+              console.log('onAccion', valor);
+              const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+                  data: this.ordenCompra,
+                  header: valor.nomtrx ,
+                  closeOnEscape: false,
+                  styleClass: 'testDialog',
+                  width: '40%'
+              });
+          
+              ref.onClose.subscribe(() => {
+                  this.getListar();
+                });
   
-            if (this.listadoArchivos.length === 0) {
-              this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Adjunto...!' });
-                  return;
-            }else{
-              this.ordenCompra.idtrx = valor.idtrx;
-        console.log('onAccion', valor);
-        const ref = this.dialogService.open(CModalExcAlmacenComponent, {
-            data: this.ordenCompra,
-            header: valor.nomtrx ,
-            closeOnEscape: false,
-            styleClass: 'testDialog',
-            width: '40%'
-        });
-    
-        ref.onClose.subscribe(() => {
-            this.getListar();
-          });
-            }
+            // if (this.listadoArchivos.length === 0) {
+            //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Adjunto...!' });
+            //       return;
+            // }else{
+              // this.ordenCompra.idtrx = valor.idtrx;
+              // console.log('onAccion', valor);
+              // const ref = this.dialogService.open(CModalExcAlmacenComponent, {
+              //     data: this.ordenCompra,
+              //     header: valor.nomtrx ,
+              //     closeOnEscape: false,
+              //     styleClass: 'testDialog',
+              //     width: '40%'
+              // });
+          
+              // ref.onClose.subscribe(() => {
+              //     this.getListar();
+              //   });
+            //}
           },
           error: (err) => {
             this.serviceSharedApp.messageToast();

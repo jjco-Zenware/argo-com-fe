@@ -42,7 +42,7 @@
                     </div> 
                     <div class=" sm:col-8 lg:col-3 md:col-12"></div> 
                     <div class="sm:col-6 lg:col-3 md:col-12 col-6 field h-4rem">
-                        <label class="block text-900 font-semibold mb-1">N° Guia </label>
+                        <label class="block text-900 font-semibold mb-1">N° Guia <span class="text-red-500 font-bold"> * </span></label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="font-semibold p-inputtext-sm" formControlName="sustentodoc"/>
                         </span>
@@ -61,7 +61,7 @@
                             </div>                            
                             <span >
                                 <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
-                                optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true"></p-dropdown>
                             </span>
                         </div> 
                     <div class="lg:col-7"></div>

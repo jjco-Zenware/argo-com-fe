@@ -75,6 +75,7 @@ export class CDetalleBajaComponent implements OnInit, OnDestroy{
   lstTipoDoc: any[] = [];
   lstComprobante: any[] = [];
   lstTipoMovimiento: any;
+  verOc: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -109,19 +110,11 @@ export class CDetalleBajaComponent implements OnInit, OnDestroy{
     this.listarItemsTablaComprobante();
     
     if (this.idMovimiento > 0) {   
-      if (this.IA_data.paramReg === 'V') {
-        this.dataAdjunto ={
-          idCliente: this.idMovimiento,
-          codtipoproc: 7,
-          veracciones: 1
-        }
-      }  else{
-        this.dataAdjunto ={
+      this.dataAdjunto ={
           idCliente: this.idMovimiento,
           codtipoproc: 7,
           veracciones: 0
-        }
-      }  
+        } 
       this.verAdjunto = true;     
       this.traerUnoOrdenC();
     }else{
@@ -204,7 +197,7 @@ export class CDetalleBajaComponent implements OnInit, OnDestroy{
       nrodocumento_ctb:[{ value: '', disabled: false }],
       fecemision: [{value: this.serviceUtilitario.obtenerFechaActual(),disabled: false,}],
       tipodoc_ctb: [{ value: 7, disabled: false }],      
-      tipomovimiento: [{ value: 589, disabled: false }],
+      tipomovimiento: [{ value: '', disabled: false }],
     });
   }
 
@@ -289,6 +282,9 @@ export class CDetalleBajaComponent implements OnInit, OnDestroy{
             if (rpta.ordencompra[0].items !== undefined) {
               this.lstItemOC = rpta.ordencompra[0].items;
             }     
+            if (rpta.ordencompra[0].estado !== 'REG') {
+              this.verOc =  false; 
+            }
                          
           this.visibleDocument = false;
           // console.log('s_monto', rpta.ordencompra[0].s_monto);
@@ -373,6 +369,14 @@ export class CDetalleBajaComponent implements OnInit, OnDestroy{
       if (this.lstItemOC[i].preciocosto.toString() === '') {
         this.lstItemOC[i].preciocosto = 0;
       }
+    }
+
+     if (this.registerFormRegistro.value.idproveedor === null) {
+      this.registerFormRegistro.get('idproveedor').setValue(0);
+    }
+
+    if (this.registerFormRegistro.value.alm_idordencompra === null) {
+      this.registerFormRegistro.get('alm_idordencompra').setValue(0);
     }
 
     const objeto = {
@@ -649,12 +653,12 @@ export class CDetalleBajaComponent implements OnInit, OnDestroy{
         }
 
 
-        if (this.listadoArchivos.length === 0) {
-          this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
-              return;
-        }else{
+        // if (this.listadoArchivos.length === 0) {
+        //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Debe Ingresar Guia de Remisión...!' });
+        //       return;
+        // }else{
           this.guardarOC2(valor);
-        }
+        //}
       },
       error: (err) => {
         this.serviceSharedApp.messageToast();
@@ -706,6 +710,14 @@ export class CDetalleBajaComponent implements OnInit, OnDestroy{
       if (this.lstItemOC[i].preciocosto.toString() === '') {
         this.lstItemOC[i].preciocosto = 0;
       }
+    }
+
+     if (this.registerFormRegistro.value.idproveedor === null) {
+      this.registerFormRegistro.get('idproveedor').setValue(0);
+    }
+
+    if (this.registerFormRegistro.value.alm_idordencompra === null) {
+      this.registerFormRegistro.get('alm_idordencompra').setValue(0);
     }
 
     const objeto = {

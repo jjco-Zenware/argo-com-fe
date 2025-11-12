@@ -253,4 +253,9 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.centroCostoUPD}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    procesarTrxDocPago(objeto:any) {
+        const url = `${constantesApiWeb.procesarTrxPago}`;
+        return  this.http.post<any>(url, objeto)
+    }
 }

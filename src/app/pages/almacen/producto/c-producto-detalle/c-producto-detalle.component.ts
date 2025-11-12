@@ -105,7 +105,7 @@ lstControlInventario: any;
       modelo:[{ value: '', disabled: false }],
       serie:[{ value: '', disabled: false }],
       lote:[{ value: '', disabled: false }],
-      controlinven:[{ value: '', disabled: false }],
+      controlinven:[{ value: 592, disabled: false }],
     });
   }
 

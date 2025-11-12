@@ -1,0 +1,24 @@
+
+<p-card class="m-2 gap-1">
+    <ng-template pTemplate="content">
+        <div class="p-fluid grid -mb-4 -mt-3">           
+            <!-- <div class="col-3 h-3rem flex flex-column -mt-3">
+                <label class="font-semibold">N° habitacion</label>
+                <label>{{habitacion.nomHabitacion}}</label>
+            </div> -->
+            <div class="col-12">
+                <label class="font-semibold">COMENTARIO</label>
+                <textarea id="description" name="description" type="text" [(ngModel)]="descripcion" pInputTextarea [rows]="2" style="resize: none" 
+                class="w-full mt-1 p-inputtext-sm"></textarea>
+            </div>
+        </div>
+    </ng-template>
+    
+    <ng-template pTemplate="footer" class="h-3rem">
+        <button pButton label="Pagar" (click)="getPagar()" [className]="btnColor" type="submit" ></button>
+    </ng-template>
+    
+</p-card>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<!-- <p-toast></p-toast> -->

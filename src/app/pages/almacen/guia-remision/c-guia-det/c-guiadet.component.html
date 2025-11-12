@@ -216,9 +216,10 @@
                             <!-- <th class="bg-teal-50 border-1">CATEGORIA</th>
                             <th class="bg-teal-50 border-1">TIPO <br> EXISTENCIA</th> -->
                             <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
-                            <!-- <th class="bg-teal-50 border-1">MARCA</th>
                             <th class="bg-teal-50 border-1">MODELO</th>
                             <th class="bg-teal-50 border-1">SERIAL N</th>
+                            <!-- <th class="bg-teal-50 border-1">MARCA</th>
+                            
                             <th class="bg-teal-50 border-1">SERVICE TAG</th>-->
                             <th class="bg-teal-50 border-1">U. MED</th> 
                             <th class="bg-teal-50 border-1">CANT.</th>
@@ -235,11 +236,22 @@
                             <td>{{ product.codproducto | uppercase}}</td>
                             <!-- <td>{{ product.nomsubfamilia | uppercase}}</td>
                             <td>{{ product.nomtipoexistencia | uppercase}}</td> -->
-                            <td>{{ product.descripcion | uppercase}}</td>
-                            <!-- <td>{{ product.nommarca | uppercase}}</td>
+                            <!-- <td>{{ product.descripcion | uppercase}}</td> -->
+                            <td [pEditableColumn]="product.descripcion | uppercase" pEditableColumnField="descripcion" class="cursor-pointer">
+                                <p-cellEditor >
+                                    <ng-template pTemplate="input">
+                                        <input pInputText type="text" [(ngModel)]="product.descripcion" required/>
+                                    </ng-template>
+                                    <ng-template pTemplate="output">
+                                        {{ product.descripcion | uppercase }}
+                                    </ng-template>
+                                </p-cellEditor>
+                            </td>
                             <td>{{ product.modelo | uppercase}}</td>
                            
                             <td>{{ product.serialnumber }}</td>
+                            <!-- <td>{{ product.nommarca | uppercase}}</td>
+                            
                             <td>{{ product.servicetag }}</td> -->
                            
                             <td>{{ product.nomunidad }}</td>
@@ -302,7 +314,7 @@
                         <label class="block text-900 font-semibold mb-1">N° Licencia</label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="p-inputtext-sm" formControlName="gre_conductor_numero_licencia" 
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" [readonly]=onlyRead/>
+                            oninput="this.value=this.value.replace(/[^A-Z0-9]/g,'');" maxlength="9" [readonly]=onlyRead/>
                         </span>
                     </div> 
                     <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">

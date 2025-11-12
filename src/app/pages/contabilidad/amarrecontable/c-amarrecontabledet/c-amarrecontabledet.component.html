@@ -38,7 +38,7 @@
                         <label class="block text-900 font-semibold mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
                         <span>
                             <p-dropdown [options]="lstCategoriaDoc" formControlName="idcategoria" optionLabel="nomcategoria" placeholder="Seleccionar..."
-                                optionValue="idcategoria" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                                optionValue="idcategoria" appendTo="body" class="p-inputtext-sm" [filter]="true"></p-dropdown>
                         </span>
                     </div>
                      <div class="sm:col-6 lg:col-12 md:col-12 h-4rem field">
@@ -80,13 +80,6 @@
                             <th style="width: 100px;" class="bg-teal-50 border-1">ACCIÓN</th>
                         </tr>
                     
-                        <!-- <tr >
-                            <th></th>
-                            <th *ngFor="let col of cols">
-                                <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>
-                                
-                            </th>
-                        </tr> -->
                     </ng-template>
                     <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex"> 
                         <tr class="text-sm">
