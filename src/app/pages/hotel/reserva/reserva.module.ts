@@ -24,13 +24,15 @@ import { RegistroVentaModule } from '../../facturacion/registro-venta/registro-v
 import { CFacturacionHabitacionComponent } from './c-facturacion-habitacion/c-facturacion-habitacioncomponent';
 import { ReservaService } from './reserva.service';
 import { CmPersonaPaxComponent } from './cm-persona-pax/cm-persona-pax.component';
+import { CmExcTransacReservaComponent } from './cm-exc-transac-reserva/cm-exc-transac-reserva.component';
 
 @NgModule({
   declarations: [
     CReservaListComponent,
     CReservaDetComponent,
     CFacturacionHabitacionComponent,
-    CmPersonaPaxComponent
+    CmPersonaPaxComponent,
+    CmExcTransacReservaComponent
   ],
   imports: [
     CommonModule,

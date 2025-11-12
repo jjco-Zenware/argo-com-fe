@@ -1,7 +1,7 @@
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { c_habitacion, constantesLocalStorage, mensajesQuestion } from '@constantes';
+import { c_habitacion, constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -16,6 +16,7 @@ import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/mo
 import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 import { ReservaService } from '../reserva.service';
 import { CmPersonaPaxComponent } from '../cm-persona-pax/cm-persona-pax.component';
+import { CmExcTransacReservaComponent } from '../cm-exc-transac-reserva/cm-exc-transac-reserva.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -40,6 +41,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
   headerTitle: string = '';
   registerFormCliente: any = FormGroup;
   registerFormContacto: any= FormGroup;
+  registerFormPago: any= FormGroup;
   lstMonedas: Moneda[] = [];
   lstItemOC: OrdenCompraItem[] = [];
   montoTotal: number = 0;
@@ -110,6 +112,16 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
   vistaPrincipal: boolean = true;
   dataFacturacion: any;
   listadoPAX: any[] = [];
+  selectedDetalle: any[] = [];
+  lstPagos: any[] =[];
+  lstEstados:any[] = [
+    { codestadofel: 0, nomestadofel: 'TODOS' },
+    { codestadofel: 1, nomestadofel: 'ACEPTADO' },
+    { codestadofel: 2, nomestadofel: 'ERROR' },
+    { codestadofel: 3, nomestadofel: 'EN PROCESO' },
+    { codestadofel: 4, nomestadofel: 'ANULADO' },
+    { codestadofel: 4, nomestadofel: 'EN PROCESO ANULACIÓN' }
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -135,6 +147,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
     this.createFrm();
     this.createFormRegistro();
     this.createFormContacto();
+    this.createFormPagos();
     this.listaProyectoTipo();
     this.listaClientes();
     this.listaMonedas();  
@@ -142,6 +155,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
     this.listarItemsTablaUnidad() ;
     this.listarItemsTablaComprobante();
     this.listarPAX();
+    this.getListarPagos();
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -188,6 +202,19 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
       indvig: [{ value: true, disabled: false }]
     });
 }
+
+  createFormPagos(){
+    this.registerFormPago = this.formBuilder.group({
+      fecini: [{value: this.serviceUtilitario.obtenerFechaInicioMes(),disabled: false}],       
+      fecfin: [{value: this.serviceUtilitario.obtenerFechaFinMes(),disabled: false}],     
+      idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
+      idproveedor: [{value: 0,disabled: false}],
+      idmoneda: [{value: 0,disabled: false}],
+      idcliente: [{value: 0,disabled: false}],
+      idcentrocosto: [{ value: 0, disabled: false }],
+      ind_estado_fel: [{ value: 0, disabled: false }]
+    });
+  }
 
 createFormRegistro() {
   //Agregar validaciones de formulario
@@ -1287,6 +1314,78 @@ createFormRegistro() {
       if (rpta != undefined) {
         this.listarPAX();
       }
+    });
+  }
+
+  getListarPagos(){
+    const {idordencompra: iddocumentoprc_origen} = this.IA_data;
+    console.log("iddocumentoprc_origen recibido: ", iddocumentoprc_origen);
+    
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+    
+    const objeto = {
+      ...this.registerFormPago.value,
+      idtipodocprc: 6,
+      iddocumentoprc_origen
+    }
+    console.log("objeto recibido: ", objeto);
+    const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
+      .subscribe({
+        next: (rpta:any) => {
+            this.setSpinner(false);
+            console.log('rpta getListar', rpta);
+            if(rpta.length === 0){ return }
+            this.lstPagos = rpta.ordenescompra              
+        },
+        error:(err)=>{
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+        },
+        complete:() => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($getListarOrdenCompra)
+  }
+
+  pagarItemDetalle() {
+    console.log("lstItemOC : ", this.lstItemOC);
+    console.log("selectedDetalle : ", this.selectedDetalle);
+
+    if(this.selectedDetalle.length === 0){
+      this.messageService.clear();
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Seleccionar al menos un item...' });
+      return
+    }
+
+    const {idordencompra} = this.IA_data;
+    const data = {
+      idordencompra,
+      idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
+    }
+    console.log("selectedDetalle data : ", data);
+
+    /*this.ordenHabitacion.idtrx = item.idtrx;
+    this.ordenHabitacion.idoperacion = item.idnrooperacion;
+    this.ordenHabitacion.idoperacion_item = item.idnrooperacion_item;*/
+    //console.log('onAccion', item);
+    const ref = this.dialogService.open(CmExcTransacReservaComponent, {
+      data, //this.ordenHabitacion,
+      header: idordencompra, //+ ' - ' + this.ordenHabitacion.nomHabitacion,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+
+    ref.onClose.subscribe((rpta: any) => {
+      if (!rpta) { return; }
+
+      this.serviceSharedApp.messageToast({
+        severity: rpta.data.procesoSwitch === 0 ? 'success' : 'info',
+        summary: rpta.data.procesoSwitch === 0 ? 'Exito' : 'Validación...!',
+        detail: rpta.data.mensaje
+      });
     });
   }
 }
