@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { constantesLocalStorage, globalVariable, mensajesQuestion, mensajesSpinner } from '@constantes';
+import { mensajesQuestion, mensajesSpinner } from '@constantes';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
@@ -8,10 +8,10 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import esLocale from '@fullcalendar/core/locales/es';
-//import { ListatareasService } from '../../listatareas/service/listatareas.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CModalAgendaComponent } from '../modalagenda/c-modalagenda.component';
 import { FullCalendarComponent } from '@fullcalendar/angular';
+import { CatalogoHabitacionService } from '../../catalogo-habitacion/catalogo-habitacion.service';
 
 @Component({
     selector: 'app-c-agenda',
@@ -35,7 +35,6 @@ export class CAgendaComponent implements OnInit {
     hasta: any;
     periodo: any = new Date();
     lstTareas: any[]= [];
-    verVendedor: boolean = true;
 
   calendarOptions: CalendarOptions = {
     initialDate: new Date(),
@@ -57,36 +56,26 @@ export class CAgendaComponent implements OnInit {
     eventClick: (info) => {
       this.mostrarTarea(info.event._def.extendedProps['description']);
     },
-    // dayCellClassNames: (arg) => {
-    //     if (arg.date.getDay() === 0 || arg.date.getDay() === 6) { // 0 = Domingo, 6 = Sábado
-    //     return ['fin-semana-style'];
-    //     }
-    //     return [];
-    // },
     firstDay: 1, // 0=Domingo, 1=Lunes
     dayHeaderFormat: { weekday: 'long' },
     dayHeaderDidMount: (arg) => {
-    // arg.date → fecha de la cabecera
-    // arg.el → <th> del header (la cabecera del día)
 
     const day = arg.date.getDay(); // 0=Dom, 1=Lun, ..., 6=Sáb
     },
-    //dateClick: this.handleDateClick.bind(this),  //crear evento desde la celda
 
   };
 
     constructor(
         private messageService: MessageService,
         private utilitariosService: UtilitariosService,
-        //private listatareasService: ListatareasService,
         public dialogService: DialogService,
+        private serviceCatalogoHabitacion: CatalogoHabitacionService
         ) {
     }
 
     ngOnInit(): void {
         this.desde = this.utilitariosService.obtenerFechaInicioMes();
         this.hasta = this.utilitariosService.obtenerFechaFinMes();
-        this.listaVendedor();
         this.getBuscar();
       }
 
@@ -94,30 +83,7 @@ export class CAgendaComponent implements OnInit {
         this.blockedDocument = valor;
       }
 
-    listaVendedor() {
-    // this.kanbanService.listarUsuariosxPerfil(2).subscribe({
-    //     next: (rpta: any) => {
-    //     //console.info('next : ', rpta);
-    //     this.Vendedor = rpta;
-    //     this.Vendedor.unshift(this.Usuario ={
-    //         idusuario: 0,
-    //         name:"TODOS"
-    //     })
-
-    //     },
-    //     error: (err) => {
-    //     console.info('error : ', err);
-    //     this.messageService.clear();
-    //     this.messageService.add({
-    //         severity: 'error',
-    //         summary: 'Error',
-    //         detail: mensajesQuestion.msgErrorGenerico,
-    //     });
-    //     },
-    //     complete: () => {
-    //     },
-    // });
-    }
+    
 
     ngOnDestroy() {
         if (this.$listSubcription != undefined) {
@@ -126,63 +92,58 @@ export class CAgendaComponent implements OnInit {
     }
 
     getBuscar() {
-            // this.setSpinner(true);
-            // this.mensajeSpinner = mensajesSpinner.msjRecuperaLista;
-            // let _eventos: any[]=[];
-            // this.lstTareas = [];
+            this.setSpinner(true);
+            this.mensajeSpinner = mensajesSpinner.msjRecuperaLista;
+            let _eventos: any[]=[];
+            this.lstTareas = [];
 
-            // if (constantesLocalStorage.idperfil !== 4) {
-            //     this.verVendedor = false;
-            //     this.idvendedor = constantesLocalStorage.idusuario;
-            // }
-
-            // const objeto ={
-            //     fechaini: this.desde,
-            //     fechafin: this.hasta,
-            //     idusuario: this.idvendedor,
-            //     idcliente:0,
-            //     idoprotunidad:0            
-            // }
+            const objeto ={
+                fechaini: this.desde,
+                fechafin: this.hasta,
+                idusuario: this.idvendedor,
+                idcliente:0,
+                idoprotunidad:0            
+            }
     
-            // const $listaTareas = this.listatareasService
-            //     .listaAgenda(objeto)
-            //     .subscribe({
-            //         next: (rpta: any) => {
-            //             this.setSpinner(false);
-            //             console.log('rpta listaAgenda', rpta);
-            //             this.lstTareas = rpta;
+            const $listaTareas = this.serviceCatalogoHabitacion
+                .listaAgenda(objeto)
+                .subscribe({
+                    next: (rpta: any) => {
+                        this.setSpinner(false);
+                        console.log('rpta listaAgenda', rpta);
+                        this.lstTareas = rpta;
 
-            //             rpta.forEach((element: any) => {
-            //                 _eventos.push({
-            //                     title: element.descripcion,
-            //                     start:  element.fechainicial,
-            //                     description: element.idtarea,
-            //                     color: element.completo ? 'green' : 'blue'
-            //                 });
-            //             });
+                        rpta.forEach((element: any) => {
+                            _eventos.push({
+                                title: element.descripcion,
+                                start:  element.fechainicial,
+                                description: element.idtarea,
+                                color: element.completo ? 'green' : 'blue'
+                            });
+                        });
 
-            //             this.events = [..._eventos];
-            //             console.log('this.events', this.events);
+                        this.events = [..._eventos];
+                        console.log('this.events', this.events);
 
-            //             // redireccionamos el calendario a la fecha seleccionada
-            //             let calendarApi = this.calendarComponent.getApi();
-            //             calendarApi.gotoDate(this.periodo); 
-            //         },
-            //         error: (err) => {
-            //             this.setSpinner(false);
-            //             console.error('error : ', err);
-            //             this.messageService.clear();
-            //             this.messageService.add({
-            //                 severity: 'error',
-            //                 summary: 'Error',
-            //                 detail: mensajesQuestion.msgErrorGenerico,
-            //             });
-            //         },
-            //         complete: () => {
-            //             this.setSpinner(false);
-            //         },
-            //     });
-            // this.$listSubcription.push($listaTareas);
+                        // redireccionamos el calendario a la fecha seleccionada
+                        let calendarApi = this.calendarComponent.getApi();
+                        calendarApi.gotoDate(this.periodo); 
+                    },
+                    error: (err) => {
+                        this.setSpinner(false);
+                        console.error('error : ', err);
+                        this.messageService.clear();
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: mensajesQuestion.msgErrorGenerico,
+                        });
+                    },
+                    complete: () => {
+                        this.setSpinner(false);
+                    },
+                });
+            this.$listSubcription.push($listaTareas);
         }
 
     changePeriodo(dato: any) {
