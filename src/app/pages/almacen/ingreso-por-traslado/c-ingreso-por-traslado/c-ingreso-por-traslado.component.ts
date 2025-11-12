@@ -230,7 +230,7 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
       }
     
       onAccion(item: any) {
-        this.getListaArchivos(item);
+        
         console.log('onAccion', item);
 
         let lstItem = this.ordenCompra.items;
@@ -257,6 +257,8 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
           }
       }
 
+      this.getListaArchivos(item);
+
         // this.ordenCompra.idtrx = item.idtrx;
         // console.log('onAccion', item);
         // const ref = this.dialogService.open(CModalExcAlmacenComponent, {
@@ -277,7 +279,7 @@ export class CIngresoPorTrasladoComponent implements OnInit, OnDestroy{
         const objeto = {
           idoportunidad: 0,
           codtipoproc: 7 , 
-          idnroproceso: this.ordenCompra.idordencompra, 
+          idnroproceso: this.ordenCompra.alm_idordencompra, 
         }
         console.log('this.objeto ...', objeto );
       
