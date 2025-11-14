@@ -1077,10 +1077,10 @@ createFormRegistro() {
       return;
     }
     console.log('length...', _nro.length); 
-    if(_nro.length < 11){
+    /*if(_nro.length < 11){
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Ruc no Valido...' });
       return;
-    }
+    }*/
 
     this.setSpinner(true);
     this.mensajeSpinner = 'Buscando...!';
@@ -1261,6 +1261,8 @@ createFormRegistro() {
   }
 
   eliminaPAX(item:any){
+    console.log("eliminaPAX: ", item);
+    
     this.confirmationService.confirm({
       key: 'confirm1',
       header: 'Confirmación',
@@ -1278,8 +1280,13 @@ createFormRegistro() {
       .subscribe({
         next: (rpta: any) => {
           this.setSpinner(false);
-          console.log('rpta listarPAX: ', rpta);
-          this.listadoPAX = rpta;
+          console.log('rpta eliminarPaxDel: ', rpta);
+          this.serviceSharedApp.messageToast({
+            severity: rpta.resultProceso === "0" ? 'success' : 'info',
+            summary: rpta.resultProceso === "0" ? 'Exito' : 'Aviso...!',
+            detail: rpta.mensaje
+          });
+          this.listarPAX();
         },
         error: (err) => {
           this.setSpinner(false);
@@ -1318,6 +1325,7 @@ createFormRegistro() {
   }
 
   getListarPagos(){
+    debugger
     const {idordencompra: iddocumentoprc_origen} = this.IA_data;
     console.log("iddocumentoprc_origen recibido: ", iddocumentoprc_origen);
     

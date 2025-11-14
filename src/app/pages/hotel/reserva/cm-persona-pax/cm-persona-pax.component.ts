@@ -124,6 +124,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
 
 
   cambioTipoPer(dato: any) {
+    this.listarTiposDoc();
     if (dato === 'J') {
       this.personaNatural = false;
       this.esPersonaJuridica = true;

@@ -33,7 +33,7 @@
             <div class="lg:col-4 col-12 field">
                 <label class="font-semibold">Tipo Documento</label>
                 <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="destipodoc" placeholder="Seleccionar Documento"
-                    optionValue="idtipodoc" (onChange)="cambioTipoDoc($event.value)"class="p-inputtext-sm"></p-dropdown>
+                    optionValue="idtipodoc" (onChange)="cambioTipoDoc($event.value)"class="p-inputtext-sm" appendTo="body"></p-dropdown>
             </div>
             <div class="lg:col-4 col-12 field -mt-5">
                 <label class="font-semibold">N° Documento</label>

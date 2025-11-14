@@ -122,7 +122,7 @@ esPersonaJuridica: boolean = false;
 
   
   cambioTipoPer(dato: any) {
-    debugger
+    this.listarTiposDoc();
     if (dato === 'J') {
       this.personaNatural = false;
       this.esPersonaJuridica = true;
@@ -139,7 +139,7 @@ esPersonaJuridica: boolean = false;
 
       this.registerFormCliente.get('apmaterno')?.clearValidators();
       this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();
-      }else{
+    }else{
       this.personaNatural = true;
       this.esPersonaJuridica = false;
 
