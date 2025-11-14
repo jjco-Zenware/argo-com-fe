@@ -33,5 +33,9 @@ export class ReservaService {
     const url = `${constantesApiWeb.listarHabitacionesCombo}`;
     return this.http.post<any>(url, objeto)
   }
-  
+
+  listartipodocumentotablasunat(tipoPersona: string) {
+    const url = `${constantesApiWeb.listartipodocumentotablasunat}${tipoPersona}`;
+    return this.http.get<any>(url)
+  }
 }

@@ -24,16 +24,16 @@
                 <!-- <small class="p-error" *ngIf="submitted && !formCliente.indnacionalidad.requiered">Nacionalidad es requerido.</small> -->
                 <!-- <p class="p-error" *ngIf="submitted && formCliente.indnacionalidad.errors">Nacionalidad es requerido.</p> -->
             </div>
-            <div class="col-12 field sm:col-6 lg:col-4 md:col-3">
+            <!-- <div class="col-12 field sm:col-6 lg:col-4 md:col-3">
                 <label class="font-semibold">Tipo Rol</label>
                 <p-dropdown [options]="lstRol" formControlName="idrolpersona" optionLabel="valoritem" placeholder="Seleccionar Rol...!"
                     optionValue="coditem" class="p-inputtext-sm"></p-dropdown>
-            </div>
+            </div> -->
         
-            <div class="lg:col-4 col-12 field -mt-5">
+            <div class="lg:col-4 col-12 field">
                 <label class="font-semibold">Tipo Documento</label>
-                <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="name" placeholder="Seleccionar Documento"
-                    optionValue="code" (onChange)="cambioTipoDoc($event.value)"class="p-inputtext-sm"></p-dropdown>
+                <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="destipodoc" placeholder="Seleccionar Documento"
+                    optionValue="idtipodoc" (onChange)="cambioTipoDoc($event.value)"class="p-inputtext-sm"></p-dropdown>
             </div>
             <div class="lg:col-4 col-12 field -mt-5">
                 <label class="font-semibold">N° Documento</label>
@@ -44,7 +44,7 @@
                     pTooltip="Buscar documento" tooltipPosition="top"></button>
                 </span>
             </div>
-            <div class="lg:col-4 col-12 field -mt-5">
+            <div *ngIf="esPersonaJuridica" class="lg:col-4 col-12 field -mt-5">
                 <label class="font-semibold">Tipo Entidad</label>
                 <p-dropdown [options]="lstEnti" formControlName="tipoentidad" optionLabel="name" placeholder="Seleccionar Entidad"
                     optionValue="id" class="p-inputtext-sm"></p-dropdown>

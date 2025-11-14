@@ -38,8 +38,8 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
   ];
 
   dropdownItemsTipNro = [
-    { name: 'RUC', code: 'RUC' },
-    { name: 'DNI', code: 'DNI' }
+    /*{ name: 'RUC', code: 'RUC' },
+    { name: 'DNI', code: 'DNI' }*/
   ];
 
   lstEnti = [
@@ -48,6 +48,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
   ];
 
   listaHabitacion: any[] = [];
+  esPersonaJuridica: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -70,9 +71,10 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
     this.param = this.config.data;
     console.log('this.param...', this.param.idrolpersona);
     this.createFormCliente();
-    this.cambioTipoPer('J');
+    this.cambioTipoPer('N');
     this.listarItemsTabla();
     this.listarHabitacion();
+    this.listarTiposDoc();
   }
 
   ngOnDestroy() {
@@ -85,9 +87,9 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
     //Agregar validaciones de formulario
     this.registerFormCliente = this.formBuilder.group({
       idrolpersona: [{ value: this.param.idrolpersona, disabled: false }],
-      tipopersona: [{ value: 'J', disabled: false }],
+      tipopersona: [{ value: 'N', disabled: false }],
       tipoalta: [{ value: 'NOR', disabled: false }],
-      indnacionalidad: [{ value: null, disabled: false }, [Validators.required]],
+      indnacionalidad: [{ value: '1', disabled: false }, [Validators.required]],
       idpais: [{ value: '1', disabled: false }],
       idtipodoc: [{ value: null, disabled: false }, [Validators.required]],
       nrodocumento: [{ value: null, disabled: false }, [Validators.required]],
@@ -113,7 +115,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       iduseract: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idpersona: [{ value: 0, disabled: false }],
       tipocambio: [{ value: 0, disabled: false }],
-      tipoentidad: [{ value: null, disabled: false }, [Validators.required]],
+      tipoentidad: [{ value: 'P', disabled: false }, [Validators.required]],
       nroctadetraccion: [{ value: null, disabled: false }],
       idprod: [{ value: null, disabled: false }],
     });
@@ -124,6 +126,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
   cambioTipoPer(dato: any) {
     if (dato === 'J') {
       this.personaNatural = false;
+      this.esPersonaJuridica = true;
 
       this.registerFormCliente.get('razonsocial')?.clearValidators();
       this.registerFormCliente.get('razonsocial')?.setValidators(Validators.required);
@@ -139,6 +142,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();
     } else {
       this.personaNatural = true;
+      this.esPersonaJuridica = false;
 
       this.registerFormCliente.get('nombres')?.clearValidators();
       this.registerFormCliente.get('nombres')?.setValidators(Validators.required);
@@ -314,5 +318,22 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
         complete: () => { }
       });
     this.$listSubcription.push($personaTraerUnoTipoDoc)
+  }
+
+  listarTiposDoc(){
+    const { tipopersona, idtipodoc } = this.registerFormCliente.controls;
+    const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat(tipopersona.value)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta listartipodocumentotablasunat: ', rpta);
+          this.dropdownItemsTipNro = rpta;
+          idtipodoc.setValue(tipopersona.value === 'J' ? 'RUC' : 'DNI');
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { }
+      });
+    this.$listSubcription.push($listartipodocumentotablasunat)
   }
 }

@@ -7,7 +7,8 @@ import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
-import { mensajesQuestion } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion } from '@constantes';
+import { ReservaService } from 'src/app/pages/hotel/reserva/reserva.service';
 @Component({
   selector: 'app-c-modalpersona',
   templateUrl: './c-modalpersona.component.html'
@@ -37,14 +38,15 @@ dropdownItemsNac = [
 ];
 
 dropdownItemsTipNro = [
-    { name: 'RUC', code: 'RUC' },
-    { name: 'DNI', code: 'DNI' }
+    /*{ name: 'RUC', code: 'RUC' },
+    { name: 'DNI', code: 'DNI' }*/
 ];
 
 lstEnti = [
     { id:'P', name: 'PRIVADO' },
     { id: 'E', name: 'ESTADO' },
 ];
+esPersonaJuridica: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -57,6 +59,7 @@ lstEnti = [
     public datepipe: DatePipe,
     private ordencompraService: OrdencompraService,
     private formBuilder: FormBuilder,
+    private serviceReserva: ReservaService,
   ) { }
 
 
@@ -66,8 +69,11 @@ lstEnti = [
     this.param = this.config.data;
     console.log('this.param...', this.param.idrolpersona);
     this.createFormCliente();
-    this.cambioTipoPer('J');
+    this.cambioTipoPer('N');
     this.listarItemsTabla();
+    this.listarTiposDoc();
+    console.log("esPersonaJuridica : ", this.esPersonaJuridica);
+    
   }
 
   ngOnDestroy() {
@@ -80,9 +86,9 @@ lstEnti = [
     //Agregar validaciones de formulario
     this.registerFormCliente = this.formBuilder.group({
     idrolpersona: [{ value: this.param.idrolpersona, disabled: false }],
-    tipopersona :  [{ value: 'J', disabled: false }],
+    tipopersona :  [{ value: 'N', disabled: false }],
     tipoalta : [{ value: 'NOR', disabled: false }],
-    indnacionalidad: [{ value: null, disabled: false }, [Validators.required]],
+    indnacionalidad: [{ value: '1', disabled: false }, [Validators.required]],
     idpais: [{ value: '1', disabled: false }],
     idtipodoc: [{ value: null, disabled: false }, [Validators.required]],
     nrodocumento: [{ value: null, disabled: false }, [Validators.required]],
@@ -108,7 +114,7 @@ lstEnti = [
     iduseract: [{ value: 1, disabled: false }],
     idpersona: [{ value: 0, disabled: false }],
     tipocambio: [{ value: 0, disabled: false }],
-    tipoentidad: [{ value: null, disabled: false }, [Validators.required]],
+    tipoentidad: [{ value: 'P', disabled: false }, [Validators.required]],
     nroctadetraccion: [{ value: null, disabled: false }],
     });
 }
@@ -116,8 +122,10 @@ lstEnti = [
 
   
   cambioTipoPer(dato: any) {
+    debugger
     if (dato === 'J') {
       this.personaNatural = false;
+      this.esPersonaJuridica = true;
 
       this.registerFormCliente.get('razonsocial')?.clearValidators();
       this.registerFormCliente.get('razonsocial')?.setValidators(Validators.required);
@@ -133,6 +141,7 @@ lstEnti = [
       this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();
       }else{
       this.personaNatural = true;
+      this.esPersonaJuridica = false;
 
       this.registerFormCliente.get('nombres')?.clearValidators();
       this.registerFormCliente.get('nombres')?.setValidators(Validators.required);
@@ -228,5 +237,70 @@ lstEnti = [
   
     }
 
+      getBuscarPersonaPAX() {
+        const { idtipodoc, nrodocumento, tipopersona } = this.registerFormCliente.getRawValue();
+        if (!idtipodoc) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "Seleccione Tipo Documento" });
+          return;
+        }
+    
+        if (!nrodocumento) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "Ingrese Número de Documento" });
+          return;
+        }
+    
+        const objeto = {
+          idusuario: constantesLocalStorage.idusuario,
+          idrolpersona: "",
+          idpersona: 0,
+          nrodocumento,
+          tipodocumento: idtipodoc
+        }
+        const $personaTraerUnoTipoDoc = this.serviceReserva.personaTraerUnoTipoDoc(objeto)
+          .subscribe({
+            next: (rpta: any) => {
+              console.log('rpta personaTraerUnoTipoDoc: ', rpta);
+              const { idpersona, appaterno, apmaterno, nombres, razonsocial, direcresumen, telefresumen, email } = rpta;
+              this.registerFormCliente.get('idpersona')?.setValue(idpersona);
+    
+              this.registerFormCliente.get('appaterno')?.setValue(appaterno);
+              this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);
+              this.registerFormCliente.get('nombres')?.setValue(nombres);
+              this.registerFormCliente.get('razonsocial')?.setValue(razonsocial);
+              this.registerFormCliente.get('direcresumen')?.setValue(direcresumen);
+              this.registerFormCliente.get('telefresumen')?.setValue(telefresumen);
+              this.registerFormCliente.get('email')?.setValue(email);
+              /*if (tipopersona === 'N') {
+                this.registerFormCliente.get('appaterno')?.setValue(appaterno);
+                this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);
+                this.registerFormCliente.get('nombres')?.setValue(nombres);
+              } else {
+                this.registerFormCliente.get('razonsocial')?.setValue(razonsocial);
+              }*/
+            },
+            error: (err) => {
+              this.serviceSharedApp.messageToast()
+            },
+            complete: () => { }
+          });
+        this.$listSubcription.push($personaTraerUnoTipoDoc)
+      }
  
+  listarTiposDoc(){
+    const { tipopersona, idtipodoc } = this.registerFormCliente.controls;
+    const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat(tipopersona.value)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta listartipodocumentotablasunat: ', rpta);
+          this.dropdownItemsTipNro = rpta;
+          idtipodoc.setValue(tipopersona.value === 'J' ? 'RUC' : 'DNI');
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { }
+      });
+    this.$listSubcription.push($listartipodocumentotablasunat)
+  }
+
 }

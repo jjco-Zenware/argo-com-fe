@@ -276,4 +276,5 @@ export const constantesApiWeb = {
     listarHabitacionesCombo: controllerHotel + '/listarhabitacionescombo',
     listaAgenda: controllerHotel + '/agendalist',
     procesarTrxPago: controllerMain + '/prctrxdocpago',
+    listartipodocumentotablasunat: controllerContabilidad + '/listartipodocumentotablasunat/',
 }
