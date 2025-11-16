@@ -480,7 +480,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
             this.traerUno2();
 
             //preguntar si desea emitir el documento con una cuota
-            this.confirmationService.confirm({
+            /*this.confirmationService.confirm({
               key: 'confirm1',
               header: 'Confirmación',
               message: '¿Desea Emitir el Documento con una Cuota...?',
@@ -488,7 +488,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
                 this.guardar();
                 this.procesarTRX();
               }
-            });
+            });*/
           } else {
             this.traerUno();
           }
