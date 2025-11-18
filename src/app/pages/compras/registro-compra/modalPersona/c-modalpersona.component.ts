@@ -66,8 +66,7 @@ esPersonaJuridica: boolean = false;
   get formCliente() { return this.registerFormCliente.controls; }
 
   ngOnInit(): void {
-    this.param = this.config.data;
-    console.log('this.param...', this.param.idrolpersona);
+    this.param = this.config.data;    
     this.createFormCliente();
     this.cambioTipoPer('N');
     this.listarItemsTabla();
@@ -85,7 +84,8 @@ esPersonaJuridica: boolean = false;
   createFormCliente() {
     //Agregar validaciones de formulario
     this.registerFormCliente = this.formBuilder.group({
-    idrolpersona: [{ value: this.param.idrolpersona, disabled: false }],
+    //idrolpersona: [{ value: this.param.idrolpersona, disabled: false }],
+    idrolpersona: [{ value: "CLI", disabled: false }],
     tipopersona :  [{ value: 'N', disabled: false }],
     tipoalta : [{ value: 'NOR', disabled: false }],
     indnacionalidad: [{ value: '1', disabled: false }, [Validators.required]],
@@ -219,12 +219,11 @@ esPersonaJuridica: boolean = false;
   listarItemsTabla() {
     this.ordencompraService.obtenerItemsTabla(115).subscribe({
         next: (rpta: any) => {
-          console.info('this.param.idrolpersona : ', this.param.idrolpersona);
-          console.info('listarItemsTabla : ', rpta);
           let lista = rpta
           //this.lstRol = rpta;
   
-          this.lstRol = lista.filter((x: { coditem: string; }) => x.coditem !== this.param.idrolpersona);
+          //this.lstRol = lista.filter((x: { coditem: string; }) => x.coditem !== this.param.idrolpersona);
+          this.lstRol = lista.filter((x: { coditem: string; }) => x.coditem !== "CLI");
             
         },
         error: (err) => {
