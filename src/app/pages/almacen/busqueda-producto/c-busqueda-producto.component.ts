@@ -1,5 +1,5 @@
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
@@ -16,8 +16,8 @@ import { Table } from 'primeng/table';
   templateUrl: './c-busqueda-producto.component.html',
   styleUrls: ['./c-busqueda-producto.component.scss']
 })
-export class CBusquedaProductoComponent implements OnInit, OnDestroy{
-
+export class CBusquedaProductoComponent implements OnInit, AfterViewInit, OnDestroy{
+  @ViewChild('descripcion') descripcion!: ElementRef<HTMLTextAreaElement>;
   @ViewChild(Table) dt1!: Table;
 
     $listSubcription: Subscription[] = [];
@@ -55,6 +55,14 @@ export class CBusquedaProductoComponent implements OnInit, OnDestroy{
         }else{
           this.verAlm = false;
         }
+    }
+
+    ngAfterViewInit(): void {
+      setTimeout(() => {
+        if (this.descripcion?.nativeElement) {
+          this.descripcion.nativeElement.focus();
+        }
+      }, 300);
     }
 
     createFrm(){

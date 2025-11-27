@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog'; import { KanbanCard } from '@interfaces';
 import { constantesLocalStorage, mensajesSpinner } from '@constantes';
@@ -11,7 +11,9 @@ import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/
   templateUrl: './modal-exc-transac-hotel.component.html',
   styleUrls: ['./modal-exc-transac-hotel.component.scss']
 })
-export class CModalExcTransacHotelComponent {
+export class CModalExcTransacHotelComponent implements OnInit, AfterViewInit {
+  @ViewChild('descArea') descArea!: ElementRef<HTMLTextAreaElement>;
+
   $listSubcription: Subscription[] = [];
   _transaccion: any;
   habitacion!: any;
@@ -39,6 +41,14 @@ export class CModalExcTransacHotelComponent {
     console.log('habitacion Modal', this.habitacion);
     this._transaccion = this.config.data.acciones.filter((x: { idtrx: any; }) => x.idtrx === this.config.data.idtrx);
     this.cargarData();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.descArea?.nativeElement) {
+        this.descArea.nativeElement.focus();
+      }
+    }, 300);
   }
 
   cargarData() {

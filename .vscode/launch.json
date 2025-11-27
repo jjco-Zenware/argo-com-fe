@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Angular: Chrome",
+      "url": "http://localhost:4201",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/*": "*",
+        "webpack:///./*": "${webRoot}/*"
+      }
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Angular: Attach Chrome",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack:/*": "${webRoot}/*",
+        "/./*": "${webRoot}/*",
+        "/*": "*",
+        "webpack:///./*": "${webRoot}/*"
+      }
+    }
+  ]
+}
