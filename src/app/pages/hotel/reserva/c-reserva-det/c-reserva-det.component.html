@@ -1,338 +1,341 @@
-<div>
-    <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
-        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem"
-            (click)="guardarOC()"></button>
-    </div>
-    <div class="card p-2">
-        <p-tabView>
-            <p-tabPanel>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-building"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Datos Generales
-                        </span>
-                    </div>
-                </ng-template>
-
-                <form [formGroup]="registerFormRegistro"
-                    class="p-fluid grid lg:col-7 col-12 border-1 border-round surface-border p-2 m-2">
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
-                        <div class="flex mb-1">
-                            <label class="block text-900 ">Fecha Registro</label>
-                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
+<ng-container *ngIf="vistaLista; else visSecciones">
+    <div>
+        <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+            <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem"
+                (click)="guardarOC()"></button>
+        </div>
+        <div class="card p-2">
+            <p-tabView>
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-building"></i>
+                            <span class="font-bold white-space-nowrap m-0">
+                                Datos Generales
+                            </span>
                         </div>
-                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
-                            <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false"
-                                [showIcon]="false" [required]="true" inputId="start"
-                                inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"
-                                [readonlyInput]="true"></p-calendar>
-                        </span>
-                    </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 mb-1">ID Registro</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" class="font-semibold surface-300 p-inputtext-sm"
-                                formControlName="idordencompra" readonly="true" />
-                        </span>
-                    </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem ">
-                        <label class="block text-900  mb-1">RUC <span class="text-red-500 font-bold"> *
-                            </span></label>
-                        <span class="p-input-icon-right">
-                            <i class="pi pi-search cursor-pointer" pTooltip="Busqueda por RUC" tooltipPosition="bottom"
-                                (click)="getBusquedaRUC()"></i>
-                            <input pInputText type="text" formControlName="nrodocumento" [readonly]=onlyRead
-                                class="p-inputtext-sm" maxlength="11"
-                                oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
-                        </span>
-                    </div>
-                    <div class="col-4 sm:col-8 lg:col-6 md:col-6 col-6 h-4rem">
-                        <div class="flex">
-                            <label class="block text-900 mb-1">Cliente </label>
-                            <i class="pi pi-user-plus cursor-pointer text-blue-600" style="margin-left: 10px;"
-                                pTooltip="Nuevo Cliente" tooltipPosition="right" (click)="NuevoPersona();"></i>
-                        </div>
+                    </ng-template>
 
-                        <span inputStyleClass="font-semibold surface-300">
-                            <p-dropdown [options]="lstCliente" placeholder="Cliente..." formControlName="idproveedor"
-                                class="p-inputtext-sm" optionLabel="razonsocial" optionValue="idcliente" appendTo="body"
-                                [readonly]=onlyRead [filter]="true" (onChange)="getDatos($event.value)"></p-dropdown>
-                        </span>
-                    </div>
-                    <div class="lg:col-3 "></div>
-                    <div class="sm:col-12 lg:col-9 md:col-3 col-12 h-4rem field mt-3">
-                        <label class="block text-900  mb-1">Dirección</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="direccion" readonly=true
-                                class="p-inputtext-sm surface-100" />
-                        </span>
-                    </div>
-                    <div class="lg:col-3 "></div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
-                        <label class="block text-900  mb-1">Tipo Documento<span class="text-red-500 font-bold"> *
-                            </span></label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb"
-                                placeholder="Seleccionar Origen" optionLabel="nomitemsunat" optionValue="codsunat"
-                                [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                        </span>
-                    </div>
-                    <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field mt-1">
-                        <label class="block text-900 mb-1">Serie</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nroserie_ctb" [readonly]=onlyReadSunat
-                                class="p-inputtext-sm surface-100" />
-                        </span>
-                    </div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
-                        <label class="block text-900 mb-1">N° Documento</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nrodocumento_ctb" [readonly]=onlyReadSunat
-                                class="p-inputtext-sm surface-100"
-                                oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
-                        </span>
-                    </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field -mt-1">
-                        <label class="block text-900 mb-1">Moneda <span class="text-red-500 font-bold"> *
-                            </span></label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda"
-                                placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda"
-                                appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                        </span>
-                    </div>
-                    <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem -mt-1">
-                        <label class="block text-900 mb-1">Tipo Cambio<span class="text-red-500 font-bold"> *
-                            </span></label>
-                        <!-- <span class="p-fluid">
+                    <form [formGroup]="registerFormRegistro"
+                        class="p-fluid grid lg:col-7 col-12 border-1 border-round surface-border p-2 m-2">
+                        <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+                            <div class="flex mb-1">
+                                <label class="block text-900 ">Fecha Registro</label>
+                                <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
+                            </div>
+                            <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
+                                <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false"
+                                    [showIcon]="false" [required]="true" inputId="start"
+                                    inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"
+                                    [readonlyInput]="true"></p-calendar>
+                            </span>
+                        </div>
+                        <div class="lg:col-3"></div>
+                        <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+                            <label class="block text-900 mb-1">ID Registro</label>
+                            <span class="p-fluid">
+                                <input pInputText type="text" class="font-semibold surface-300 p-inputtext-sm"
+                                    formControlName="idordencompra" readonly="true" />
+                            </span>
+                        </div>
+                        <div class="lg:col-3"></div>
+                        <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem ">
+                            <label class="block text-900  mb-1">RUC <span class="text-red-500 font-bold"> *
+                                </span></label>
+                            <span class="p-input-icon-right">
+                                <i class="pi pi-search cursor-pointer" pTooltip="Busqueda por RUC"
+                                    tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
+                                <input pInputText type="text" formControlName="nrodocumento" [readonly]=onlyRead
+                                    class="p-inputtext-sm" maxlength="11"
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                            </span>
+                        </div>
+                        <div class="col-4 sm:col-8 lg:col-6 md:col-6 col-6 h-4rem">
+                            <div class="flex">
+                                <label class="block text-900 mb-1">Cliente </label>
+                                <i class="pi pi-user-plus cursor-pointer text-blue-600" style="margin-left: 10px;"
+                                    pTooltip="Nuevo Cliente" tooltipPosition="right" (click)="NuevoPersona();"></i>
+                            </div>
+
+                            <span inputStyleClass="font-semibold surface-300">
+                                <p-dropdown [options]="lstCliente" placeholder="Cliente..."
+                                    formControlName="idproveedor" class="p-inputtext-sm" optionLabel="razonsocial"
+                                    optionValue="idcliente" appendTo="body" [readonly]=onlyRead [filter]="true"
+                                    (onChange)="getDatos($event.value)"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="lg:col-3 "></div>
+                        <div class="sm:col-12 lg:col-9 md:col-3 col-12 h-4rem field mt-3">
+                            <label class="block text-900  mb-1">Dirección</label>
+                            <span class="p-fluid">
+                                <input pInputText type="text" formControlName="direccion" readonly=true
+                                    class="p-inputtext-sm surface-100" />
+                            </span>
+                        </div>
+                        <div class="lg:col-3 "></div>
+                        <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
+                            <label class="block text-900  mb-1">Tipo Documento<span class="text-red-500 font-bold"> *
+                                </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb"
+                                    placeholder="Seleccionar Origen" optionLabel="nomitemsunat" optionValue="codsunat"
+                                    [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field mt-1">
+                            <label class="block text-900 mb-1">Serie</label>
+                            <span class="p-fluid">
+                                <input pInputText type="text" formControlName="nroserie_ctb" [readonly]=onlyReadSunat
+                                    class="p-inputtext-sm surface-100" />
+                            </span>
+                        </div>
+                        <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
+                            <label class="block text-900 mb-1">N° Documento</label>
+                            <span class="p-fluid">
+                                <input pInputText type="text" formControlName="nrodocumento_ctb"
+                                    [readonly]=onlyReadSunat class="p-inputtext-sm surface-100"
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                            </span>
+                        </div>
+                        <div class="lg:col-3"></div>
+                        <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field -mt-1">
+                            <label class="block text-900 mb-1">Moneda <span class="text-red-500 font-bold"> *
+                                </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstMonedas" formControlName="idmoneda"
+                                    placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda"
+                                    appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem -mt-1">
+                            <label class="block text-900 mb-1">Tipo Cambio<span class="text-red-500 font-bold"> *
+                                </span></label>
+                            <!-- <span class="p-fluid">
                         <p-inputNumber class="mt-1" formControlName="tc" locale="es-PE" mode="decimal" [minFractionDigits]="4" name="tipocambio" 
                         [min]="0" [max]="9" class="p-inputtext-sm" [readonly]=onlyRead></p-inputNumber>                                  
                     </span> -->
-                        <input pInputText type="text" formControlName="tc" readonly=true
-                            class="p-inputtext-sm surface-100" />
+                            <input pInputText type="text" formControlName="tc" readonly=true
+                                class="p-inputtext-sm surface-100" />
 
-                    </div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 -mt-1">
-                        <label class="block text-900 mb-1">Forma de Pago <span class="text-red-500 font-bold"> *
-                            </span></label>
-                        <span>
-                            <p-dropdown [options]="lstTermino" formControlName="codformapago" optionLabel="valoritem"
-                                placeholder="Seleccionar..." optionValue="iditem" appendTo="body" [readonly]=onlyRead
-                                class="p-inputtext-sm"></p-dropdown>
-                        </span>
-                    </div>
-                    <div class="lg:col-4"></div>
-                    <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field -mt-3">
-                        <div class="flex mb-1">
-                            <label class="block text-900">Fec. Ingreso</label>
-                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
                         </div>
-                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
-                            <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false"
-                                [showIcon]="false" [required]="true" inputId="start"
-                                inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"
-                                [minDate]="minimaFechaDesde" [maxDate]="maximaFechaDesde" [readonlyInput]="true"
-                                (onSelect)="changeFechaDesde($event)"></p-calendar>
-                        </span>
-                    </div>
-
-                    <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field -mt-3">
-                        <div class="flex mb-1">
-                            <label class="block text-900">Fec. Salida</label>
-                            <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
+                        <div class="sm:col-4 lg:col-3 md:col-3 col-6 -mt-1">
+                            <label class="block text-900 mb-1">Forma de Pago <span class="text-red-500 font-bold"> *
+                                </span></label>
+                            <span>
+                                <p-dropdown [options]="lstTermino" formControlName="codformapago"
+                                    optionLabel="valoritem" placeholder="Seleccionar..." optionValue="iditem"
+                                    appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                            </span>
                         </div>
-                        <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
-                            <p-calendar formControlName="fecvencimiento" dateFormat="dd/mm/yy" [showTime]="false"
-                                [showIcon]="false" [required]="true" inputId="start"
-                                inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"
-                                [minDate]="minimaFechaHasta" [readonlyInput]="true"
-                                (onSelect)="changeFechaHasta($event)"></p-calendar>
-                        </span>
-                    </div>
-                    <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field -mt-3">
-                        <label class="block text-900 mb-1">N° Días</label>
-                        <span class="p-fluid">
-                            <input pInputText type="text" formControlName="nrodias" (blur)="addDiasFec()"
-                                (keydown.enter)="addDiasFec()" [readonly]=onlyRead class="p-inputtext-sm"
-                                oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
-                        </span>
-                    </div>
-                    <div class="sm:col-12 lg:col-9 md:col-12 col-12 -mt-2">
-                        <label class="block text-900">Observación</label>
-                        <span class="p-fluid mb-1">
-                            <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion"
-                                style="resize: none" class="w-full" id="observacion" [readonly]=onlyRead
-                                class="p-inputtext-sm"></textarea>
-                        </span>
-                    </div>
-                </form>
-
-            </p-tabPanel>
-
-            <p-tabPanel>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-list"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Detalle
-                        </span>
-                    </div>
-                </ng-template>
-                <div class="ml-2 lg:col-9 border-1 border-round surface-border">
-                    <p-table [value]="lstItemOC" [(selection)]="selectedDetalle" responsiveLayout="stack"
-                        [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}" [scrollable]="true"
-                        styleClass="p-datatable-sm ">
-                        <ng-template pTemplate="caption">
-                            <div *ngIf="verItems" class="flex gap-2 mb-2">
-                                <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
-                                    pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar"
-                                    (click)="getItem([],0)"></button>
-                                <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
-                                    pTooltip="Pagar Item" icon="pi pi-money-bill" label="Pagar"
-                                    (click)="pagarItemDetalle()"></button>
+                        <div class="lg:col-4"></div>
+                        <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field -mt-3">
+                            <div class="flex mb-1">
+                                <label class="block text-900">Fec. Ingreso</label>
+                                <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
                             </div>
-                        </ng-template>
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
-                                    <p-tableHeaderCheckbox style="width:15px; height:15px;"></p-tableHeaderCheckbox>
-                                </th>
-                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
-                                <th style="width: 70px;" class="bg-teal-50 border-1">
-                                    <div class="justify-content-end ">
-                                        CÓDIGO
-                                    </div>
-                                </th>
-                                <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
-                                <th style="width: 70px;" class="bg-teal-50 border-1">
-                                    <div class="justify-content-end ">
-                                        U. MED
-                                    </div>
-                                </th>
-                                <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
-                                    <div class="justify-content-end ">
-                                        P. UNI.
-                                    </div>
-                                </th>
-                                <th style="width: 70px; text-align:center;" class="bg-teal-50 border-1">
-                                    <div class="justify-content-end ">
-                                        CANT.
-                                    </div>
-                                </th>
-                                <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
-                                    <div class="justify-content-end ">
-                                        TOTAL
-                                    </div>
-                                </th>
-                                <th style="width: 30px;" class="bg-teal-50 border-1">
-                                    <div class="flex justify-content-between align-items-center">
-                                        ACCIONES
-                                    </div>
-                                </th>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                            <tr>
-                                <td>
-                                    <p-tableCheckbox [value]="product" [disabled]="product.idordencompraitem === 0" />
-                                </td>
-                                <td>{{rowIndex + 1}}</td>
-                                <td>
-                                    <div [ngStyle]="{'width':'70px'}">
-                                        {{ product.codproducto }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        {{ product.descripcion | uppercase}}
-                                    </div>
-                                </td>
-                                <!-- <td>
+                            <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
+                                <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false"
+                                    [showIcon]="false" [required]="true" inputId="start"
+                                    inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"
+                                    [minDate]="minimaFechaDesde" [maxDate]="maximaFechaDesde" [readonlyInput]="true"
+                                    (onSelect)="changeFechaDesde($event)"></p-calendar>
+                            </span>
+                        </div>
+
+                        <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field -mt-3">
+                            <div class="flex mb-1">
+                                <label class="block text-900">Fec. Salida</label>
+                                <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
+                            </div>
+                            <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
+                                <p-calendar formControlName="fecvencimiento" dateFormat="dd/mm/yy" [showTime]="false"
+                                    [showIcon]="false" [required]="true" inputId="start"
+                                    inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"
+                                    [minDate]="minimaFechaHasta" [readonlyInput]="true"
+                                    (onSelect)="changeFechaHasta($event)"></p-calendar>
+                            </span>
+                        </div>
+                        <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field -mt-3">
+                            <label class="block text-900 mb-1">N° Días</label>
+                            <span class="p-fluid">
+                                <input pInputText type="text" formControlName="nrodias" (blur)="addDiasFec()"
+                                    (keydown.enter)="addDiasFec()" [readonly]=onlyRead class="p-inputtext-sm"
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                            </span>
+                        </div>
+                        <div class="sm:col-12 lg:col-9 md:col-12 col-12 -mt-2">
+                            <label class="block text-900">Observación</label>
+                            <span class="p-fluid mb-1">
+                                <textarea type="text" pInputTextarea [rows]="3" formControlName="observacion"
+                                    style="resize: none" class="w-full" id="observacion" [readonly]=onlyRead
+                                    class="p-inputtext-sm"></textarea>
+                            </span>
+                        </div>
+                    </form>
+
+                </p-tabPanel>
+
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-list"></i>
+                            <span class="font-bold white-space-nowrap m-0">
+                                Detalle
+                            </span>
+                        </div>
+                    </ng-template>
+                    <div class="ml-2 lg:col-9 border-1 border-round surface-border">
+                        <p-table [value]="lstItemOC" [(selection)]="selectedDetalle" responsiveLayout="stack"
+                            [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}" [scrollable]="true"
+                            styleClass="p-datatable-sm ">
+                            <ng-template pTemplate="caption">
+                                <div *ngIf="verItems" class="flex gap-2 mb-2">
+                                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
+                                        pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar"
+                                        (click)="getItem([],0)"></button>
+                                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
+                                        pTooltip="Pagar Item" icon="pi pi-money-bill" label="Pagar"
+                                        (click)="pagarItemDetalle()"></button>
+                                </div>
+                            </ng-template>
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
+                                        <p-tableHeaderCheckbox style="width:15px; height:15px;"></p-tableHeaderCheckbox>
+                                    </th>
+                                    <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                                    <th style="width: 70px;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            CÓDIGO
+                                        </div>
+                                    </th>
+                                    <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
+                                    <th style="width: 70px;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            U. MED
+                                        </div>
+                                    </th>
+                                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            P. UNI.
+                                        </div>
+                                    </th>
+                                    <th style="width: 70px; text-align:center;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            CANT.
+                                        </div>
+                                    </th>
+                                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            TOTAL
+                                        </div>
+                                    </th>
+                                    <th style="width: 30px;" class="bg-teal-50 border-1">
+                                        <div class="flex justify-content-between align-items-center">
+                                            ACCIONES
+                                        </div>
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                                <tr>
+                                    <td>
+                                        <p-tableCheckbox [value]="product"
+                                            [disabled]="product.idordencompraitem === 0" />
+                                    </td>
+                                    <td>{{rowIndex + 1}}</td>
+                                    <td>
+                                        <div [ngStyle]="{'width':'70px'}">
+                                            {{ product.codproducto }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            {{ product.descripcion | uppercase}}
+                                        </div>
+                                    </td>
+                                    <!-- <td>
                                 <div pTooltip="{{product.descripcion | uppercase}}">
                                     {{(product.descripcion.length > 70) ? ((product.descripcion).slice(0, 70) + '...' | uppercase) : product.descripcion | uppercase}}
                                 </div>  
                             </td> -->
-                                <td>
-                                    <div [ngStyle]="{'width':'70px'}">
-                                        {{ product.nomunidad }}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div [ngStyle]="{'width':'100px','text-align':'right'}">
-                                        {{ product.preciocosto | number: '0.2'}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div [ngStyle]="{'width':'70px','text-align':'right'}">
-                                        {{ product.cantidad | number: '0.2'}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div [ngStyle]="{'width':'100px','text-align':'right'}">
-                                        {{ product.preciocostototal | number: '0.2'}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div *ngIf="verItems" class="flex"
-                                        [ngStyle]="{'width':'30px','text-align':'right'}">
-                                        <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item"
-                                            tooltipPosition="left" (click)="getItem(product, rowIndex)"
-                                            class="p-button-text p-button-rounded text-900 text-blue-600"></button>
-                                        <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
-                                            tooltipPosition="left" (click)="eliminarItem(product)"
-                                            class="p-button-text p-button-rounded text-900 text-red-600"></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="footer">
-                            <tr>
-                                <td colspan="7" class="text-right">Sub Total: </td>
-                                <td>
-                                    <div [ngStyle]="{'text-align':'right'}">
-                                        {{s_monto | number: '0.2-2'}}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="7" class="text-right">IGV: </td>
-                                <td>
-                                    <div [ngStyle]="{'text-align':'right'}">
-                                        {{s_igv | number: '0.2-2'}}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="7" class="text-right">Total: </td>
-                                <td>
-                                    <div [ngStyle]="{'text-align':'right'}">
-                                        {{montoTotal | number: '0.2-2'}}
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                </div>
-
-            </p-tabPanel>
-
-            <p-tabPanel [disabled]=visibleDocument>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-paperclip"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Adjuntos
-                        </span>
+                                    <td>
+                                        <div [ngStyle]="{'width':'70px'}">
+                                            {{ product.nomunidad }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                            {{ product.preciocosto | number: '0.2'}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                                            {{ product.cantidad | number: '0.2'}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                            {{ product.preciocostototal | number: '0.2'}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div *ngIf="verItems" class="flex"
+                                            [ngStyle]="{'width':'30px','text-align':'right'}">
+                                            <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item"
+                                                tooltipPosition="left" (click)="getItem(product, rowIndex)"
+                                                class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
+                                                tooltipPosition="left" (click)="eliminarItem(product)"
+                                                class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="footer">
+                                <tr>
+                                    <td colspan="7" class="text-right">Sub Total: </td>
+                                    <td>
+                                        <div [ngStyle]="{'text-align':'right'}">
+                                            {{s_monto | number: '0.2-2'}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" class="text-right">IGV: </td>
+                                    <td>
+                                        <div [ngStyle]="{'text-align':'right'}">
+                                            {{s_igv | number: '0.2-2'}}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" class="text-right">Total: </td>
+                                    <td>
+                                        <div [ngStyle]="{'text-align':'right'}">
+                                            {{montoTotal | number: '0.2-2'}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
                     </div>
-                </ng-template>
-                <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto"></app-c-adjuntos>
-            </p-tabPanel>
 
-            <!-- <p-tabPanel [disabled]=visibleAsiento>
+                </p-tabPanel>
+
+                <p-tabPanel [disabled]=visibleDocument>
+                    <ng-template pTemplate="header">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-paperclip"></i>
+                            <span class="font-bold white-space-nowrap m-0">
+                                Adjuntos
+                            </span>
+                        </div>
+                    </ng-template>
+                    <app-c-adjuntos *ngIf="verAdjunto" [IA_data]="dataAdjunto"></app-c-adjuntos>
+                </p-tabPanel>
+
+                <!-- <p-tabPanel [disabled]=visibleAsiento>
             <ng-template pTemplate="header">
                 <div class="flex align-items-center gap-2">
                     <i class="pi pi-table"></i>
@@ -412,513 +415,560 @@
             </p-table>              
         </p-tabPanel> -->
 
-            <p-tabPanel>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-cog"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            Transacciones
-                        </span>
-                    </div>
-                </ng-template>
-                <p-table [value]="lstTransacciones" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'"
-                    [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm">
+                <p-tabPanel>
                     <ng-template pTemplate="header">
-                        <tr class="text-sm">
-                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th [ngStyle]="{'width':'120px'}" class="surface-200">FECHA MOV</th>
-                            <th class="surface-200">TRANSACCIÓN</th>
-                            <th class="surface-200">DESCRIPCIÓN</th>
-                            <th class="surface-200">USUARIO</th>
-                            <th class="surface-200">ROL</th>
-                            <th class="surface-200"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                        <tr class="text-sm">
-                            <td>{{rowIndex + 1}}</td>
-                            <td>
-                                <div [ngStyle]="{'width':'120px'}">
-                                    {{product.fechamov }}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'200px'}">
-                                    {{product.nomtrx | uppercase}}
-                                </div>
-                            </td>
-                            <td>{{ product.mensajetrx | uppercase}}</td>
-
-                            <td>{{ product.nomusuario | uppercase}}</td>
-                            <td>{{ product.perfiles | uppercase}}</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </p-tabPanel>
-
-            <p-tabPanel>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-cog"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            PAX
-                        </span>
-                    </div>
-                </ng-template>
-                <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
-                    <button pButton icon="pi pi-save" label="Agregar" class="p-button-primary w-auto h-2rem"
-                        (click)="clientePAX()"></button>
-                </div>
-                <p-table #dt1 [value]="listadoPAX" [rows]="25" [rowHover]="true" responsiveLayout="stack"
-                    [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
-                    [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
-                    currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
-                    styleClass="p-datatable-sm card border-1 border-round surface-border">
-
-                    <ng-template pTemplate="header">
-                        <tr class="text-sm">
-                            <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
-                                <div class="flex justify-content-between align-items-center">
-                                    N°
-                                </div>
-                            </th>
-                            <th style="width: 60px;" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    CODIGO ITEM PAX
-                                </div>
-                            </th>
-                            <th style="width: 60px;" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    CODIGO RESERVA
-                                </div>
-                            </th>
-                            <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    CODIGO PERSONA
-                                </div>
-                            </th>
-                            <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    RAZON SOCIAL
-                                </div>
-                            </th>
-                            <th style="width: 70px" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    TIPO DOCUMENTO
-                                </div>
-                            </th>
-                            <th style="width: 70px" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    NUMERO DOCUMENTO
-                                </div>
-                            </th>
-                            <th style="width: 70px" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    DESCRIPCION PRODUCTO
-                                </div>
-                            </th>
-                            <th style="width: 70px" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    USUARIO
-                                </div>
-                            </th>
-                            <th style="width: 70px" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    FECHA
-                                </div>
-                            </th>
-                            <th style="width: 30px;" class="bg-teal-50 border-1">
-                                <div class="flex justify-content-between align-items-center">
-                                    ACCIONES
-                                </div>
-                            </th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-                        <tr class="text-sm">
-                            <td>
-                                <div [ngStyle]="{'width':'20px'}">
-                                    {{rowIndex + 1}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'60px'}">
-                                    {{data.iditempax}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'60px'}">
-                                    {{data.idreserva}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'150px'}">
-                                    {{data.idpersona}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.razonsocial | uppercase}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.idtipodoc}}
-                                </div>
-                            </td>
-
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.nrodocumento}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.despro | uppercase}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.usuario}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.fecha | date:'dd/MM/yyyy'}}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex" [ngStyle]="{'width':'30px','text-align':'right'}">
-                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
-                                        tooltipPosition="left" (click)="eliminaPAX(data)"
-                                        class="p-button-text p-button-rounded text-900 text-red-600"></button>
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td colspan="11">No se encontraron registros.</td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="loadingbody">
-                        <tr>
-                            <td colspan="11">Cargando datos. Espere por favor.</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-            </p-tabPanel>
-
-            <p-tabPanel>
-                <ng-template pTemplate="header">
-                    <div class="flex align-items-center gap-2">
-                        <i class="pi pi-cog"></i>
-                        <span class="font-bold white-space-nowrap m-0">
-                            PAGOS
-                        </span>
-                    </div>
-                </ng-template>
-                <div class="flex justify-content-between col-12 -mt-3 gap-2">
-                    <form [formGroup]="registerFormPago" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm">
-                        <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
-                            <label class="font-semibold text-blue-600 text-base">Desde</label>
-                            <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini"
-                                formControlName="fecini" [showOnFocus]="false" [readonlyInput]="true" appendTo="body"
-                                [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
-                            </p-calendar>
-                        </div>
-                        <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
-                            <label class="font-semibold text-blue-600 text-base">Hasta</label>
-                            <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin"
-                                formControlName="fecfin" [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"
-                                [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-                        </div>
-                        <div class="sm:col-6 lg:col-3 md:col-6 col-12 -mt-3">
-                            <label class=" font-semibold text-blue-600 text-base">Cliente</label>
-                            <span>
-                                <p-dropdown [options]="lstProveedores" formControlName="idproveedor"
-                                    class="p-inputtext-sm" optionLabel="nomcomercial" optionValue="idcliente"
-                                    appendTo="body" [filter]="true"></p-dropdown>
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-cog"></i>
+                            <span class="font-bold white-space-nowrap m-0">
+                                Transacciones
                             </span>
                         </div>
-                        <div class="sm:col-4 lg:col-2 md:col-6 col-12 -mt-3">
-                            <label class="font-semibold text-blue-600 text-base">Moneda</label>
-                            <span class="p-fluid">
-                                <p-dropdown [options]="lstMonedas" formControlName="idmoneda" optionLabel="desmoneda"
-                                    optionValue="idmoneda" appendTo="body" [readonly]=onlyRead
-                                    class="p-inputtext-sm"></p-dropdown>
-                            </span>
-                        </div>
-                        <div class="sm:col-4 lg:col-2 md:col-6 col-12 -mt-3">
-                            <label class="font-semibold text-blue-600 text-base">Estado SUNAT</label>
-                            <span class="p-fluid">
-                                <p-dropdown [options]="lstEstados" formControlName="ind_estado_fel"
-                                    optionLabel="nomestadofel" optionValue="codestadofel" appendTo="body"
-                                    [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
-                            </span>
-                        </div>
-                    </form>
+                    </ng-template>
+                    <p-table [value]="lstTransacciones" class="ml-2" responsiveLayout="stack" [breakpoint]="'960px'"
+                        [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm">
+                        <ng-template pTemplate="header">
+                            <tr class="text-sm">
+                                <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
+                                <th [ngStyle]="{'width':'120px'}" class="surface-200">FECHA MOV</th>
+                                <th class="surface-200">TRANSACCIÓN</th>
+                                <th class="surface-200">DESCRIPCIÓN</th>
+                                <th class="surface-200">USUARIO</th>
+                                <th class="surface-200">ROL</th>
+                                <th class="surface-200"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                            <tr class="text-sm">
+                                <td>{{rowIndex + 1}}</td>
+                                <td>
+                                    <div [ngStyle]="{'width':'120px'}">
+                                        {{product.fechamov }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'200px'}">
+                                        {{product.nomtrx | uppercase}}
+                                    </div>
+                                </td>
+                                <td>{{ product.mensajetrx | uppercase}}</td>
 
-                    <div class="field sm:col-3 md:col-2 lg:col-3 -mt-3 gap-2">
-                        <button pButton type="button" (click)="getListarPagos()" pTooltip="Buscar Registros"
-                            tooltipPosition="bottom" class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem"
-                            icon="pi pi-search"></button>
-                    </div>
-                </div>
+                                <td>{{ product.nomusuario | uppercase}}</td>
+                                <td>{{ product.perfiles | uppercase}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-tabPanel>
 
-                <p-table #dt1 [value]="lstPagos" [rows]="25" [rowHover]="true" responsiveLayout="stack"
-                    [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
-                    [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
-                    currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
-                    styleClass="p-datatable-sm card border-1 border-round surface-border">
-
+                <p-tabPanel>
                     <ng-template pTemplate="header">
-                        <tr class="text-sm">
-                            <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
-                                <div class="flex justify-content-between align-items-center">
-                                    N°
-                                </div>
-                            </th>
-                            <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    ENVIO <br> SUNAT
-                                </div>
-                            </th>
-                            <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    ESTADO <br> SUNAT
-                                </div>
-                            </th>
-                            <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    FECHA <br> EMISIÓN
-                                </div>
-                            </th>
-                            <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    FECHA <br> VENCIMIENTO
-                                </div>
-                            </th>
-                            <th style="width: 80px;" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    TIPO <br> DOCUMENTO
-                                </div>
-                            </th>
-                            <th style="width: 80px;" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    N° <br>DOCUMENTO
-                                </div>
-                            </th>
-                            <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    CLIENTE
-                                </div>
-                            </th>
-
-                            <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1">
-                                <i class="pi pi-money-bill text-green-500"></i>
-                                <div class="justify-content-between align-items-center">
-                                    MONEDA
-                                </div>
-                            </th>
-                            <th style="width: 80px; text-align:right;" class="bg-teal-50 border-1">
-                                <div class="justify-content-end">
-                                    BASE <br> IMPONIBLE
-                                </div>
-                            </th>
-                            <th style="width: 70px; text-align:right;" class="bg-teal-50 border-1">
-                                <div class="justify-content-end ">
-                                    IGV
-                                </div>
-                            </th>
-                            <th style="width: 100px; text-align:right;" class="bg-teal-50 border-1">
-                                <div class="justify-content-end ">
-                                    TOTAL
-                                </div>
-                            </th>
-                            <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    GLOSA
-                                </div>
-                            </th>
-                            <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
-                                <div class="justify-content-between align-items-center">
-                                    CENTRO COSTO
-                                </div>
-                            </th>
-                            <th style="width: 80px" class="bg-teal-50 border-1">
-                                <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                                    ESTADO
-                                </div>
-                            </th>
-                            <th style="width: 40px; text-align:center;" class="bg-teal-50 border-1">
-                                <i class="pi pi-percentage text-red-500"></i>
-                                <div [ngStyle]="{'width':'40px'}">
-                                    DETRA
-                                </div>
-                            </th>
-                            <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1">
-                                <div [ngStyle]="{'width':'60px'}">
-                                    MONTO <br> DETRACCIÓN
-                                </div>
-                            </th>
-
-                            <th style="width: 60px;" class="bg-teal-50 border-1">
-                                <div class="flex justify-content-between align-items-center">
-                                    ACCIONES
-                                </div>
-                            </th>
-                        </tr>
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-cog"></i>
+                            <span class="font-bold white-space-nowrap m-0">
+                                PAX
+                            </span>
+                        </div>
                     </ng-template>
-                    <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-                        <tr class="text-sm">
-                            <td>
-                                <div [ngStyle]="{'width':'20px'}">
-                                    {{rowIndex + 1}}
-                                </div>
-                            </td>
-                            <td>
-                                <div *ngIf="!data.indsunatreg" class="flex align-items-center m:justify-content-end"
-                                    [ngStyle]="{'width':'40px'}">
-                                    <button
-                                        *ngIf="data.estado === 'EMT' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3 && data.ind_estado_fel != 4 && data.ind_estado_fel != 5 && visXperfil"
-                                        pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom"
-                                        pTooltip="Enviar a SUNAT" class="p-button-rounded p-button-text text-blue-500"
-                                        (click)="emitirDocumento(data)"></button>
-                                    <button
-                                        *ngIf="data.ind_estado_fel === 1 || data.ind_estado_fel === 3 || data.ind_estado_fel === 4 || data.ind_estado_fel === 5"
-                                        pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom"
-                                        pTooltip="Descargar Documento"
-                                        class="p-button-rounded p-button-text text-green-500"
-                                        (click)="verDocumento(data)"></button>
-                                    <button
-                                        *ngIf="data.ind_estado_fel != 0 && data.ind_estado_fel != 2 && data.ind_estado_fel != 4 && visXperfil"
-                                        [disabled]="data.b_accion" pButton pRipple type="button" icon="pi pi-ellipsis-v"
-                                        class="p-button-rounded p-button-text " (click)="toggleMenuSunat($event, data)"
-                                        pTooltip="Transacciones Sunat" tooltipPosition="bottom"></button>
-                                    <p-tieredMenu #menuSunat [model]="menuItemsSunat" appendTo="body"
-                                        [popup]="true"></p-tieredMenu>
-                                </div>
+                    <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+                        <button pButton icon="pi pi-save" label="Agregar" class="p-button-primary w-auto h-2rem"
+                            (click)="clientePAX()"></button>
+                    </div>
+                    <p-table #dt1 [value]="listadoPAX" [rows]="25" [rowHover]="true" responsiveLayout="stack"
+                        [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+                        [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
+                        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+                        styleClass="p-datatable-sm card border-1 border-round surface-border">
 
-                            </td>
-                            <td>
-                                <div *ngIf="data.ind_estado_fel !== 0"
-                                    [ngStyle]="{'width':'70px','text-align': 'center'}">
-                                    <p-tag [style]="{'width':'100%'}" [value]="data.nomestadofel"
-                                        [severity]="getSeverity(data.ind_estado_fel)"></p-tag>
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'60px'}">
-                                    {{data.fecemision}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'60px'}">
-                                    {{data.fecvencimiento}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'80px'}">
-                                    {{data.nomtipodoc_ctb }}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'80px'}">
-                                    {{data.nrofactura }}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'150px'}">
-                                    {{data.nomempresa | uppercase}}
-                                </div>
-                            </td>
+                        <ng-template pTemplate="header">
+                            <tr class="text-sm">
+                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
+                                    <div class="flex justify-content-between align-items-center">
+                                        N°
+                                    </div>
+                                </th>
+                                <th style="width: 60px;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        CODIGO ITEM PAX
+                                    </div>
+                                </th>
+                                <th style="width: 60px;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        CODIGO RESERVA
+                                    </div>
+                                </th>
+                                <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        CODIGO PERSONA
+                                    </div>
+                                </th>
+                                <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        RAZON SOCIAL
+                                    </div>
+                                </th>
+                                <th style="width: 70px" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        TIPO DOCUMENTO
+                                    </div>
+                                </th>
+                                <th style="width: 70px" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        NUMERO DOCUMENTO
+                                    </div>
+                                </th>
+                                <th style="width: 70px" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        DESCRIPCION PRODUCTO
+                                    </div>
+                                </th>
+                                <th style="width: 70px" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        USUARIO
+                                    </div>
+                                </th>
+                                <th style="width: 70px" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        FECHA
+                                    </div>
+                                </th>
+                                <th style="width: 30px;" class="bg-teal-50 border-1">
+                                    <div class="flex justify-content-between align-items-center">
+                                        ACCIONES
+                                    </div>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                            <tr class="text-sm">
+                                <td>
+                                    <div [ngStyle]="{'width':'20px'}">
+                                        {{rowIndex + 1}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'60px'}">
+                                        {{data.iditempax}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'60px'}">
+                                        {{data.idreserva}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'150px'}">
+                                        {{data.idpersona}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'100px'}">
+                                        {{data.razonsocial | uppercase}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'100px'}">
+                                        {{data.idtipodoc}}
+                                    </div>
+                                </td>
 
-                            <td>
-                                <div [ngStyle]="{'width':'60px','text-align':'center'}">
-                                    {{data.simbmoneda | uppercase}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'80px','text-align':'right'}">
-                                    {{data.s_monto | number: '0.2-2' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'70px','text-align':'right'}">
-                                    {{data.s_igv | number: '0.2-2' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px','text-align':'right'}">
-                                    {{data.s_monto_total | number: '0.2-2' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'100px'}">
-                                    {{data.s_glosa | uppercase}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'120px'}">
-                                    {{data.descentrocosto | uppercase}}
-                                </div>
-                            </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'100px'}">
+                                        {{data.nrodocumento}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'100px'}">
+                                        {{data.despro | uppercase}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'100px'}">
+                                        {{data.usuario}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'100px'}">
+                                        {{data.fecha | date:'dd/MM/yyyy'}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex" [ngStyle]="{'width':'30px','text-align':'right'}">
+                                        <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
+                                            tooltipPosition="left" (click)="eliminaPAX(data)"
+                                            class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="11">No se encontraron registros.</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="loadingbody">
+                            <tr>
+                                <td colspan="11">Cargando datos. Espere por favor.</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-tabPanel>
 
-                            <td>
-                                <div [ngStyle]="{'width':'80px','text-align': 'center'}">
-                                    {{data.nomestado | uppercase}}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'40px','text-align':'right'}">
-                                    {{data.porc_detraccion | number: '0.0' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div [ngStyle]="{'width':'60px','text-align':'right'}">
-                                    {{data.s_monto_detraccion_mn_CTB | number: '0.0' }}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'60px'}">
-                                    <button *ngIf="(data.acciones.length > 0 || visXperfil) && data.ind_estado_fel != 1"
-                                        pButton pRipple type="button" icon="pi pi-ellipsis-v"
-                                        class="p-button-rounded p-button-text " (click)="toggleMenu($event, data)"
-                                        pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
-                                    <p-tieredMenu #menu [model]="menuItems" appendTo="body"
-                                        [popup]="true"></p-tieredMenu>
-                                    <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom"
-                                        pTooltip="Vista Preliminar" class="p-button-rounded p-button-text text-red-500"
-                                        (click)="onVerDetalle(data)"></button>
-                                    <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom"
-                                        pTooltip="Ver" class="p-button-rounded p-button-text text-green-500"
-                                        (click)="onVer(data)"></button>
-                                    <button *ngIf="(data.ind_estado_fel == 0 || data.ind_estado_fel == 2) && visXperfil"
-                                        pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom"
-                                        pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500"
-                                        (click)="onEditar(data)"></button>
-                                </div>
-                            </td>
-                        </tr>
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <div class="flex align-items-center gap-2">
+                            <i class="pi pi-cog"></i>
+                            <span class="font-bold white-space-nowrap m-0">
+                                PAGOS
+                            </span>
+                        </div>
                     </ng-template>
-                    <ng-template pTemplate="emptymessage">
-                        <tr>
-                            <td colspan="8">No se encontraron registros.</td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="loadingbody">
-                        <tr>
-                            <td colspan="8">Cargando datos. Espere por favor.</td>8
-                        </tr>
-                    </ng-template>
-                </p-table>
+                    <div class="flex justify-content-between col-12 -mt-3 gap-2">
+                        <form [formGroup]="registerFormPago"
+                            class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm">
+                            <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
+                                <label class="font-semibold text-blue-600 text-base">Desde</label>
+                                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini"
+                                    formControlName="fecini" [showOnFocus]="false" [readonlyInput]="true"
+                                    appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
+                                </p-calendar>
+                            </div>
+                            <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
+                                <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin"
+                                    formControlName="fecfin" [readonlyInput]="true" appendTo="body"
+                                    class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
+                            </div>
+                            <div class="sm:col-6 lg:col-3 md:col-6 col-12 -mt-3">
+                                <label class=" font-semibold text-blue-600 text-base">Cliente</label>
+                                <span>
+                                    <p-dropdown [options]="lstProveedores" formControlName="idproveedor"
+                                        class="p-inputtext-sm" optionLabel="nomcomercial" optionValue="idcliente"
+                                        appendTo="body" [filter]="true"></p-dropdown>
+                                </span>
+                            </div>
+                            <div class="sm:col-4 lg:col-2 md:col-6 col-12 -mt-3">
+                                <label class="font-semibold text-blue-600 text-base">Moneda</label>
+                                <span class="p-fluid">
+                                    <p-dropdown [options]="lstMonedas" formControlName="idmoneda"
+                                        optionLabel="desmoneda" optionValue="idmoneda" appendTo="body"
+                                        [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                </span>
+                            </div>
+                            <div class="sm:col-4 lg:col-2 md:col-6 col-12 -mt-3">
+                                <label class="font-semibold text-blue-600 text-base">Estado SUNAT</label>
+                                <span class="p-fluid">
+                                    <p-dropdown [options]="lstEstados" formControlName="ind_estado_fel"
+                                        optionLabel="nomestadofel" optionValue="codestadofel" appendTo="body"
+                                        [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                                </span>
+                            </div>
+                        </form>
 
-            </p-tabPanel>
-        </p-tabView>
+                        <div class="field sm:col-3 md:col-2 lg:col-3 -mt-3 gap-2">
+                            <button pButton type="button" (click)="getListarPagos()" pTooltip="Buscar Registros"
+                                tooltipPosition="bottom"
+                                class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem"
+                                icon="pi pi-search"></button>
+                        </div>
+                    </div>
+
+                    <p-table #dt1 [value]="lstPagos" [rows]="25" [rowHover]="true" responsiveLayout="stack"
+                        [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+                        [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
+                        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+                        styleClass="p-datatable-sm card border-1 border-round surface-border">
+
+                        <ng-template pTemplate="header">
+                            <tr class="text-sm">
+                                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
+                                    <div class="flex justify-content-between align-items-center">
+                                        N°
+                                    </div>
+                                </th>
+                                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        ENVIO <br> SUNAT
+                                    </div>
+                                </th>
+                                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        ESTADO <br> SUNAT
+                                    </div>
+                                </th>
+                                <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        FECHA <br> EMISIÓN
+                                    </div>
+                                </th>
+                                <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        FECHA <br> VENCIMIENTO
+                                    </div>
+                                </th>
+                                <th style="width: 80px;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        TIPO <br> DOCUMENTO
+                                    </div>
+                                </th>
+                                <th style="width: 80px;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        N° <br>DOCUMENTO
+                                    </div>
+                                </th>
+                                <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        CLIENTE
+                                    </div>
+                                </th>
+
+                                <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1">
+                                    <i class="pi pi-money-bill text-green-500"></i>
+                                    <div class="justify-content-between align-items-center">
+                                        MONEDA
+                                    </div>
+                                </th>
+                                <th style="width: 80px; text-align:right;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-end">
+                                        BASE <br> IMPONIBLE
+                                    </div>
+                                </th>
+                                <th style="width: 70px; text-align:right;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-end ">
+                                        IGV
+                                    </div>
+                                </th>
+                                <th style="width: 100px; text-align:right;" class="bg-teal-50 border-1">
+                                    <div class="justify-content-end ">
+                                        TOTAL
+                                    </div>
+                                </th>
+                                <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        GLOSA
+                                    </div>
+                                </th>
+                                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
+                                    <div class="justify-content-between align-items-center">
+                                        CENTRO COSTO
+                                    </div>
+                                </th>
+                                <th style="width: 80px" class="bg-teal-50 border-1">
+                                    <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                                        ESTADO
+                                    </div>
+                                </th>
+                                <th style="width: 40px; text-align:center;" class="bg-teal-50 border-1">
+                                    <i class="pi pi-percentage text-red-500"></i>
+                                    <div [ngStyle]="{'width':'40px'}">
+                                        DETRA
+                                    </div>
+                                </th>
+                                <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1">
+                                    <div [ngStyle]="{'width':'60px'}">
+                                        MONTO <br> DETRACCIÓN
+                                    </div>
+                                </th>
+
+                                <th style="width: 60px;" class="bg-teal-50 border-1">
+                                    <div class="flex justify-content-between align-items-center">
+                                        ACCIONES
+                                    </div>
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+                            <tr class="text-sm">
+                                <td>
+                                    <div [ngStyle]="{'width':'20px'}">
+                                        {{rowIndex + 1}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div *ngIf="!data.indsunatreg" class="flex align-items-center m:justify-content-end"
+                                        [ngStyle]="{'width':'40px'}">
+                                        <button
+                                            *ngIf="data.estado === 'EMT' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3 && data.ind_estado_fel != 4 && data.ind_estado_fel != 5 && visXperfil"
+                                            pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom"
+                                            pTooltip="Enviar a SUNAT"
+                                            class="p-button-rounded p-button-text text-blue-500"
+                                            (click)="emitirDocumento(data)"></button>
+                                        <button
+                                            *ngIf="data.ind_estado_fel === 1 || data.ind_estado_fel === 3 || data.ind_estado_fel === 4 || data.ind_estado_fel === 5"
+                                            pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom"
+                                            pTooltip="Descargar Documento"
+                                            class="p-button-rounded p-button-text text-green-500"
+                                            (click)="verDocumento(data)"></button>
+                                        <button
+                                            *ngIf="data.ind_estado_fel != 0 && data.ind_estado_fel != 2 && data.ind_estado_fel != 4 && visXperfil"
+                                            [disabled]="data.b_accion" pButton pRipple type="button"
+                                            icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text "
+                                            (click)="toggleMenuSunat($event, data)" pTooltip="Transacciones Sunat"
+                                            tooltipPosition="bottom"></button>
+                                        <p-tieredMenu #menuSunat [model]="menuItemsSunat" appendTo="body"
+                                            [popup]="true"></p-tieredMenu>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div *ngIf="data.ind_estado_fel !== 0"
+                                        [ngStyle]="{'width':'70px','text-align': 'center'}">
+                                        <p-tag [style]="{'width':'100%'}" [value]="data.nomestadofel"
+                                            [severity]="getSeverity(data.ind_estado_fel)"></p-tag>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'60px'}">
+                                        {{data.fecemision}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'60px'}">
+                                        {{data.fecvencimiento}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'80px'}">
+                                        {{data.nomtipodoc_ctb }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'80px'}">
+                                        {{data.nrofactura }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'150px'}">
+                                        {{data.nomempresa | uppercase}}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div [ngStyle]="{'width':'60px','text-align':'center'}">
+                                        {{data.simbmoneda | uppercase}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'80px','text-align':'right'}">
+                                        {{data.s_monto | number: '0.2-2' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                                        {{data.s_igv | number: '0.2-2' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                        {{data.s_monto_total | number: '0.2-2' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'100px'}">
+                                        {{data.s_glosa | uppercase}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'120px'}">
+                                        {{data.descentrocosto | uppercase}}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div [ngStyle]="{'width':'80px','text-align': 'center'}">
+                                        {{data.nomestado | uppercase}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'40px','text-align':'right'}">
+                                        {{data.porc_detraccion | number: '0.0' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div [ngStyle]="{'width':'60px','text-align':'right'}">
+                                        {{data.s_monto_detraccion_mn_CTB | number: '0.0' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex align-items-center m:justify-content-end"
+                                        [ngStyle]="{'width':'60px'}">
+                                        <button
+                                            *ngIf="(data.acciones.length > 0 || visXperfil) && data.ind_estado_fel != 1"
+                                            pButton pRipple type="button" icon="pi pi-ellipsis-v"
+                                            class="p-button-rounded p-button-text " (click)="toggleMenu($event, data)"
+                                            pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
+                                            <p-tieredMenu #menu [model]="menuItems" appendTo="body"
+                                                [popup]="true"></p-tieredMenu>
+                                        <button pButton pRipple type="button" icon="pi pi-file-pdf"
+                                            tooltipPosition="bottom" pTooltip="Vista Preliminar"
+                                            class="p-button-rounded p-button-text text-red-500"
+                                            (click)="onVerDetalle(data)"></button>
+                                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom"
+                                            pTooltip="Ver" class="p-button-rounded p-button-text text-green-500"
+                                            (click)="onVer(data)"></button>
+                                        <button
+                                            *ngIf="(data.ind_estado_fel == 0 || data.ind_estado_fel == 2) && visXperfil"
+                                            pButton pRipple type="button" icon="pi pi-file-edit"
+                                            tooltipPosition="bottom" pTooltip="Editar"
+                                            class="p-button-rounded p-button-text text-yellow-500"
+                                            (click)="onEditar(data)"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="8">No se encontraron registros.</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="loadingbody">
+                            <tr>
+                                <td colspan="8">Cargando datos. Espere por favor.</td>8
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                </p-tabPanel>
+            </p-tabView>
+        </div>
     </div>
-</div>
+</ng-container>
+<ng-template #visSecciones>
+
+    <ng-container *ngIf="visDetalle" (OB_back)="getDetalle($event)">
+        <div class="grid ">
+            <div class="flex justify-content-between col-12 gap-2">
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
+                        label="Regresar" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                        (click)="getBackFactura()"></button>
+                </div>
+                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                    <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                </div>
+            </div>
+        </div>
+        <app-c-dato-venta [IA_data]="dataPrc"></app-c-dato-venta>
+    </ng-container>
+
+    <ng-container *ngIf="visQuote" (OB_back)="getDetalle($event)">
+        <div class="grid ">
+            <div class="flex justify-content-between col-12 -mt-3">
+                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                    <span class="text-base font-semibold">{{tituloDetalle}}</span>
+                </div>
+                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
+                        label="Regresar" pTooltip="Regresar" tooltipPosition="left" (click)="getBack()"></button>
+                </div>
+            </div>
+        </div>
+        <!-- <app-c-cotizacion ></app-c-cotizacion> -->
+    </ng-container>
+
+
+
+</ng-template>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
-<!-- <p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
-acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog> -->
+<p-confirmDialog header="Confirmation" key="confirm2" [style]="{width: '450px'}"
+    acceptButtonStyleClass="p-button p-button-info surface-border"
+    rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>

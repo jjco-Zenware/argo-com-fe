@@ -205,7 +205,8 @@ createFormRegistro() {
     fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
     idordencompra: [{ value: this.idOrdenC, disabled: false }],
     condicionescomerciales: [{ value: '', disabled: false }],
-    idproveedor: [{ value: '', disabled: false }],
+    //idproveedor: [{ value: '', disabled: false }],
+    idproveedor: [{ value: this.IA_data.idproveedor??'', disabled: false }],
     idmoneda: [{ value: 0, disabled: false }],
     //idorigen: [{ value: this.IA_data, disabled: false }],
     idcontacto: [{ value: 0, disabled: false }],
@@ -846,9 +847,11 @@ createFormRegistro() {
   }
 
   cargarProyectos(dato:any){
+    debugger
     let idcliente = this.registerFormRegistro.value.idproveedor;
     console.log('dato...',dato,idcliente);
-    this.ordencompraService.portipoProyectoList(dato).subscribe({
+    //this.ordencompraService.portipoProyectoList(dato).subscribe({
+    this.ordencompraService.portipoProyectoList(idcliente).subscribe({
       next: (rpta: any) => {
       this.lstProyectos = rpta;
       console.log('rpta...',rpta);

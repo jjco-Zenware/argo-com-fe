@@ -1,5 +1,5 @@
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { c_habitacion, constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
@@ -17,31 +17,34 @@ import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabil
 import { ReservaService } from '../reserva.service';
 import { CmPersonaPaxComponent } from '../cm-persona-pax/cm-persona-pax.component';
 import { CmExcTransacReservaComponent } from '../cm-exc-transac-reserva/cm-exc-transac-reserva.component';
+import { Menu } from 'primeng/menu';
+import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-registro/modal-transac.component';
 
 @Component({
   selector: 'app-c-reserva-det',
   templateUrl: './c-reserva-det.component.html',
   styleUrls: ['./c-reserva-det.component.scss']
 })
-export class CReservaDetComponent implements OnInit, OnDestroy{
+export class CReservaDetComponent implements OnInit, OnDestroy {
   @Input() IA_data: any;
+  @ViewChild('menu') menu!: Menu;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
   visibleDocument: boolean = true;
   visibleAsiento: boolean = true;
   dataAdjunto: any;
-  registerFormRegistro: any= FormGroup;
+  registerFormRegistro: any = FormGroup;
   registerFormCuota!: FormGroup;
   idtipoproyecto: any;
   lstProyectos: any;
-  lstCliente: Cliente []=[];
+  lstCliente: Cliente[] = [];
   lstProveedores: Cliente[] = [];
   annio: Date = new Date;
   submitted = false;
   headerTitle: string = '';
   registerFormCliente: any = FormGroup;
-  registerFormContacto: any= FormGroup;
-  registerFormPago: any= FormGroup;
+  registerFormContacto: any = FormGroup;
+  registerFormPago: any = FormGroup;
   lstMonedas: Moneda[] = [];
   lstItemOC: OrdenCompraItem[] = [];
   montoTotal: number = 0;
@@ -57,33 +60,33 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
   verbtnAcciones: boolean = false;
   verItems: boolean = true;
   ordenCompra: any;
-  dataCT:any = {id:0, razonsocial:'', description:'', nommoneda:'', startDate:'', nomcreador:'', tipocambio:'', idlista:'', quotes:[]};
+  dataCT: any = { id: 0, razonsocial: '', description: '', nommoneda: '', startDate: '', nomcreador: '', tipocambio: '', idlista: '', quotes: [] };
   verCotizacion: boolean = true;
   lstTipo = [
     { name: 'COMPRA', code: 'OC' },
     { name: 'SERVICIO', code: 'OS' }
   ];
   lstTermino: any;
-  lstQuotes: any[]=[];
+  lstQuotes: any[] = [];
   verAdjunto: boolean = false;
   contactoVisible: boolean = false;
   itemVisible: boolean = false;
   ExcelData: any;
   idtipoprod: any;
   idmarca: any;
-  lstMarcas:any;
-  lstTipoProducto:any;
+  lstMarcas: any;
+  lstTipoProducto: any;
   verImportar: boolean = true;
   onlyRead: boolean = false;
   onlyReadSunat: boolean = true;
   //verReferencia: boolean = false;
   verProyecto: boolean = true;
-  lstUnidades:any;
+  lstUnidades: any;
   errorMensaje: string = "";
-  lstComprobante:any;
-  listaCuotas:any[]=[]; 
-  Cuotas:any;
-  lstAsientos:any[]=[];
+  lstComprobante: any;
+  listaCuotas: any[] = [];
+  Cuotas: any;
+  lstAsientos: any[] = [];
   lstCuotas = [
     { name: '1', code: 1 },
     { name: '2', code: 2 },
@@ -97,24 +100,30 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
   minimaFechaHasta!: Date;
   maximaFechaHasta: Date = this.serviceUtilitario.obtenerFechaFinMesTotal();
   lstCentroCosto: any;
-  nrocuotas!:number;
+  nrocuotas!: number;
   s_monto!: number;
   s_igv!: number;
-  lstSunatTrans:any[]=[];
-  lstTipoDetra: any[]=[];
-  lstTipoPagoDetra: any[]=[];
-  lstTipoRetencion: any[]=[];
+  lstSunatTrans: any[] = [];
+  lstTipoDetra: any[] = [];
+  lstTipoPagoDetra: any[] = [];
+  lstTipoRetencion: any[] = [];
   onlyReadMonto: boolean = true;
   lstOrdenC: any;
   verDetraccion: boolean = false;
-  lstTransacciones: any[]=[];
+  lstTransacciones: any[] = [];
   verbtnFacturacion: boolean = false;
   vistaPrincipal: boolean = true;
   dataFacturacion: any;
   listadoPAX: any[] = [];
   selectedDetalle: any[] = [];
-  lstPagos: any[] =[];
-  lstEstados:any[] = [
+  dataPrc: any;
+  lstPagos: any[] = [];
+  tituloDetalle!: string;
+  vistaLista: boolean = true;
+  visDetalle: boolean = false;
+  visQuote: boolean = false;
+  visXperfil: boolean = true;
+  lstEstados: any[] = [
     { codestadofel: 0, nomestadofel: 'TODOS' },
     { codestadofel: 1, nomestadofel: 'ACEPTADO' },
     { codestadofel: 2, nomestadofel: 'ERROR' },
@@ -140,7 +149,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
 
   ngOnInit(): void {
     console.log("ngOnInit IA_data : ", this.IA_data);
-    
+
     this.idOrdenC = this.IA_data.idordencompra;
     this.verbtnFacturacion = this.IA_data.visBtnFacturacion || false;
 
@@ -150,44 +159,50 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
     this.createFormPagos();
     this.listaProyectoTipo();
     this.listaClientes();
-    this.listaMonedas();  
-    this.listarItemsTabla(); 
-    this.listarItemsTablaUnidad() ;
+    this.listaMonedas();
+    this.listarItemsTabla();
+    this.listarItemsTablaUnidad();
     this.listarItemsTablaComprobante();
     this.listarPAX();
     this.getListarPagos();
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
-    
-    if (this.idOrdenC > 0) {   
+
+    if (this.idOrdenC > 0) {
       if (this.IA_data.paramReg === 'V') {
-        this.dataAdjunto ={
+        this.dataAdjunto = {
           idCliente: this.idOrdenC,
           codtipoproc: 8, //adjuntos compras
           veracciones: 1
         }
-      }  else{
-        this.dataAdjunto ={
+      } else {
+        this.dataAdjunto = {
           idCliente: this.idOrdenC,
           codtipoproc: 8,
           veracciones: 0
         }
-      }  
-      this.verAdjunto = true;      
+      }
+      this.verAdjunto = true;
       this.traerUno();
       this.listarTransacciones();
-    }else{
-      this.dataAdjunto ={
+    } else {
+      this.dataAdjunto = {
         idCliente: 0,
         codtipoproc: 8,
         veracciones: 0
-      }     
+      }
       this.mostrarBotones('NVO');
       //this.getOrigen('OPO');
-    //   const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), 30);
-    // this.registerFormRegistro.get('fecvencimiento').setValue(newDate);
-    }   
+      //   const newDate = this.addDays(this.serviceUtilitario.obtenerFechaActual(), 30);
+      // this.registerFormRegistro.get('fecvencimiento').setValue(newDate);
+    }
+
+    if (constantesLocalStorage.idperfil === 11) {
+      this.visXperfil = false;
+    } else {
+      this.visXperfil = true;
+    }
   }
 
 
@@ -201,97 +216,97 @@ export class CReservaDetComponent implements OnInit, OnDestroy{
       tiporol: [{ value: 0, disabled: false }],
       indvig: [{ value: true, disabled: false }]
     });
-}
+  }
 
-  createFormPagos(){
+  createFormPagos() {
     this.registerFormPago = this.formBuilder.group({
-      fecini: [{value: this.serviceUtilitario.obtenerFechaInicioMes(),disabled: false}],       
-      fecfin: [{value: this.serviceUtilitario.obtenerFechaFinMes(),disabled: false}],     
-      idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
-      idproveedor: [{value: 0,disabled: false}],
-      idmoneda: [{value: 0,disabled: false}],
-      idcliente: [{value: 0,disabled: false}],
+      fecini: [{ value: this.serviceUtilitario.obtenerFechaInicioMes(), disabled: false }],
+      fecfin: [{ value: this.serviceUtilitario.obtenerFechaFinMes(), disabled: false }],
+      idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      idproveedor: [{ value: 0, disabled: false }],
+      idmoneda: [{ value: 0, disabled: false }],
+      idcliente: [{ value: 0, disabled: false }],
       idcentrocosto: [{ value: 0, disabled: false }],
       ind_estado_fel: [{ value: 0, disabled: false }]
     });
   }
 
-createFormRegistro() {
-  //Agregar validaciones de formulario
-  this.registerFormRegistro = this.formBuilder.group({
-    idproyecto: [{ value: 0, disabled: false }],
-    idtipoproyecto: [{ value: 0, disabled: false }],
-    idtipodocprc: [{ value: c_habitacion.tipoDocPRC, disabled: false }],
-    idoportunidad: [{ value: 0, disabled: false }],
-    sustentodoc: [{ value: '', disabled: false }],
-    idrequerimiento: [{ value: 0, disabled: false }],
-    iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
-    idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
-    nrodocumentoadd:[{ value: '', disabled: false }],
-    fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
-    idordencompra: [{ value: this.idOrdenC, disabled: false }],
-    condicionescomerciales: [{ value: '', disabled: false }],
-    idproveedor: [{ value: '', disabled: false }],
-    idmoneda: [{ value: 0, disabled: false }],
-    //idorigen: [{ value: this.IA_data, disabled: false }],
-    idcontacto: [{ value: 0, disabled: false }],
-    codtipodoc: [{ value: 'OPO', disabled: false }],
-    tiempoentrega: [{ value: 0, disabled: false }],
-    codformapago: [{ value: 118, disabled: false }],
-    validezoferta: [{ value: 0, disabled: false }],
-    lugarentrega: [{ value: '', disabled: false }],
-    garantia: [{ value: 0, disabled: false }],
-    servicionombre: [{ value: '', disabled: false }],
-    ref01: [{ value: '', disabled: false }],
-    ref02: [{ value: '', disabled: false }],
-    ref03: [{ value: '', disabled: false }],
-    codtipoorden:[{ value: 'OC', disabled: false }],
-    codigonroorden:[{ value: '', disabled: true }],
-    nomproyecto:[{ value: '', disabled: false }],
-    nrodocumento:[{ value: '', disabled: false }],
-    fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-    tc:[{ value: 0, disabled: false }],
-    tipodoc_ctb:[{ value: '', disabled: false }],
-    nroserie_ctb:[{ value: '', disabled: false }],
-    nrodocumento_ctb:[{ value: '', disabled: false }],
-    fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-    nrocuotas:[{ value: 1, disabled: false }],
-    porc_detraccion:[{ value: 0, disabled: false }],
-    monto_detraccion_mn_CTB:[{ value: 0, disabled: false }],
-    s_monto_detraccion_CTB:[{ value: 0, disabled: false }],
-    s_monto_valor_venta_CTB:[{ value: 0, disabled: false }],
-    s_monto_igv_CTB:[{ value: 0, disabled: false }],
-    s_monto_total_CTB:[{ value: 0, disabled: false }],
-    montoTotal:[{ value: 0, disabled: false }],
-    nrocontrato_ctb:[{ value: null, disabled: false }],
-    nroexpediente_ctb:[{ value: null, disabled: false }],
-    codunidadejecutora_ctb:[{ value: null, disabled: false }],
-    nroprocesoseleccion_ctb:[{ value: null, disabled: false }],
-    observacion: [{ value: '', disabled: false }],
-    nrodias:[{ value: 1, disabled: false }],
-    idordencompra_origen_ctb:[{ value: 0, disabled: false }],
-    monto_pen_pago:[{ value: 0, disabled: false }],
-    idcentrocosto:[{ value: 225, disabled: false }],
-    s_monto_neto_CTB:[{ value: 0, disabled: false }],
-    direccion:[{ value: null, disabled: false }],
-    fel_sunat_transaction:[{ value: 1, disabled: false }],
-    tipo_de_nota_de_credito:[{ value: null, disabled: false }],
-    tipo_de_nota_de_debito:[{ value: null, disabled: false }],
-    porcretencion:[{ value: 0, disabled: false }],
-    monto_retencion:[{ value: 0, disabled: false }],
-    detraccion_tipo:[{ value: 0, disabled: false }],
-    detraccion_tipo_pago:[{ value: 0, disabled: false }],
-    inddetraccion_ctb: [{ value: false, disabled: false }],
-    monto_anticipo:[{ value: 0, disabled: false }],
-    retencion_tipo:[{ value: 0, disabled: false }],
-    retencion_base_imponible:[{ value: 0, disabled: false }],
-    indmanualdetraccion:[{ value: false, disabled: false }],
-    indsunatreg:[{ value: false, disabled: false }],
-    //codctactble:[{ value: '0', disabled: false }],
-  });
+  createFormRegistro() {
+    //Agregar validaciones de formulario
+    this.registerFormRegistro = this.formBuilder.group({
+      idproyecto: [{ value: 0, disabled: false }],
+      idtipoproyecto: [{ value: 0, disabled: false }],
+      idtipodocprc: [{ value: c_habitacion.tipoDocPRC, disabled: false }],
+      idoportunidad: [{ value: 0, disabled: false }],
+      sustentodoc: [{ value: '', disabled: false }],
+      idrequerimiento: [{ value: 0, disabled: false }],
+      iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      nrodocumentoadd: [{ value: '', disabled: false }],
+      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
+      idordencompra: [{ value: this.idOrdenC, disabled: false }],
+      condicionescomerciales: [{ value: '', disabled: false }],
+      idproveedor: [{ value: '', disabled: false }],
+      idmoneda: [{ value: 0, disabled: false }],
+      //idorigen: [{ value: this.IA_data, disabled: false }],
+      idcontacto: [{ value: 0, disabled: false }],
+      codtipodoc: [{ value: 'OPO', disabled: false }],
+      tiempoentrega: [{ value: 0, disabled: false }],
+      codformapago: [{ value: 118, disabled: false }],
+      validezoferta: [{ value: 0, disabled: false }],
+      lugarentrega: [{ value: '', disabled: false }],
+      garantia: [{ value: 0, disabled: false }],
+      servicionombre: [{ value: '', disabled: false }],
+      ref01: [{ value: '', disabled: false }],
+      ref02: [{ value: '', disabled: false }],
+      ref03: [{ value: '', disabled: false }],
+      codtipoorden: [{ value: 'OC', disabled: false }],
+      codigonroorden: [{ value: '', disabled: true }],
+      nomproyecto: [{ value: '', disabled: false }],
+      nrodocumento: [{ value: '', disabled: false }],
+      fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      tc: [{ value: 0, disabled: false }],
+      tipodoc_ctb: [{ value: '', disabled: false }],
+      nroserie_ctb: [{ value: '', disabled: false }],
+      nrodocumento_ctb: [{ value: '', disabled: false }],
+      fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      nrocuotas: [{ value: 1, disabled: false }],
+      porc_detraccion: [{ value: 0, disabled: false }],
+      monto_detraccion_mn_CTB: [{ value: 0, disabled: false }],
+      s_monto_detraccion_CTB: [{ value: 0, disabled: false }],
+      s_monto_valor_venta_CTB: [{ value: 0, disabled: false }],
+      s_monto_igv_CTB: [{ value: 0, disabled: false }],
+      s_monto_total_CTB: [{ value: 0, disabled: false }],
+      montoTotal: [{ value: 0, disabled: false }],
+      nrocontrato_ctb: [{ value: null, disabled: false }],
+      nroexpediente_ctb: [{ value: null, disabled: false }],
+      codunidadejecutora_ctb: [{ value: null, disabled: false }],
+      nroprocesoseleccion_ctb: [{ value: null, disabled: false }],
+      observacion: [{ value: '', disabled: false }],
+      nrodias: [{ value: 1, disabled: false }],
+      idordencompra_origen_ctb: [{ value: 0, disabled: false }],
+      monto_pen_pago: [{ value: 0, disabled: false }],
+      idcentrocosto: [{ value: 225, disabled: false }],
+      s_monto_neto_CTB: [{ value: 0, disabled: false }],
+      direccion: [{ value: null, disabled: false }],
+      fel_sunat_transaction: [{ value: 1, disabled: false }],
+      tipo_de_nota_de_credito: [{ value: null, disabled: false }],
+      tipo_de_nota_de_debito: [{ value: null, disabled: false }],
+      porcretencion: [{ value: 0, disabled: false }],
+      monto_retencion: [{ value: 0, disabled: false }],
+      detraccion_tipo: [{ value: 0, disabled: false }],
+      detraccion_tipo_pago: [{ value: 0, disabled: false }],
+      inddetraccion_ctb: [{ value: false, disabled: false }],
+      monto_anticipo: [{ value: 0, disabled: false }],
+      retencion_tipo: [{ value: 0, disabled: false }],
+      retencion_base_imponible: [{ value: 0, disabled: false }],
+      indmanualdetraccion: [{ value: false, disabled: false }],
+      indsunatreg: [{ value: false, disabled: false }],
+      //codctactble:[{ value: '0', disabled: false }],
+    });
 
-  
-}
+
+  }
 
   ngOnDestroy() {
     if (this.$listSubcription != undefined) {
@@ -311,55 +326,55 @@ createFormRegistro() {
     this.blockedDocument = valor;
   }
 
-  mostrarBotones(data:any){
+  mostrarBotones(data: any) {
     console.log('mostrarBotones', this.IA_data.paramReg, '..data...', data);
     switch (data) {
       case 'CKI':
       case 'REG':
         this.verbtnGrabar = true;
-        this.verbtnPreliminar= true;
+        this.verbtnPreliminar = true;
         this.verbtnOrden = false;
         this.verbtnAcciones = true;
         this.onlyRead = false;
-      break;
+        break;
       case 'NVO':
         this.verbtnGrabar = true;
-        this.verbtnPreliminar= false;
+        this.verbtnPreliminar = false;
         this.verbtnOrden = false;
         this.verbtnAcciones = false;
         this.onlyRead = false;
-      break;      
+        break;
       case 'CKO':
         this.verbtnGrabar = true;
-        this.verbtnPreliminar= true;
+        this.verbtnPreliminar = true;
         this.verbtnOrden = true;
         this.verbtnAcciones = true;
         this.verItems = true;
         this.onlyRead = false;
-      break;
+        break;
       case 'ANU':
         this.verbtnGrabar = false;
-        this.verbtnPreliminar= false;
+        this.verbtnPreliminar = false;
         this.verbtnOrden = true;
         this.verbtnAcciones = false;
         this.verItems = false;
         this.onlyRead = false;
-      break;
+        break;
       case 'ELI':
         this.verbtnGrabar = false;
-        this.verbtnPreliminar= true;
+        this.verbtnPreliminar = true;
         this.verbtnOrden = false;
         this.verbtnAcciones = false;
         this.verItems = false;
         this.onlyRead = false;
-      break;
+        break;
       case 'PAG':
         this.verbtnGrabar = false;
-        this.verbtnPreliminar= true;
+        this.verbtnPreliminar = true;
         this.verbtnOrden = false;
         this.verbtnAcciones = true;
         this.onlyRead = true;
-      break;
+        break;
       case 'CFM':
         this.verbtnGrabar = true;
         this.onlyRead = false;
@@ -367,7 +382,7 @@ createFormRegistro() {
         this.verbtnOrden = false;
         this.verbtnAcciones = true;
         this.verItems = false;*/
-      break;
+        break;
       default:
         break;
     }
@@ -375,42 +390,42 @@ createFormRegistro() {
     if (this.IA_data.paramReg === 'V') {
       console.log('entro', this.IA_data.paramReg);
       this.verbtnGrabar = false;
-      this.verbtnPreliminar= this.idOrdenC === 0 ? true : false;
+      this.verbtnPreliminar = this.idOrdenC === 0 ? true : false;
       this.verbtnOrden = this.idOrdenC === 0 ? false : true;
       this.verbtnAcciones = false;
       this.verItems = false;
       this.onlyRead = true;
     }
-    
+
   }
 
-  traerUno(){
-     this.setSpinner(true);
-     this.mensajeSpinner = 'Cargando...!';
-     const objeto ={
-       idordencompra: this.idOrdenC,
-       idusuario: constantesLocalStorage.idusuario
-     }
- 
-     const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
-       .subscribe({
-         next: (rpta:any) => {
-          debugger
-           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-             this.ordenCompra = rpta.ordencompra[0];     
-             //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
-             if (rpta.ordencompra[0].items !== undefined) {
-               this.lstItemOC = rpta.ordencompra[0].items;
-             }  
-             if (rpta.ordencompra[0].quotes !== undefined) {
-               this.lstQuotes =  rpta.ordencompra[0].quotes; 
-             } 
+  traerUno() {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Cargando...!';
+    const objeto = {
+      idordencompra: this.idOrdenC,
+      idusuario: constantesLocalStorage.idusuario
+    }
 
-             if (rpta.ordencompra[0].cuotas !== undefined) {
-              this.listaCuotas =  rpta.ordencompra[0].cuotas; 
-            }   
- 
-          this.visibleDocument = false; 
+    const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          debugger
+          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+          this.ordenCompra = rpta.ordencompra[0];
+          //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
+          if (rpta.ordencompra[0].items !== undefined) {
+            this.lstItemOC = rpta.ordencompra[0].items;
+          }
+          if (rpta.ordencompra[0].quotes !== undefined) {
+            this.lstQuotes = rpta.ordencompra[0].quotes;
+          }
+
+          if (rpta.ordencompra[0].cuotas !== undefined) {
+            this.listaCuotas = rpta.ordencompra[0].cuotas;
+          }
+
+          this.visibleDocument = false;
           this.visibleAsiento = false;
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
@@ -418,47 +433,46 @@ createFormRegistro() {
           //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
           this.s_monto = rpta.ordencompra[0].s_monto;
           this.s_igv = rpta.ordencompra[0].s_igv;
-            this.montoTotal = rpta.ordencompra[0].s_monto_total;
           this.montoTotal = rpta.ordencompra[0].s_monto_total;
-          this.mostrarBotones(rpta.ordencompra[0].estado); 
-          this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);     
+          this.montoTotal = rpta.ordencompra[0].s_monto_total;
+          this.mostrarBotones(rpta.ordencompra[0].estado);
+          this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);
           this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
           this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
-          this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );  
-          this.registerFormRegistro.get('direccion').setValue(rpta.ordencompra[0].direcresumen); 
-          this.nrocuotas = rpta.ordencompra[0].nrocuotas 
+          this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision);
+          this.registerFormRegistro.get('direccion').setValue(rpta.ordencompra[0].direcresumen);
+          this.nrocuotas = rpta.ordencompra[0].nrocuotas
           this.getBusquedaRUC();
-          this.setSpinner(false);       
-         },
-         error:(err)=>{
-             this.setSpinner(false);
-             this.serviceSharedApp.messageToast()
-         },
-         complete:() => {
-           this.setSpinner(false);
-           
-         }
-       });
-     this.$listSubcription.push($cargarOrdenC)
-   }
- 
-  guardarOC(){
-
-    if (this.validarDatos())
-      {
           this.setSpinner(false);
-          this.messageService.add({severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+
+        }
+      });
+    this.$listSubcription.push($cargarOrdenC)
+  }
+
+  guardarOC() {
+
+    if (this.validarDatos()) {
+      this.setSpinner(false);
+      this.messageService.add({ severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+      return;
+    }
+    if (this.listaCuotas.length > 0) {
+      for (let i = 0; i < this.listaCuotas.length; i++) {
+        this.listaCuotas[i].nrocuota = i + 1;
+        if (this.listaCuotas[i].monto === 0) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso', detail: 'El monto de la cuota debe ser mayor que cero...' });
           return;
-      }
-      if (this.listaCuotas.length > 0) {
-        for (let i = 0; i < this.listaCuotas.length; i++) {
-          this.listaCuotas[i].nrocuota = i + 1;
-          if (this.listaCuotas[i].monto === 0) {
-            this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'El monto de la cuota debe ser mayor que cero...' });
-          return;
-          }
         }
       }
+    }
 
     this.setSpinner(true);
     this.mensajeSpinner = 'Guardando...!';
@@ -468,35 +482,29 @@ createFormRegistro() {
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecemision = this.registerFormRegistro.value.fecemision;
     fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
-    
-    //if (this.idOrdenC > 0) {
-      if (fechaingreso.toString().length === 10) {
-        fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso)); 
-      }
-      if (fecemision.toString().length === 10) {
-        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
-      } 
-      if (fecvencimiento.toString().length === 10) {
-        fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));    
-      }         
-    //}
 
-    for (let i = 0; i < this.lstItemOC.length; i++) {      
+    if (fechaingreso.toString().length === 10) {
+      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
+    }
+    if (fecemision.toString().length === 10) {
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
+    }
+    if (fecvencimiento.toString().length === 10) {
+      fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
+    }
+
+    for (let i = 0; i < this.lstItemOC.length; i++) {
       if (this.lstItemOC[i].cantidad.toString() === '') {
         this.lstItemOC[i].cantidad = 0;
-      }    
+      }
       if (this.lstItemOC[i].preciocosto.toString() === '') {
         this.lstItemOC[i].preciocosto = 0;
       }
     }
 
     let retencion_tipo = this.registerFormRegistro.value.retencion_tipo;
-    //let detraccion_tipo = this.registerFormRegistro.value.detraccion_tipo;
-    //let detraccion_tipo_pago = this.registerFormRegistro.value.detraccion_tipo_pago;
     if (!this.registerFormRegistro.value.inddetraccion_ctb) {
       retencion_tipo = 0;
-      //detraccion_tipo = 0;
-      //detraccion_tipo_pago = 0;
     }
 
     const objeto = {
@@ -505,158 +513,158 @@ createFormRegistro() {
       fechaingreso,
       fecemision,
       fecvencimiento,
-      tipodoc_ctb : (this.registerFormRegistro.value.tipodoc_ctb).toString(),
+      tipodoc_ctb: (this.registerFormRegistro.value.tipodoc_ctb).toString(),
       cuotas: this.listaCuotas,
-      nrocuotas: this.nrocuotas ,
-      retencion_tipo : retencion_tipo,
+      nrocuotas: this.nrocuotas,
+      retencion_tipo: retencion_tipo,
       //detraccion_tipo : detraccion_tipo,
       //detraccion_tipo_pago : detraccion_tipo_pago
     }
 
     console.log('guardarOC...', objeto);
-    
+
     this.ordencompraService.ordenCompraprc(objeto).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
-        if (rpta.procesoSwitch === 0){
+        if (rpta.procesoSwitch === 0) {
           this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
           if (this.idOrdenC === 0) {
-            this.idOrdenC = rpta.resultProceso;  
+            this.idOrdenC = rpta.resultProceso;
             this.registerFormRegistro.get('idordencompra').setValue(rpta.resultProceso);
-            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);            
-           
-            this.dataAdjunto ={
+            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);
+
+            this.dataAdjunto = {
               idCliente: this.idOrdenC,
               codtipoproc: 8,
               veracciones: 0
-            }   
-            this.verAdjunto = true;  
+            }
+            this.verAdjunto = true;
             //agregar una cuota por defecto
-            this.traerUno2();             
-            
+            this.traerUno2();
+
             //preguntar si desea emitir el documento con una cuota
             this.confirmationService.confirm({
               key: 'confirm1',
               header: 'Confirmación',
-              message:  '¿Desea Emitir el Documento con una Cuota...?' ,
+              message: '¿Desea Emitir el Documento con una Cuota...?',
               accept: () => {
                 this.guardarOC();
                 this.procesarTRX();
-                }
-            }); 
-          }else{
+              }
+            });
+          } else {
             this.traerUno();
           }
-          
-         
-        this.visibleDocument = false;
-        this.visibleAsiento = false;
-        }else{
-        this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+
+
+          this.visibleDocument = false;
+          this.visibleAsiento = false;
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
         }
       },
       error: (err) => {
         this.setSpinner(false);
-      this.messageService.clear();
-      this.messageService.add({
+        this.messageService.clear();
+        this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: mensajesQuestion.msgErrorGenerico,
-          });
+        });
       },
       complete: () => {
       },
-  });
+    });
   }
 
-  traerUno2(){
-      this.setSpinner(true);
-      this.mensajeSpinner = 'Cargando...!';
-      const objeto ={
-        idordencompra: this.idOrdenC,
-        idusuario: constantesLocalStorage.idusuario
-      }
-  
-      const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
-        .subscribe({
-          next: (rpta:any) => {
-            console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
-              this.ordenCompra = rpta.ordencompra[0];     
-              //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
-              if (rpta.ordencompra[0].items !== undefined) {
-                this.lstItemOC = rpta.ordencompra[0].items;
-              }  
-              if (rpta.ordencompra[0].quotes !== undefined) {
-                this.lstQuotes =  rpta.ordencompra[0].quotes; 
-              } 
-              if (rpta.ordencompra[0].cuotas !== undefined) {
-                this.listaCuotas =  rpta.ordencompra[0].cuotas; 
-              }   
-   
-            this.visibleDocument = false; 
-            this.visibleAsiento = false;
-  
-            this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-            this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
-            //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
-            this.s_monto = rpta.ordencompra[0].s_monto;
-          this.s_igv = rpta.ordencompra[0].s_igv;
-            this.montoTotal = rpta.ordencompra[0].s_monto_total;
-            this.mostrarBotones(rpta.ordencompra[0].estado); 
-            this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);     
-            this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
-            this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
-            this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision );   
-            this.nrocuotas = rpta.ordencompra[0].nrocuotas
-            this.setSpinner(false);
-          },
-          error:(err)=>{
-              this.setSpinner(false);
-              this.serviceSharedApp.messageToast()
-          },
-          complete:() => {
-            this.setSpinner(false);
-            
-          }
-        });
-      this.$listSubcription.push($cargarOrdenC)
-    }
-  
-
-  procesarTRX() { 
+  traerUno2() {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Cargando...!';
     const objeto = {
-        idtrx: 137,
-        idusuario: constantesLocalStorage.idusuario,
-        descripcion: 'ok',
-        iddocumentoprc: this.idOrdenC,
+      idordencompra: this.idOrdenC,
+      idusuario: constantesLocalStorage.idusuario
+    }
+
+    const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+          this.ordenCompra = rpta.ordencompra[0];
+          //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
+          if (rpta.ordencompra[0].items !== undefined) {
+            this.lstItemOC = rpta.ordencompra[0].items;
+          }
+          if (rpta.ordencompra[0].quotes !== undefined) {
+            this.lstQuotes = rpta.ordencompra[0].quotes;
+          }
+          if (rpta.ordencompra[0].cuotas !== undefined) {
+            this.listaCuotas = rpta.ordencompra[0].cuotas;
+          }
+
+          this.visibleDocument = false;
+          this.visibleAsiento = false;
+
+          this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
+          //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
+          this.s_monto = rpta.ordencompra[0].s_monto;
+          this.s_igv = rpta.ordencompra[0].s_igv;
+          this.montoTotal = rpta.ordencompra[0].s_monto_total;
+          this.mostrarBotones(rpta.ordencompra[0].estado);
+          this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);
+          this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
+          this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
+          this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision);
+          this.nrocuotas = rpta.ordencompra[0].nrocuotas
+          this.setSpinner(false);
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+
+        }
+      });
+    this.$listSubcription.push($cargarOrdenC)
+  }
+
+
+  procesarTRX() {
+    const objeto = {
+      idtrx: 137,
+      idusuario: constantesLocalStorage.idusuario,
+      descripcion: 'ok',
+      iddocumentoprc: this.idOrdenC,
     }
 
     const $procesarTrx = this.ordencompraService.procesarTrx(objeto).subscribe({
-        next: (rpta: any) => {
-            console.log('prcReunion', rpta);
-            if (rpta.procesoSwitch === 0) {
-                console.log('entro procesoSwitch....');
-                this.onlyRead = true;
-            }
+      next: (rpta: any) => {
+        console.log('prcReunion', rpta);
+        if (rpta.procesoSwitch === 0) {
+          console.log('entro procesoSwitch....');
+          this.onlyRead = true;
+        }
 
-            this.serviceSharedApp.messageToast({
-                severity: rpta.procesoSwitch === "0" ? 'success' : 'info',
-                summary: rpta.procesoSwitch === "0" ? 'Exito' : 'Validación...!',
-                detail: rpta.mensaje
-            });
-        },
-        error: (err) => {
-            console.error('error : ', err);
-            this.serviceSharedApp.messageToast();
-        },
-        complete: () => {},
+        this.serviceSharedApp.messageToast({
+          severity: rpta.procesoSwitch === "0" ? 'success' : 'info',
+          summary: rpta.procesoSwitch === "0" ? 'Exito' : 'Validación...!',
+          detail: rpta.mensaje
+        });
+      },
+      error: (err) => {
+        console.error('error : ', err);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => { },
     });
     this.$listSubcription.push($procesarTrx)
-}
+  }
 
-  servicioGenerico(){
+  servicioGenerico() {
     //this.registerFormRegistro.get('condicionescomerciales').setValue(''); 
-    
+
     this.comprasService.obtenerItemsTabla(109).subscribe({
       next: (rpta: any) => {
 
@@ -664,50 +672,50 @@ createFormRegistro() {
         //this.registerFormRegistro.get('condicionescomerciales').setValue(_condicionescomerciales[0].valoritem);
       },
       error: (err) => {
-      console.info('error : ', err);
-      this.serviceSharedApp.messageToast()
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
       },
       complete: () => {
       },
-  });
+    });
   }
 
   listarItemsTabla() {
     this.comprasService.obtenerItemsTabla(114).subscribe({
-        next: (rpta: any) => {
-          console.info('listarItemsTabla : ', rpta);
-            this.lstTermino = rpta;
-        },
-        error: (err) => {
+      next: (rpta: any) => {
+        console.info('listarItemsTabla : ', rpta);
+        this.lstTermino = rpta;
+      },
+      error: (err) => {
         console.info('error : ', err);
         this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
+      },
+      complete: () => {
+      },
     });
-  
+
   }
 
   listarItemsTablaUnidad() {
     this.comprasService.obtenerItemsTabla(107).subscribe({
-        next: (rpta: any) => {
-          console.info('listarItemsTabla : ', rpta);
-            this.lstUnidades = rpta;
-        },
-        error: (err) => {
+      next: (rpta: any) => {
+        console.info('listarItemsTabla : ', rpta);
+        this.lstUnidades = rpta;
+      },
+      error: (err) => {
         console.info('error : ', err);
         this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-    });    
-  } 
+      },
+      complete: () => {
+      },
+    });
+  }
 
   listaMonedas() {
     const $listaMonedas = this.proyectosService.obtenerMonedas().subscribe({
       next: (rpta: any) => {
         console.log('listaMonedas', rpta);
-        this.lstMonedas = rpta;       
+        this.lstMonedas = rpta;
       },
       error: (err) => {
         this.serviceSharedApp.messageToast()
@@ -720,50 +728,50 @@ createFormRegistro() {
   }
 
   listaClientes() {
-    let tiporol ="CLI";
+    let tiporol = "CLI";
     this.proyectosService.obtenerClientes(tiporol).subscribe({
-        next: (rpta: any) => {
+      next: (rpta: any) => {
         this.lstCliente = rpta;
         console.log('listaClientes', this.lstCliente);
-        },
-        error: (err) => {
-        this.messageService.clear();
-        this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: mensajesQuestion.msgErrorGenerico,
-        });
-        },
-        complete: () => {
-        },
-    });
-  }
-
-  listaProyectoTipo(){
-    this.ordencompraService.tipoProyectoList().subscribe({
-      next: (rpta: any) => {
-      this.lstOrigen = rpta.filter((x: { idtipoproyecto: number; }) => x.idtipoproyecto === 1);
-      const objeto = {
-        idtipoproyecto: 4,
-        nomtipoproyecto: 'Otros',
-        codproceso:'OTR'
-      }
-      this.lstOrigen.unshift(objeto);
       },
       error: (err) => {
-      this.messageService.clear();
-      this.messageService.add({
+        this.messageService.clear();
+        this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: mensajesQuestion.msgErrorGenerico,
-      });
+        });
       },
       complete: () => {
       },
-  });
+    });
   }
-   
-  getItem(data: any,index: number) {
+
+  listaProyectoTipo() {
+    this.ordencompraService.tipoProyectoList().subscribe({
+      next: (rpta: any) => {
+        this.lstOrigen = rpta.filter((x: { idtipoproyecto: number; }) => x.idtipoproyecto === 1);
+        const objeto = {
+          idtipoproyecto: 4,
+          nomtipoproyecto: 'Otros',
+          codproceso: 'OTR'
+        }
+        this.lstOrigen.unshift(objeto);
+      },
+      error: (err) => {
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+        });
+      },
+      complete: () => {
+      },
+    });
+  }
+
+  getItem(data: any, index: number) {
     data.nroindex = index;
     data.idordencompra = this.idOrdenC;
     data.origenreg = 'RV';
@@ -776,16 +784,16 @@ createFormRegistro() {
       width: '40%'
     });
     refItem.onClose.subscribe((rpta: any) => {
-      
-      console.log('onClose',rpta);
+
+      console.log('onClose', rpta);
       if (rpta != undefined) {
-          const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == index))
-          if (_posAll != -1) {
-            this.lstItemOC.splice(_posAll, 1)
-          }
-          console.log('getItem',rpta.objeto);
+        const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == index))
+        if (_posAll != -1) {
+          this.lstItemOC.splice(_posAll, 1)
+        }
+        console.log('getItem', rpta.objeto);
         this.lstItemOC.push(rpta.objeto);
-        console.log('this.lstItemOC',this.lstItemOC);
+        console.log('this.lstItemOC', this.lstItemOC);
       }
     });
   }
@@ -794,127 +802,127 @@ createFormRegistro() {
     this.confirmationService.confirm({
       key: 'confirm1',
       header: 'Confirmación',
-      message:  '¿Desea Eliminar Item ' + '<b>' + data.descripcion + '</b>' + '?' ,
+      message: '¿Desea Eliminar Item ' + '<b>' + data.descripcion + '</b>' + '?',
       accept: () => {
         if (data.idordencompra > 0) {
           const _posAll: number = this.lstItemOC.findIndex((x => x.idordencompraitem == data.idordencompraitem))
           if (_posAll != -1) {
-          this.lstItemOC.splice(_posAll, 1)
+            this.lstItemOC.splice(_posAll, 1)
           }
-      }else{
+        } else {
           const _posAll: number = this.lstItemOC.findIndex((x => x.idnvoitem == data.idnvoitem))
           if (_posAll != -1) {
-          this.lstItemOC.splice(_posAll, 1)
+            this.lstItemOC.splice(_posAll, 1)
           }
-      }
-      if (this.lstItemOC.length === 0) {
-        this.registerFormRegistro.get('nrocuota')?.setValue(0);
-        this.nrocuotas = 0;
-        this.listaCuotas=[];
+        }
+        if (this.lstItemOC.length === 0) {
+          this.registerFormRegistro.get('nrocuota')?.setValue(0);
+          this.nrocuotas = 0;
+          this.listaCuotas = [];
 
-        this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(0);
-        this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(0);
-        this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(0);
-        this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue('');
-        this.registerFormRegistro.get('monto_pen_pago')?.setValue(0);
+          this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(0);
+          this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(0);
+          this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(0);
+          this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue('');
+          this.registerFormRegistro.get('monto_pen_pago')?.setValue(0);
 
-        /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
-        this.s_monto = 0;
-        this.s_igv = 0;
-        this.montoTotal = 0;
-      }else{
+          /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
+          this.s_monto = 0;
+          this.s_igv = 0;
+          this.montoTotal = 0;
+        } else {
+        }
+
       }
-      
-      }
-  });
+    });
   }
-  
-  NuevoPersona(){
+
+  NuevoPersona() {
     const objet = {
-      idrolpersona:'PRO'
-          }
+      idrolpersona: 'PRO'
+    }
 
-     const refItem = this.dialogService.open(CModalPersonaComponent, {
-     
-       data: objet,
-       header: "Agregar Cliente",
-       closeOnEscape: false,
-       styleClass: 'testDialog',
-       width: '40%'
-     });
-     refItem.onClose.subscribe((rpta: any) => {
-       
-       console.log('onClose',rpta);
-       if (rpta != undefined) {
-         this.listaClientes();
-         this.registerFormRegistro.get('nrodocumento').setValue(parseInt(rpta.objeto.nrodocumento));
-         this.registerFormRegistro.get('idproveedor').setValue(parseInt(rpta.objeto.idpersona));     
-         this.registerFormRegistro.get('direccion').setValue(rpta.objeto.direcresumen);
-       }
-     });
-   }
+    const refItem = this.dialogService.open(CModalPersonaComponent, {
 
-  vistaPreliminar(){
+      data: objet,
+      header: "Agregar Cliente",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+
+      console.log('onClose', rpta);
+      if (rpta != undefined) {
+        this.listaClientes();
+        this.registerFormRegistro.get('nrodocumento').setValue(parseInt(rpta.objeto.nrodocumento));
+        this.registerFormRegistro.get('idproveedor').setValue(parseInt(rpta.objeto.idpersona));
+        this.registerFormRegistro.get('direccion').setValue(rpta.objeto.direcresumen);
+      }
+    });
+  }
+
+  vistaPreliminar() {
     this.setSpinner(true);
     this.mensajeSpinner = 'Descargando Vista Preliminar...!';
 
     const objeto = {
-      idusuario : constantesLocalStorage.idusuario,
+      idusuario: constantesLocalStorage.idusuario,
       iddocumentoprc: this.idOrdenC,
       codtipoprc: 6
     }
 
     const $cargarOrdenC = this.ordencompraService.prcDocumento(objeto).subscribe({
       next: (rpta: any) => {
-        this.setSpinner(false);      
-        
+        this.setSpinner(false);
+
         const mediaType = 'application/pdf';
-          const blob = new Blob([rpta.body], { type: mediaType });
-          const filename = this.idOrdenC + '-OC';
-  
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = filename;
-          document.body.appendChild(a);
-          a.target = '_blank';
-          a.click();
+        const blob = new Blob([rpta.body], { type: mediaType });
+        const filename = this.idOrdenC + '-OC';
 
-          window.open(url);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.target = '_blank';
+        a.click();
 
-          setTimeout(() => {
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(url);
-          }, 100);
+        window.open(url);
+
+        setTimeout(() => {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 100);
       },
-          error: (err) => {
-            this.setSpinner(false);
-          this.messageService.clear();
-          this.messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: mensajesQuestion.msgErrorGenerico,
-          });
+      error: (err) => {
+        this.setSpinner(false);
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+        });
       },
-          complete: () => {
+      complete: () => {
       },
     });
     this.$listSubcription.push($cargarOrdenC)
   }
- 
-  importarPlantilla(){
+
+  importarPlantilla() {
     this.listarTipoProducto();
     this.listarMarcas();
     this.idtipoprod = null;
     this.idmarca = null;
-    this.verImportar= true;
+    this.verImportar = true;
     this.itemVisible = true;
   }
 
-  disabelImportar(){
-    console.log(this.idtipoprod , this.idmarca)
+  disabelImportar() {
+    console.log(this.idtipoprod, this.idmarca)
     if (this.idtipoprod != null && this.idmarca != null) {
-      this.verImportar= false;
+      this.verImportar = false;
     }
   }
 
@@ -952,27 +960,24 @@ createFormRegistro() {
 
   }
 
-  validarDatos():boolean{
+  validarDatos(): boolean {
     let _error = false;
-    this.errorMensaje="";
+    this.errorMensaje = "";
     console.log('this.formValue...', this.registerFormRegistro.value);
 
-    if (!_error && (this.registerFormRegistro.value.nrodocumento === null ||this.registerFormRegistro.value.nrodocumento ==='' ))
-    {
-        this.errorMensaje="Ingresar RUC...!";
-        _error = true;
+    if (!_error && (this.registerFormRegistro.value.nrodocumento === null || this.registerFormRegistro.value.nrodocumento === '')) {
+      this.errorMensaje = "Ingresar RUC...!";
+      _error = true;
     }
 
-    if (!_error && (this.registerFormRegistro.value.idproveedor === null || this.registerFormRegistro.value.idproveedor === ''))
-    {
-        this.errorMensaje="Buscar Proveedor por RUC...!";
-        _error = true;
+    if (!_error && (this.registerFormRegistro.value.idproveedor === null || this.registerFormRegistro.value.idproveedor === '')) {
+      this.errorMensaje = "Buscar Proveedor por RUC...!";
+      _error = true;
     }
 
-    if (!_error && (this.registerFormRegistro.value.tipodoc_ctb === '' || this.registerFormRegistro.value.tipodoc_ctb === null))
-    {
-        this.errorMensaje="Seleccionar Tipo de Documento...!";
-        _error = true;
+    if (!_error && (this.registerFormRegistro.value.tipodoc_ctb === '' || this.registerFormRegistro.value.tipodoc_ctb === null)) {
+      this.errorMensaje = "Seleccionar Tipo de Documento...!";
+      _error = true;
     }
 
     // if (!_error && (this.registerFormRegistro.value.nroserie_ctb === '' || this.registerFormRegistro.value.nroserie_ctb === null))
@@ -980,103 +985,94 @@ createFormRegistro() {
     //     this.errorMensaje="Ingresar Serie de Documento...!";
     //     _error = true;
     // }
-  
+
     // if (!_error && (this.registerFormRegistro.value.nrodocumento_ctb === '' || this.registerFormRegistro.value.nrodocumento_ctb === null))
     //   {
     //       this.errorMensaje="Ingresar Número de Documento...!";
     //       _error = true;
     //   }
 
-      if (!_error && (this.registerFormRegistro.value.codformapago === '' || this.registerFormRegistro.value.codformapago === null))
-        {
-            this.errorMensaje="Ingresar Forma de Pago...!";
-            _error = true;
-        }
+    if (!_error && (this.registerFormRegistro.value.codformapago === '' || this.registerFormRegistro.value.codformapago === null)) {
+      this.errorMensaje = "Ingresar Forma de Pago...!";
+      _error = true;
+    }
 
-        // if (!_error && (this.registerFormRegistro.value.porc_detraccion === '' || this.registerFormRegistro.value.porc_detraccion === null))
-        //   {
-        //       this.errorMensaje="Ingresar % Detracción...!";
-        //       _error = true;
-        //   }
+    // if (!_error && (this.registerFormRegistro.value.porc_detraccion === '' || this.registerFormRegistro.value.porc_detraccion === null))
+    //   {
+    //       this.errorMensaje="Ingresar % Detracción...!";
+    //       _error = true;
+    //   }
 
-    if (!_error && this.registerFormRegistro.value.idmoneda === null)
-    {
-          this.errorMensaje="Seleccionar Moneda...!";
-          _error = true;
+    if (!_error && this.registerFormRegistro.value.idmoneda === null) {
+      this.errorMensaje = "Seleccionar Moneda...!";
+      _error = true;
     }
 
     if (this.registerFormRegistro.value.idmoneda !== 1) {
-      if (!_error && (this.registerFormRegistro.value.tc === null || this.registerFormRegistro.value.tc === ''|| this.registerFormRegistro.value.tc === 0))
-        {
-              this.errorMensaje="Ingresar Tipo Cambio...!";
-              _error = true;
-        }
+      if (!_error && (this.registerFormRegistro.value.tc === null || this.registerFormRegistro.value.tc === '' || this.registerFormRegistro.value.tc === 0)) {
+        this.errorMensaje = "Ingresar Tipo Cambio...!";
+        _error = true;
+      }
     }
 
-    if (!_error && this.registerFormRegistro.value.fel_sunat_transaction === null)
-      {
-            this.errorMensaje="Seleccionar Transacción...!";
-            _error = true;
-      }   
-      
-      
-      if (!_error && this.registerFormRegistro.value.inddetraccion_ctb)
-        {
-          if (!_error &&(this.registerFormRegistro.value.porc_detraccion === null 
-            || this.registerFormRegistro.value.porc_detraccion === '' 
-            || this.registerFormRegistro.value.porc_detraccion === 0))
-            {
-                  this.errorMensaje="Ingresar Porcentaje Detracción...!";
-                  _error = true;
-            }
+    if (!_error && this.registerFormRegistro.value.fel_sunat_transaction === null) {
+      this.errorMensaje = "Seleccionar Transacción...!";
+      _error = true;
+    }
 
-          if (!_error && (this.registerFormRegistro.value.detraccion_tipo === null || this.registerFormRegistro.value.detraccion_tipo === 0))
-            {
-                  this.errorMensaje="Seleccionar Tipo Detracción...!";
-                  _error = true;
-            }
 
-          if (!_error && (this.registerFormRegistro.value.detraccion_tipo_pago === null || this.registerFormRegistro.value.detraccion_tipo_pago === 0))
-            {
-                  this.errorMensaje="Seleccionar Tipo Pago...!";
-                  _error = true;
-            }
-        } 
+    if (!_error && this.registerFormRegistro.value.inddetraccion_ctb) {
+      if (!_error && (this.registerFormRegistro.value.porc_detraccion === null
+        || this.registerFormRegistro.value.porc_detraccion === ''
+        || this.registerFormRegistro.value.porc_detraccion === 0)) {
+        this.errorMensaje = "Ingresar Porcentaje Detracción...!";
+        _error = true;
+      }
 
-        if (!_error && this.registerFormRegistro.value.fel_sunat_transaction === 4) {
-          if (!_error && (this.registerFormRegistro.value.monto_anticipo === null 
-            || this.registerFormRegistro.value.monto_anticipo === ''
-            || this.registerFormRegistro.value.monto_anticipo === 0))
-            {
-                  this.errorMensaje="Ingresar Monto Anticipo...!";
-                  _error = true;
-            }
-        }
+      if (!_error && (this.registerFormRegistro.value.detraccion_tipo === null || this.registerFormRegistro.value.detraccion_tipo === 0)) {
+        this.errorMensaje = "Seleccionar Tipo Detracción...!";
+        _error = true;
+      }
 
-      // if (this.idOrdenC > 0) {
-      //   let total = this.listaCuotas.map(({monto}) => monto).reduce((acc, value) => acc + value, 0);
-      //   console.log('total', total);
-      //   console.log('monto_pen_pago', this.registerFormRegistro.value.monto_pen_pago);
-      //   if (total > this.registerFormRegistro.value.monto_pen_pago) {
-          
-      //         this.errorMensaje="El Monto de cuotas no debe exceder el Monto Neto Pago...!";
-      //             _error = true;
-      //   }
-      // }
-    
+      if (!_error && (this.registerFormRegistro.value.detraccion_tipo_pago === null || this.registerFormRegistro.value.detraccion_tipo_pago === 0)) {
+        this.errorMensaje = "Seleccionar Tipo Pago...!";
+        _error = true;
+      }
+    }
+
+    if (!_error && this.registerFormRegistro.value.fel_sunat_transaction === 4) {
+      if (!_error && (this.registerFormRegistro.value.monto_anticipo === null
+        || this.registerFormRegistro.value.monto_anticipo === ''
+        || this.registerFormRegistro.value.monto_anticipo === 0)) {
+        this.errorMensaje = "Ingresar Monto Anticipo...!";
+        _error = true;
+      }
+    }
+
+    // if (this.idOrdenC > 0) {
+    //   let total = this.listaCuotas.map(({monto}) => monto).reduce((acc, value) => acc + value, 0);
+    //   console.log('total', total);
+    //   console.log('monto_pen_pago', this.registerFormRegistro.value.monto_pen_pago);
+    //   if (total > this.registerFormRegistro.value.monto_pen_pago) {
+
+    //         this.errorMensaje="El Monto de cuotas no debe exceder el Monto Neto Pago...!";
+    //             _error = true;
+    //   }
+    // }
+
 
     return _error;
-    }
+  }
 
-  getBusquedaRUC(){
-    const _nro =  this.registerFormRegistro.get('nrodocumento')?.value;
-    console.log('getBusquedaRUC...', _nro); 
+  getBusquedaRUC() {
+    const _nro = this.registerFormRegistro.get('nrodocumento')?.value;
+    console.log('getBusquedaRUC...', _nro);
 
-    if(_nro === null || _nro === ''){
-      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Ingresar Ruc...' });
+    if (_nro === null || _nro === '') {
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Ingresar Ruc...' });
       return;
     }
-    console.log('length...', _nro.length); 
+    console.log('length...', _nro.length);
     /*if(_nro.length < 11){
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Ruc no Valido...' });
       return;
@@ -1093,64 +1089,64 @@ createFormRegistro() {
       next: (rpta: any) => {
         debugger
         this.setSpinner(false);
-        console.log('rpta...', rpta); 
-        if(rpta.length === 0){
-          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Cliente no encontrado...' });
+        console.log('rpta...', rpta);
+        if (rpta.length === 0) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Cliente no encontrado...' });
           return;
-        }        
+        }
         this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
         this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);
       },
       error: (err) => {
         debugger
         this.setSpinner(false);
-      this.messageService.clear();
-      this.messageService.add({
+        this.messageService.clear();
+        this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: mensajesQuestion.msgErrorGenerico,
-          });
+        });
       },
       complete: () => {
       },
-  });
+    });
   }
 
   listarItemsTablaComprobante() {
     this.contabilidadService.listarItemsTablaSunat(2).subscribe({
       next: (rpta: any) => {
         console.info('listarItemsTablaComprobante : ', rpta);
-        this.lstComprobante  = rpta.filter((x: { codsunat: number; }) => (x.codsunat === 1 || x.codsunat === 2));
-          //this.lstComprobante = rpta;
+        this.lstComprobante = rpta.filter((x: { codsunat: number; }) => (x.codsunat === 1 || x.codsunat === 2));
+        //this.lstComprobante = rpta;
       },
       error: (err) => {
-      console.info('error : ', err);
-      this.serviceSharedApp.messageToast()
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
       },
       complete: () => {
       },
-  });     
+    });
   }
 
   editarRegistro(data: any) {
     this.mensajeSpinner = "Actualizando...";
-    console.log('editarRegistro...', data);   
+    console.log('editarRegistro...', data);
   }
 
   changeFechaDesde(event: Date) {
     this.minimaFechaHasta = event;
     console.log('changeFechaDesde event', event);
     let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
-    
+
     let vencimiento = this.registerFormRegistro.value.fecvencimiento;
     console.log('changeFechaDesde vencimiento', vencimiento);
     if (vencimiento.toString().length === 10) {
-      vencimiento = new Date(this.serviceUtilitario.formatFecha(vencimiento));    
+      vencimiento = new Date(this.serviceUtilitario.formatFecha(vencimiento));
     }
 
     console.log('emision', emision);
     console.log('vencimiento', vencimiento);
-    let diferenci = this.serviceUtilitario.diferenciaEnDias(emision,vencimiento);
+    let diferenci = this.serviceUtilitario.diferenciaEnDias(emision, vencimiento);
     console.log('diferenci', diferenci);
     // let inicio = emision.getTime();
     // let fin = vencimiento.getTime();
@@ -1163,14 +1159,14 @@ createFormRegistro() {
     let fecemision = this.registerFormRegistro.value.fecemision;
     console.log('fecemision changeFechaHasta', fecemision);
     if (fecemision.toString().length === 10) {
-      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
     }
-    
+
     this.maximaFechaDesde = event;
     let vencimiento = event;
 
     console.log('fecemision', fecemision, 'vencimiento', vencimiento);
-    let diferenci = this.serviceUtilitario.diferenciaEnDias(fecemision,vencimiento);
+    let diferenci = this.serviceUtilitario.diferenciaEnDias(fecemision, vencimiento);
     console.log('diferenci', diferenci);
     // let inicio = emision.getTime();
     // let fin = vencimiento.getTime();
@@ -1186,60 +1182,60 @@ createFormRegistro() {
   }
 
 
-  addDiasFec(){
+  addDiasFec() {
     let fecemision = this.registerFormRegistro.value.fecemision;
     if (fecemision.toString().length === 10) {
-      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));    
-    } 
+      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
+    }
 
     let fecha = this.addDays(fecemision, parseInt(this.registerFormRegistro.value.nrodias));
-    this.registerFormRegistro.get('fecvencimiento')?.setValue( fecha );
+    this.registerFormRegistro.get('fecvencimiento')?.setValue(fecha);
   }
 
 
-  setearDias(ven:any, emi:any){
-    let  vencimiento = new Date(this.serviceUtilitario.formatFecha(ven));
-    let  emision = new Date(this.serviceUtilitario.formatFecha(emi));
-    let diff= 0;
+  setearDias(ven: any, emi: any) {
+    let vencimiento = new Date(this.serviceUtilitario.formatFecha(ven));
+    let emision = new Date(this.serviceUtilitario.formatFecha(emi));
+    let diff = 0;
     if (emision.getTime() > vencimiento.getTime()) {
       diff = emision.getTime() - vencimiento.getTime()
-    }else{
+    } else {
       diff = vencimiento.getTime() - emision.getTime()
     }
-    this.registerFormRegistro.get('nrodias')?.setValue( diff/(1000*60*60*24) );
+    this.registerFormRegistro.get('nrodias')?.setValue(diff / (1000 * 60 * 60 * 24));
   }
 
-    getDatos(dato:any){
-      debugger
-        console.log('getDatos...', dato);
-        let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
-        this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
-        this.registerFormRegistro.get('direccion')?.setValue(provee[0].direcresumen);
-    }
+  getDatos(dato: any) {
+    debugger
+    console.log('getDatos...', dato);
+    let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
+    this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
+    this.registerFormRegistro.get('direccion')?.setValue(provee[0].direcresumen);
+  }
 
-    listarTransacciones() {
-      const $lstTransacciones = this.proyectosService.listarTrasacciones(this.idOrdenC).subscribe({
-        next: (rpta: any) => {
-          console.log('lstTransacciones', rpta);
-          this.lstTransacciones = rpta;       
-        },
-        error: (err) => {
-          this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
-      });
-      this.$listSubcription.push($lstTransacciones);
-  
-    }
+  listarTransacciones() {
+    const $lstTransacciones = this.proyectosService.listarTrasacciones(this.idOrdenC).subscribe({
+      next: (rpta: any) => {
+        console.log('lstTransacciones', rpta);
+        this.lstTransacciones = rpta;
+      },
+      error: (err) => {
+        this.serviceSharedApp.messageToast()
+      },
+      complete: () => {
+      },
+    });
+    this.$listSubcription.push($lstTransacciones);
+
+  }
 
   listarPAX() {
     console.log("data entrada: ", this.IA_data);
-    
+
     const objeto = {
       idreserva: this.IA_data.idordencompra,
       idprod: 0,
-      idusuario : constantesLocalStorage.idusuario,
+      idusuario: constantesLocalStorage.idusuario,
       indvig: true
     }
     const $listarPAX = this.serviceReserva.listarPAX(objeto)
@@ -1260,15 +1256,15 @@ createFormRegistro() {
     this.$listSubcription.push($listarPAX)
   }
 
-  eliminaPAX(item:any){
+  eliminaPAX(item: any) {
     console.log("eliminaPAX: ", item);
-    
+
     this.confirmationService.confirm({
       key: 'confirm1',
       header: 'Confirmación',
-      message:  '¿Desea Eliminar Item ' + '<b>' + item.razonsocial + '</b>' + '?' ,
+      message: '¿Desea Eliminar Item ' + '<b>' + item.razonsocial + '</b>' + '?',
       accept: () => {
-        const objeto = { 
+        const objeto = {
           iditempax: item.iditempax,
           idreserva: item.idreserva,
           idpersona: item.idpersona,
@@ -1276,40 +1272,40 @@ createFormRegistro() {
           idusuario: constantesLocalStorage.idusuario,
         }
 
-      const $eliminarPaxDel = this.serviceReserva.eliminarPaxDel(objeto)
-      .subscribe({
-        next: (rpta: any) => {
-          this.setSpinner(false);
-          console.log('rpta eliminarPaxDel: ', rpta);
-          this.serviceSharedApp.messageToast({
-            severity: rpta.resultProceso === "0" ? 'success' : 'info',
-            summary: rpta.resultProceso === "0" ? 'Exito' : 'Aviso...!',
-            detail: rpta.mensaje
+        const $eliminarPaxDel = this.serviceReserva.eliminarPaxDel(objeto)
+          .subscribe({
+            next: (rpta: any) => {
+              this.setSpinner(false);
+              console.log('rpta eliminarPaxDel: ', rpta);
+              this.serviceSharedApp.messageToast({
+                severity: rpta.resultProceso === "0" ? 'success' : 'info',
+                summary: rpta.resultProceso === "0" ? 'Exito' : 'Aviso...!',
+                detail: rpta.mensaje
+              });
+              this.listarPAX();
+            },
+            error: (err) => {
+              this.setSpinner(false);
+              this.serviceSharedApp.messageToast()
+            },
+            complete: () => {
+              this.setSpinner(false);
+            }
           });
-          this.listarPAX();
-        },
-        error: (err) => {
-          this.setSpinner(false);
-          this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-          this.setSpinner(false);
-        }
-      });
-      this.$listSubcription.push($eliminarPaxDel)
+        this.$listSubcription.push($eliminarPaxDel)
       }
     });
   }
 
-  clientePAX(){
+  clientePAX() {
     const objet = {
       idreserva: this.IA_data.idordencompra,
       idprod: 0,
-      idrolpersona:'PRO'
+      idrolpersona: 'PRO'
     }
 
     const refItem = this.dialogService.open(CmPersonaPaxComponent, {
-    
+
       data: objet,
       header: "Agregar Cliente PAX",
       closeOnEscape: false,
@@ -1317,21 +1313,21 @@ createFormRegistro() {
       width: '40%'
     });
     refItem.onClose.subscribe((rpta: any) => {
-      console.log('onClose',rpta);
+      console.log('onClose', rpta);
       if (rpta != undefined) {
         this.listarPAX();
       }
     });
   }
 
-  getListarPagos(){
+  getListarPagos() {
     debugger
-    const {idordencompra: iddocumentoprc_origen} = this.IA_data;
+    const { idordencompra: iddocumentoprc_origen } = this.IA_data;
     console.log("iddocumentoprc_origen recibido: ", iddocumentoprc_origen);
-    
+
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-    
+
     const objeto = {
       ...this.registerFormPago.value,
       idtipodocprc: 6,
@@ -1340,17 +1336,17 @@ createFormRegistro() {
     console.log("objeto recibido: ", objeto);
     const $getListarOrdenCompra = this.proyectosService.ordenCompraList(objeto)
       .subscribe({
-        next: (rpta:any) => {
-            this.setSpinner(false);
-            console.log('rpta getListar', rpta);
-            if(rpta.length === 0){ return }
-            this.lstPagos = rpta.ordenescompra              
+        next: (rpta: any) => {
+          this.setSpinner(false);
+          console.log('rpta getListar', rpta);
+          if (rpta.length === 0) { return }
+          this.lstPagos = rpta.ordenescompra
         },
-        error:(err)=>{
-            this.setSpinner(false);
-            this.serviceSharedApp.messageToast()
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
         },
-        complete:() => {
+        complete: () => {
           this.setSpinner(false);
         }
       });
@@ -1361,13 +1357,13 @@ createFormRegistro() {
     console.log("lstItemOC : ", this.lstItemOC);
     console.log("selectedDetalle : ", this.selectedDetalle);
 
-    if(this.selectedDetalle.length === 0){
+    if (this.selectedDetalle.length === 0) {
       this.messageService.clear();
-      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail:'Seleccionar al menos un item...' });
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
       return
     }
 
-    const {idordencompra} = this.IA_data;
+    const { idordencompra } = this.IA_data;
     const data = {
       idordencompra,
       idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
@@ -1396,4 +1392,236 @@ createFormRegistro() {
       });
     });
   }
+
+  onVer(data: any) {
+    console.log("onVer data : ", data);
+
+    this.dataPrc = {
+      idordencompra: data.idordencompra,
+      idproveedor: data.idproveedor,
+      paramReg: 'V'
+    }
+    this.tituloDetalle = "Ver Factura N° " + data.nrofactura;
+    this.vistaLista = false;
+    this.visDetalle = true;
+    this.visQuote = false;
+  }
+
+  onEditar(data: any) {
+    console.log("onEditar data : ", data);
+    this.dataPrc = {
+      idordencompra: data.idordencompra,
+      idproveedor: data.idproveedor,
+      paramReg: 'E'
+    }
+    this.tituloDetalle = "Editar Factura N° " + data.nrofactura;
+    this.vistaLista = false;
+    this.visDetalle = true;
+    this.visQuote = false;
+  }
+
+  onVerDetalle(data: any) {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Descargando Detalle...!';
+
+    const objeto = {
+      idusuario: constantesLocalStorage.idusuario,
+      iddocumentoprc: data.idordencompra,
+      codtipoprc: 6,
+      idplantilla: 0
+    }
+
+    const $cargarOrdenC = this.ordencompraService.prcDocumentoDet(objeto).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+
+        const mediaType = 'application/pdf';
+        const blob = new Blob([rpta.body], { type: mediaType });
+        const filename = 'DET_FACT_VENTA_' + data.nrofactura;
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.target = '_blank';
+        a.click();
+
+        window.open(url);
+
+        setTimeout(() => {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        }, 100);
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+        });
+      },
+      complete: () => {
+      },
+    });
+    this.$listSubcription.push($cargarOrdenC)
+  }
+
+  toggleMenu(event: Event, data: any) {
+    if (data.acciones) {
+      this.cargarMenu(data.acciones);
+      this.ordenCompra = data;
+      this.menu.toggle(event);
+    }
+  }
+
+  cargarMenu(data: any) {
+    this.menuItems = [];
+    data.forEach((item: any) => {
+      this.menuItems.push({
+        label: item.nomtrx,
+        icon: 'pi pi-cog',
+        command: () => this.onAccion(item)
+      })
+    });
+  }
+
+  onAccion(item: any) {
+    this.guardarOCFacturacion(item);
+  }
+
+  guardarOCFacturacion(item: any) {
+    let _fechaingreso;
+    let _fecemision;
+    let _fecvencimiento;
+    _fechaingreso = this.ordenCompra.fechaingreso;
+    _fecemision = this.ordenCompra.fecemision;
+    _fecvencimiento = this.ordenCompra.fecvencimiento;
+
+    if (_fechaingreso.toString().length === 10) {
+      _fechaingreso = new Date(this.serviceUtilitario.formatFecha(_fechaingreso));
+    }
+    if (_fecemision.toString().length === 10) {
+      _fecemision = new Date(this.serviceUtilitario.formatFecha(_fecemision));
+    }
+    if (_fecvencimiento.toString().length === 10) {
+      _fecvencimiento = new Date(this.serviceUtilitario.formatFecha(_fecvencimiento));
+    }
+
+    this.ordenCompra.fechaingreso = _fechaingreso;
+    this.ordenCompra.fecemision = _fecemision;
+    this.ordenCompra.fecvencimiento = _fecvencimiento;
+    this.ordenCompra.tipodoc_ctb = (this.ordenCompra.tipodoc_ctb).toString();
+
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjProcesando;
+
+    this.ordencompraService.ordenCompraprc(this.ordenCompra).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        if (rpta.procesoSwitch === 0) {
+          this.ordenCompra.idtrx = item.idtrx;
+          const ref = this.dialogService.open(CModalTransacComponent, {
+            data: this.ordenCompra,
+            header: item.nomtrx,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '40%'
+          });
+
+          ref.onClose.subscribe(() => {
+            this.getListarPagos();
+          });
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+        }
+      },
+      error: (err) => {
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+        });
+      },
+      complete: () => {
+      },
+    });
+  }
+
+  emitirDocumento(data: any) {
+    this.confirmationService.confirm({
+      key: 'confirm2',
+      header: 'Confirmación',
+      message: '¿Estás seguro de Enviar a SUNAT?...',
+      accept: () => {
+        this.setSpinner(true);
+        this.mensajeSpinner = "Enviando...!"
+
+        const objeto = {
+          codproceso: 0,
+          idusuario: constantesLocalStorage.idusuario,
+          idordendocumento: data.idordencompra,
+        }
+
+        const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
+          next: (rpta: any) => {
+            console.log('emitirDocumento', rpta);
+            this.setSpinner(false);
+            this.getListarPagos();
+
+            if (rpta.aceptada_por_sunat) {
+              this.messageService.add({ severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
+              return;
+            }
+
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.errors });
+          },
+          error: (err) => {
+            this.setSpinner(false);
+            console.error('error : ', err);
+            this.serviceSharedApp.messageToast();
+          },
+          complete: () => {
+            this.setSpinner(false);
+          },
+        });
+        this.$listSubcription.push($procesarTrx)
+      }
+    });
+  }
+
+  getSeverity(data: any) {
+    let color;
+    switch (data) {
+      case 0:
+        color = 'primary'
+        break;
+      case 1:
+        color = 'success'
+        break;
+      case 2:
+        color = 'danger'
+        break;
+      case 3:
+        color = 'warning'
+        break;
+      case 4:
+        color = 'danger'
+        break;
+      case 5:
+        color = 'warning'
+        break;
+    }
+    return color;
+  }
+
+  getBackFactura(){
+    this.vistaLista = true;
+    this.visDetalle = false;
+    this.visQuote = false;
+  }
+
 }
