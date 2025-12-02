@@ -131,6 +131,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     { codestadofel: 4, nomestadofel: 'ANULADO' },
     { codestadofel: 4, nomestadofel: 'EN PROCESO ANULACIÓN' }
   ];
+  dropdownItemsTipNro = [];
 
   constructor(
     private fb: FormBuilder,
@@ -165,6 +166,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     this.listarItemsTablaComprobante();
     this.listarPAX();
     this.getListarPagos();
+    this.listarTiposDoc();
 
     this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
     this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -303,6 +305,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       indmanualdetraccion: [{ value: false, disabled: false }],
       indsunatreg: [{ value: false, disabled: false }],
       //codctactble:[{ value: '0', disabled: false }],
+      idtipodoc: [{ value: '', disabled: false }]
     });
 
 
@@ -837,9 +840,10 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     });
   }
 
-  NuevoPersona() {
+  NuevoPersona(itemDocumento?: any) {
     const objet = {
-      idrolpersona: 'PRO'
+      idrolpersona: 'PRO',
+      ...itemDocumento
     }
 
     const refItem = this.dialogService.open(CModalPersonaComponent, {
@@ -1065,6 +1069,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   }
 
   getBusquedaRUC() {
+    const _idtipodoc = this.registerFormRegistro.get('idtipodoc')?.value;
     const _nro = this.registerFormRegistro.get('nrodocumento')?.value;
     console.log('getBusquedaRUC...', _nro);
 
@@ -1092,6 +1097,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
         console.log('rpta...', rpta);
         if (rpta.length === 0) {
           this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Cliente no encontrado...' });
+          this.NuevoPersona({ idtipodoc: _idtipodoc, nroDocumento: _nro });
           return;
         }
         this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
@@ -1618,10 +1624,33 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     return color;
   }
 
-  getBackFactura(){
+  getBackFactura() {
     this.vistaLista = true;
     this.visDetalle = false;
     this.visQuote = false;
+  }
+
+  listarTiposDoc() {
+    const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat('X')
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta listartipodocumentotablasunat: ', rpta);
+          this.dropdownItemsTipNro = rpta;
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { }
+      });
+    this.$listSubcription.push($listartipodocumentotablasunat)
+  }
+
+  cambioTipoDoc(dato: any) {
+    if (dato == 'RUC') {
+      //this.idtipodoc
+    } else {
+      //this.cliente.tipopersona == 'N';
+    }
   }
 
 }

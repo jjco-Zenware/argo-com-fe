@@ -66,13 +66,17 @@ esPersonaJuridica: boolean = false;
   get formCliente() { return this.registerFormCliente.controls; }
 
   ngOnInit(): void {
-    this.param = this.config.data;    
+    this.param = this.config.data;
+    console.log('Config data:', this.param);
+    
     this.createFormCliente();
     this.cambioTipoPer('N');
     this.listarItemsTabla();
     this.listarTiposDoc();
     console.log("esPersonaJuridica : ", this.esPersonaJuridica);
-    
+    if(this.param?.idtipodoc != null && this.param?.nroDocumento != null){
+        this.getBuscarPersonaPAX();
+    }
   }
 
   ngOnDestroy() {
@@ -90,8 +94,8 @@ esPersonaJuridica: boolean = false;
     tipoalta : [{ value: 'NOR', disabled: false }],
     indnacionalidad: [{ value: '1', disabled: false }, [Validators.required]],
     idpais: [{ value: '1', disabled: false }],
-    idtipodoc: [{ value: null, disabled: false }, [Validators.required]],
-    nrodocumento: [{ value: null, disabled: false }, [Validators.required]],
+    idtipodoc: [{ value: this.param?.idtipodoc || null, disabled: false }, [Validators.required]],
+    nrodocumento: [{ value: this.param?.nroDocumento || null, disabled: false }, [Validators.required]],
     appaterno: [{ value: null, disabled: false }, [Validators.required]],
     apmaterno: [{ value: null, disabled: false }, [Validators.required]],
     apcasada: [{ value: null, disabled: false }],

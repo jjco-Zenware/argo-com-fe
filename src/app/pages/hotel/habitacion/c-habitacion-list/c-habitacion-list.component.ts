@@ -36,9 +36,9 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   @ViewChild('menuFacturacion') menuFacturacion!: Menu;
   ordenHabitacion: any;
   vistaLista: boolean = true;
-  dataPrc:any;
-  visSeccionReserva : boolean = false;
-  visSeccionFacturacion : boolean = false;
+  dataPrc: any;
+  visSeccionReserva: boolean = false;
+  visSeccionFacturacion: boolean = false;
 
   constructor(
     public dialogService: DialogService,
@@ -115,6 +115,16 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
 
   getHabitacion(habitacion: any): void {
     console.log('Habitación seleccionada:', habitacion);
+    if (habitacion.idnrooperacion === 0) {
+      this.serviceSharedApp.messageToast({
+        severity: 'info',
+        summary: 'Aviso',
+        detail: 'La habitación no tiene una operación asociada.'
+      });
+      return;
+    }
+
+    this.onAccionFacturacion({idnrooperacion: habitacion.idnrooperacion})
   }
 
   toggleMenuAcciones(event: Event, data: any) {
@@ -202,7 +212,7 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     this.visSeccionFacturacion = false;
     this.dataPrc = {
       idordencompra: item.idnrooperacion,
-      paramReg:'E',
+      paramReg: 'E',
       visBtnFacturacion: true
     }
   }
@@ -238,15 +248,15 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     this.visSeccionFacturacion = true;
     this.dataPrc = {
       iddocumentoprc_origen: item.idnrooperacion,
-      paramReg:'E',
+      paramReg: 'E',
       visBtnFacturacion: true
     }
   }
 
-  getTransferenciaReserva(idnrooperacion:number){
+  getTransferenciaReserva(idnrooperacion: number) {
     console.log('getTransferenciaReserva:', idnrooperacion);
     const ref = this.dialogService.open(CmTransferenciaReservaComponent, {
-      data: {idnrooperacion, habitacionesAgrupadas: this.habitacionesAgrupadas},
+      data: { idnrooperacion, habitacionesAgrupadas: this.habitacionesAgrupadas },
       header: 'Transferencia de Reserva',
       closeOnEscape: false,
       styleClass: 'testDialog',

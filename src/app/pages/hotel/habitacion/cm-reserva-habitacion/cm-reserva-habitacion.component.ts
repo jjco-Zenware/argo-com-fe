@@ -11,6 +11,7 @@ import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/servic
 import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/modalPersona/c-modalpersona.component';
 import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
+import { ReservaService } from '../../reserva/reserva.service';
 
 @Component({
   selector: 'app-cm-reserva-habitacion',
@@ -41,6 +42,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   montoTotal: number = 0;
   lstQuotes: any[] = [];
   data: any;
+  dropdownItemsTipNro = [];
 
   constructor(
     private fb: FormBuilder,
@@ -54,15 +56,17 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     private ordencompraService: OrdencompraService,
     private proyectosService: ProyectosService,
     private contabilidadService: ContabilidadService,
+    private serviceReserva: ReservaService,
   ) { }
 
   ngOnInit(): void {
     this.data = this.config.data;
     console.log('data config: ', this.data);
-    
+
     this.createFrm();
     this.listaClientes();
     this.listarItemsTablaComprobante();
+    this.listarTiposDoc();
   }
 
   ngOnDestroy() {
@@ -86,7 +90,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd: [{ value: '', disabled: false }],
-      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
+      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: true, }],
       idordencompra: [{ value: 0, disabled: false }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: '', disabled: false }],
@@ -145,13 +149,19 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       retencion_base_imponible: [{ value: 0, disabled: false }],
       indmanualdetraccion: [{ value: false, disabled: false }],
       indsunatreg: [{ value: false, disabled: false }],
+      idtipodoc: [{ value: null, disabled: false }],
     });
   }
 
   getBusquedaRUC() {
+    const _idtipodoc = this.frmDatos.get('idtipodoc')?.value;
     const _nro = this.frmDatos.get('nrodocumento')?.value;
     console.log('getBusquedaRUC...', _nro);
 
+    if (_idtipodoc === null || _idtipodoc === '') {
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar Tipo Documento...' });
+      return;
+    }
     if (_nro === null || _nro === '') {
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Ingresar Ruc...' });
       return;
@@ -175,6 +185,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
         console.log('rpta...', rpta);
         if (rpta.length === 0) {
           this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Cliente no encontrado...' });
+          this.NuevoPersona({ idtipodoc: _idtipodoc, nroDocumento: _nro });
           return;
         }
         this.frmDatos.get('idproveedor')?.setValue(rpta[0].idcliente);
@@ -194,13 +205,15 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  NuevoPersona() {
+  NuevoPersona(itemDocumento?: any) {
     const objet = {
-      idrolpersona: 'PRO'
+      idrolpersona: 'PRO',
+      ...itemDocumento
     }
 
-    const refItem = this.dialogService.open(CModalPersonaComponent, {
+    console.log('NuevoPersona objet:', objet);
 
+    const refItem = this.dialogService.open(CModalPersonaComponent, {
       data: objet,
       header: "Agregar Cliente",
       closeOnEscape: false,
@@ -415,7 +428,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     }
     //}
 
-    let _lstItemOC:any[]=[]
+    let _lstItemOC: any[] = []
     if (this.lstItemOC.length !== 0) {
       for (let i = 0; i < this.lstItemOC.length; i++) {
         if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -727,6 +740,29 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       diff = vencimiento.getTime() - emision.getTime()
     }
     this.frmDatos.get('nrodias')?.setValue(diff / (1000 * 60 * 60 * 24));
+  }
+
+  listarTiposDoc() {
+    const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat('X')
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta listartipodocumentotablasunat: ', rpta);
+          this.dropdownItemsTipNro = rpta;
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { }
+      });
+    this.$listSubcription.push($listartipodocumentotablasunat)
+  }
+
+  cambioTipoDoc(dato: any) {
+    if (dato == 'RUC') {
+      //this.idtipodoc
+    } else {
+      //this.cliente.tipopersona == 'N';
+    }
   }
 
 }
