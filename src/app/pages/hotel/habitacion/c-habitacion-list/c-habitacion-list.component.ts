@@ -124,7 +124,7 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.onAccionFacturacion({idnrooperacion: habitacion.idnrooperacion})
+    this.onAccionReservas({idnrooperacion: habitacion.idnrooperacion})
   }
 
   toggleMenuAcciones(event: Event, data: any) {

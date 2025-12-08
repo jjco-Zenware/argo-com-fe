@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { c_habitacion, constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, OrdenCompraItem } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Subscription } from 'rxjs';
+import { map, Subscription } from 'rxjs';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/modalPersona/c-modalpersona.component';
@@ -43,6 +43,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   lstQuotes: any[] = [];
   data: any;
   dropdownItemsTipNro = [];
+  tituloTipoDocumento: string = 'Nro. Documento';
 
   constructor(
     private fb: FormBuilder,
@@ -153,6 +154,39 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     });
   }
 
+  getValidarNroDocumento():boolean {
+    const _idtipodoc = this.frmDatos.get('idtipodoc')?.value;
+    const _nro = this.frmDatos.get('nrodocumento')?.value;
+  
+    switch (_idtipodoc) {
+      case 'DNI':
+        if (_nro.length !== 8) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'DNI no Valido...' });
+          return false;
+        }
+        break;
+      case 'RUC':
+        if (_nro.length !== 11) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'RUC no Valido...' });
+          return false;
+        }
+        break;
+      case 'CEX':
+        if (_nro.length < 12 || _nro.length > 16) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Carnet de Extranjería no Valido...' });
+          return false;
+        }
+        break;
+      case 'PAS':
+        if (_nro.length < 12 || _nro.length > 16) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Pasaporte no Valido...' });
+          return false;
+        }
+        break;
+    }
+    return true;
+  }
+
   getBusquedaRUC() {
     const _idtipodoc = this.frmDatos.get('idtipodoc')?.value;
     const _nro = this.frmDatos.get('nrodocumento')?.value;
@@ -167,8 +201,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       return;
     }
     console.log('length...', _nro.length);
-    if (_nro.length < 11) {
-      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Ruc no Valido...' });
+    if (!this.getValidarNroDocumento()) {
       return;
     }
 
@@ -743,8 +776,14 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   }
 
   listarTiposDoc() {
+    const documentosValidos : string[] =['DNI', 'RUC', 'CEX', 'PAS'];
     const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat('X')
-      .subscribe({
+    .pipe(
+          map((rpta: any) => {
+            return rpta.filter((item: any) => item.idtipodoc && documentosValidos.includes(item.idtipodoc));
+          })
+        )    
+    .subscribe({
         next: (rpta: any) => {
           console.log('rpta listartipodocumentotablasunat: ', rpta);
           this.dropdownItemsTipNro = rpta;
@@ -757,12 +796,32 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($listartipodocumentotablasunat)
   }
 
-  cambioTipoDoc(dato: any) {
-    if (dato == 'RUC') {
-      //this.idtipodoc
-    } else {
-      //this.cliente.tipopersona == 'N';
+cambioTipoDoc(dato: any) {
+    console.log('cambioTipoDoc...', dato);
+
+    switch (dato) {
+      case 'DNI':
+        this.tituloTipoDocumento = 'Nro. Documento de Identidad (DNI)';
+        this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(8)]);
+        this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        break;
+      case 'RUC':
+        this.tituloTipoDocumento = 'Número de RUC';
+        this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
+        this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        break;  
+      case 'CEX':
+        this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
+        this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(16), Validators.maxLength(12)]);
+        this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        break;
+      case 'PAS':
+        this.tituloTipoDocumento = 'Número de Pasaporte (PAS)';
+        this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(16), Validators.maxLength(12)]);
+        this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        break;
     }
+
   }
 
 }
