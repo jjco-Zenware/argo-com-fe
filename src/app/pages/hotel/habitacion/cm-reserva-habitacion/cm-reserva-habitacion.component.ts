@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { c_habitacion, constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, OrdenCompraItem } from '@interfaces';
@@ -19,6 +20,7 @@ import { ReservaService } from '../../reserva/reserva.service';
   styleUrls: ['./cm-reserva-habitacion.component.scss']
 })
 export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
+  @ViewChild('nrodocumentoInput') nrodocumentoInput!: ElementRef;
   $listSubcription: Subscription[] = [];
   frmDatos!: FormGroup;
 
@@ -70,6 +72,14 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     this.listarTiposDoc();
   }
 
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      if (this.nrodocumentoInput) {
+        this.nrodocumentoInput.nativeElement.focus();
+      }
+    }, 300);
+  }
+
   ngOnDestroy() {
     if (this.$listSubcription != undefined) {
       this.$listSubcription.forEach((sub) => sub.unsubscribe());
@@ -114,7 +124,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       nrodocumento: [{ value: '', disabled: false }],
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       tc: [{ value: 0, disabled: false }],
-      tipodoc_ctb: [{ value: '', disabled: false }],
+      tipodoc_ctb: [{ value: 1, disabled: false }],
       nroserie_ctb: [{ value: '', disabled: false }],
       nrodocumento_ctb: [{ value: '', disabled: false }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
@@ -150,7 +160,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       retencion_base_imponible: [{ value: 0, disabled: false }],
       indmanualdetraccion: [{ value: false, disabled: false }],
       indsunatreg: [{ value: false, disabled: false }],
-      idtipodoc: [{ value: null, disabled: false }],
+      idtipodoc: [{ value: 'DNI', disabled: false }],
     });
   }
 

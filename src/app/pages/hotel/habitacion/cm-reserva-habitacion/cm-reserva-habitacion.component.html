@@ -29,7 +29,7 @@
             <div class="col-12 md:col-4">
                 <div class="field">
                     <label class="block text-900 font-medium">
-                        Tipo Documento <span class="text-red-500 font-bold">*</span>
+                        Comprobante <span class="text-red-500 font-bold">*</span>
                     </label>
                     <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb"
                         placeholder="Seleccione tipo documento" optionLabel="nomitemsunat" optionValue="codsunat"
@@ -94,7 +94,7 @@
                             tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
                         <input pInputText type="text" formControlName="nrodocumento" class="w-full" maxlength="11"
                             oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="Ingrese {{tituloTipoDocumento}}"
-                            (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" />
+                            (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" #nrodocumentoInput />
                     </span>
                 </div>
             </div>
