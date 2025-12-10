@@ -1,7 +1,7 @@
 export const environment = {
     production: false,
-    //webAPI: 'https://localhost:7050/api/',
-        webAPI: 'https://ion.net.pe/huascaran-backend/api/',
+    webAPI: 'https://localhost:7050/api/',
+    //webAPI: 'https://ion.net.pe/huascaran-backend/api/',
     msalConfig: {
         auth: {
             clientId: 'b65e275c-ca73-4aac-b3e3-fd74c0658fd8',

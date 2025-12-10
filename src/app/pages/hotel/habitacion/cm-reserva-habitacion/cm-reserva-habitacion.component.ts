@@ -211,6 +211,10 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     const objet = {
       nrodocumento: _nro
     }
+    let _tipopersona = '';
+    if (_idtipodoc === 'RUC') { 
+      _tipopersona = 'J';
+    }else { _tipopersona = 'N'; }
 
     this.ordencompraService.buscarporRUC(objet).subscribe({
       next: (rpta: any) => {
@@ -218,7 +222,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
         console.log('rpta...', rpta);
         if (rpta.length === 0) {
           this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Cliente no encontrado...' });
-          this.NuevoPersona({ idtipodoc: _idtipodoc, nroDocumento: _nro });
+          this.NuevoPersona({ idtipodoc: _idtipodoc, nroDocumento: _nro, tipopersona: _tipopersona });
           return;
         }
         this.frmDatos.get('idproveedor')?.setValue(rpta[0].idcliente);

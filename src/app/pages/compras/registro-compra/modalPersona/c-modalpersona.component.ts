@@ -77,6 +77,9 @@ esPersonaJuridica: boolean = false;
     if(this.param?.idtipodoc != null && this.param?.nroDocumento != null){
         this.getBuscarPersonaPAX();
     }
+
+    console.log("registerFormCliente - tipopersona: ", this.registerFormCliente.get('tipopersona')?.value);
+    this.cambioTipoPer(this.registerFormCliente.get('tipopersona')?.value);
   }
 
   ngOnDestroy() {
@@ -90,7 +93,7 @@ esPersonaJuridica: boolean = false;
     this.registerFormCliente = this.formBuilder.group({
     //idrolpersona: [{ value: this.param.idrolpersona, disabled: false }],
     idrolpersona: [{ value: "CLI", disabled: false }],
-    tipopersona :  [{ value: 'N', disabled: false }],
+    tipopersona :  [{ value: this.param?.tipopersona || null, disabled: false }],
     tipoalta : [{ value: 'NOR', disabled: false }],
     indnacionalidad: [{ value: '1', disabled: false }, [Validators.required]],
     idpais: [{ value: '1', disabled: false }],
