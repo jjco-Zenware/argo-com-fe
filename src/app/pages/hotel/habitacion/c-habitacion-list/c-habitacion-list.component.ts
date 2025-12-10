@@ -116,11 +116,11 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   getHabitacion(habitacion: any): void {
     console.log('Habitación seleccionada:', habitacion);
     if (habitacion.idnrooperacion === 0) {
-      this.serviceSharedApp.messageToast({
+      /*this.serviceSharedApp.messageToast({
         severity: 'info',
         summary: 'Aviso',
         detail: 'La habitación no tiene una operación asociada.'
-      });
+      });*/
       return;
     }
 

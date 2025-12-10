@@ -18,20 +18,21 @@
                         <div class="col-6 md:col-4 lg:col-3 xl:col-2"
                             *ngFor="let item of grupo.habitaciones; trackBy: trackByHabitacion">
                             <div class="habitacion-card border-1 border-round surface-border"
-                                pTooltip="{{item.tipoHabitacion}} - {{item.estadoHabitacion}}" tooltipPosition="top"
-                                (click)="getHabitacion(item)">
-                                <div class="habitacion-icon">
-                                    <i [class]="item.icono || 'pi pi-home'" [style.color]="item.color"></i>
-                                </div>
-                                <div class="habitacion-nombre">
-                                    <span>{{item.nomHabitacion}}</span>
-                                </div>
-                                <div class="habitacion-estado">
-                                    <span class="custom-badge" [style.backgroundColor]="item.color"
-                                        [style.color]="'#fff'">
-                                        {{item.estadoHabitacion}}
-                                    </span>
-                                </div>
+                                pTooltip="{{item.tipoHabitacion}} - {{item.estadoHabitacion}}" tooltipPosition="top">
+                                <section (click)="getHabitacion(item)">
+                                    <div class="habitacion-icon">
+                                        <i [class]="item.icono || 'pi pi-home'" [style.color]="item.color"></i>
+                                    </div>
+                                    <div class="habitacion-nombre">
+                                        <span>{{item.nomHabitacion}}</span>
+                                    </div>
+                                    <div class="habitacion-estado">
+                                        <span class="custom-badge" [style.backgroundColor]="item.color"
+                                            [style.color]="'#fff'">
+                                            {{item.estadoHabitacion}}
+                                        </span>
+                                    </div>
+                                </section>
                                 <p-divider></p-divider>
                                 <div class="habitacion-actions">
                                     <button pButton
