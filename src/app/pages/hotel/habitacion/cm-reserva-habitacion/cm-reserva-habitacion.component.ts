@@ -101,7 +101,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd: [{ value: '', disabled: false }],
-      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: true, }],
+      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: true, }],
       idordencompra: [{ value: 0, disabled: false }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: '', disabled: false }],
@@ -459,10 +459,13 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     let fechaingreso;
     let fecemision;
     let fecvencimiento;
-    fechaingreso = this.frmDatos.value.fechaingreso;
-    fecemision = this.frmDatos.value.fecemision;
-    fecvencimiento = this.frmDatos.value.fecvencimiento;
 
+    fechaingreso = this.frmDatos.getRawValue().fechaingreso;
+    fecemision = this.frmDatos.getRawValue().fecemision;
+    fecvencimiento = this.frmDatos.getRawValue().fecvencimiento;
+
+
+    debugger;
     //if (this.idOrdenC > 0) {
     if (fechaingreso.toString().length === 10) {
       fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
