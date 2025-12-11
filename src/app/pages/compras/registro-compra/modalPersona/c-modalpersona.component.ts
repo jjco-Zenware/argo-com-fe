@@ -70,7 +70,7 @@ esPersonaJuridica: boolean = false;
     console.log('Config data:', this.param);
     
     this.createFormCliente();
-    this.cambioTipoPer('N');
+    //this.cambioTipoPer('N');
     this.listarItemsTabla();
     this.listarTiposDoc();
     console.log("esPersonaJuridica : ", this.esPersonaJuridica);
