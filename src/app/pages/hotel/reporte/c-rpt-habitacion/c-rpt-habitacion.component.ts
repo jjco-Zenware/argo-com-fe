@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { mensajesSpinner } from '@constantes';
+import { DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
+import { CmReservaHabitacionComponent } from '../../habitacion/cm-reserva-habitacion/cm-reserva-habitacion.component';
 
 @Component({
   selector: 'app-c-rpt-habitacion',
@@ -13,8 +15,12 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
   dias: number[] = [];
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
+  vistaLista: boolean = true;
+  visSeccionReserva: boolean = false;
+  dataPrc: any;
 
-  constructor() { }
+  constructor(
+    public dialogService: DialogService,) { }
 
   ngOnInit() {
     this.loadData();
@@ -198,4 +204,60 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
     return habitacion.fechas.find((f: any) => f.nrodia === nrodia) || null;
   }
 
+  procesarReserva(item: any) {
+    console.log('Procesar reserva para:', item);
+    if (item.idoperacion) {
+      this.getReserva(item);
+    } else {
+      this.reservarHabitacion(item);
+    }
+  }
+
+  getReserva(item: any): void {
+    console.log('Habitación seleccionada:', item);
+
+    //this.onAccionReservas({idnrooperacion: habitacion.idnrooperacion})
+    this.vistaLista = false;
+    this.visSeccionReserva = true;
+    this.dataPrc = {
+      idordencompra: item.idoperacion,
+      paramReg: 'E',
+      visBtnFacturacion: true
+    }
+  }
+
+  reservarHabitacion(item: any) {
+    console.log('Reservar habitación:', item);
+    const ref = this.dialogService.open(CmReservaHabitacionComponent, {
+      data: item,
+      header: item.nomHabitacion,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+
+    ref.onClose.subscribe(() => {
+      this.loadData();
+      this.loadDias();
+      //this.obtenerData()
+    });
+  }
+
+  getBack() {
+    this.vistaLista = true;
+    this.loadData();
+    this.loadDias();
+    //this.obtenerData()
+  }
+
+  procesarSinFecha(item: any, dia: number) {
+    console.log('Procesar sin fecha para:', item);
+    console.log('Procesar sin fecha - dia:', dia);
+    const habitacionData = {
+      idprod: item.idhabitacion,
+      idtipoprod: 0,
+      nomHabitacion: item.deshabitacion
+    };
+    this.reservarHabitacion(habitacionData);
+  }
 }

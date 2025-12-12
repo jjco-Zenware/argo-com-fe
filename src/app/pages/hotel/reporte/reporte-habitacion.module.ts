@@ -13,6 +13,8 @@ import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { AlmacenModule } from '../../almacen/almacen.module';
 import { SharedAppService } from '@sharedAppService';
 import { ConfirmationService } from 'primeng/api';
+import { ReservaService } from '../reserva/reserva.service';
+import { ReservaModule } from '../reserva/reserva.module';
 
 
 @NgModule({
@@ -30,11 +32,13 @@ import { ConfirmationService } from 'primeng/api';
     AlmacenModule,
     InputNumberModule ,
     TagModule,
-    DropdownModule 
+    DropdownModule,
+    ReservaModule,
   ],
   providers: [
     SharedAppService, 
-    ConfirmationService
+    ConfirmationService,
+    ReservaService
   ]
 })
 export class ReporteHabitacionModule { }

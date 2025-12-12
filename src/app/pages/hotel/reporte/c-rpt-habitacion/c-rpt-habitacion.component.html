@@ -1,36 +1,67 @@
-<div class="p-datatable p-component custom-table-wrapper ">
-	<table class="p-datatable-table">
-		<thead class="p-datatable-thead">
-			<tr>
-				<th class="p-datatable-thead-cell p-text-center p-px-2" style="min-width: 180px; background: #f4f4f4;">Habitación</th>
-				<th *ngFor="let dia of dias" class="p-datatable-thead-cell p-text-center p-px-2" style="background: #f4f4f4;">{{ dia }}</th>
-			</tr>
-		</thead>
-		<tbody class="p-datatable-tbody">
-			<tr *ngFor="let habitacion of dataHabitaciones.habitaciones" class="p-datatable-row">
-				<td class="p-datatable-td p-px-2 p-py-2 p-text-bold" 
-						style="background: #f9fafb; border-right: 1px solid #e0e0e0; cursor: pointer;"
-						[attr.title]="habitacion.mensaje">
-					{{ habitacion.nrohabitacion }} - {{ habitacion.deshabitacion }}
-				</td>
-				<td *ngFor="let dia of dias" class="p-datatable-td p-px-1 p-py-1" style="border-right: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0;">
-					<ng-container *ngIf="getFechaInfo(habitacion, dia) as fechaInfo; else sindata">
-						<span
-							[style.background-color]="fechaInfo.color"
-							[attr.title]="fechaInfo.mensaje"
-							class="cell-content"
-							style="display: flex; align-items: center; justify-content: center; width: 100%; height: 32px; border-radius: 6px; cursor: pointer; color: #fff; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.04);"
-						>
-						</span>
-					</ng-container>
-					<ng-template #sindata>
-						<span style="display: block; height: 32px;"></span>
-					</ng-template>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+<ng-container *ngIf="vistaLista; else visSecciones">
+    <div class="p-datatable p-component custom-table-wrapper ">
+        <table class="p-datatable-table">
+            <thead class="p-datatable-thead">
+                <tr>
+                    <th class="p-datatable-thead-cell p-text-center p-px-2" style="background: #f4f4f4; border-bottom: none; min-width: 180px;"></th>
+                    <th class="p-datatable-thead-cell p-text-center p-px-1" 
+                        [attr.colspan]="dias.length" 
+                        style="background: #f4f4f4; border-bottom: none; min-width: 38px; max-width: 48px; width: 42px; text-align: center; font-size: 16px; font-weight: 700;">
+                        {{ dataHabitaciones.habitaciones?.[0]?.fechas?.[0]?.mes || '' }}
+                    </th>
+                </tr>
+                <tr>
+                    <th class="p-datatable-thead-cell p-text-center p-px-2"
+                        style="min-width: 180px; background: #f4f4f4;">
+                        Habitación</th>
+                    <th *ngFor="let dia of dias" class="p-datatable-thead-cell p-text-center p-px-1"
+                        style="background: #f4f4f4; min-width: 38px; max-width: 48px; width: 42px;">{{ dia }}</th>
+                </tr>
+            </thead>
+            <tbody class="p-datatable-tbody">
+                <tr *ngFor="let habitacion of dataHabitaciones.habitaciones" class="p-datatable-row">
+                    <td class="p-datatable-td p-px-2 p-py-2 p-text-bold"
+                        style="background: #f9fafb; border-right: 1px solid #e0e0e0; cursor: pointer;"
+                        [attr.title]="habitacion.mensaje">
+                        {{ habitacion.nrohabitacion }} - {{ habitacion.deshabitacion }}
+                    </td>
+                    <td *ngFor="let dia of dias" class="p-datatable-td p-px-0 p-py-1"
+                        style="border-right: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; min-width: 38px; max-width: 48px; width: 42px;">
+                        <ng-container *ngIf="getFechaInfo(habitacion, dia) as fechaInfo; else sindata">
+                            <span [style.background-color]="fechaInfo.color" [attr.title]="fechaInfo.mensaje"
+                                class="cell-content"
+                                style="display: flex; align-items: center; justify-content: center; width: 100%; height: 32px; border-radius: 6px; cursor: pointer; color: #fff; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.04);"
+                                (click)="procesarReserva(fechaInfo)">
+                            </span>
+                        </ng-container>
+                        <ng-template #sindata>
+                            <span style="display: block; height: 32px;" (click)="procesarSinFecha(habitacion, dia)"></span>
+                        </ng-template>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ng-container>
+<ng-template #visSecciones>
+    <ng-container *ngIf="visSeccionReserva">
+        <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
+            <div class="grid ">
+                <div class="flex justify-content-between col-12 gap-2">
+                    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
+                        <button pButton class="font-semibold p-button-outlined justify-content-center"
+                            icon="pi pi-backward" label="Regresar" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                            (click)="getBack()"></button>
+                    </div>
+                    <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                        <span class="text-lg font-semibold">RESERVA N° {{dataPrc.idordencompra}}</span>
+                    </div>
+                </div>
+            </div>
+            <app-c-reserva-det [IA_data]="dataPrc"></app-c-reserva-det>
+        </div>
+    </ng-container>
+</ng-template>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
 <p-toast></p-toast>

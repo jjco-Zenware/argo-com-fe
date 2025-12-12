@@ -416,6 +416,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (rpta: any) => {
           debugger
+          if(rpta.length === 0){ return }
           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
           this.ordenCompra = rpta.ordencompra[0];
           //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
