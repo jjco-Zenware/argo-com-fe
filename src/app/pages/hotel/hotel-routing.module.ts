@@ -26,6 +26,11 @@ const routes: Routes = [
     path: 'agenda',
     loadChildren: () => import('./agenda/agenda.module').then(m => m.AgendaModule),
     data: { breadcrumb: 'Agenda' }
+  },
+  {
+    path: 'reporte-habitacion',
+    loadChildren: () => import('./reporte/reporte-habitacion.module').then(m => m.ReporteHabitacionModule),
+    data: { breadcrumb: 'Reporte Habitación' }
   }
 ];
 
