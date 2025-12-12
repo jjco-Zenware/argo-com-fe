@@ -19,6 +19,7 @@ import { CmPersonaPaxComponent } from '../cm-persona-pax/cm-persona-pax.componen
 import { CmExcTransacReservaComponent } from '../cm-exc-transac-reserva/cm-exc-transac-reserva.component';
 import { Menu } from 'primeng/menu';
 import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-registro/modal-transac.component';
+import { CMAgregarProductoComponent } from '../cm-agregar-producto/cm-agregar-producto.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -1710,6 +1711,68 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
         break;
     }
 
+  }
+
+  getAgregarProducto() {
+    const data: any = {
+      nroindex: 0,
+      idordencompra: this.idOrdenC,
+      origenreg: 'RV',
+      idalmacen: 0
+    }
+    console.log('CMAgregarProductoComponent', data);
+    const refItem = this.dialogService.open(CMAgregarProductoComponent, {
+      data,
+      header: "Agregar Producto " + this.idOrdenC,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+
+      console.log('onClose', rpta);
+      if (rpta != undefined) {
+        /*const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == 0))
+        if (_posAll != -1) {
+          this.lstItemOC.splice(_posAll, 1)
+        }*/
+        console.log('getAgregarProducto', rpta.data);
+        const dataOC = {
+          idordencompraitem: 0,
+          idprod: rpta.data.idprod,
+          codproducto: rpta.data.codproducto,
+          descripcion: rpta.data.despro,
+          idunidad: 130,
+          nomunidad: "UNIDAD",
+          preciocosto: rpta.data.valorunit,
+          cantidad: rpta.data.cantidad,
+          preciocostototal: rpta.data.valorunit * rpta.data.cantidad,
+          idtipoprod: rpta.data.idtipoprod,
+          precioventa: 0,
+          precioventatotal: 0,
+          preprofit: 0,
+          idnvoitem: 0,
+          nroindex: 0,
+          nromeses: 0,
+          rutaubicacion: '',
+          coptipoexistencia: '',
+          nomtipoexistencia: '',
+          idfamilia: rpta.data.idfamilia,
+          idmarca: rpta.data.idmarca,
+          idsubfamilia: rpta.data.idsubfamilia,
+          modelo: rpta.data.modelo,
+          nomfamilia: rpta.data.nomfamilia,
+          nommarca: rpta.data.nommarca,
+          nomsubfamilia: rpta.data.nomsubfamilia,
+          preciovenmax: rpta.data.preciovenmax,
+          preciovenmin: rpta.data.preciovenmin,
+          serialnumber: rpta.data.serialnumber,
+          valorunit: rpta.data.valorunit,
+        }
+        this.lstItemOC.push(dataOC);
+        console.log('this.lstItemOC', this.lstItemOC);
+      }
+    });
   }
 
 }

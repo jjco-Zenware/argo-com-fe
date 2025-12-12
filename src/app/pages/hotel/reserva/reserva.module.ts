@@ -25,6 +25,7 @@ import { CFacturacionHabitacionComponent } from './c-facturacion-habitacion/c-fa
 import { ReservaService } from './reserva.service';
 import { CmPersonaPaxComponent } from './cm-persona-pax/cm-persona-pax.component';
 import { CmExcTransacReservaComponent } from './cm-exc-transac-reserva/cm-exc-transac-reserva.component';
+import { CMAgregarProductoComponent } from './cm-agregar-producto/cm-agregar-producto.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { CmExcTransacReservaComponent } from './cm-exc-transac-reserva/cm-exc-tr
     CReservaDetComponent,
     CFacturacionHabitacionComponent,
     CmPersonaPaxComponent,
-    CmExcTransacReservaComponent
+    CmExcTransacReservaComponent,
+    CMAgregarProductoComponent
   ],
   imports: [
     CommonModule,
