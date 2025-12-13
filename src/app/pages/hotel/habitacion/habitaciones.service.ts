@@ -19,4 +19,9 @@ export class HabitacionesService {
     return this.http.post<any>(url, objeto)
   }
   
+  planingReservasTraer(objeto: any) {
+    const url = `${constantesApiWeb.planingReservasTraer}`;
+    return this.http.post<any>(url, objeto)
+  }
+  
 }

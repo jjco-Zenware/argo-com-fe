@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 import { CmReservaHabitacionComponent } from '../../habitacion/cm-reserva-habitacion/cm-reserva-habitacion.component';
+import { HabitacionesService } from '../../habitacion/habitaciones.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { UtilitariosService } from 'src/app/services/utilitarios.service';
+import { SharedAppService } from '@sharedAppService';
 
 @Component({
   selector: 'app-c-rpt-habitacion',
@@ -11,6 +15,7 @@ import { CmReservaHabitacionComponent } from '../../habitacion/cm-reserva-habita
 })
 export class CRptHabitacionComponent implements OnInit, OnDestroy {
   $listSubcription: Subscription[] = [];
+  frmDatos!: FormGroup;
   dataHabitaciones: any = {};
   dias: number[] = [];
   blockedDocument: boolean = false;
@@ -20,11 +25,15 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
   dataPrc: any;
 
   constructor(
-    public dialogService: DialogService,) { }
+    private fb: FormBuilder,
+    public dialogService: DialogService,
+    public serviceHotel: HabitacionesService,
+    private utilitariosService: UtilitariosService,
+    private serviceSharedApp: SharedAppService,
+  ) { }
 
   ngOnInit() {
-    this.loadData();
-    this.loadDias();
+    this.createFrm();
     //this.obtenerData();
   }
 
@@ -34,16 +43,38 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
     }
   }
 
+  createFrm() {
+    this.frmDatos = this.fb.group({
+      fechaini: [{ value: this.utilitariosService.obtenerFechaInicioMes(), disabled: false }],
+      fechafin: [{ value: this.utilitariosService.obtenerFechaFinMes(), disabled: false }],
+      idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+    })
+  }
+
   setSpinner(valor: boolean) {
     this.blockedDocument = valor;
   }
 
-  /*obtenerData() {
+  obtenerData() {
+    const fechaInicio = this.frmDatos.get('fechaini')?.value;
+    const fechaFin = this.frmDatos.get('fechafin')?.value;
+
+    if (new Date(fechaInicio) > new Date(fechaFin)) {        
+      this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Aviso', detail: 'La fecha de inicio no puede ser mayor a la fecha de fin' });
+      return;
+    }
+    
+    const diffTime = Math.abs(new Date(fechaFin).getTime() - new Date(fechaInicio).getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    if (diffDays > 30) {        
+      this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Aviso', detail: 'La diferencia entre las fechas no puede ser mayor a 30 días' });
+      return;
+    }
+
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
 
-
-    const $rptHabitaciones = this.service.ordenCompraList()
+    const $planingReservasTraer = this.serviceHotel.planingReservasTraer(this.frmDatos.getRawValue())
       .subscribe({
         next: (rpta: any) => {
           this.setSpinner(false);
@@ -52,15 +83,18 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
         },
         error: () => {
           this.setSpinner(false);
+          /*TODO - MRC */
+          this.dataMockup(); //eliminar esta linea
+          this.loadDias(); //eliminar esta linea
         },
         complete: () => {
           this.setSpinner(false);
         }
       });
-    this.$listSubcription.push($rptHabitaciones)
-  }*/
+    this.$listSubcription.push($planingReservasTraer)
+  }
 
-  loadData() {
+  dataMockup() {
     this.dataHabitaciones = {
       "nrodias": 30,
       "habitaciones": [
@@ -237,17 +271,13 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
     });
 
     ref.onClose.subscribe(() => {
-      this.loadData();
-      this.loadDias();
-      //this.obtenerData()
+      this.obtenerData()
     });
   }
 
   getBack() {
     this.vistaLista = true;
-    this.loadData();
-    this.loadDias();
-    //this.obtenerData()
+    this.obtenerData()
   }
 
   procesarSinFecha(item: any, dia: number) {

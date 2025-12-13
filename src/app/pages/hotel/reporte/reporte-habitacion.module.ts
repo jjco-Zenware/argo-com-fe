@@ -15,6 +15,7 @@ import { SharedAppService } from '@sharedAppService';
 import { ConfirmationService } from 'primeng/api';
 import { ReservaService } from '../reserva/reserva.service';
 import { ReservaModule } from '../reserva/reserva.module';
+import { HabitacionesService } from '../habitacion/habitaciones.service';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { ReservaModule } from '../reserva/reserva.module';
   providers: [
     SharedAppService, 
     ConfirmationService,
-    ReservaService
+    ReservaService,
+    HabitacionesService
   ]
 })
 export class ReporteHabitacionModule { }
