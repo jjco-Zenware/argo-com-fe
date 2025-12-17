@@ -91,8 +91,7 @@
                                 <i class="pi pi-search cursor-pointer" pTooltip="Busqueda por RUC"
                                     tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
                                 <input pInputText type="text" formControlName="nrodocumento" [readonly]=onlyRead
-                                    class="p-inputtext-sm" maxlength="11"
-                                    oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+                                    class="p-inputtext-sm"                                   
                                     (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" />
                             </span>
                         </div>

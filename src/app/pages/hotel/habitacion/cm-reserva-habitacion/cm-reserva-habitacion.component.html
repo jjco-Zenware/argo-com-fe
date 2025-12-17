@@ -92,8 +92,8 @@
                     <span class="p-input-icon-right w-full">
                         <i class="pi pi-search cursor-pointer text-primary" pTooltip="Buscar por RUC"
                             tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
-                        <input pInputText type="text" formControlName="nrodocumento" class="w-full" maxlength="11"
-                            oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="Ingrese {{tituloTipoDocumento}}"
+                        <input pInputText type="text" formControlName="nrodocumento" class="w-full"
+                            placeholder="Ingrese {{tituloTipoDocumento}}"
                             (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" #nrodocumentoInput />
                     </span>
                 </div>
