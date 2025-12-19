@@ -266,6 +266,7 @@ esPersonaJuridica: boolean = false;
           .subscribe({
             next: (rpta: any) => {
               console.log('rpta personaTraerUnoTipoDoc: ', rpta);
+              if(!rpta) {return;}
               const { idpersona, appaterno, apmaterno, nombres, razonsocial, direcresumen, telefresumen, email } = rpta;
               this.registerFormCliente.get('idpersona')?.setValue(idpersona);
     

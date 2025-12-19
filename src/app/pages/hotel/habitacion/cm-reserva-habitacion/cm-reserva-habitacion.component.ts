@@ -188,7 +188,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
         }
         break;
       case 'PAS':
-        if (_nro.length < 12 || _nro.length > 16) {
+        if (_nro.length < 8 || _nro.length > 16) {
           this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Pasaporte no Valido...' });
           return false;
         }
@@ -829,12 +829,12 @@ cambioTipoDoc(dato: any) {
         break;  
       case 'CEX':
         this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
-        this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(16), Validators.maxLength(12)]);
+        this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(12), Validators.maxLength(16)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
         break;
       case 'PAS':
         this.tituloTipoDocumento = 'Número de Pasaporte (PAS)';
-        this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(16), Validators.maxLength(12)]);
+        this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(16)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
         break;
     }
