@@ -4,7 +4,7 @@
 
             <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
                 <label class="font-semibold text-blue-600 text-base">Desde</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fechaini"
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechainicio" formControlName="fechainicio"
                     [showOnFocus]="false" [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}"
                     class="p-inputtext-sm">
                 </p-calendar>
@@ -29,23 +29,23 @@
                             style="background: #f4f4f4; border-bottom: none; min-width: 180px;"></th>
                         <th class="p-datatable-thead-cell p-text-center p-px-1" [attr.colspan]="dias.length"
                             style="background: #f4f4f4; border-bottom: none; min-width: 38px; max-width: 48px; width: 42px; text-align: center; font-size: 16px; font-weight: 700;">
-                            {{ dataHabitaciones.habitaciones?.[0]?.fechas?.[0]?.mes || '' }}
+                            {{ dataHabitaciones?.[0]?.fechas?.[0]?.mes || '' }}
                         </th>
                     </tr>
                     <tr>
                         <th class="p-datatable-thead-cell p-text-center p-px-2"
-                            style="min-width: 180px; background: #f4f4f4;">
+                            style="min-width: 100px; background: #f4f4f4;">
                             Habitación</th>
                         <th *ngFor="let dia of dias" class="p-datatable-thead-cell p-text-center p-px-1"
                             style="background: #f4f4f4; min-width: 38px; max-width: 48px; width: 42px;">{{ dia }}</th>
                     </tr>
                 </thead>
                 <tbody class="p-datatable-tbody">
-                    <tr *ngFor="let habitacion of dataHabitaciones.habitaciones" class="p-datatable-row">
+                    <tr *ngFor="let habitacion of dataHabitaciones" class="p-datatable-row">
                         <td class="p-datatable-td p-px-2 p-py-2 p-text-bold"
                             style="background: #f9fafb; border-right: 1px solid #e0e0e0; cursor: pointer;"
                             [attr.title]="habitacion.mensaje">
-                            {{ habitacion.nrohabitacion }} - {{ habitacion.deshabitacion }}
+                            {{ habitacion.nomHabitacion }}
                         </td>
                         <td *ngFor="let dia of dias" class="p-datatable-td p-px-0 p-py-1"
                             style="border-right: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; min-width: 38px; max-width: 48px; width: 42px;">

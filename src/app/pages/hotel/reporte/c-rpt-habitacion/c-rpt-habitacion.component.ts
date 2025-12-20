@@ -16,7 +16,7 @@ import { SharedAppService } from '@sharedAppService';
 export class CRptHabitacionComponent implements OnInit, OnDestroy {
   $listSubcription: Subscription[] = [];
   frmDatos!: FormGroup;
-  dataHabitaciones: any = {};
+  dataHabitaciones: any = [];
   dias: number[] = [];
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
@@ -34,7 +34,7 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createFrm();
-    //this.obtenerData();
+    this.obtenerData();
   }
 
   ngOnDestroy(): void {
@@ -45,9 +45,10 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
 
   createFrm() {
     this.frmDatos = this.fb.group({
-      fechaini: [{ value: this.utilitariosService.obtenerFechaInicioMes(), disabled: false }],
+      fechainicio: [{ value: this.utilitariosService.obtenerFechaInicioMes(), disabled: false }],
       fechafin: [{ value: this.utilitariosService.obtenerFechaFinMes(), disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      idhotel: [{ value: 0, disabled: false }],
     })
   }
 
@@ -56,7 +57,7 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
   }
 
   obtenerData() {
-    const fechaInicio = this.frmDatos.get('fechaini')?.value;
+    const fechaInicio = this.frmDatos.get('fechainicio')?.value;
     const fechaFin = this.frmDatos.get('fechafin')?.value;
 
     if (new Date(fechaInicio) > new Date(fechaFin)) {        
@@ -78,14 +79,13 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (rpta: any) => {
           this.setSpinner(false);
-          this.dataHabitaciones = rpta;
-          this.loadDias();
+          this.dataHabitaciones = rpta.hotel[0].habitaciones;
+          //console.log("dataHabitaciones: ", this.dataHabitaciones);
+          
+          this.loadDias(rpta.hotel[0].nrodias || 0);
         },
         error: () => {
           this.setSpinner(false);
-          /*TODO - MRC */
-          this.dataMockup(); //eliminar esta linea
-          this.loadDias(); //eliminar esta linea
         },
         complete: () => {
           this.setSpinner(false);
@@ -228,8 +228,7 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
     };
   }
 
-  loadDias() {
-    const nrodias = this.dataHabitaciones.nrodias || 0;
+  loadDias(nrodias:number) {
     this.dias = Array.from({ length: nrodias }, (_, i) => i + 1);
   }
 
