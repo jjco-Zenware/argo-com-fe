@@ -28,7 +28,7 @@ const routes: Routes = [
     data: { breadcrumb: 'Agenda' }
   },
   {
-    path: 'reporte-habitacion',
+    path: 'planning-reservas',
     loadChildren: () => import('./reporte/reporte-habitacion.module').then(m => m.ReporteHabitacionModule),
     data: { breadcrumb: 'Reporte Habitación' }
   }
