@@ -95,12 +95,12 @@ esPersonaJuridica: boolean = false;
     idrolpersona: [{ value: "CLI", disabled: false }],
     tipopersona :  [{ value: this.param?.tipopersona || null, disabled: false }],
     tipoalta : [{ value: 'NOR', disabled: false }],
-    indnacionalidad: [{ value: '1', disabled: false }, [Validators.required]],
+    indnacionalidad: [{ value: this.param?.esExtranjero ? '0' : '1', disabled: false }, [Validators.required]],
     idpais: [{ value: '1', disabled: false }],
     idtipodoc: [{ value: this.param?.idtipodoc || null, disabled: false }, [Validators.required]],
     nrodocumento: [{ value: this.param?.nroDocumento || null, disabled: false }, [Validators.required]],
     appaterno: [{ value: null, disabled: false }, [Validators.required]],
-    apmaterno: [{ value: null, disabled: false }, [Validators.required]],
+    apmaterno: [{ value: null, disabled: false }],
     apcasada: [{ value: null, disabled: false }],
     nombres: [{ value: null, disabled: false }, [Validators.required]],
     razonsocial: [{ value: null, disabled: false }, [Validators.required]],
@@ -108,7 +108,7 @@ esPersonaJuridica: boolean = false;
     direcresumen: [{ value: null, disabled: false }, [Validators.required]],
     telefresumen: [{ value: null, disabled: false }],
     telefmovil: [{ value: null, disabled: false }],
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', [Validators.email]],
     paginaweb: [{ value: null, disabled: false }],
     facebook: [{ value: null, disabled: false }],
     youtube: [{ value: null, disabled: false }],
@@ -144,8 +144,8 @@ esPersonaJuridica: boolean = false;
       this.registerFormCliente.get('appaterno')?.clearValidators();
       this.registerFormCliente.get('appaterno')?.updateValueAndValidity();
 
-      this.registerFormCliente.get('apmaterno')?.clearValidators();
-      this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();
+      /*this.registerFormCliente.get('apmaterno')?.clearValidators();
+      this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();*/
     }else{
       this.personaNatural = true;
       this.esPersonaJuridica = false;
@@ -158,9 +158,9 @@ esPersonaJuridica: boolean = false;
       this.registerFormCliente.get('appaterno')?.setValidators(Validators.required);
       this.registerFormCliente.get('appaterno')?.updateValueAndValidity();
 
-      this.registerFormCliente.get('apmaterno')?.clearValidators();
+      /*this.registerFormCliente.get('apmaterno')?.clearValidators();
       this.registerFormCliente.get('apmaterno')?.setValidators(Validators.required);
-      this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();
+      this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();*/
 
       this.registerFormCliente.get('razonsocial')?.clearValidators();
       this.registerFormCliente.get('razonsocial')?.updateValueAndValidity();

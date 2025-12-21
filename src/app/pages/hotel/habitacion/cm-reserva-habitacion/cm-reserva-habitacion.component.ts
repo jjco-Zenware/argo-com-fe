@@ -46,6 +46,17 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   data: any;
   dropdownItemsTipNro = [];
   tituloTipoDocumento: string = 'Nro. Documento';
+  esExtranjero: boolean = false;
+  lsTipoTAM: any[] = [
+    {
+      codigo: 'D',
+      descripcion: 'Días'
+    },
+    {
+      codigo: 'M',
+      descripcion: 'Mes'
+    }
+  ]
 
   constructor(
     private fb: FormBuilder,
@@ -161,6 +172,11 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       indmanualdetraccion: [{ value: false, disabled: false }],
       indsunatreg: [{ value: false, disabled: false }],
       idtipodoc: [{ value: 'DNI', disabled: false }],
+
+      fecingresopais: [{ value: null, disabled: false }],
+      tiempopermanencia: [{ value: null, disabled: false }],
+      tipopermanencia: [{ value: 'D', disabled: false }],
+      codverificaciontam: [{ value: null, disabled: false }]
     });
   }
 
@@ -253,9 +269,11 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   }
 
   NuevoPersona(itemDocumento?: any) {
+    const { idtipodoc } = this.frmDatos.getRawValue();
     const objet = {
       idrolpersona: 'PRO',
-      ...itemDocumento
+      ...itemDocumento,
+      esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS'
     }
 
     console.log('NuevoPersona objet:', objet);
@@ -818,21 +836,25 @@ cambioTipoDoc(dato: any) {
 
     switch (dato) {
       case 'DNI':
+        this.esExtranjero = false;
         this.tituloTipoDocumento = 'Nro. Documento de Identidad (DNI)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(8)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
         break;
       case 'RUC':
+        this.esExtranjero = false;
         this.tituloTipoDocumento = 'Número de RUC';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
         break;  
       case 'CEX':
+        this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(12), Validators.maxLength(16)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
         break;
       case 'PAS':
+        this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Pasaporte (PAS)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(16)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
