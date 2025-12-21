@@ -134,6 +134,17 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   ];
   dropdownItemsTipNro = [];
   tituloTipoDocumento: string = 'Nro. Documento';
+  esExtranjero: boolean = false;
+  lsTipoTAM: any[] = [
+    {
+      codigo: 'D',
+      descripcion: 'Días'
+    },
+    {
+      codigo: 'M',
+      descripcion: 'Mes'
+    }
+  ]
 
   constructor(
     private fb: FormBuilder,
@@ -307,7 +318,12 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       indmanualdetraccion: [{ value: false, disabled: false }],
       indsunatreg: [{ value: false, disabled: false }],
       //codctactble:[{ value: '0', disabled: false }],
-      idtipodoc: [{ value: '', disabled: false }]
+      idtipodoc: [{ value: '', disabled: false }],
+
+      fecingresopais: [{ value: null, disabled: false }],
+      tiempopermanencia: [{ value: null, disabled: false }],
+      tipopermanencia: [{ value: 'D', disabled: false }],
+      codverificaciontam: [{ value: null, disabled: false }]
     });
 
 
@@ -435,6 +451,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
           this.visibleAsiento = false;
 
           this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this.esExtranjero = rpta.ordencompra[0].idtipodoc === 'CEX' || rpta.ordencompra[0].idtipodoc === 'PAS';
           this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
           //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
           this.s_monto = rpta.ordencompra[0].s_monto;
@@ -446,6 +463,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
           this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
           this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
           this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision);
+          this.registerFormRegistro.get('fecingresopais')?.setValue(rpta.ordencompra[0].fecingresopais);
           this.registerFormRegistro.get('direccion').setValue(rpta.ordencompra[0].direcresumen);
           this.nrocuotas = rpta.ordencompra[0].nrocuotas
           this.getBusquedaRUC();
@@ -1691,21 +1709,25 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
     switch (dato) {
       case 'DNI':
+        this.esExtranjero = false;
         this.tituloTipoDocumento = 'Nro. Documento de Identidad (DNI)';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(8)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();
         break;
       case 'RUC':
+        this.esExtranjero = false;
         this.tituloTipoDocumento = 'Número de RUC';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();
         break;  
       case 'CEX':
+        this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(12), Validators.maxLength(16)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();
         break;
       case 'PAS':
+        this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Pasaporte (PAS)';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(16)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();

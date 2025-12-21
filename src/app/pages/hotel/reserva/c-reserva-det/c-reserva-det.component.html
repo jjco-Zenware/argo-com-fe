@@ -91,7 +91,7 @@
                                 <i class="pi pi-search cursor-pointer" pTooltip="Busqueda por RUC"
                                     tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
                                 <input pInputText type="text" formControlName="nrodocumento" [readonly]=onlyRead
-                                    class="p-inputtext-sm"                                   
+                                    class="p-inputtext-sm"
                                     (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" />
                             </span>
                         </div>
@@ -169,6 +169,38 @@
                                     appendTo="body" [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
                             </span>
                         </div>
+
+                        <ng-container *ngIf="esExtranjero">
+                            <div class="sm:col-4 lg:col-4 md:col-4 col-4 -mt-1">
+                                <label class="block text-900 font-medium">
+                                    <i class="pi pi-calendar text-orange-600 mr-2"></i>
+                                    Fecha Ingreso
+                                </label>
+                                <p-calendar formControlName="fecingresopais" dateFormat="dd/mm/yy" [showTime]="false"
+                                    [showIcon]="true" [required]="true" inputStyleClass="w-full" appendTo="body"
+                                    styleClass="w-full" [readonlyInput]="true">
+                                </p-calendar>
+                            </div>
+                            <div class="sm:col-4 lg:col-4 md:col-4 col-4 -mt-1">
+                                <label class="block text-900 font-medium">Tiempo de Permanencia</label>
+                                <input pInputText type="text" formControlName="tiempopermanencia"
+                                    class="w-full text-center font-semibold"
+                                    oninput="this.value=this.value.replace(/[^0-9]/g,'');" placeholder="0" />
+                            </div>
+                            <div class="sm:col-4 lg:col-4 md:col-4 col-4 -mt-1">
+                                <label class="block text-900 font-medium">&nbsp;</label>
+                                <p-dropdown [options]="lsTipoTAM" placeholder="Seleccione..."
+                                    formControlName="tipopermanencia" styleClass="w-full" optionLabel="descripcion"
+                                    optionValue="codigo" appendTo="body" [filter]="true" [showClear]="true">
+                                </p-dropdown>
+                            </div>
+                            <div class="sm:col-12 lg:col-12 md:col-12 col-12 h-4rem field -mt-1 mb-4">
+                                <label class="block text-900 font-medium">Codigo de Verificación</label>
+                                <input pInputText type="text" formControlName="codverificaciontam"
+                                    class="w-full text-center font-semibold" placeholder="" />
+                            </div>
+                        </ng-container>
+
                         <div class="sm:col-12 lg:col-12 md:col-12 col-12">
                             <label class="block text-900">Observación</label>
                             <span class="p-fluid mb-1">
