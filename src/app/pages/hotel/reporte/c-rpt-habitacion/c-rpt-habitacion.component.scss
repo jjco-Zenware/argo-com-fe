@@ -22,7 +22,7 @@
 	font-weight: 700;
 	border-bottom: 3px solid #2563eb;
 	border-top: 2px solid #d1d5db;
-	padding: 12px 8px;
+	padding: 8px 4px;
 	text-align: center;
 	background: linear-gradient(90deg, #f8fafc 60%, #f1f5f9 100%);
 	color: #374151;
@@ -44,16 +44,29 @@
 }
 
 .p-datatable-td {
-	font-size: 14px;
-	padding: 8px 6px;
+	font-size: 13px;
+	padding: 7px 8px;
 	text-align: center;
 	background: #fff;
 	border-bottom: 1px solid #e5e7eb;
 	border-right: 1px solid #e5e7eb;
 	transition: background 0.2s;
+	height: 32px;
+	min-height: 24px;
+	line-height: 28px;
 }
 .p-datatable-td:last-child {
 	border-right: none;
+}
+
+/* Ajustar ancho de la columna HAB. */
+.p-datatable-thead th:first-child,
+.p-datatable-tbody td:first-child {
+	min-width: 80px !important;
+	max-width: 120px !important;
+	width: 80px !important;
+	padding-left: 8px !important;
+	padding-right: 8px !important;
 }
 .p-datatable-row:nth-child(even) .p-datatable-td {
 	background: #f9fafb;
@@ -66,12 +79,13 @@
 	transition: box-shadow 0.2s, filter 0.2s;
 	border-radius: 6px;
 	min-width: 28px;
-	min-height: 28px;
+	min-height: 22px;
+	height: 28px;
 	box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 15px;
+	font-size: 13px;
 	font-weight: 500;
 	color: #fff;
 	cursor: pointer;
