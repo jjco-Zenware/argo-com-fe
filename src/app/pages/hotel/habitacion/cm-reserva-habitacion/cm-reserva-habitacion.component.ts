@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { c_habitacion, constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, OrdenCompraItem } from '@interfaces';

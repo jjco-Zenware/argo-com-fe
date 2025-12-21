@@ -300,7 +300,8 @@ esPersonaJuridica: boolean = false;
         next: (rpta: any) => {
           console.log('rpta listartipodocumentotablasunat: ', rpta);
           this.dropdownItemsTipNro = rpta;
-          idtipodoc.setValue(tipopersona.value === 'J' ? 'RUC' : 'DNI');
+          //idtipodoc.setValue(tipopersona.value === 'J' ? 'RUC' : 'DNI');
+          idtipodoc.setValue(this.param?.idtipodoc); 
         },
         error: (err) => {
           this.serviceSharedApp.messageToast()
