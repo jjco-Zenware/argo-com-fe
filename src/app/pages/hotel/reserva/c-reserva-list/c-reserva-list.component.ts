@@ -269,7 +269,6 @@ visXperfil: boolean = true;
   
 
   onEditar(data: any) {
-    debugger
       this.dataPrc = {
         idordencompra: data.idordencompra,
         paramReg:'E'

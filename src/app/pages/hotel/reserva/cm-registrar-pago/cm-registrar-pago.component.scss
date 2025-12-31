@@ -1,0 +1,64 @@
+button[pButton][variant="outlined"],
+button[pButton][variant="outlined"].metodo-activo {
+	border: 1.5px solid #bdbdbd !important;
+	color: #222 !important;
+	background: transparent !important;
+}
+
+button[pButton][variant="outlined"].metodo-activo {
+	border-color: #4caf50 !important;
+}
+
+button[pButton][variant="outlined"],
+button[pButton][variant="outlined"].metodo-activo {
+	color: #222 !important;
+}
+
+button[pButton][variant="outlined"].metodo-activo {
+	position: relative;
+	background: transparent !important;
+	border-color: #4caf50 !important;
+}
+
+button[pButton][variant="outlined"].metodo-activo::after {
+	content: '';
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2px;
+	background: #4caf50;
+	border-radius: 0 0 2px 2px;
+}
+
+.detalle-pago-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.pago-item {
+	display: flex;
+	flex: 1 1 45%;
+	min-width: 180px;
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	padding: 0.75rem 1rem;
+	background: #fff;
+	box-sizing: border-box;
+	border-bottom: 1px solid #e0e0e0;
+	margin-bottom: 0.5rem;
+	padding-bottom: 0.5rem;
+}
+
+@media (max-width: 600px) {
+	.detalle-pago-grid {
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.pago-item {
+		flex: 1 1 100%;
+		min-width: 0;
+	}
+}

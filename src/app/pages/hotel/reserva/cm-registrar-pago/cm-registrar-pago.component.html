@@ -1,0 +1,84 @@
+<p-panel styleClass="p-mb-3">
+	<div class="p-fluid">
+		<p-card>
+			<ng-template pTemplate="content">
+				<div class="flex align-items-center p-mb-2" style="min-height: 90px;">
+					<div class="flex-1 flex flex-column justify-content-center"
+						style="text-align: left; padding-left: 2rem;">
+						<div class="flex flex-column gap-2" style="font-size: 1.25rem;">
+							<div class="flex align-items-center">
+								<b style="min-width: 100px; display: inline-block;">N° Venta:</b>
+								<span style="font-size: 1rem;">{{data.idordencompra}}</span>
+							</div>
+							<div class="flex align-items-center">
+								<b style="min-width: 100px; display: inline-block;">Cliente:</b>
+								<span style="font-size: 1rem;">{{data.nombreCliente}}</span>
+							</div>
+							<div class="flex align-items-center">
+								<b style="min-width: 100px; display: inline-block;">Fecha:</b>
+								<span style="font-size: 1rem;">{{data.fecha}}</span>
+							</div>
+						</div>
+					</div>
+					<div class="ml-4 mr-4" style="height: 60px; border-left: 2px solid #e0e0e0;"></div>
+					<div class="flex-1 flex flex-column justify-content-center" style="text-align: left;">
+						<div class="mb-1" style="font-size: 1.35rem;"><b>Total a Pagar: </b></div>
+						<div style="font-size: 2.5rem; color: #4caf50; font-weight: bold; line-height: 1;">
+							{{data.simboloMoneda}} {{data.totalPagar}}
+						</div>
+					</div>
+				</div>
+			</ng-template>
+		</p-card>
+
+		<div class="p-mb-3 mt-4">
+			<label><b>Método de Pago</b></label>
+			<div class="flex flex-wrap gap-2 mt-2 w-full">
+				<button *ngFor="let metodo of lstMetodoPago" pButton type="button" [label]="metodo.valoritem"
+					[icon]="metodo.icon" [class]="metodo.class" variant="outlined"
+					[ngClass]="{'metodo-activo': metodo.iditem === selectedMetodoPago}"
+					(click)="agregarDetallePago(metodo)" class="flex-1 min-w-max">
+				</button>
+			</div>
+		</div>
+
+		<div class="p-mb-3 mt-4">
+			<label><b>Detalle del Pago</b></label>
+			<div class="mt-2" style="background: #f8f9fa; border-radius: 6px; padding: 1rem;">
+				<div class="detalle-pago-grid">
+					<ng-container *ngFor="let pago of lstDetallePago; let i = index">
+						<div class="pago-item flex align-items-center gap-2">
+							<div style="flex:1;">{{pago.metodo}}</div>
+							<div style="flex:1; text-align:right;">
+								<span>{{data.simboloMoneda}} </span>
+								<input pInputText type="number" min="0" step="0.01"
+									style="width: 100px; text-align: right;" [(ngModel)]="pago.monto"
+									(ngModelChange)="onMontoChange(pago, $event)"
+									[ngClass]="{'p-invalid': pago.monto < 0 || pago.monto === null || pago.monto === undefined}" />
+							</div>
+							<button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-sm ml-2"
+								(click)="eliminarDetallePago(i)" style="margin-left: 8px;" title="Eliminar"></button>
+						</div>
+					</ng-container>
+				</div>
+				<div class="flex justify-end mt-2" style="border-top: 1px solid #e0e0e0; padding-top: 0.5rem;">
+					<div style="flex:1; text-align:right;"><b>Total: S/ {{ totalPago | number:'1.2-2' }}</b></div>
+				</div>
+			</div>
+		</div>
+
+		<form [formGroup]="frmDatos">
+			<div class="p-mb-3 mt-4">
+				<label for="observaciones"><b>Observaciones</b></label>
+				<input id="observaciones" pInputText formControlName="observaciones" type="text"
+					placeholder="Añadir observaciones..." class="w-full mt-2" />
+			</div>
+		</form>
+	</div>
+</p-panel>
+
+<div class="flex align-items-center gap-2 mt-4" style="display: flex; justify-content: flex-end;">
+	<button pButton type="button" label="Registrar Pago" icon="pi pi-save" class="p-button-success min-w-14rem"
+		(click)="getPagar()"></button>
+	<button pButton type="button" label="Cancelar" class="p-button-secondary min-w-14rem" (click)="cerrar([])"></button>
+</div>

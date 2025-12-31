@@ -20,6 +20,7 @@ import { CmExcTransacReservaComponent } from '../cm-exc-transac-reserva/cm-exc-t
 import { Menu } from 'primeng/menu';
 import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-registro/modal-transac.component';
 import { CMAgregarProductoComponent } from '../cm-agregar-producto/cm-agregar-producto.component';
+import { CmRegistrarPagoComponent } from '../cm-registrar-pago/cm-registrar-pago.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -431,7 +432,6 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
       .subscribe({
         next: (rpta: any) => {
-          debugger
           if(rpta.length === 0){ return }
           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
           this.ordenCompra = rpta.ordencompra[0];
@@ -1145,7 +1145,6 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
     this.ordencompraService.buscarporRUC(objet).subscribe({
       next: (rpta: any) => {
-        debugger
         this.setSpinner(false);
         console.log('rpta...', rpta);
         if (rpta.length === 0) {
@@ -1157,7 +1156,6 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
         this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);
       },
       error: (err) => {
-        debugger
         this.setSpinner(false);
         this.messageService.clear();
         this.messageService.add({
@@ -1265,7 +1263,6 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   }
 
   getDatos(dato: any) {
-    debugger
     console.log('getDatos...', dato);
     let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
     this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
@@ -1380,7 +1377,6 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   }
 
   getListarPagos() {
-    debugger
     const { idordencompra: iddocumentoprc_origen } = this.IA_data;
     console.log("iddocumentoprc_origen recibido: ", iddocumentoprc_origen);
 
@@ -1423,8 +1419,19 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     }
 
     const { idordencompra } = this.IA_data;
+    const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
+    console.log("lstCliente : ", this.lstCliente);
+    const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
+    const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;
+    
     const data = {
       idordencompra,
+      nombreCliente,
+      fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
+      totalPagar: this.montoTotal,
+      idproveedor,
+      idmoneda,
+      simboloMoneda,
       idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
     }
     console.log("selectedDetalle data : ", data);
@@ -1433,9 +1440,10 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     this.ordenHabitacion.idoperacion = item.idnrooperacion;
     this.ordenHabitacion.idoperacion_item = item.idnrooperacion_item;*/
     //console.log('onAccion', item);
-    const ref = this.dialogService.open(CmExcTransacReservaComponent, {
+    //const ref = this.dialogService.open(CmExcTransacReservaComponent, {
+    const ref = this.dialogService.open(CmRegistrarPagoComponent, {
       data, //this.ordenHabitacion,
-      header: idordencompra, //+ ' - ' + this.ordenHabitacion.nomHabitacion,
+      header: 'Registrar Pago', //+ ' - ' + this.ordenHabitacion.nomHabitacion,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '40%'
@@ -1443,12 +1451,6 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
     ref.onClose.subscribe((rpta: any) => {
       if (!rpta) { return; }
-
-      this.serviceSharedApp.messageToast({
-        severity: rpta.data.procesoSwitch === 0 ? 'success' : 'info',
-        summary: rpta.data.procesoSwitch === 0 ? 'Exito' : 'Validación...!',
-        detail: rpta.data.mensaje
-      });
     });
   }
 

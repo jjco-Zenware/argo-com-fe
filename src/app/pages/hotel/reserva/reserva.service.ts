@@ -38,4 +38,14 @@ export class ReservaService {
     const url = `${constantesApiWeb.listartipodocumentotablasunat}${tipoPersona}`;
     return this.http.get<any>(url)
   }
+
+  obtenerItemsTabla(id: number) {
+    const url = `${constantesApiWeb.lstItemsTabla}${id}`;
+    return this.http.get<any>(url);
+  }
+
+  pagoVentaPRC(objeto: any) {
+    const url = `${constantesApiWeb.pagoVentaPRC}`;
+    return this.http.post<any>(url, objeto)
+  }
 }
