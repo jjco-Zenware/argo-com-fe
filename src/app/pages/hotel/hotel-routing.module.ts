@@ -31,6 +31,11 @@ const routes: Routes = [
     path: 'planning-reservas',
     loadChildren: () => import('./reporte/reporte-habitacion.module').then(m => m.ReporteHabitacionModule),
     data: { breadcrumb: 'Reporte Habitación' }
+  },
+  {
+    path: 'tipo-cambio',
+    loadChildren: () => import('./tipo-cambio/tipo-cambio.module').then(m => m.TipoCambioModule),
+    data: { breadcrumb: 'Tipo Cambio' }
   }
 ];
 

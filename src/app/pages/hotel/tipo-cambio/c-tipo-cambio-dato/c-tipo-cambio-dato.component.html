@@ -1,0 +1,46 @@
+<div class="p-fluid col-12 mt-2">
+    <form [formGroup]="frmDatos" class="p-fluid grid lg:col-12 col-12 border-round surface-border border-1 -p-2">
+        <div class="sm:col-12 lg:col-4 md:col-12 col-6 justify-content-end h-4rem field">
+            <label class="block text-900 font-semibold">Fec. TC.<span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-input-icon-left w-auto p-fluid -mt-1 p-inputtext-sm" style="height: 3rem;">
+                <p-calendar formControlName="fectc" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true" [required]="true" inputId="start"
+                inputStyleClass="w-full cursor-pointer p-inputtext-sm" appendTo="body" class="p-inputtext-sm" ></p-calendar>
+            </span>
+        </div>
+        <div class="col-6 h-4rem field sm:col-6 lg:col-4 md:col-4">
+            <label class="block text-900 font-semibold mb-1">Valor Fijo <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="number" formControlName="valorfijo" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class="col-6 h-4rem field sm:col-6 lg:col-4 md:col-4">
+            <label class="block text-900 font-semibold mb-1">Valor Compra <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="number" formControlName="valorcompra" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+            <label class="block text-900 font-semibold mb-1">Valor Minimo de Compra <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="number" formControlName="valmincompra" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+            <label class="block text-900 font-semibold mb-1">Valor Venta <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="number" formControlName="valorventa" class="p-inputtext-sm"/>
+            </span>
+        </div>
+        <div class="h-4rem field sm:col-6 lg:col-4 md:col-3">
+            <label class="block text-900 font-semibold mb-1">Valor Maxima de Venta <span class="text-red-500 font-bold"> * </span></label>
+            <span class="p-fluid mt-1">
+                <input pInputText type="number" formControlName="valmaxventa" class="p-inputtext-sm"/>
+            </span>
+        </div>
+    </form>
+    <div class="flex justify-content-end mt-2 mr-3">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto" (click)="guardar()"></button>
+    </div>
+</div>
+
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

@@ -279,4 +279,7 @@ export const constantesApiWeb = {
     listartipodocumentotablasunat: controllerContabilidad + '/listartipodocumentotablasunat/',
     planingReservasTraer: controllerHotel + '/listarplaningreservas',
     pagoVentaPRC: controllerTesoreria + '/pagoventaprc/',
+    tipocambiolistar: controllerTesoreria + '/tipocambiolistar',
+    tipoCambioTraerUno: controllerTesoreria + '/tipocambiotraeruno',
+    tipoCambioPRC: controllerTesoreria + '/tipocambioprc',
 }

@@ -1,0 +1,127 @@
+<div class="card m-4">
+    <div class="grid mt-2">
+        <div class="flex justify-content-between col-12 -mt-3 gap-2">
+            <div style="display: flex; justify-content: end;" class="mt-2 pl-1 h-2rem">
+                <button pButton class="font-semibold p-button-outlined justify-content-center " icon="pi pi-file"
+                    label="Nuevo" pTooltip="Nuevo" tooltipPosition="left" (click)="getRegistro(null)"></button>
+            </div>
+            <button pButton type="button" (click)="getListar()" pTooltip="Actualizar Registros" tooltipPosition="bottom"
+                class="font-semibold mt-2 justify-content-center h-2rem w-3rem w-auto" icon="pi pi-refresh"></button>
+            <div class="mb-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                <span class="text-base font-semibold">TIPO DE CAMBIO</span>
+            </div>
+        </div>
+    </div>
+
+    <p-table #dt1 [value]="listado" [rows]="25" [rowHover]="true" responsiveLayout="stack"
+        [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+        [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        styleClass="p-datatable-sm card border-1 border-round surface-border">
+
+        <ng-template pTemplate="header">
+            <tr class="text-sm h-3rem">
+                <th style="width: 10px">
+                    <div class="flex justify-content-between align-items-center">
+                        N°
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        FECHA
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        VALOR FIJO
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        VALOR VENTA
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'70px'}" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        VALOR MAXIMO VENTA
+                    </div>
+                </th>
+                <th style="width: 150px;" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        VALOR MINIMO COMPRA
+                    </div>
+                </th>
+                <th style="width: 80px" class="bg-teal-50 border-1">
+                    <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                        VALOR COMPRA
+                    </div>
+                </th>
+                <th style="width: 80px;" class="bg-teal-50 border-1">
+                    <div class="flex justify-content-between align-items-center">
+                        ACCIONES
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td [ngStyle]="{'width':'10px'}">
+                    {{rowIndex + 1}}
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'50px'}">
+                        {{data.fectipocmb | date:'dd/MM/yyyy'}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'400px'}">
+                        {{data.valorfijo}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'100px'}">
+                        {{data.valorventa}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.valmaxventa}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.valmincompra}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.valorcompra}}
+                    </div>
+                </td>
+                <td>
+                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'60px'}">
+                        <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom"
+                            pTooltip="Editar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 "
+                            (click)="getRegistro(data.fectipocmb)"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="8">Cargando datos. Espere por favor.</td>8
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<p-toast></p-toast>
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
+    acceptButtonStyleClass="p-button p-button-info surface-border"
+    rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
