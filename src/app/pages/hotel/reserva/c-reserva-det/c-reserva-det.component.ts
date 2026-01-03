@@ -285,7 +285,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       tipodoc_ctb: [{ value: '', disabled: false }],
       nroserie_ctb: [{ value: '', disabled: false }],
       nrodocumento_ctb: [{ value: '', disabled: false }],
-      fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      fecvencimiento: [{ value: this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1), disabled: false, }],
       nrocuotas: [{ value: 1, disabled: false }],
       porc_detraccion: [{ value: 0, disabled: false }],
       monto_detraccion_mn_CTB: [{ value: 0, disabled: false }],
@@ -1192,44 +1192,38 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
   changeFechaDesde(event: Date) {
     this.minimaFechaHasta = event;
-    console.log('changeFechaDesde event', event);
-    let emision = new Date(this.registerFormRegistro.get('fecemision')?.value);
+    const { fecemision, nrodias, fecvencimiento } = this.registerFormRegistro.controls;
 
-    let vencimiento = this.registerFormRegistro.value.fecvencimiento;
-    console.log('changeFechaDesde vencimiento', vencimiento);
-    if (vencimiento.toString().length === 10) {
-      vencimiento = new Date(this.serviceUtilitario.formatFecha(vencimiento));
-    }
+    const emision = fecemision.value;
+    const vencimiento = this.addDays(emision, 1);
+    const diferenci = this.calcularDiferenciaDias(emision, vencimiento);
 
-    console.log('emision', emision);
-    console.log('vencimiento', vencimiento);
-    let diferenci = this.serviceUtilitario.diferenciaEnDias(emision, vencimiento);
-    console.log('diferenci', diferenci);
-    // let inicio = emision.getTime();
-    // let fin = vencimiento.getTime();
-    // var diff = fin - inicio;
-    // let numerDiff = (diff/(1000*60*60*24))+1;
-    this.registerFormRegistro.get('nrodias')?.setValue(diferenci);
+    fecvencimiento?.setValue(vencimiento);
+    nrodias?.setValue(diferenci);
   }
 
   changeFechaHasta(event: Date) {
-    let fecemision = this.registerFormRegistro.value.fecemision;
-    console.log('fecemision changeFechaHasta', fecemision);
-    if (fecemision.toString().length === 10) {
-      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
-    }
-
     this.maximaFechaDesde = event;
-    let vencimiento = event;
+    const { fecemision, nrodias } = this.registerFormRegistro.controls;
+    
+    const vencimiento = this.parsearFecha(event);
+    const _fecemision = this.parsearFecha(fecemision.value);
+    const diferenciaEnDias = this.calcularDiferenciaDias(_fecemision, vencimiento);
 
-    console.log('fecemision', fecemision, 'vencimiento', vencimiento);
-    let diferenci = this.serviceUtilitario.diferenciaEnDias(fecemision, vencimiento);
-    console.log('diferenci', diferenci);
-    // let inicio = emision.getTime();
-    // let fin = vencimiento.getTime();
-    // var diff = fin - inicio;
-    // let numerDiff = (diff/(1000*60*60*24))+1;
-    this.registerFormRegistro.get('nrodias')?.setValue(diferenci);
+    nrodias?.setValue(diferenciaEnDias);
+  }
+  
+  private parsearFecha(value: any): Date {
+    if (!value) return new Date();
+    if (value instanceof Date) return value;
+    if (typeof value === 'string' && value.length === 10) {
+      return new Date(this.serviceUtilitario.formatFecha(value));
+    }
+    return new Date(value);
+  }
+
+  private calcularDiferenciaDias(fechaInicio: Date, fechaFin: Date): number {
+    return this.serviceUtilitario.diferenciaEnDias(fechaInicio, fechaFin);
   }
 
   addDays(date: Date, days: number): Date {
@@ -1238,17 +1232,23 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     return result;
   }
 
-
   addDiasFec() {
-    let fecemision = this.registerFormRegistro.value.fecemision;
-    if (fecemision.toString().length === 10) {
-      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
+    const { fecemision, nrodias, fecvencimiento } = this.registerFormRegistro.controls;
+    if(!nrodias.value || Number.parseInt(nrodias.value) === 0) {
+      nrodias?.setValue(1);
+      const _fechaSalida = this.addDays(fecemision.value, nrodias.value);
+      fecvencimiento?.setValue(_fechaSalida);
+      return;
     }
 
-    let fecha = this.addDays(fecemision, parseInt(this.registerFormRegistro.value.nrodias));
-    this.registerFormRegistro.get('fecvencimiento')?.setValue(fecha);
-  }
+    let _fecemision = fecemision.value;
+    if (_fecemision.toString().length === 10) {
+      _fecemision = new Date(this.serviceUtilitario.formatFecha(_fecemision));
+    }
 
+    const fecha = this.addDays(_fecemision, Number.parseInt(nrodias.value));
+    fecvencimiento?.setValue(fecha);
+  }
 
   setearDias(ven: any, emi: any) {
     let vencimiento = new Date(this.serviceUtilitario.formatFecha(ven));
