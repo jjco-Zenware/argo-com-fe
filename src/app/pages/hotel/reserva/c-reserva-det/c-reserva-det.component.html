@@ -44,10 +44,10 @@
                                 <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
                             </div>
                             <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
-                                <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false"
+                                <p-calendar formControlName="fecha_ini" dateFormat="dd/mm/yy" [showTime]="false"
                                     [showIcon]="false" [required]="true" inputId="start"
                                     inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"
-                                    [minDate]="minimaFechaDesde" [maxDate]="maximaFechaDesde" [readonlyInput]="true"
+                                    [minDate]="minimaFechaDesde" [readonlyInput]="true"
                                     (onSelect)="changeFechaDesde($event)"></p-calendar>
                             </span>
                         </div>
@@ -58,7 +58,7 @@
                                 <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
                             </div>
                             <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
-                                <p-calendar formControlName="fecvencimiento" dateFormat="dd/mm/yy" [showTime]="false"
+                                <p-calendar formControlName="fecha_fin" dateFormat="dd/mm/yy" [showTime]="false"
                                     [showIcon]="false" [required]="true" inputId="start"
                                     inputStyleClass="w-full cursor-pointer" appendTo="body" class="p-inputtext-sm"
                                     [minDate]="minimaFechaHasta" [readonlyInput]="true"
@@ -237,6 +237,9 @@
                                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
                                         pTooltip="Agregar Producto" icon="pi pi-plus" label="Agregar Producto"
                                         (click)="getAgregarProducto()"></button>
+                                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
+                                        pTooltip="Facturación" icon="pi pi-money-bill" label="Facturación"
+                                        (click)="getFacturacion()"></button>
                                 </div>
                             </ng-template>
                             <ng-template pTemplate="header">

@@ -5,7 +5,7 @@
       "type": "chrome",
       "request": "launch",
       "name": "Angular: Chrome",
-      "url": "http://localhost:4201",
+      "url": "http://localhost:4202",
       "webRoot": "${workspaceFolder}",
       "sourceMapPathOverrides": {
         "webpack:/*": "${webRoot}/*",

@@ -22,7 +22,7 @@ export class CModalExcTransacHotelComponent implements OnInit, AfterViewInit {
   btnTitleAccion!: string;
   btnIdAccion!: number;
   errorMensaje: string = "";
-  descripcion: string = "";
+  descripcion: string = "OK";
   btnIconAccion!: string;
   btnColor!: string;
   blockedDocument: boolean = false;

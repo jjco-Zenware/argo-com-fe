@@ -134,11 +134,13 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       nomproyecto: [{ value: '', disabled: false }],
       nrodocumento: [{ value: '', disabled: false }],
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      fecha_ini: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       tc: [{ value: 0, disabled: false }],
       tipodoc_ctb: [{ value: 1, disabled: false }],
       nroserie_ctb: [{ value: '', disabled: false }],
       nrodocumento_ctb: [{ value: '', disabled: false }],
       fecvencimiento: [{ value: this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1), disabled: false, }],
+      fecha_fin: [{ value: this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1), disabled: false, }],
       nrocuotas: [{ value: 1, disabled: false }],
       porc_detraccion: [{ value: 0, disabled: false }],
       monto_detraccion_mn_CTB: [{ value: 0, disabled: false }],
@@ -306,22 +308,22 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
 
   changeFechaDesde(event: Date) {
     this.minimaFechaHasta = event;
-    const { fecemision, nrodias, fecvencimiento } = this.frmDatos.controls;
+    const { fecha_ini, nrodias, fecha_fin } = this.frmDatos.controls;
 
-    const emision = fecemision.value;
+    const emision = fecha_ini.value;
     const vencimiento = this.addDays(emision, 1);
     const diferenci = this.calcularDiferenciaDias(emision, vencimiento);
 
-    fecvencimiento?.setValue(vencimiento);
+    fecha_fin?.setValue(vencimiento);
     nrodias?.setValue(diferenci);
   }
 
   changeFechaHasta(event: Date) {
     this.maximaFechaDesde = event;
-    const { fecemision, nrodias } = this.frmDatos.controls;
+    const { fecha_ini, nrodias } = this.frmDatos.controls;
     
     const vencimiento = this.parsearFecha(event);
-    const _fecemision = this.parsearFecha(fecemision.value);
+    const _fecemision = this.parsearFecha(fecha_ini.value);
     const diferenciaEnDias = this.calcularDiferenciaDias(_fecemision, vencimiento);
 
     nrodias?.setValue(diferenciaEnDias);
@@ -347,21 +349,21 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   }
 
   addDiasFec() {
-    const { fecemision, nrodias, fecvencimiento } = this.frmDatos.controls;
+    const { fecha_ini, nrodias, fecha_fin } = this.frmDatos.controls;
     if(!nrodias.value || Number.parseInt(nrodias.value) === 0) {
       nrodias?.setValue(1);
-      const _fechaSalida = this.addDays(fecemision.value, nrodias.value);
-      fecvencimiento?.setValue(_fechaSalida);
+      const _fechaSalida = this.addDays(fecha_ini.value, nrodias.value);
+      fecha_fin?.setValue(_fechaSalida);
       return;
     }
 
-    let _fecemision = fecemision.value;
+    let _fecemision = fecha_ini.value;
     if (_fecemision.toString().length === 10) {
       _fecemision = new Date(this.serviceUtilitario.formatFecha(_fecemision));
     }
 
     const fecha = this.addDays(_fecemision, Number.parseInt(nrodias.value));
-    fecvencimiento?.setValue(fecha);
+    fecha_fin?.setValue(fecha);
   }
 
   listaClientes() {
@@ -493,11 +495,15 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     this.mensajeSpinner = 'Guardando...!';
     let fechaingreso;
     let fecemision;
+    let fechaIni;
     let fecvencimiento;
+    let fechaFin;
 
     fechaingreso = this.frmDatos.getRawValue().fechaingreso;
     fecemision = this.frmDatos.getRawValue().fecemision;
+    fechaIni = this.frmDatos.getRawValue().fecha_ini;
     fecvencimiento = this.frmDatos.getRawValue().fecvencimiento;
+    fechaFin = this.frmDatos.getRawValue().fecha_fin;
 
 
     debugger;
@@ -508,8 +514,14 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     if (fecemision.toString().length === 10) {
       fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
     }
+    if (fechaIni.toString().length === 10) {
+      fechaIni = new Date(this.serviceUtilitario.formatFecha(fechaIni));
+    }
     if (fecvencimiento.toString().length === 10) {
       fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
+    }
+    if (fechaFin.toString().length === 10) {
+      fechaFin = new Date(this.serviceUtilitario.formatFecha(fechaFin));
     }
     //}
 
@@ -547,7 +559,9 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       items: this.lstItemOC.length === 0 ? _lstItemOC : this.lstItemOC,
       fechaingreso,
       fecemision,
+      fecha_ini:fechaIni,
       fecvencimiento,
+      fecha_fin: fechaFin,
       tipodoc_ctb: (this.frmDatos.value.tipodoc_ctb).toString(),
       cuotas: this.listaCuotas,
       nrocuotas: this.nrocuotas,

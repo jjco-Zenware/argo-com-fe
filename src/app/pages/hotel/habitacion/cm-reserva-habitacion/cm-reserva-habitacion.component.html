@@ -44,9 +44,9 @@
                         <i class="pi pi-calendar text-orange-600 mr-2"></i>
                         Fecha Ingreso
                     </label>
-                    <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true"
+                    <p-calendar formControlName="fecha_ini" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true"
                         [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
-                        [minDate]="minimaFechaDesde" [maxDate]="maximaFechaDesde" [readonlyInput]="true"
+                        [minDate]="minimaFechaDesde" [readonlyInput]="true"
                         (onSelect)="changeFechaDesde($event)">
                     </p-calendar>
                 </div>
@@ -58,7 +58,7 @@
                         <i class="pi pi-calendar text-orange-600 mr-2"></i>
                         Fecha Salida
                     </label>
-                    <p-calendar formControlName="fecvencimiento" dateFormat="dd/mm/yy" [showTime]="false"
+                    <p-calendar formControlName="fecha_fin" dateFormat="dd/mm/yy" [showTime]="false"
                         [showIcon]="true" [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
                         [minDate]="minimaFechaHasta" [readonlyInput]="true" (onSelect)="changeFechaHasta($event)">
                     </p-calendar>

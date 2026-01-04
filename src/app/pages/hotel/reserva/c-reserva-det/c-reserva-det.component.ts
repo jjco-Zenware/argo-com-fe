@@ -21,6 +21,7 @@ import { Menu } from 'primeng/menu';
 import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-registro/modal-transac.component';
 import { CMAgregarProductoComponent } from '../cm-agregar-producto/cm-agregar-producto.component';
 import { CmRegistrarPagoComponent } from '../cm-registrar-pago/cm-registrar-pago.component';
+import { CmRegistrarFacturacionComponent } from '../cm-registrar-facturacion/cm-registrar-facturacion.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -281,11 +282,13 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       nomproyecto: [{ value: '', disabled: false }],
       nrodocumento: [{ value: '', disabled: false }],
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      fecha_ini: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       tc: [{ value: 0, disabled: false }],
       tipodoc_ctb: [{ value: '', disabled: false }],
       nroserie_ctb: [{ value: '', disabled: false }],
       nrodocumento_ctb: [{ value: '', disabled: false }],
       fecvencimiento: [{ value: this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1), disabled: false, }],
+      fecha_fin: [{ value: this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1), disabled: false, }],
       nrocuotas: [{ value: 1, disabled: false }],
       porc_detraccion: [{ value: 0, disabled: false }],
       monto_detraccion_mn_CTB: [{ value: 0, disabled: false }],
@@ -432,7 +435,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
       .subscribe({
         next: (rpta: any) => {
-          if(rpta.length === 0){ return }
+          if (rpta.length === 0) { return }
           console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
           this.ordenCompra = rpta.ordencompra[0];
           //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
@@ -462,7 +465,9 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
           this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);
           this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
           this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
+          this.registerFormRegistro.get('fecha_fin')?.setValue(rpta.ordencompra[0].fecha_fin);
           this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision);
+          this.registerFormRegistro.get('fecha_ini')?.setValue(rpta.ordencompra[0].fecha_ini);
           this.registerFormRegistro.get('fecingresopais')?.setValue(rpta.ordencompra[0].fecingresopais);
           this.registerFormRegistro.get('direccion').setValue(rpta.ordencompra[0].direcresumen);
           this.nrocuotas = rpta.ordencompra[0].nrocuotas
@@ -502,10 +507,14 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     this.mensajeSpinner = 'Guardando...!';
     let fechaingreso;
     let fecemision;
+    let fechaIni;
     let fecvencimiento;
+    let fechaFin;
     fechaingreso = this.registerFormRegistro.value.fechaingreso;
     fecemision = this.registerFormRegistro.value.fecemision;
+    fechaIni = this.registerFormRegistro.value.fecha_ini;
     fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
+    fechaFin = this.registerFormRegistro.value.fecha_fin;
 
     if (fechaingreso.toString().length === 10) {
       fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
@@ -513,9 +522,16 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     if (fecemision.toString().length === 10) {
       fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
     }
+    if (fechaIni.toString().length === 10) {
+      fechaIni = new Date(this.serviceUtilitario.formatFecha(fechaIni));
+    }
     if (fecvencimiento.toString().length === 10) {
       fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
     }
+    if (fechaFin.toString().length === 10) {
+      fechaFin = new Date(this.serviceUtilitario.formatFecha(fechaFin));
+    }
+
 
     for (let i = 0; i < this.lstItemOC.length; i++) {
       if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -536,7 +552,9 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       items: this.lstItemOC,
       fechaingreso,
       fecemision,
+      fecha_ini: fechaIni,
       fecvencimiento,
+      fecha_fin: fechaFin,
       tipodoc_ctb: (this.registerFormRegistro.value.tipodoc_ctb).toString(),
       cuotas: this.listaCuotas,
       nrocuotas: this.nrocuotas,
@@ -567,7 +585,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
             this.traerUno2();
 
             //preguntar si desea emitir el documento con una cuota
-            this.confirmationService.confirm({
+            /*this.confirmationService.confirm({
               key: 'confirm1',
               header: 'Confirmación',
               message: '¿Desea Emitir el Documento con una Cuota...?',
@@ -575,7 +593,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
                 this.guardarOC();
                 this.procesarTRX();
               }
-            });
+            });*/
           } else {
             this.traerUno();
           }
@@ -1089,10 +1107,10 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     return _error;
   }
 
-  getValidarNroDocumento():boolean {
+  getValidarNroDocumento(): boolean {
     const _idtipodoc = this.registerFormRegistro.get('idtipodoc')?.value;
     const _nro = this.registerFormRegistro.get('nrodocumento')?.value;
-  
+
     switch (_idtipodoc) {
       case 'DNI':
         if (_nro.length !== 8) {
@@ -1192,27 +1210,27 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
   changeFechaDesde(event: Date) {
     this.minimaFechaHasta = event;
-    const { fecemision, nrodias, fecvencimiento } = this.registerFormRegistro.controls;
+    const { fecha_ini, nrodias, fecha_fin } = this.registerFormRegistro.controls;
 
-    const emision = fecemision.value;
+    const emision = fecha_ini.value;
     const vencimiento = this.addDays(emision, 1);
     const diferenci = this.calcularDiferenciaDias(emision, vencimiento);
 
-    fecvencimiento?.setValue(vencimiento);
+    fecha_fin?.setValue(vencimiento);
     nrodias?.setValue(diferenci);
   }
 
   changeFechaHasta(event: Date) {
     this.maximaFechaDesde = event;
-    const { fecemision, nrodias } = this.registerFormRegistro.controls;
-    
+    const { fecha_ini, nrodias } = this.registerFormRegistro.controls;
+
     const vencimiento = this.parsearFecha(event);
-    const _fecemision = this.parsearFecha(fecemision.value);
+    const _fecemision = this.parsearFecha(fecha_ini.value);
     const diferenciaEnDias = this.calcularDiferenciaDias(_fecemision, vencimiento);
 
     nrodias?.setValue(diferenciaEnDias);
   }
-  
+
   private parsearFecha(value: any): Date {
     if (!value) return new Date();
     if (value instanceof Date) return value;
@@ -1233,21 +1251,21 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   }
 
   addDiasFec() {
-    const { fecemision, nrodias, fecvencimiento } = this.registerFormRegistro.controls;
-    if(!nrodias.value || Number.parseInt(nrodias.value) === 0) {
+    const { fecha_ini, nrodias, fecha_fin } = this.registerFormRegistro.controls;
+    if (!nrodias.value || Number.parseInt(nrodias.value) === 0) {
       nrodias?.setValue(1);
-      const _fechaSalida = this.addDays(fecemision.value, nrodias.value);
-      fecvencimiento?.setValue(_fechaSalida);
+      const _fechaSalida = this.addDays(fecha_ini.value, nrodias.value);
+      fecha_fin?.setValue(_fechaSalida);
       return;
     }
 
-    let _fecemision = fecemision.value;
+    let _fecemision = fecha_ini.value;
     if (_fecemision.toString().length === 10) {
       _fecemision = new Date(this.serviceUtilitario.formatFecha(_fecemision));
     }
 
     const fecha = this.addDays(_fecemision, Number.parseInt(nrodias.value));
-    fecvencimiento?.setValue(fecha);
+    fecha_fin?.setValue(fecha);
   }
 
   setearDias(ven: any, emi: any) {
@@ -1423,7 +1441,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     console.log("lstCliente : ", this.lstCliente);
     const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
     const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;
-    
+
     const data = {
       idordencompra,
       nombreCliente,
@@ -1686,14 +1704,14 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   }
 
   listarTiposDoc() {
-    const documentosValidos : string[] =['DNI', 'RUC', 'CEX', 'PAS'];
+    const documentosValidos: string[] = ['DNI', 'RUC', 'CEX', 'PAS'];
     const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat('X')
-    .pipe(
-      map((rpta: any) => {
-        return rpta.filter((item: any) => item.idtipodoc && documentosValidos.includes(item.idtipodoc));
-      })
-    )  
-    .subscribe({
+      .pipe(
+        map((rpta: any) => {
+          return rpta.filter((item: any) => item.idtipodoc && documentosValidos.includes(item.idtipodoc));
+        })
+      )
+      .subscribe({
         next: (rpta: any) => {
           console.log('rpta listartipodocumentotablasunat: ', rpta);
           this.dropdownItemsTipNro = rpta;
@@ -1721,7 +1739,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
         this.tituloTipoDocumento = 'Número de RUC';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();
-        break;  
+        break;
       case 'CEX':
         this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
@@ -1797,6 +1815,55 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
         this.lstItemOC.push(dataOC);
         console.log('this.lstItemOC', this.lstItemOC);
       }
+    });
+  }
+
+  getFacturacion() {
+    console.log("lstItemOC : ", this.lstItemOC);
+    console.log("selectedDetalle : ", this.selectedDetalle);
+
+    if (this.selectedDetalle.length === 0) {
+      this.messageService.clear();
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
+      return
+    }
+
+    const { idordencompra } = this.IA_data;
+    const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
+    console.log("lstCliente : ", this.lstCliente);
+    /*const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
+    const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;*/
+
+    /*const data = {
+      idordencompra,
+      nombreCliente,
+      fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
+      totalPagar: this.montoTotal,
+      idproveedor,
+      idmoneda,
+      simboloMoneda,
+      idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
+    }*/
+    const data = { 
+      ...this.registerFormRegistro.getRawValue(),
+      idordencompra,
+      detalleCompra: this.selectedDetalle,
+      s_monto: this.s_monto,
+      s_igv: this.s_igv,
+      montoTotal: this.montoTotal,
+    }
+    console.log("selectedDetalle data : ", data);
+
+    const ref = this.dialogService.open(CmRegistrarFacturacionComponent, {
+      data, //this.ordenHabitacion,
+      header: 'Registrar Facturación',
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '50%'
+    });
+
+    ref.onClose.subscribe((rpta: any) => {
+      if (!rpta) { return; }
     });
   }
 

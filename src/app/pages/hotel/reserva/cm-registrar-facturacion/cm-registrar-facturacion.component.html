@@ -1,0 +1,445 @@
+<div class="card p-2">
+    <p-tabView>
+        <p-tabPanel>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-building"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Datos Generales
+                    </span>
+                </div>
+            </ng-template>
+
+            <form [formGroup]="frmDatos" class="p-fluid grid col-12 border-1 border-round surface-border p-2 m-2">
+                <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+                    <div class="flex mb-1">
+                        <label class="block text-900">Fecha Registro</label>
+                        <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
+                    </div>
+                    <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
+                        <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false"
+                            [showIcon]="false" [required]="true" inputId="start" inputStyleClass="w-full cursor-pointer"
+                            appendTo="body" class="p-inputtext-sm" [readonlyInput]="true"></p-calendar>
+                    </span>
+                </div>
+                <div class="lg:col-3"></div>
+                <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+                    <label class="block text-900 mb-1">ID Registro</label>
+                    <span class="p-fluid">
+                        <input pInputText type="text" class="font-semibold surface-300 p-inputtext-sm"
+                            formControlName="idordencompra" readonly="true" />
+                    </span>
+                </div>
+                <div class="lg:col-3"></div>
+
+                <div class="sm:col-6 lg:col-6 md:col-6 col-6 h-4rem ">
+                    <div class="field">
+                        <label class="block text-900 font-medium">Tipo Documento</label>
+                        <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="destipodoc"
+                            placeholder="Seleccionar Documento" optionValue="idtipodoc"
+                            (onChange)="cambioTipoDoc($event.value)" inputStyleClass="w-full" appendTo="body"
+                            styleClass="w-full"></p-dropdown>
+                    </div>
+                </div>
+                <div class="sm:col-6 lg:col-6 md:col-6 col-6 h-4rem ">
+                    <label class="block text-900  mb-1">{{tituloTipoDocumento}} <span class="text-red-500 font-bold"> *
+                        </span></label>
+                    <span class="p-input-icon-right">
+                        <i class="pi pi-search cursor-pointer" pTooltip="Busqueda por RUC" tooltipPosition="bottom"
+                            (click)="getBusquedaRUC()"></i>
+                        <input pInputText type="text" formControlName="nrodocumento" class="p-inputtext-sm"
+                            (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" />
+                    </span>
+                </div>
+                <div class="col-12 sm:col-12 lg:col-12 md:col-12 col-12 h-4rem mt-5">
+                    <div class="flex">
+                        <label class="block text-900 mb-1">Cliente </label>
+                    </div>
+                    <span inputStyleClass="font-semibold surface-300">
+                        <p-dropdown [options]="lstCliente" placeholder="Cliente..." formControlName="idproveedor"
+                            class="p-inputtext-sm" optionLabel="razonsocial" optionValue="idcliente" appendTo="body"
+                            [filter]="true" (onChange)="getDatos($event.value)"></p-dropdown>
+                    </span>
+                </div>
+                <div class="sm:col-12 lg:col-12 md:col-12 col-12 h-4rem field mt-3">
+                    <label class="block text-900  mb-1">Dirección</label>
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="direccion" readonly=true
+                            class="p-inputtext-sm surface-100" />
+                    </span>
+                </div>
+                <div class="col-12 h-4rem">
+                    <div class="flex align-items-center justify-content-start h-full">
+                        <p-checkbox formControlName="indsunatreg" inputId="ny" [binary]="true"
+                            class="align-items-center" (onChange)="changeAplicaSunat($event.checked)" />
+                        <p class="m-0 ml-2">Registrada por el Portal SUNAT</p>
+                    </div>
+                </div>
+                <div class="sm:col-4 lg:col-5 md:col-5 col-6 h-4rem field">
+                    <label class="block text-900 mb-1">Tipo Comprobante<span class="text-red-500 font-bold"> *
+                        </span></label>
+                    <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb"
+                        placeholder="Seleccionar Origen" optionLabel="nomitemsunat" optionValue="codsunat"
+                        class="p-inputtext-sm"></p-dropdown>
+                </div>
+                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <label class="block text-900 mb-1">Serie</label>
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="nroserie_ctb"
+                            class="p-inputtext-sm surface-100" />
+                    </span>
+                </div>
+                <div class="sm:col-4 lg:col-4 md:col-5 col-6 h-4rem field">
+                    <label class="block text-900 mb-1">N° Documento</label>
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="nrodocumento_ctb"
+                            class="p-inputtext-sm surface-100" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                    </span>
+                </div>
+
+                <div class="sm:col-4 lg:col-5 md:col-5 col-6 h-4rem field">
+                    <label class="block text-900 mb-1">Moneda <span class="text-red-500 font-bold"> * </span></label>
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda"
+                            optionLabel="desmoneda" optionValue="idmoneda" appendTo="body"
+                            class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div>
+                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <label class="block text-900 mb-1">Tipo Cambio<span class="text-red-500 font-bold"> *
+                        </span></label>
+                    <input pInputText type="text" formControlName="tc" readonly=true
+                        class="p-inputtext-sm surface-100" />
+
+                </div>
+                <div class="sm:col-4 lg:col-4 md:col-5 col-6 h-4rem field">
+                    <label class="block text-900 mb-1">Forma de Pago <span class="text-red-500 font-bold"> *
+                        </span></label>
+                    <span>
+                        <p-dropdown [options]="lstFormaPago" formControlName="codformapago" optionLabel="valoritem"
+                            placeholder="Seleccionar..." optionValue="iditem" appendTo="body"
+                            class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div>
+                <div class="sm:col-5 lg:col-5 md:col-5 col-5 h-4rem field">
+                    <div class="flex mb-1">
+                        <label class="block text-900">Fec. Emisión</label>
+                        <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
+                    </div>
+                    <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
+                        <p-calendar formControlName="fecemision" dateFormat="dd/mm/yy" [showTime]="false"
+                            [showIcon]="false" [required]="true" inputId="start" inputStyleClass="w-full cursor-pointer"
+                            appendTo="body" class="p-inputtext-sm" [minDate]="minimaFechaDesde"
+                            [maxDate]="maximaFechaDesde" [readonlyInput]="true"
+                            (onSelect)="changeFechaDesde($event)"></p-calendar>
+                    </span>
+                </div>
+                <div class="sm:col-5 lg:col-5 md:col-5 col-5 h-4rem field">
+                    <div class="flex mb-1">
+                        <label class="block text-900">Fec. Vencimiento</label>
+                        <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
+                    </div>
+                    <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
+                        <p-calendar formControlName="fecvencimiento" dateFormat="dd/mm/yy" [showTime]="false"
+                            [showIcon]="false" [required]="true" inputId="start" inputStyleClass="w-full cursor-pointer"
+                            appendTo="body" class="p-inputtext-sm" [minDate]="minimaFechaHasta" [readonlyInput]="true"
+                            (onSelect)="changeFechaHasta($event)"></p-calendar>
+                    </span>
+                </div>
+                <div class="sm:col-2 lg:col-2 md:col-2 col-2 h-4rem field">
+                    <label class="block text-900 mb-1">N° Días</label>
+                    <span class="p-fluid">
+                        <input pInputText type="text" formControlName="nrodias" (blur)="addDiasFec()"
+                            (keydown.enter)="addDiasFec()" class="p-inputtext-sm"
+                            oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+                    </span>
+                </div>
+
+                <div class="col-12 h-4rem">
+                    <div class="flex align-items-center justify-content-start h-full">
+                        <p-checkbox formControlName="inddetraccion_ctb" inputId="ny" [binary]="true"
+                            class="align-items-center" (onChange)="changeAplicaDetra($event.checked)" />
+                        <p class="m-0 ml-2">Detracción</p>
+                    </div>
+                </div>
+                <div class="sm:col-6 lg:col-6 md:col-6 col-6 -mt-1">
+                    <label class="block text-900 mb-1">Sunat Transacción <span class="text-red-500 font-bold"> *
+                        </span></label>
+                    <span>
+                        <p-dropdown [options]="lstSunatTrans" formControlName="fel_sunat_transaction"
+                            optionLabel="nomitemsunat" placeholder="Seleccionar..." optionValue="codsunat"
+                            appendTo="body" class="p-inputtext-sm"
+                            (onChange)="getMontoAnticipo($event.value)"></p-dropdown>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-6 md:col-6 col-6 -mt-1">
+                    <label class="text-900 mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
+                    <span>
+                        <p-dropdown [options]="lstCategoriaDoc" formControlName="idcategoria" optionLabel="nomcategoria"
+                            placeholder="Seleccionar..." optionValue="idcategoria" appendTo="body"
+                            class="p-inputtext-sm" [filter]="true"></p-dropdown>
+                    </span>
+                </div>
+            </form>
+        </p-tabPanel>
+
+        <p-tabPanel>
+            <ng-template pTemplate="header">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-list"></i>
+                    <span class="font-bold white-space-nowrap m-0">
+                        Detalle
+                    </span>
+                </div>
+            </ng-template>
+            <form [formGroup]="frmDatos" class="p-fluid grid col-12 border-1 m-2 border-round surface-border ">
+                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                    <label class=" text-900 mb-1">B.Imponible</label>
+                    <span class="p-fluid">
+                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                            inputStyleClass="surface-100 text-right" formControlName="s_monto_valor_venta_CTB"
+                            readonly="true"></p-inputNumber>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                    <label class="text-900 mb-1">IGV</label>
+                    <span class="p-fluid">
+                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                            inputStyleClass="surface-100 text-right" formControlName="s_monto_igv_CTB"
+                            readonly="true"></p-inputNumber>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                    <label class="text-900 mb-1">Total</label>
+                    <span class="p-fluid">
+                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                            inputStyleClass="surface-100 text-right" formControlName="s_monto_total_CTB"
+                            readonly="true"></p-inputNumber>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                    <label class="text-900 mb-1">Monto Neto Pago</label>
+                    <p-inputNumber mode="decimal" [minFractionDigits]="2" inputStyleClass="surface-100 text-right"
+                        class="p-inputtext-sm " formControlName="monto_pen_pago" [readonly]="true"></p-inputNumber>
+                </div>
+                <ng-container *ngIf="verDetraccion">
+                    <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                    <label class=" text-900 mb-1">% Detracción</label>
+                    <span class="p-fluid">
+                        <p-inputNumber class="mt-1" formControlName="porc_detraccion" locale="es-PE" mode="decimal"
+                            [minFractionDigits]="0" name="porc_detraccion" [min]="0" [max]="99" class="p-inputtext-sm"
+                            inputStyleClass="text-right" (onInput)="recalcularRegistro($event.value)"></p-inputNumber>
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                    <div class="flex justify-content-end mb-1">
+                        <label class="text-900">Editar </label>
+                    </div>
+                    <span class="flex justify-content-end flex-wrap mt-2">
+                        <p-checkbox formControlName="indmanualdetraccion" inputId="ny" [binary]="true"
+                            class="align-items-end" (onChange)="changeEditaDetra($event.checked)"
+                            pTooltip="Editar el Monto Detracción" tooltipPosition="bottom" />
+                    </span>
+                </div>
+                <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field ">
+                    <label class="text-900 mb-1">Monto Detracción S/</label>
+                    <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
+                        formControlName="monto_detraccion_mn_CTB" Monto inputStyleClass="text-right"></p-inputNumber>
+                </div>
+                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <label class="text-900 mb-1">Tipo Detracción</label>
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstTipoDetra" formControlName="detraccion_tipo"
+                            placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
+                            class="p-inputtext-sm" [filter]="true"></p-dropdown>
+                    </span>
+                </div>
+                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <label class="text-900 mb-1">Tipo Pago</label>
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstTipoPagoDetra" formControlName="detraccion_tipo_pago"
+                            placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
+                            class="p-inputtext-sm" [filter]="true"></p-dropdown>
+                    </span>
+                </div>
+                </ng-container>
+                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <label class="text-900 mb-1">Tipo Retención</label>
+                    <span class="p-fluid mt-1">
+                        <p-dropdown [options]="lstTipoRetencion" formControlName="retencion_tipo"
+                            placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
+                            class="p-inputtext-sm"></p-dropdown>
+                    </span>
+                </div>
+                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <label class="text-900 mb-1">Base Retención S/</label>
+                    <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
+                        formControlName="retencion_base_imponible" inputStyleClass="text-right"></p-inputNumber>
+                </div>
+                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <label class="text-900 mb-1">Monto Retención S/</label>
+                    <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
+                        formControlName="monto_retencion" inputStyleClass="text-right"></p-inputNumber>
+                </div>
+                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <label class=" text-900 mb-1">Monto Anticipo</label>
+                    <span class="p-fluid">
+                        <p-inputNumber class="mt-1" formControlName="monto_anticipo" locale="es-PE" mode="decimal"
+                            [minFractionDigits]="0" [min]="0" class="p-inputtext-sm"
+                            inputStyleClass="text-right"></p-inputNumber>
+                    </span>
+                </div>
+            </form>
+
+            <div class="ml-2 col-12 border-1 border-round surface-border">
+                <p-table [value]="lstItemOC" responsiveLayout="stack" [breakpoint]="'960px'"
+                    [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm ">
+                    <ng-template pTemplate="caption">
+                        <div *ngIf="verItems" class="flex gap-2 mb-2">
+                            <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
+                                pTooltip="Agregar Item" icon="pi pi-plus" label="Agregar"
+                                (click)="getItem([],0)"></button>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                            <th style="width: 70px;" class="bg-teal-50 border-1">
+                                <div class="justify-content-end ">
+                                    CÓDIGO
+                                </div>
+                            </th>
+                            <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
+                            <th style="width: 70px;" class="bg-teal-50 border-1">
+                                <div class="justify-content-end ">
+                                    U. MED
+                                </div>
+                            </th>
+                            <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                                <div class="justify-content-end ">
+                                    P. UNI.
+                                </div>
+                            </th>
+                            <th style="width: 70px; text-align:center;" class="bg-teal-50 border-1">
+                                <div class="justify-content-end ">
+                                    CANT.
+                                </div>
+                            </th>
+                            <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                                <div class="justify-content-end ">
+                                    TOTAL
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                        <tr>
+                            <td>{{rowIndex + 1}}</td>
+                            <td>
+                                <div [ngStyle]="{'width':'70px'}">
+                                    {{ product.codproducto }}
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    {{ product.descripcion | uppercase}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'70px'}">
+                                    {{ product.nomunidad }}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                    {{ product.preciocosto | number: '0.2'}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                                    {{ product.cantidad | number: '0.2'}}
+                                </div>
+                            </td>
+                            <td>
+                                <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                    {{ product.preciocostototal | number: '0.2'}}
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="footer">
+                        <tr>
+                            <td colspan="6" class="text-right">Sub Total: </td>
+                            <td>
+                                <div [ngStyle]="{'text-align':'right'}">
+                                    {{s_monto | number: '0.2-2'}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="text-right">IGV: </td>
+                            <td>
+                                <div [ngStyle]="{'text-align':'right'}">
+                                    {{s_igv | number: '0.2-2'}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="6" class="text-right">Total: </td>
+                            <td>
+                                <div [ngStyle]="{'text-align':'right'}">
+                                    {{montoTotal | number: '0.2-2'}}
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+            <div class="col-12 border-1 border-round surface-border ml-2">
+                <div class="flex">
+                    <div class="col-12 ">
+                        <label class="block text-900 mb-1">N° Cuotas<span class="text-red-500 font-bold"> *
+                            </span></label>
+                        <span>
+                            <p-dropdown [options]="lstCuotas" [(ngModel)]="nrocuotas" optionLabel="name"
+                                placeholder="Seleccionar..." optionValue="code" appendTo="body" class="p-inputtext-sm"
+                                (onChange)="prcCuota($event.value);"></p-dropdown>
+                        </span>
+                    </div>
+                </div>
+                <p-table [value]="listaCuotas" class="ml-2" responsiveLayout="stack" [breakpoint]="'900px'"
+                    [tableStyle]="{'min-width': '35rem'}" [scrollable]="true"
+                    styleClass="p-datatable-sm card border-1 border-round surface-border -mt-3">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th [ngStyle]="{'width':'80px'}" class="bg-teal-50 border-1">N° Cuota</th>
+                            <th class="bg-teal-50 border-1">Fecha</th>
+                            <th class="bg-teal-50 border-1">
+                                <div [ngStyle]="{'text-align':'right'}">
+                                    Monto
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                        <tr>
+                            <td>{{rowIndex + 1}}</td>
+                            <td>{{ product.fechacuota | date:'dd/MM/yyyy'}} </td>
+                            <td>
+                                <div [ngStyle]="{'text-align':'right'}">
+                                    {{ product.monto | number: '0.2'}}
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </p-tabPanel>
+    </p-tabView>
+</div>
+
+    <div class="flex justify-content-end">
+        <button pButton icon="pi pi-save" label="Facturar" class="p-button-primary mr-2" (click)="guardarOC()"></button>
+        <button pButton icon="pi pi-times" label="Cancelar" class="p-button-secondary" (click)="cerrar(false)"></button>
+    </div>
