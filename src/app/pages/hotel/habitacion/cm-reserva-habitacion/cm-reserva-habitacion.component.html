@@ -104,8 +104,8 @@
                 <div class="field">
                     <label class="block text-900 font-medium">
                         Cliente
-                        <i class="pi pi-user-plus cursor-pointer text-primary ml-2" pTooltip="Nuevo Cliente"
-                            tooltipPosition="right" (click)="NuevoPersona()"></i>
+                        <i *ngIf="esVisEditPersona" class="pi pi-user-edit cursor-pointer text-primary ml-2" pTooltip="Editar Cliente"
+                            tooltipPosition="right" (click)="editPersona()"></i>
                     </label>
                     <p-dropdown [options]="lstCliente" placeholder="Seleccione cliente..." formControlName="idproveedor"
                         styleClass="w-full" optionLabel="razonsocial" optionValue="idcliente" appendTo="body"

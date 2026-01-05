@@ -80,6 +80,9 @@ esPersonaJuridica: boolean = false;
 
     console.log("registerFormCliente - tipopersona: ", this.registerFormCliente.get('tipopersona')?.value);
     this.cambioTipoPer(this.registerFormCliente.get('tipopersona')?.value);
+    /*if(this.param?.tipoProceso === 'E'){
+      this.getBuscarPersonaPAX();
+    }*/
   }
 
   ngOnDestroy() {
@@ -196,7 +199,9 @@ esPersonaJuridica: boolean = false;
                   console.log("rpta prcClientes : ", rpta);
                   if (rpta.procesoSwitch == 0){
                       this.messageService.add({severity: 'success', detail: "Operación exitosa" });
-                      this.registerFormCliente.get('idpersona')?.setValue(rpta.resultProceso);
+                      if(rpta.resultProceso !== '0'){
+                        this.registerFormCliente.get('idpersona')?.setValue(rpta.resultProceso);
+                      }
                       this.cerrar({...this.registerFormCliente.getRawValue()})
                       }else{
                           this.messageService.add({severity: 'error', detail: rpta.mensaje });

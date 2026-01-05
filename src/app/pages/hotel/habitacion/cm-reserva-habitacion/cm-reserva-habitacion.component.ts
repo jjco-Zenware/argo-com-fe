@@ -47,6 +47,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   dropdownItemsTipNro = [];
   tituloTipoDocumento: string = 'Nro. Documento';
   esExtranjero: boolean = false;
+  esVisEditPersona: boolean = false;
   lsTipoTAM: any[] = [
     {
       codigo: 'D',
@@ -182,10 +183,10 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  getValidarNroDocumento():boolean {
+  getValidarNroDocumento(): boolean {
     const _idtipodoc = this.frmDatos.get('idtipodoc')?.value;
     const _nro = this.frmDatos.get('nrodocumento')?.value;
-  
+
     switch (_idtipodoc) {
       case 'DNI':
         if (_nro.length !== 8) {
@@ -240,10 +241,11 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       nrodocumento: _nro
     }
     let _tipopersona = '';
-    if (_idtipodoc === 'RUC') { 
+    if (_idtipodoc === 'RUC') {
       _tipopersona = 'J';
-    }else { _tipopersona = 'N'; }
+    } else { _tipopersona = 'N'; }
 
+    this.esVisEditPersona = false;
     this.ordencompraService.buscarporRUC(objet).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
@@ -253,6 +255,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
           this.NuevoPersona({ idtipodoc: _idtipodoc, nroDocumento: _nro, tipopersona: _tipopersona });
           return;
         }
+        this.esVisEditPersona = true;
         this.frmDatos.get('idproveedor')?.setValue(rpta[0].idcliente);
         this.frmDatos.get('direccion')?.setValue(rpta[0].direcresumen);
       },
@@ -275,13 +278,35 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     const objet = {
       idrolpersona: 'PRO',
       ...itemDocumento,
-      esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS'
+      esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS',
+      tipoProceso: 'N'
     }
+    this.getModalPersona(objet);
+  }
 
-    console.log('NuevoPersona objet:', objet);
+  editPersona() {
+    const { idproveedor, idtipodoc, nrodocumento } = this.frmDatos.getRawValue();
+    
+    let _tipopersona = '';
+    if (idtipodoc === 'RUC') {
+      _tipopersona = 'J';
+    } else { _tipopersona = 'N'; }
 
+    const objet = {
+      idrolpersona: 'PRO',
+      idtipodoc,
+      idproveedor,
+      nroDocumento: nrodocumento, 
+      tipopersona: _tipopersona,
+      esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS',
+      tipoProceso: 'E'
+    }
+    this.getModalPersona(objet);
+  }
+
+  getModalPersona(data: any) {
     const refItem = this.dialogService.open(CModalPersonaComponent, {
-      data: objet,
+      data,
       header: "Agregar Cliente",
       closeOnEscape: false,
       styleClass: 'testDialog',
@@ -291,9 +316,9 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
 
       console.log('onClose', rpta);
       if (rpta != undefined) {
-        this.listaClientes();
-        this.frmDatos.get('nrodocumento')?.setValue(parseInt(rpta.objeto.nrodocumento));
-        this.frmDatos.get('idproveedor')?.setValue(parseInt(rpta.objeto.idpersona));
+        this.listaClientes(rpta.objeto.idpersona);
+        this.frmDatos.get('nrodocumento')?.setValue(rpta.objeto.nrodocumento);
+        //this.frmDatos.get('idproveedor')?.setValue(parseInt(rpta.objeto.idpersona));
         this.frmDatos.get('direccion')?.setValue(rpta.objeto.direcresumen);
       }
     });
@@ -321,7 +346,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   changeFechaHasta(event: Date) {
     this.maximaFechaDesde = event;
     const { fecha_ini, nrodias } = this.frmDatos.controls;
-    
+
     const vencimiento = this.parsearFecha(event);
     const _fecemision = this.parsearFecha(fecha_ini.value);
     const diferenciaEnDias = this.calcularDiferenciaDias(_fecemision, vencimiento);
@@ -350,7 +375,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
 
   addDiasFec() {
     const { fecha_ini, nrodias, fecha_fin } = this.frmDatos.controls;
-    if(!nrodias.value || Number.parseInt(nrodias.value) === 0) {
+    if (!nrodias.value || Number.parseInt(nrodias.value) === 0) {
       nrodias?.setValue(1);
       const _fechaSalida = this.addDays(fecha_ini.value, nrodias.value);
       fecha_fin?.setValue(_fechaSalida);
@@ -366,12 +391,15 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     fecha_fin?.setValue(fecha);
   }
 
-  listaClientes() {
+  listaClientes(idPersona?:number) {
     let tiporol = "CLI";
     this.proyectosService.obtenerClientes(tiporol).subscribe({
       next: (rpta: any) => {
         this.lstCliente = rpta;
         console.log('listaClientes', this.lstCliente);
+        if(idPersona){
+          this.frmDatos.get('idproveedor')?.setValue(idPersona);
+        }
       },
       error: (err) => {
         this.messageService.clear();
@@ -559,7 +587,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       items: this.lstItemOC.length === 0 ? _lstItemOC : this.lstItemOC,
       fechaingreso,
       fecemision,
-      fecha_ini:fechaIni,
+      fecha_ini: fechaIni,
       fecvencimiento,
       fecha_fin: fechaFin,
       tipodoc_ctb: (this.frmDatos.value.tipodoc_ctb).toString(),
@@ -842,14 +870,14 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   }
 
   listarTiposDoc() {
-    const documentosValidos : string[] =['DNI', 'RUC', 'CEX', 'PAS'];
+    const documentosValidos: string[] = ['DNI', 'RUC', 'CEX', 'PAS'];
     const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat('X')
-    .pipe(
-          map((rpta: any) => {
-            return rpta.filter((item: any) => item.idtipodoc && documentosValidos.includes(item.idtipodoc));
-          })
-        )    
-    .subscribe({
+      .pipe(
+        map((rpta: any) => {
+          return rpta.filter((item: any) => item.idtipodoc && documentosValidos.includes(item.idtipodoc));
+        })
+      )
+      .subscribe({
         next: (rpta: any) => {
           console.log('rpta listartipodocumentotablasunat: ', rpta);
           this.dropdownItemsTipNro = rpta;
@@ -862,7 +890,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($listartipodocumentotablasunat)
   }
 
-cambioTipoDoc(dato: any) {
+  cambioTipoDoc(dato: any) {
     console.log('cambioTipoDoc...', dato);
 
     switch (dato) {
@@ -877,7 +905,7 @@ cambioTipoDoc(dato: any) {
         this.tituloTipoDocumento = 'Número de RUC';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
-        break;  
+        break;
       case 'CEX':
         this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
