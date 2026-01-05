@@ -314,6 +314,7 @@ export interface Cliente {
     nomtipopersona?: string;
     nroctadetraccion?: number;
     tipoentidad?: string;
+    proyecto_cod?: string;
 }
 
 export interface KanbanCard {

@@ -245,4 +245,9 @@ export class ComprasService {
             responseType: 'blob'
           })
     }
+
+    listarAreas() {
+        const url = `${constantesApiWeb.listarAreas}`;
+        return this.http.get<any>(url)
+    }
 }

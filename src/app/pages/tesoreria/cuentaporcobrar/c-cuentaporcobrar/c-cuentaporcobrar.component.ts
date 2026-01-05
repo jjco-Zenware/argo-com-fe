@@ -5,12 +5,13 @@ import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
-import * as FileSaver from 'file-saver';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TesoreriaService } from '../../service/tesoreriaServices';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { CModalRegPAgosComponent } from '../../modalregpagos/c-modalregpagos.component';
 import { CModalListPAgosComponent } from '../../modallistpagos/c-modallistpagos.component';
+import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
+import { CModalListAsiento } from '../../modalasientos/c-modalasiento.component';
 
 @Component({
   selector: 'app-c-cuentaporcobrar',
@@ -43,6 +44,9 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
   saldo_documento_dol: number = 0;
   s_monto_recaudado_sol: number = 0;
   s_monto_recaudado_dol: number = 0;
+  lstCategoriaDoc: any;
+  ordenCompra: any;
+  idcategoria: any;
 
   constructor(
       private fb: FormBuilder,
@@ -53,7 +57,7 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
       private messageService: MessageService,
       private tesoreriaService: TesoreriaService, 
       private proyectosService: ProyectosService,
-      
+      private contabilidadService: ContabilidadService
     ){    
       
   }
@@ -102,7 +106,14 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
         next: (rpta:any) => {
             this.setSpinner(false);
 
-            this.lstPorCobrar = rpta.ordenescompra;
+            let listaSort = rpta.ordenescompra.sort((a:any, b:any) => {
+              if (a.nrofactura > b.nrofactura) {
+                return -1;
+              }
+              return 0;
+            })
+
+            this.lstPorCobrar = listaSort;
             console.log('rpta lstPorCobrar', this.lstPorCobrar);
         },
         error:(err)=>{
@@ -176,6 +187,16 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
   }
   
   onPagar(data :any) {
+    this.listarCategoriaDoc();
+    
+    console.log('onPagar',data);
+    if (data.idmoneda = 1) {
+      this.idcategoria = 21; // S/.
+    }else{
+      this.idcategoria = 23; // $.
+    }
+    this.ordenCompra = data;
+
     data.tipodeuda = 1;
     data.idpagodocprc = 0;
     const refItem = this.dialogService.open(CModalRegPAgosComponent, {
@@ -189,42 +210,43 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
           
           console.log('onClose',rpta);
           if (rpta != undefined) {
-            this.getListar();    
+
+            this.generarAsiento();
           }
         });
   }
 
-  onPagarDetra(data :any) {
-    console.log('onPagarDetra',data);
-    data.tipodeuda = 2;
-    const refItem = this.dialogService.open(CModalRegPAgosComponent, {
-          data: data,
-          header: "Cobro de Detracción",
-          closeOnEscape: false,
-          styleClass: 'testDialog',
-          width: '30%'
-        });
-        refItem.onClose.subscribe((rpta: any) => {
-          console.log('onClose',rpta);
-          if (rpta != undefined) {
-            this.getListar()   ;
-          }
-        });
-  }
+  // onPagarDetra(data :any) {
+  //   console.log('onPagarDetra',data);
+  //   data.tipodeuda = 2;
+  //   const refItem = this.dialogService.open(CModalRegPAgosComponent, {
+  //         data: data,
+  //         header: "Cobro de Detracción",
+  //         closeOnEscape: false,
+  //         styleClass: 'testDialog',
+  //         width: '30%'
+  //       });
+  //       refItem.onClose.subscribe((rpta: any) => {
+  //         console.log('onClose',rpta);
+  //         if (rpta != undefined) {
+  //           this.getListar()   ;
+  //         }
+  //       });
+  // }
 
-  onVerDetra(data :any) {
-    data.tipodeuda = 2;
-    const refItem = this.dialogService.open(CModalListPAgosComponent, {
-      data: data,
-      header: "Pago Detracción de "+ data.nomcomercial + ' / FACT N° - ' + data.nrofactura,
-      closeOnEscape: false,
-      styleClass: 'testDialog',
-      width: '50%'
-    });
-    refItem.onClose.subscribe((rpta: any) => {
-      this.getListar();         
-    });
-  }
+  // onVerDetra(data :any) {
+  //   data.tipodeuda = 2;
+  //   const refItem = this.dialogService.open(CModalListPAgosComponent, {
+  //     data: data,
+  //     header: "Pago Detracción de "+ data.nomcomercial + ' / FACT N° - ' + data.nrofactura,
+  //     closeOnEscape: false,
+  //     styleClass: 'testDialog',
+  //     width: '50%'
+  //   });
+  //   refItem.onClose.subscribe((rpta: any) => {
+  //     this.getListar();         
+  //   });
+  // }
 
  getExportarExcel() {
      this.setSpinner(true);
@@ -255,4 +277,70 @@ export class CCuentaporCobrarComponent implements OnInit, OnDestroy {
      });
    this.$listSubcription.push($getListar)
    }
+
+   generarAsiento() {  
+
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Generando Asientos...!';
+    let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.idcategoria);
+    console.log('s_categoria...', s_categoria);
+
+    const objeto = {
+      idasiento: 0,
+      idreferencia: this.ordenCompra.idordencompra,
+      glosaasiento: 'ASIENTO GENERADO CXC ' + s_categoria[0].nomcategoria,
+      idusuario: constantesLocalStorage.idusuario
+    }
+    const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
+      next: (rpta: any) => {
+        if (rpta.procesoSwitch === 0) {
+          this.setSpinner(false);
+          this.messageService.add({ severity: 'success', summary: 'Exito', detail: rpta.mensaje });
+                    
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.mensaje });
+        }
+            this.getListar();    
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($listaMonedas);
+  }
+
+  listarCategoriaDoc() {
+    let tipo = 17; // compras
+    const $listarCategoriaDoc = this.contabilidadService
+      .listarCategoriasDoc(tipo)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('listarCategoriasDoc...', rpta);
+
+          this.lstCategoriaDoc = rpta;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => { },
+      });
+    this.$listSubcription.push($listarCategoriaDoc);
+  }
+
+  onVerAsiento(data :any) {
+    console.log('onVerAsiento...', data);
+    const refItemx = this.dialogService.open(CModalListAsiento, {
+      data: data,
+      header: "Lista de Asientos / "+ data.nomcomercial,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '50%'
+    });
+    refItemx.onClose.subscribe((rpta: any) => {      
+      
+    });
+  }
 }

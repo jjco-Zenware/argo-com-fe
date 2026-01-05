@@ -122,6 +122,7 @@ export class CRegistroFacturacionComponent implements OnInit, OnDestroy{
       this.visDetalle = true;
       this.visQuote = false;
   }
+
   verCotiza(data: any) {
       console.log('onVer...', data);
       this.tituloDetalle = "Cotización de Factura N° " + data.idfacturacion;
@@ -151,5 +152,5 @@ export class CRegistroFacturacionComponent implements OnInit, OnDestroy{
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
-    }
+    }     
 }

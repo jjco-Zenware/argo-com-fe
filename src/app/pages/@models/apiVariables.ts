@@ -260,4 +260,6 @@ export const constantesApiWeb = {
      asientocfgTraeruno: controllerContabilidad + '/asientocfgtraeruno/',
     asientoPrc: controllerContabilidad + '/asientoprc',
     exportarexceldetracciones: controllerMain + '/exportarexceldetracciones',
+
+    listarAreas: controllerComercial + '/listarareas',
 }

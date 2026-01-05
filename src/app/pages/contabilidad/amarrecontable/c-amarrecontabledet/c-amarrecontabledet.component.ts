@@ -351,11 +351,15 @@ export class CAmarreContableDetComponent implements OnInit, OnDestroy {
     this.contabilidadService.obtenerItemsTabla(130).subscribe({
         next: (rpta: any) => {
             let listafilter;
-            if (this.registerFormRegistro.value.idtipodocprc === 6) {
-                listafilter = rpta.filter((item: any) => item.coditem === '6');
-            } else {
-                listafilter = rpta.filter((item: any) => item.coditem === '7');
-            }
+            // if (this.registerFormRegistro.value.idtipodocprc === 6) {
+            //     listafilter = rpta.filter((item: any) => item.coditem === '6');
+            // } else {
+            //     listafilter = rpta.filter((item: any) => item.coditem === '7');
+            // }
+
+            listafilter = rpta.filter((item: any) => item.coditem === this.registerFormRegistro.value.idtipodocprc.toString());
+
+
             if (this.registerFormRegistro.value.idasientocfg > 0) {
               this.registerFormRegistro.get('conceptoctble')?.setValue(this.registerFormRegistro.value.conceptoctble);
             }

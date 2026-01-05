@@ -12,6 +12,8 @@ import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/servic
 import { CModalListPAgosComponent } from '../../modallistpagos/c-modallistpagos.component';
 import { CModalRegPAgosComponent } from '../../modalregpagos/c-modalregpagos.component';
 import { CModalProgramacionComponent } from '../../modalfecprogramacion/c-modalfecprogramacion.component';
+import { CModalListAsiento } from '../../modalasientos/c-modalasiento.component';
+import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 
 @Component({
   selector: 'app-c-cuentaporpagar',
@@ -43,6 +45,9 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     {value: 'PAR', name: 'PARCIAL' }, 
     {value: 'PAG', name: 'PAGADO' }, 
   ]
+  lstCategoriaDoc: any;
+  ordenCompra: any;
+  idcategoria: any;
 
   constructor(
       private fb: FormBuilder,
@@ -53,7 +58,7 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
       private messageService: MessageService,
       private tesoreriaService: TesoreriaService, 
       private proyectosService: ProyectosService,
-      
+      private contabilidadService: ContabilidadService
     ){    
       
   }
@@ -188,10 +193,19 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     }
     
     onPagar(data :any) {
+      this.listarCategoriaDoc();
       if (data.fecprogramacion === null || data.fecprogramacion === undefined || data.fecprogramacion === '') {
         this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'Ingresar Fecha de Pago..' });
           return;        
       }
+
+      console.log('onPagar',data);
+    if (data.idmoneda = 1) {
+      this.idcategoria = 22; // S/.
+    }else{
+      this.idcategoria = 24; // $.
+    }
+    this.ordenCompra = data;
 
       data.tipodeuda = 1;
       const refItem = this.dialogService.open(CModalRegPAgosComponent, {
@@ -205,7 +219,8 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
             
             console.log('onClose',rpta);
             if (rpta != undefined) {
-              this.getListar()   ;
+              this.generarAsiento();
+              
             }
           });
     }
@@ -290,4 +305,71 @@ export class CCuentaporPagarComponent implements OnInit, OnDestroy{
     });
   this.$listSubcription.push($getListar)
   }
+
+   generarAsiento() {  
+
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Generando Asientos...!';
+    let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.idcategoria);
+    console.log('s_categoria...', s_categoria);
+
+    const objeto = {
+      idasiento: 0,
+      idreferencia: this.ordenCompra.idordencompra,
+      glosaasiento: 'ASIENTO GENERADO CXC ' + s_categoria[0].nomcategoria,
+      idusuario: constantesLocalStorage.idusuario
+    }
+    const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
+      next: (rpta: any) => {
+        if (rpta.procesoSwitch === 0) {
+          this.setSpinner(false);
+          this.messageService.add({ severity: 'success', summary: 'Exito', detail: rpta.mensaje });
+                    
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.mensaje });
+        }
+        this.getListar()   ;
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($listaMonedas);
+  }
+
+  listarCategoriaDoc() {
+    let tipo = 18; // compras
+    const $listarCategoriaDoc = this.contabilidadService
+      .listarCategoriasDoc(tipo)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('listarCategoriasDoc...', rpta);
+
+          this.lstCategoriaDoc = rpta;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => { },
+      });
+    this.$listSubcription.push($listarCategoriaDoc);
+  }
+
+    onVerAsiento(data :any) {
+      console.log('onVerAsiento...', data);
+      const refItemx = this.dialogService.open(CModalListAsiento, {
+        data: data,
+        header: "Lista de Asientos / "+ data.nomcomercial,
+        closeOnEscape: false,
+        styleClass: 'testDialog',
+        width: '50%'
+      });
+      refItemx.onClose.subscribe((rpta: any) => {      
+        
+      });
+    }
+    
 }

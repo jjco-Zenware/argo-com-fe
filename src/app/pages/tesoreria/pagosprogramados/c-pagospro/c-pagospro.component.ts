@@ -95,7 +95,8 @@ export class CPagosProComponent implements OnInit, OnDestroy{
         next: (rpta:any) => {
             this.setSpinner(false);
             console.log('rpta',rpta);
-            this.lstCuentas = rpta.ordenescompra;
+            let lista = rpta.ordenescompra;
+            this.lstCuentas = lista.filter((item:any) => item.saldo_documento > 0);
             this.s_monto_pago_sol = this.lstCuentas.filter((item:any) => item.idmoneda === 1).reduce((acc:any, item:any) => acc + item.s_monto_neto_CTB, 0);
             this.s_monto_pago_dol = this.lstCuentas.filter((item:any) => item.idmoneda === 2).reduce((acc:any, item:any) => acc + item.s_monto_neto_CTB, 0);
           

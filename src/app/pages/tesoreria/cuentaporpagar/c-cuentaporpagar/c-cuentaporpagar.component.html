@@ -62,12 +62,12 @@
                 </th>
                 <th style="width: 60px;" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
-                        N° OC
+                        TIPO <br> DOCUMENTO
                     </div>
                 </th>
                 <th style="width: 60px;" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
-                        N° DOCUMENTO
+                        N° <br> DOCUMENTO
                     </div>
                 </th>
                 <th style="width: 60px;" class="bg-teal-50 border-1" >
@@ -90,11 +90,12 @@
                         PROVEEDOR
                     </div>
                 </th>
-                <th style="width: 70px;" class="bg-teal-50 border-1" >
-                    <div [ngStyle]="{'width':'70px','text-align':'center'}">
-                        IMPORTE <br> TOTAL
+                <th style="width: 50px; text-align:center" class="bg-teal-50 border-1" >
+                    <div class="justify-content-between align-items-center">
+                        MONEDA
                     </div>
                 </th>
+               
                 <th style="width: 70px;" class="bg-teal-50 border-1" >
                     <div [ngStyle]="{'width':'70px','text-align':'center'}">
                         MONTO <br> A PAGAR
@@ -110,12 +111,13 @@
                         SALDO <br> DETRACCIÓN
                     </div>
                 </th> -->
-                
-                <th style="width: 50px; text-align:center" class="bg-teal-50 border-1" >
-                    <div class="justify-content-between align-items-center">
-                        MONEDA
+                 <th style="width: 70px;" class="bg-teal-50 border-1" >
+                    <div [ngStyle]="{'width':'70px','text-align':'center'}">
+                        IMPORTE <br> TOTAL
                     </div>
                 </th>
+                
+                
                 <th style="width: 70px;" class="bg-teal-50 border-1" >
                     <div [ngStyle]="{'width':'70px','text-align':'center'}">
                         GLOSA
@@ -143,17 +145,17 @@
                 </th>
                 <th style="width: 50px" class="bg-teal-50 border-1" >
                     <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                        IMPOR TOTAL <br> PAGADO
+                        TOTAL <br> PAGADO
                     </div>
                 </th>
-                <th style="width: 50px" class="bg-teal-50 border-1" >
+                <!-- <th style="width: 50px" class="bg-teal-50 border-1" >
                     <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                        IMPOR POR  <br> PAGAR
+                        POR  <br> PAGAR
                     </div>
-                </th>
+                </th> -->
                 <th style="width: 50px" class="bg-teal-50 border-1" >
                     <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                        PROGRAMACIÓN  <br> DE PAGO
+                        PROGRAMADO
                     </div>
                 </th>
                 <!-- <th style="width: 50px" class="bg-teal-50 border-1" >
@@ -162,7 +164,7 @@
                     </div>
                 </th> -->
                 <th style="width: 50px" class="bg-teal-50 border-1" >
-                    <div [ngStyle]="{'width':'80px','text-align':'center'}">
+                    <div [ngStyle]="{'text-align':'center'}">
                         N° CUENTA  <br> BANCARIO
                     </div>
                 </th>
@@ -179,9 +181,14 @@
                 <td [ngStyle]="{'width':'10px'}">
                     {{rowIndex + 1}}
                 </td>
-                <td>
+                <!-- <td>
                     <div [ngStyle]="{'width':'70px'}">
                         {{data.codigonroorden_origen_ctax}}
+                    </div>
+                </td> -->
+                <td>
+                    <div [ngStyle]="{'width':'70px'}">
+                        {{data.nomtipodoc_ctb}}
                     </div>
                 </td>
                 <td>
@@ -210,10 +217,11 @@
                     </div>
                 </td>
                 <td>
-                    <div [ngStyle]="{'width':'80px', 'text-align':'right'}">
-                        {{data.s_monto_total | number: '0.2-2'}}
+                    <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
+                        {{data.simbmoneda }}
                     </div>
                 </td>
+               
                 <td>
                     <div [ngStyle]="{'width':'80px', 'text-align':'right'}">
                         {{data.s_monto_neto_CTB | number: '0.2-2' }}
@@ -221,12 +229,12 @@
                 </td>
                 <td>
                     <div class="flex gap-1 align-items-center">
-                        <div [ngStyle]="{'width':'50px', 'text-align':'right'}" >
+                        <div [ngStyle]="{'width':'70px', 'text-align':'right'}" >
                             {{data.s_monto_detraccion_mn_CTB | number: '0.2-2' }}
                         </div>
-                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-orange-500" (click)="onVerDetra(data)"></button>
-                        <button *ngIf="data.saldo_detraccion !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Pagar Detraccion" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagarDetra(data)"></button>
-                        
+                        <!-- <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-orange-500" (click)="onVerDetra(data)"></button>
+                        <button *ngIf="data.saldo_detraccion !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Pagar Detraccion" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagarDetra(data)"></button> -->
+
                     </div>                
                 </td>
                 <!-- <td>
@@ -234,11 +242,12 @@
                         {{data.saldo_detraccion | number: '0.2-2' }}
                     </div>
                 </td> -->
-                <td>
-                    <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
-                        {{data.simbmoneda }}
+                 <td>
+                    <div [ngStyle]="{'width':'80px', 'text-align':'right'}">
+                        {{data.s_monto_total | number: '0.2-2'}}
                     </div>
                 </td>
+                
                 <td>
                     <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
                         {{data.observacion }}
@@ -264,11 +273,11 @@
                         {{data.s_monto_recaudado | number: '0.2-2' }}
                     </div>
                 </td>
-                <td>
+                <!-- <td>
                     <div [ngStyle]="{'width':'70px','text-align':'right'}">
                         {{data.saldo_documento | number: '0.2-2' }}
                     </div>
-                </td>
+                </td> -->
                 <td>
                     <div class="flex gap-1 align-items-center">
                         <div [ngStyle]="{'width':'50px', 'text-align':'right'}" >
@@ -279,7 +288,7 @@
                     </div>   
                 </td>
                 <td>
-                    <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
+                    <div [ngStyle]="{'text-align':'center'}">
                         {{data.nrocuentaproveedor }}
                     </div>
                 </td>
@@ -287,7 +296,8 @@
                     <div class="flex align-items-center m:justify-content-end">
                         <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
                         <button *ngIf="data.saldo_documento !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Registrar Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagar(data)"></button>
-                
+                        <button *ngIf="data.asientos.length > 0" pButton pRipple type="button" icon="pi pi-book" tooltipPosition="bottom" pTooltip="Ver Asiento" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-orange-600" (click)="onVerAsiento(data)"></button>
+
                     </div>
                 </td>
             </tr>

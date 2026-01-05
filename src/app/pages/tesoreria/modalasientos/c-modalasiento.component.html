@@ -1,0 +1,87 @@
+<p-table #dt1 [value]="lstAsiento" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"                    
+    styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
+    <ng-template pTemplate="header">
+        <tr class="text-sm h-1rem">
+            <th rowspan="2" [ngStyle]="{ width: '20px' }" class="bg-teal-50 border-1">
+                    N°
+                </th>
+            <th rowspan="2" style="width: 20px" class="bg-teal-50 border-1" >
+                <div class="flex justify-content-between align-items-center">
+                    N° ASIENTO
+                </div>
+            </th>
+            <th rowspan="2" style="width: 80px;" class="bg-teal-50 border-1">FECHA</th>
+            <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">GLOSA</th>
+            <th rowspan="2" style="width: 80px;" class="bg-teal-50 border-1">TC</th>
+
+            <th colspan="2" style="width: 140px; text-align:center" class="bg-teal-50 border-1">
+                CTA CTBLE
+            </th>
+            <th colspan="2" style="width: 140px; text-align:center" class="bg-teal-50 border-1">
+                MOVIMIENTOS
+            </th>
+        </tr>
+        <tr class="text-sm" >
+            
+            <th colspan="1" class="bg-teal-50 border-1">
+                <div [ngStyle]="{'width':'70px','text-align': 'center'}">
+                    CÓDIGO
+                </div>
+            </th>
+            <th colspan="1" class="bg-teal-50 border-1">
+                <div [ngStyle]="{'width':'70px','text-align': 'center'}">
+                    DENOMINACIÓN
+                </div>
+            </th>
+            <th colspan="1" class="bg-teal-50 border-1">
+                <div [ngStyle]="{'width':'70px','text-align': 'center'}">
+                    DEBE
+                </div>
+            </th>
+            <th colspan="1" class="bg-teal-50 border-1">
+                <div [ngStyle]="{'width':'70px','text-align': 'center'}">
+                    HABER
+                </div>
+            </th>
+        </tr>
+        
+    </ng-template>
+    <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex"> 
+        <tr class="text-sm">
+            <td>{{rowIndex + 1}}</td>
+            <td>{{dato.nroasiento}}</td>
+            <td>{{dato.fecasiento}}</td>
+            <td [ngStyle]="{'width':'300px','text-align': 'center'}">{{dato.glosaasiento}}</td>
+            <td>{{dato.tc | number: '0.4' }}</td>
+            <td [ngStyle]="{'width':'70px','text-align': 'center'}">{{dato.ctactble}}</td>
+            <td>{{dato.desctactble}}</td>
+            <td [ngStyle]="{'width':'70px','text-align': 'right'}">{{dato.mtodebe | number: '0.2' }}</td>
+            <td [ngStyle]="{'width':'70px','text-align': 'right'}">{{dato.mtohaber | number: '0.2' }}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <tr>
+            <td colspan="7" class="text-right">Totales: </td>
+            <td>
+                <div [ngStyle]="{'text-align':'right'}">
+                    {{tot_debe | number: '0.2-2'}}
+                </div>
+            </td>
+                <td>
+                <div [ngStyle]="{'text-align':'right'}">
+                    {{tot_haber | number: '0.2-2'}}
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="12">No se encontraron registros.</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr>
+            <td colspan="12">Cargando datos. Espere por favor.</td>
+        </tr>
+    </ng-template>
+</p-table> 

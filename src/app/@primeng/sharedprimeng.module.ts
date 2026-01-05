@@ -54,6 +54,7 @@ import { InplaceModule } from 'primeng/inplace';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { TreeTableModule } from 'primeng/treetable';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @NgModule({
   declarations: [],
@@ -109,7 +110,8 @@ import { TreeTableModule } from 'primeng/treetable';
     InplaceModule,
     OverlayPanelModule,
     SliderModule,
-    TreeTableModule
+    TreeTableModule,
+    SelectButtonModule
   ],
   exports: [
     RadioButtonModule,
@@ -162,7 +164,8 @@ import { TreeTableModule } from 'primeng/treetable';
     InplaceModule,
     OverlayPanelModule,
     SliderModule,
-    TreeTableModule
+    TreeTableModule,
+    SelectButtonModule
   ],
   providers: [ConfirmationService, MessageService],
 })

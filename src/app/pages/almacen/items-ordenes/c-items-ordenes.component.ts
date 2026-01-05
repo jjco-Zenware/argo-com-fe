@@ -38,6 +38,8 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
   registerFormTag!: FormGroup; 
   verTag: boolean = true;
   lstTipoND: any[]=[];
+  identifica_gasto: number = 0;
+  verporGastoCorriente: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -152,6 +154,24 @@ createFormTag() {
     if (this.param.idtipoprod === 3) {
       this.verMarca = false;
     }
+
+    if (this.param.indtipoingreso) {
+      this.verporGastoCorriente = true;
+      this.verMarca = true;
+    }else{
+      this.verporGastoCorriente = false;
+          this.verMarca = false;
+          this.traerUnoProducto('GC-GC-1325');
+      // if (this.param.identifica_gasto === 16) {
+      //     this.verporGastoCorriente = true;
+      //     this.verMarca = true;
+      //   }else{
+      //     this.verMarca = false;
+      //     this.traerUnoProducto('GC-GC-1325');
+      //   }
+    }
+    
+   
   }
 
   listarItemsTabla() {

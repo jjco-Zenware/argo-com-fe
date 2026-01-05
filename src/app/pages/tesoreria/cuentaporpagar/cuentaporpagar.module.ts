@@ -11,6 +11,7 @@ import { SharedAppService } from '@sharedAppService';
 import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
 import { TagModule } from 'primeng/tag';
 import { CModalProgramacionComponent } from '../modalfecprogramacion/c-modalfecprogramacion.component';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 
 
@@ -28,6 +29,6 @@ import { CModalProgramacionComponent } from '../modalfecprogramacion/c-modalfecp
     CuentaporPagarRoutingModule,
     TagModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService, ContabilidadService]
 })
 export class CuentaporPagarModule { }

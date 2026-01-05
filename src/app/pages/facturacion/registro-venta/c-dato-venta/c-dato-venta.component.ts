@@ -106,6 +106,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy{
     lstCategoriaDoc: any;
     tot_debe: number = 0;
     tot_haber: number = 0;
+  indtipoingreso: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -262,6 +263,7 @@ createFormRegistro() {
     indmanualdetraccion:[{ value: false, disabled: false }],
     indsunatreg:[{ value: false, disabled: false }],
     idcategoria: [{ value: null, disabled: false }],
+    parm_igv: [{ value: 596, disabled: false }],
   });
 
   
@@ -381,6 +383,7 @@ createFormRegistro() {
             }
 
             this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);  
+            this.changeMotivo(rpta.ordencompra[0].idcategoria);
           this.visibleDocument = false; 
           this.visibleAsiento = false;
 
@@ -499,8 +502,7 @@ createFormRegistro() {
           if (this.idOrdenC === 0) {
             this.idOrdenC = rpta.resultProceso;  
             this.registerFormRegistro.get('idordencompra').setValue(rpta.resultProceso);
-            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);            
-          this.generarAsiento();
+            this.registerFormRegistro.get('codigonroorden').setValue(rpta.resultProceso);  
             this.dataAdjunto ={
               idCliente: this.idOrdenC,
               codtipoproc: 8,
@@ -778,6 +780,19 @@ createFormRegistro() {
   }
 
   getItem(data: any,index: number) {
+
+    console.log('idcategoria', this.registerFormRegistro.get('idcategoria')?.value);
+
+        if(this.registerFormRegistro.get('idcategoria')?.value === null){
+            this.messageService.add({
+                    severity: 'warn',
+                    summary: 'Aviso...!',
+                    detail: 'Debe Seleccionar el Motivo',
+                });
+            return;
+        }
+
+    data.indtipoingreso = this.indtipoingreso
     data.nroindex = index;
     data.idordencompra = this.idOrdenC;
     data.origenreg = 'RV';
@@ -830,7 +845,7 @@ createFormRegistro() {
         this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(0);
         this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(0);
         this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(0);
-        this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue('');
+        this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(0);
         this.registerFormRegistro.get('monto_pen_pago')?.setValue(0);
 
         /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
@@ -1679,34 +1694,9 @@ createFormRegistro() {
     this.$listSubcription.push($listarCategoriaDoc);
   }
 
-    generarAsiento() {
-
-        this.setSpinner(true);
-        this.mensajeSpinner = 'Generando Asientos...!';
-        let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.registerFormRegistro.value.idcategoria);
+    changeMotivo(value:any){
+      let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === value);
         console.log('s_categoria...', s_categoria);
-
-        const objeto = {
-            idasiento: 0,
-            idreferencia: this.idOrdenC,
-            glosaasiento: 'ASIENTO GENERADO DESDE FACTURACIÓN ' + s_categoria[0].nomcategoria,
-            idusuario: constantesLocalStorage.idusuario
-        }
-        const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
-            next: (rpta: any) => {
-                if (rpta.procesoSwitch === 0) {
-                    this.setSpinner(false);
-                    this.messageService.add({ severity: 'success', summary: 'Exito', detail: rpta.mensaje });                    
-                }else{
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.mensaje });
-                }
-            },
-            error: (err) => {
-                this.setSpinner(false);
-                this.serviceSharedApp.messageToast();
-            },
-            complete: () => {},
-        });
-        this.$listSubcription.push($listaMonedas);
+    this.indtipoingreso = s_categoria[0].indtipoingreso;
     }
 }

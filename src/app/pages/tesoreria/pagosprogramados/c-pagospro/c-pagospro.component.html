@@ -100,11 +100,11 @@
                         MONTO <br> A PAGAR
                     </div>
                 </th>
-                <th style="width: 70px;" class="bg-teal-50 border-1" > 
+                <!-- <th style="width: 70px;" class="bg-teal-50 border-1" > 
                     <div [ngStyle]="{'width':'70px','text-align':'center'}">
                         DETRACCIÓN S/
                     </div>
-                </th>
+                </th> -->
                 <th style="width: 50px; text-align:center" class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                         MONEDA
@@ -135,11 +135,11 @@
                         ESTADO 
                     </div>
                 </th>
-                <th style="width: 80px;" class="bg-teal-50 border-1">
+                <!-- <th style="width: 80px;" class="bg-teal-50 border-1">
                     <div class="flex justify-content-between align-items-center">
                         ACCIONES
                     </div>
-                </th>
+                </th> -->
             </tr>
 
         </ng-template>
@@ -187,7 +187,7 @@
                         {{data.s_monto_neto_CTB | number: '0.2-2' }}
                     </div>
                 </td>
-                <td>
+                <!-- <td>
                     <div class="flex gap-1 align-items-center">
                         <div [ngStyle]="{'width':'50px', 'text-align':'right'}" >
                             {{data.s_monto_detraccion_mn_CTB | number: '0.2-2' }}
@@ -196,7 +196,7 @@
                         <button *ngIf="data.saldo_detraccion !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Pagar Detraccion" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagarDetra(data)"></button>
                         
                     </div>                
-                </td>
+                </td> -->
                 <td>
                     <div [ngStyle]="{'width':'50px', 'text-align':'center'}">
                         {{data.simbmoneda }}
@@ -229,13 +229,13 @@
                         <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
                     </div>
                 </td>
-                <td>
+                <!-- <td>
                     <div class="flex align-items-center m:justify-content-end">
                         <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 " (click)="onVer(data)"></button>
                         <button *ngIf="data.saldo_documento !== 0" pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom" pTooltip="Registrar Pagos" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-green-500 " (click)="onPagar(data)"></button>
                 
                     </div>
-                </td>
+                </td> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">

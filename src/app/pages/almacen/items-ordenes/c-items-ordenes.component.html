@@ -2,14 +2,14 @@
 
     <form [formGroup]="frmDatosItem">
             <div class="flex grid mt-1">                
-                <div class="sm:col-12 lg:col-5 md:col-12 ">
+                <div *ngIf="verporGastoCorriente" class="sm:col-12 lg:col-5 md:col-12 ">
                     <label class="font-semibold">Código</label>
                     <div class="p-inputgroup">
                         <input pInputText type="text" formControlName="codproducto" class="p-inputtext-sm" placeholder="Ingresar Código..."/>
                         <button type="button" pButton icon="pi pi-search" styleClass="p-button-warn" (click)="buscarProducto()"></button>
                     </div>                    
                 </div> 
-                <div class="sm:col-12 lg:col-2 md:col-12 mt-3 gap-2"> 
+                <div *ngIf="verporGastoCorriente" class="sm:col-12 lg:col-2 md:col-12 mt-3 gap-2"> 
                     <button type="button" pButton icon="pi pi-search" styleClass="p-button-warn" class="h-2.5rem font-semibold p-button-outlined" (click)="getBusquedaAvanzada([])"
                         pTooltip="Busqueda Avanzada de Producto" tooltipPosition="bottom"></button>
                     <button type="button" pButton icon="pi pi-plus" styleClass="p-button-warn" class="h-2.5rem ml-2 font-bold p-button-outlined text-green-600" (click)="altaRapida()"
@@ -19,7 +19,7 @@
                     <label class="font-semibold">Marca</label>
                     <input pInputText type="text" formControlName="nommarca" class="p-inputtext-sm surface-200" [readonly]=true />
                 </div>  
-                <div class="sm:col-12 lg:col-12 md:col-12">
+                <div *ngIf="verporGastoCorriente" class="sm:col-12 lg:col-12 md:col-12">
                     <label class="font-semibold">Producto</label>
                     <textarea id="description" type="text" formControlName="despro" pInputTextarea [rows]="1"
                         style="resize: none" class="w-full" class="p-inputtext-sm surface-200" [readonly]=true></textarea>

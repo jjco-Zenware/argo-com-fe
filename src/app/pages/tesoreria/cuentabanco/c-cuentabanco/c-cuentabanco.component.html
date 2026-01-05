@@ -52,6 +52,11 @@
                             MONEDA 
                         </div>
                     </th>
+                     <th style="width: 100px;" class="bg-teal-50 border-1">
+                        <div class="flex justify-content-between align-items-center">
+                            CUENTA CONTABLE
+                        </div>
+                    </th>
                     <th style="width: 100px;" class="bg-teal-50 border-1">
                         <div class="flex justify-content-between align-items-center">
                             TIPO CUENTA
@@ -81,8 +86,8 @@
                 <tr >
                     <th></th>
                     <th *ngFor="let col of cols">
-                        <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, 'contains')" class="w-full h-2rem"/>
-                        
+                        <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, 'contains')" class="w-full h-2rem"/>                    
+
                     </th>
                 </tr>
             </ng-template>
@@ -96,6 +101,9 @@
                     </td>
                     <td>
                         {{data.desmoneda | uppercase}}
+                    </td>
+                    <td>
+                        {{data.codctactble}}
                     </td>
                     <td>
                         {{data.nomtipocuenta}}

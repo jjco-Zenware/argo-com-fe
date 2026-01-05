@@ -72,6 +72,7 @@ export class CCuentaBancoDetComponent implements OnInit, OnDestroy{
         idmoneda: [{ value: null, disabled: false }, [Validators.required]],
         iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
         codtipocuenta: [{ value: null, disabled: false }],
+        codctactble:[{ value: '', disabled: false }, [Validators.required]],
       })
     }
 
@@ -211,6 +212,12 @@ export class CCuentaBancoDetComponent implements OnInit, OnDestroy{
     if (!_error && (this.registerFormRegistro.value.nrocci === '' || this.registerFormRegistro.value.nrocci === null))
       {
           this.errorMensaje="Ingresar N° de CCI...!";
+          _error = true;
+      } 
+
+      if (!_error && (this.registerFormRegistro.value.codctactble === '' || this.registerFormRegistro.value.codctactble === null))
+      {
+          this.errorMensaje="Ingresar Cuenta Contable...!";
           _error = true;
       } 
 

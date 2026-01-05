@@ -382,7 +382,7 @@ this.$listSubcription.push($traerUno)
           //   this.lstCuentas= rpta; 
           // }
 
-          this.lstCuentas= rpta.filter((item:any) => item.idbanco === data);
+          this.lstCuentas= rpta.filter((item:any) => item.idbanco === data && item.idmoneda === this.registerForm.value.idmoneda);
           
         },
         error: (err) => {

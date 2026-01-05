@@ -146,8 +146,8 @@ export class CBancarioComponent {
         this.listaMonedas();
 
         this.registerFormRegistro.get('idcuentaprov').setValue(objeto.idcuentaprov);
-        this.registerFormRegistro.get('idpersona').setValue(globalVariable.codigoId);
-        this.registerFormRegistro.get('iduserreg').setValue(constantesLocalStorage.idusuario);
+        this.registerFormRegistro.get('idpersona').setValue(objeto.idpersona);
+        this.registerFormRegistro.get('iduserreg').setValue(objeto.iduserreg);
         
         this.registerFormRegistro.get('idbanco').setValue(objeto.idbanco);
         this.registerFormRegistro.get('idmoneda').setValue(objeto.idmoneda);
@@ -156,7 +156,7 @@ export class CBancarioComponent {
         this.registerFormRegistro.get('nrocuenta').setValue(objeto.nrocuenta);
         this.registerFormRegistro.get('codtipocuenta').setValue(objeto.codtipocuenta);
         this.registerFormRegistro.get('nrocci').setValue(objeto.nrocci);    
-        this.registerFormRegistro.get('indactivo').setValue(objeto.indactivo);        
+        //this.registerFormRegistro.get('indactivo').setValue(objeto.indactivo);        
        
         this.IdCuenta = objeto.idcuentaprov;
         this.headerTitle = "Editar Cuenta";

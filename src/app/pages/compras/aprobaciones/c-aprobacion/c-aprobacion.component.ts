@@ -114,7 +114,7 @@ export class CAprobacionComponent implements OnInit, OnDestroy{
       //console.log('this.frmDatos...', this.frmDatos.value);
       const objeto = {
         ...this.frmDatos.value,
-        idtipodocprc: 0
+        idtipodocprc: 8
       }
 
       const $getListar = this.proyectosService.ordenCompraList(objeto)

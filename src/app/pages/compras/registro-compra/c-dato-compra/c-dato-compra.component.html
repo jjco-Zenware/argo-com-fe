@@ -17,9 +17,10 @@
                     </div>
                 </ng-template>
 
-                <form [formGroup]="registerFormRegistro"
-                    class="p-fluid grid lg:col-7 col-12 border-1 border-round surface-border m-2">
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 justify-content-end h-4rem field">
+                <div class="flex">
+                    <form [formGroup]="registerFormRegistro"
+                    class="p-fluid grid lg:col-6 col-12 border-1 border-round surface-border m-1">
+                    <!-- <div class="sm:col-6 lg:col-4 md:col-12 col-6 justify-content-end h-3rem field">
                         <div class="flex mb-1">
                             <label class="block text-900">Fecha Registro</label>
                             <i class="pi pi-calendar text-orange-600" style="margin-left: 5px"></i>
@@ -31,16 +32,18 @@
                                 [readonlyInput]="true"></p-calendar>
                         </span>
                     </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
+                    <div class="lg:col-4"></div>
+                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-3rem field">
                         <label class="block text-900 mb-1">ID Registro</label>
                         <span class="p-fluid">
                             <input pInputText type="text" class="surface-300 p-inputtext-sm"
                                 formControlName="idordencompra" readonly="true" />
                         </span>
-                    </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 h-4rem">
+                    </div> -->
+                     <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 col-12 h-1rem field -mt-2">
+                            <div class="text-blue-500 font-semibold">Datos del Proveedor</div>
+                        </p-divider>
+                    <div class="sm:col-6 lg:col-4 md:col-3 col-6 h-4rem">
                         <label class="block text-900 mb-1">RUC
                             <span class="text-red-500 font-bold">
                                 *
@@ -53,7 +56,7 @@
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
                         </span>
                     </div>
-                    <div class="col-4 sm:col-6 lg:col-6 md:col-6 col-6 h-4rem">
+                    <div class="col-4 sm:col-6 lg:col-8 md:col-6 col-6 h-4rem">
                         <div class="flex">
                             <label class="block text-900 mb-1">Proveedor
                             </label>
@@ -69,17 +72,17 @@
                                 (onChange)="getDatos($event.value)"></p-dropdown>
                         </span>
                     </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-12 lg:col-9 md:col-3 col-12 h-4rem field mt-3">
+                    <div class="sm:col-12 lg:col-12 md:col-3 col-12 h-3rem field mt-3">
                         <label class="block text-900 mb-1">Dirección</label>
                         <span class="p-fluid">
                             <input pInputText type="text" formControlName="direccion" readonly="true"
                                 class="p-inputtext-sm surface-100" />
                         </span>
                     </div>
-                    <div class="lg:col-3"></div>
-
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
+                     <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 col-12 h-1rem field">
+                            <div class="text-blue-500 font-semibold">Datos del Comprobante</div>
+                        </p-divider>
+                    <div class="sm:col-4 lg:col-4 md:col-3 col-6 h-4rem field mt-1">
                         <label class="block text-900 mb-1">Tipo Documento<span class="text-red-500 font-bold">
                                 *
                             </span></label>
@@ -89,7 +92,7 @@
                                 [readonly]="onlyRead" class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div>
-                    <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field mt-1">
+                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
                         <label class="block text-900 mb-1">Serie<span class="text-red-500 font-bold">
                                 *
                             </span></label>
@@ -98,7 +101,7 @@
                                 class="p-inputtext-sm" />
                         </span>
                     </div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field mt-1">
+                    <div class="sm:col-4 lg:col-4 md:col-3 col-6 h-4rem field mt-1">
                         <label class="block text-900 mb-1">N° Documento<span class="text-red-500 font-bold">
                                 *
                             </span></label>
@@ -107,8 +110,7 @@
                                 class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
                         </span>
                     </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field -mt-1">
+                    <div class="sm:col-4 lg:col-4 md:col-3 col-6 h-4rem field -mt-1">
                         <label class="block text-900 mb-1">Moneda
                             <span class="text-red-500 font-bold">
                                 *
@@ -119,14 +121,14 @@
                                 appendTo="body" [readonly]="onlyRead" class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div>
-                    <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem -mt-1">
+                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem -mt-1">
                         <label class="block text-900 mb-1">Tipo Cambio<span class="text-red-500 font-bold">
                                 *
                             </span></label>
                         <input pInputText type="text" formControlName="tc" readonly="true"
                             class="p-inputtext-sm surface-100" />
                     </div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 -mt-1">
+                    <div class="sm:col-4 lg:col-4 md:col-3 col-6 -mt-1">
                         <label class="block text-900 mb-1">Condición de Pago
                             <span class="text-red-500 font-bold">
                                 *
@@ -137,8 +139,7 @@
                                 class="p-inputtext-sm"></p-dropdown>
                         </span>
                     </div>
-                    <div class="lg:col-4"></div>
-                    <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field -mt-3">
+                    <div class="col-6 sm:col-4 lg:col-4 md:col-12 h-4rem field -mt-3">
                         <div class="flex mb-1">
                             <label class="block text-900">Fec. Emisión</label>
                             <i class="pi pi-calendar text-orange-600" style="margin-left: 5px"></i>
@@ -152,7 +153,7 @@
                         </span>
                     </div>
 
-                    <div class="col-6 sm:col-4 lg:col-3 md:col-12 h-4rem field -mt-3">
+                    <div class="col-6 sm:col-4 lg:col-4 md:col-12 h-4rem field -mt-3">
                         <div class="flex mb-1">
                             <label class="block text-900">Fec. Vencimiento</label>
                             <i class="pi pi-calendar text-orange-600" style="margin-left: 5px"></i>
@@ -166,7 +167,7 @@
                         </span>
                     </div>
 
-                    <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field -mt-3">
+                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field -mt-3">
                         <label class="block text-900 mb-1">N° Días</label>
                         <span class="p-fluid">
                             <input pInputText type="text" formControlName="nrodias" (blur)="addDiasFec()"
@@ -175,77 +176,86 @@
                         </span>
                     </div>
 
-                    <p-divider class="sm:col-12 lg:col-9 md:col-6 col-12 -mt-2 -mb-4">
-                    </p-divider>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field h-4rem">
-                        <label class="block text-900 mb-1">Área</label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto"
-                                placeholder="Seleccionar..." optionLabel="descentrocosto" class="p-inputtext-sm"
-                                optionValue="idcentrocosto" appendTo="body" autoWidth="false"
-                                [readonly]="onlyRead"></p-dropdown>
-                        </span>
-                    </div>
-                    <div class="sm:col-12 lg:col-3 md:col-12 h-4rem field">
-                        <label class="text-900 mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
-                        <span>
-                            <p-dropdown [options]="lstCategoriaDoc" formControlName="idcategoria" optionLabel="nomcategoria" placeholder="Seleccionar..."
-                                optionValue="idcategoria" appendTo="body" class="p-inputtext-sm" [filter]="true"></p-dropdown>
-                        </span>
-                    </div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 field h-4rem">
-                        <label class="block text-900 mb-1">Centro Costos</label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto"
-                                placeholder="Seleccionar..." optionLabel="descentrocosto" class="p-inputtext-sm"
-                                optionValue="idcentrocosto" appendTo="body" autoWidth="false"
-                                [readonly]="onlyRead"></p-dropdown>
-                        </span>
-                    </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-6 lg:col-3 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 mb-1">Origen</label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstOrigen" formControlName="codtipodoc"
-                                placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" optionValue="codproceso"
-                                (onChange)="getOrigen($event.value)" appendTo="body" [readonly]="onlyRead"
-                                class="p-inputtext-sm"></p-dropdown>
-                        </span>
-                    </div>
-                    <div *ngIf="verProyecto" class="sm:col-6 lg:col-6 md:col-12 col-6 field h-4rem">
-                        <label class="block text-900 mb-1">Proyecto<span class="text-red-500 font-bold">
-                                *
-                            </span></label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstProyectos" formControlName="idproyecto"
-                                placeholder="Seleccionar Proyecto..." optionLabel="s_nomproyecto" class="p-inputtext-sm"
-                                optionValue="idproyecto" appendTo="body" autoWidth="false" [readonly]="onlyRead"
-                                (onChange)="changeProyecto($event.value)" [filter]="true"></p-dropdown>
-                        </span>
-                    </div>
-                    <div *ngIf="verOportunidad" class="sm:col-6 lg:col-6 md:col-12 col-6 field h-4rem mt-1">
-                        <label class="block text-900 mb-1">Oportunidad<span class="text-red-500 font-bold">
-                                *
-                            </span></label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstOportunidades" formControlName="ref01"
-                                placeholder="Seleccionar..." optionLabel="titulo" class="p-inputtext-sm"
-                                optionValue="id" appendTo="body" autoWidth="false" [readonly]="onlyRead"
-                                [filter]="true"></p-dropdown>
-                        </span>
-                    </div>
-                    <div class="lg:col-3"></div>
-                    <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
-                        <label class="block text-900 mb-1">N° OC/OS</label>
-                        <span class="p-fluid">
-                            <p-dropdown [options]="lstOrdenC" formControlName="idordencompra_origen_ctb"
-                                placeholder="Seleccionar Orden" optionLabel="codigonroorden" optionValue="idordencompra"
-                                appendTo="body" [readonly]="onlyRead" class="p-inputtext-sm"
-                                (onChange)="changeOC($event.value)"></p-dropdown>
-                        </span>
-                    </div>
-                </form>
+                    
+                    </form>
+
+                    <form [formGroup]="registerFormRegistro"
+                        class="grid lg:col-6 col-12 border-1 border-round surface-border m-1">
+                        <p-divider align="left" class="sm:col-12 lg:col-12 md:col-12 col-12 h-1rem field -mt-2">
+                                <div class="text-blue-500 font-semibold">Datos Operativos / OC(si aplica)</div>
+                            </p-divider>
+                        <div class="sm:col-6 lg:col-4 md:col-12 col-6 field h-4rem">
+                            <label class="block text-900 mb-1">Área<span class="text-red-500 font-bold">
+                                    *
+                                </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstAreas" formControlName="idarea"
+                                    placeholder="Seleccionar..." optionLabel="nomarea" class="p-inputtext-sm"
+                                    optionValue="idarea" appendTo="body" autoWidth="false" [filter]="true"
+                                    [readonly]="onlyRead"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="sm:col-12 lg:col-4 md:col-12 h-4rem field">
+                            <label class="text-900 mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
+                            <span>
+                                <p-dropdown [options]="lstCategoriaDoc" formControlName="idcategoria" optionLabel="nomcategoria" placeholder="Seleccionar..."
+                                    optionValue="idcategoria" appendTo="body" class="p-inputtext-sm" [filter]="true" (onChange)="changeMotivo($event.value)"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="sm:col-6 lg:col-4 md:col-12 col-6 field h-4rem">
+                            <label class="block text-900 mb-1">Centro Costos<span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto" [filter]="true"
+                                    placeholder="Seleccionar..." optionLabel="descentrocosto" class="p-inputtext-sm"
+                                    optionValue="idcentrocosto" appendTo="body" autoWidth="false"
+                                    [readonly]="onlyRead"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field -mt-3">
+                            <label class="block text-900 mb-1">Origen</label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstOrigen" formControlName="codtipodoc"
+                                    placeholder="Seleccionar Origen" optionLabel="nomtipoproyecto" optionValue="codproceso"
+                                    (onChange)="getOrigen($event.value)" appendTo="body" [readonly]="onlyRead"
+                                    class="p-inputtext-sm"></p-dropdown>
+                            </span>
+                        </div>
+                        <div *ngIf="verProyecto" class="sm:col-8 lg:col-6 md:col-12 col-6 field h-4rem -mt-3">
+                            <label class="block text-900 mb-1">Proyecto<span class="text-red-500 font-bold">
+                                    *
+                                </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstProyectos" formControlName="idproyecto"
+                                    placeholder="Seleccionar Proyecto..." optionLabel="s_nomproyecto" class="p-inputtext-sm"
+                                    optionValue="idproyecto" appendTo="body" autoWidth="false" [readonly]="onlyRead"
+                                    (onChange)="changeProyecto($event.value)" [filter]="true"></p-dropdown>
+                            </span>
+                        </div>
+                        <div *ngIf="verOportunidad" class="sm:col-6 lg:col-6 md:col-12 col-6 field h-4rem mt-1">
+                            <label class="block text-900 mb-1">Oportunidad<span class="text-red-500 font-bold">
+                                    *
+                                </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstOportunidades" formControlName="ref01"
+                                    placeholder="Seleccionar..." optionLabel="titulo" class="p-inputtext-sm"
+                                    optionValue="id" appendTo="body" autoWidth="false" [readonly]="onlyRead"
+                                    [filter]="true"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field -mt-3">
+                            <label class="block text-900 mb-1">N° OC/OS</label>
+                            <span class="p-fluid">
+                                <p-dropdown [options]="lstOrdenC" formControlName="idordencompra_origen_ctb"
+                                    placeholder="Seleccionar Orden" optionLabel="codigonroorden" optionValue="idordencompra"
+                                    appendTo="body" [readonly]="onlyRead" class="p-inputtext-sm"
+                                    (onChange)="changeOC($event.value)"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="col-12 h-12rem "></div>
+                    </form>
+                </div>
+
+                
             </p-tabPanel>
 
             <p-tabPanel>
@@ -259,6 +269,7 @@
                 </ng-template>
                 <form [formGroup]="registerFormRegistro"
                     class="p-fluid grid lg:col-9 border-1 border-round surface-border m-2">
+                    
                     <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field">
                         <label class="text-900 mb-1">B.Imponible</label>
                         <span class="p-fluid">
@@ -300,6 +311,19 @@
                         <p-inputNumber mode="decimal" [minFractionDigits]="2" inputStyleClass="surface-100 text-right"
                             class="p-inputtext-sm" formControlName="monto_pen_pago" [readonly]="true"></p-inputNumber>
                     </div>
+                    <div class="sm:col-12 lg:col-2 md:col-12 -mt-1">
+                        <label class="block text-900 mb-1">% IGV
+                            <span class="text-red-500 font-bold">
+                                *
+                            </span></label>
+                        <span>
+                            <p-dropdown [options]="lstIgv" formControlName="parm_igv" optionLabel="coditem"
+                                placeholder="Seleccionar..." optionValue="iditem" appendTo="body" [readonly]="onlyRead"
+                                class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div>
+                                                
+
                 </form>
                 <!-- <div class="lg:col-9 -mt-6 -mb-7">
                         <p-divider class="sm:col-12 lg:col-9 md:col-6">                       

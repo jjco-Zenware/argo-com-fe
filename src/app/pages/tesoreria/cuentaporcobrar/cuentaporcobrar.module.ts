@@ -12,6 +12,8 @@ import { ProyectosService } from '../../compras/proyectos-ganados/service/proyec
 import { TagModule } from 'primeng/tag';
 import { CModalListPAgosComponent } from '../modallistpagos/c-modallistpagos.component';
 import { CModalRegPAgosComponent } from '../modalregpagos/c-modalregpagos.component';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
+import { CModalListAsiento } from '../modalasientos/c-modalasiento.component';
 
 
 
@@ -19,7 +21,8 @@ import { CModalRegPAgosComponent } from '../modalregpagos/c-modalregpagos.compon
   declarations: [
     CCuentaporCobrarComponent,
     CModalListPAgosComponent,
-    CModalRegPAgosComponent
+    CModalRegPAgosComponent,
+    CModalListAsiento
   ],
   imports: [
     CommonModule,
@@ -30,6 +33,6 @@ import { CModalRegPAgosComponent } from '../modalregpagos/c-modalregpagos.compon
     CuentaporCobrarRoutingModule,
     TagModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, TesoreriaService, ProyectosService, ContabilidadService]
 })
 export class CuentaporCobrarModule { }
