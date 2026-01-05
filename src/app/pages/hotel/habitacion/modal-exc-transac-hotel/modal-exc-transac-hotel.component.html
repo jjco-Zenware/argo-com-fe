@@ -1,23 +1,32 @@
-
 <p-card class="m-2 gap-1">
     <ng-template pTemplate="content">
-        <div class="p-fluid grid -mb-4 -mt-3">           
+        <div class="p-fluid grid -mb-4 -mt-3">
             <div class="col-3 h-3rem flex flex-column -mt-3">
                 <label class="font-semibold">N° habitacion</label>
                 <label>{{habitacion.nomHabitacion}}</label>
             </div>
+            <ng-container *ngIf="visLstUsuariosAux">
+                <div class="col-12">
+                    <label class="block text-900 font-medium">Usuarios</label>
+                    <p-dropdown [options]="lstUsuariosAux" [(ngModel)]="idusuarioresponsable"
+                        optionLabel="nomUsuario" placeholder="Seleccionar Usuario" optionValue="codigoUsuario"
+                        inputStyleClass="w-full" appendTo="body" styleClass="w-full"></p-dropdown>
+                </div>
+            </ng-container>
             <div class="col-12">
                 <label class="font-semibold">COMENTARIO</label>
-                <textarea #descArea id="description" name="description" type="text" [(ngModel)]="descripcion" pInputTextarea [rows]="2" style="resize: none" 
-                class="w-full mt-1 p-inputtext-sm" (keydown.enter)="$event.preventDefault(); procesarTRX(btnIdAccion)"></textarea>
+                <textarea #descArea id="description" name="description" type="text" [(ngModel)]="descripcion"
+                    pInputTextarea [rows]="2" style="resize: none" class="w-full mt-1 p-inputtext-sm"
+                    (keydown.enter)="$event.preventDefault(); procesarTRX(btnIdAccion)"></textarea>
             </div>
         </div>
     </ng-template>
-    
+
     <ng-template pTemplate="footer" class="h-3rem">
-        <button pButton [label]="btnTitleAccion" (click)="procesarTRX(btnIdAccion)" [className]="btnColor" type="submit" ></button>
+        <button pButton [label]="btnTitleAccion" (click)="procesarTRX(btnIdAccion)" [className]="btnColor"
+            type="submit"></button>
     </ng-template>
-    
+
 </p-card>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

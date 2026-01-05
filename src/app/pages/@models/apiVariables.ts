@@ -282,4 +282,5 @@ export const constantesApiWeb = {
     tipocambiolistar: controllerTesoreria + '/tipocambiolistar',
     tipoCambioTraerUno: controllerTesoreria + '/tipocambiotraeruno',
     tipoCambioPRC: controllerTesoreria + '/tipocambioprc',
+    ListarUsuariosAuxHouseKeeping: controllerHotel + '/ListarUsuariosAuxHouseKeeping',
 }

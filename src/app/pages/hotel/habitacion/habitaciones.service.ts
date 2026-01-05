@@ -23,5 +23,10 @@ export class HabitacionesService {
     const url = `${constantesApiWeb.planingReservasTraer}`;
     return this.http.post<any>(url, objeto)
   }
+
+  listarUsuariosAuxHouseKeeping() {
+    const url = `${constantesApiWeb.ListarUsuariosAuxHouseKeeping}`;
+    return this.http.post<any>(url, [])
+  }
   
 }
