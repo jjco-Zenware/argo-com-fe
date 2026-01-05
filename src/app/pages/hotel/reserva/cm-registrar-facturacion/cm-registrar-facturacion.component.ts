@@ -783,6 +783,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       retencion_tipo: retencion_tipo,
       idordencompra: 0,
       iddocumentoprc_origen: this.data.idordencompra,
+      idtipodocprc: 6,
     }
 
     console.log('guardarOC...', objeto);
