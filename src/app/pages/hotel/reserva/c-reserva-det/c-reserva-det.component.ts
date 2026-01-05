@@ -1756,12 +1756,13 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
   }
 
-  getAgregarProducto() {
+  getAgregarProdHabit(tipoProceso:string) {
     const data: any = {
       nroindex: 0,
       idordencompra: this.idOrdenC,
       origenreg: 'RV',
-      idalmacen: 0
+      idalmacen: 0,
+      tipoProceso
     }
     console.log('CMAgregarProductoComponent', data);
     const refItem = this.dialogService.open(CMAgregarProductoComponent, {

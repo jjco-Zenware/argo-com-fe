@@ -30,24 +30,7 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
   lstFamilia: any;
   lstSubFamilia: any;
   verAlm!: boolean;
-  lstBotones: any[] = [
-    {
-      codigo: 825,
-      descripcion: "Bar"
-    },
-    {
-      codigo: 725,
-      descripcion: "Lavanderia"
-    },
-    {
-      codigo: 225,
-      descripcion: "Restaurant"
-    },
-    {
-      codigo: 325,
-      descripcion: "Tiendita"
-    }
-  ]
+  lstBotones: any[] = []
 
   constructor(
     private fb: FormBuilder,
@@ -61,12 +44,16 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
 
   ngOnInit(): void {
     this.createFrm();
+    this.getDataBotones();
     //this.listarFamilia();
     console.log('this.config.data 01', this.config.data);
     if (this.config.data > 0) {
       this.verAlm = true;
     } else {
       this.verAlm = false;
+    }
+    if (this.config.data.tipoProceso === 'H') {
+      this.getListar(125);
     }
   }
 
@@ -98,8 +85,40 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
     this.blockedDocument = valor;
   }
 
+  getDataBotones() {
+    let data: any[] = []
+    if (this.config.data.tipoProceso === 'P') {
+      data = [
+        {
+          codigo: 825,
+          descripcion: "Bar"
+        },
+        {
+          codigo: 725,
+          descripcion: "Lavanderia"
+        },
+        {
+          codigo: 225,
+          descripcion: "Restaurant"
+        },
+        {
+          codigo: 325,
+          descripcion: "Tiendita"
+        }
+      ]
+    } else {
+      data = [
+        {
+          codigo: 125,
+          descripcion: "Habitacion"
+        },
+      ]
+    }
+    this.lstBotones = data;
+  }
+
   getListar(idfamilia: number) {
-    this.dt1.reset();
+    //this.dt1.reset();
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     console.log('this.frmDatos...', this.frmDatos.value);
@@ -153,7 +172,7 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
     });
     this.$listSubcription.push($listarFamilia);
   }
-
+ 
   getSubFamilia(dato: any) {
     const $getSubFamilia = this.almacenService.listarSubFamilia(dato).subscribe({
       next: (rpta: any) => {
@@ -198,7 +217,7 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
 
       dato.idprod = producto.idprod;
       dato.nommarca = producto.nommarca;
-      dato.despro = producto.despro; 
+      dato.despro = producto.despro;
       dato.idmarca = producto.idmarca;
       this.cerrar({ ...dato });
     });

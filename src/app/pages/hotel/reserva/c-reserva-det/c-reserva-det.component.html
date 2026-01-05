@@ -236,7 +236,10 @@
                                         (click)="pagarItemDetalle()"></button>
                                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
                                         pTooltip="Agregar Producto" icon="pi pi-plus" label="Agregar Producto"
-                                        (click)="getAgregarProducto()"></button>
+                                        (click)="getAgregarProdHabit('P')"></button>
+                                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
+                                        pTooltip="Agregar Producto" icon="pi pi-plus" label="Agregar Habitacion"
+                                        (click)="getAgregarProdHabit('H')"></button>
                                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
                                         pTooltip="Facturación" icon="pi pi-money-bill" label="Facturación"
                                         (click)="getFacturacion()"></button>
@@ -464,7 +467,7 @@
                         <div class="flex align-items-center gap-2">
                             <i class="pi pi-cog"></i>
                             <span class="font-bold white-space-nowrap m-0">
-                                Transacciones
+                                Movimientos
                             </span>
                         </div>
                     </ng-template>
