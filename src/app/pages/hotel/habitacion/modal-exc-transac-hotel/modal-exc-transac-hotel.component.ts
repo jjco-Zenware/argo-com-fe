@@ -47,7 +47,8 @@ export class CModalExcTransacHotelComponent implements OnInit, AfterViewInit {
     console.log('habitacion Modal', this.habitacion);
     this._transaccion = this.config.data.acciones.filter((x: { idtrx: any; }) => x.idtrx === this.config.data.idtrx);
     this.cargarData();
-    if(this.visLstUsuariosAux){
+    if (this.visLstUsuariosAux) {
+      this.descripcion = "";
       this.listarUsuariosAux();
     }
   }
@@ -122,16 +123,15 @@ export class CModalExcTransacHotelComponent implements OnInit, AfterViewInit {
     this.errorMensaje = "";
 
     if (this.visLstUsuariosAux) {
-      if (this.idusuarioresponsable === 0) {
+      if (!this.idusuarioresponsable) {
         this.errorMensaje = "Debe Seleccionar un Usuario Responsable...!";
         return false;
       }
-    }
-
-    if (this.descripcion === " " || this.descripcion === "") {
+    } else if (this.descripcion === " " || this.descripcion === "") {
       this.errorMensaje = "Debe Ingresar Descripción...!";
       return false;
     }
+
     return true;
   }
 
@@ -146,7 +146,7 @@ export class CModalExcTransacHotelComponent implements OnInit, AfterViewInit {
           console.log('rpta getListar', rpta);
           this.lstUsuariosAux = rpta;
         },
-        error: (err:any) => {
+        error: (err: any) => {
           console.log('rpta err', err);
           this.setSpinner(false);
           this.serviceSharedApp.messageToast()
