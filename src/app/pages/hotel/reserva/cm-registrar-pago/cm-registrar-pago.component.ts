@@ -56,6 +56,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     if (!this.lstDetallePago.some((p: any) => p.iditem === metodo.iditem)) {
       this.lstDetallePago.push({
         iditem: metodo.iditem,
+        coditem: metodo.coditem,
         metodo: metodo.valoritem,
         monto: 0
       });
@@ -73,12 +74,12 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     this.blockedDocument = valor;
   }
 
-
   obtenerItemsTabla() {
     const metodoPago: number = 202
     const $obtenerItemsTabla = this.serviceReserva.obtenerItemsTabla(metodoPago).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
+        console.log("lstMetodoPago response: ", rpta);
         this.lstMetodoPago = rpta
       },
       error: (err: any) => {
@@ -95,7 +96,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
       this.serviceSharedApp.messageToast({
         severity: 'warn',
         summary: 'Validación',
-        detail: 'La suma de los montos no puede superar el total a pagar.'
+        detail: 'El monto a pagar no puede ser diferente al total a pagar.'
       });
       return;
     }
@@ -111,7 +112,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
       idmoneda: this.data.idmoneda,
       montopago: item.monto,
       montoaplicado: item.monto,
-      referencia: "",
+      referencia: item.referencia || '',
       idbanco: 0,
       idusuario: constantesLocalStorage.idusuario
     }));
@@ -151,13 +152,12 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
   }
 
   isTotalPagoValido(): boolean {
-    return this.totalPago <= this.data.totalPagar;
+    return this.totalPago === Number.parseFloat(this.data.totalPagar);
   }
 
   get totalPago(): number {
     return this.lstDetallePago.reduce((acc, p) => acc + p.monto, 0);
   }
-
 
   onMontoChange(pago: any, value: number) {
     const montoValido = typeof value === 'number' && value >= 0;

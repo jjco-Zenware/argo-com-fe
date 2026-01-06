@@ -46,20 +46,31 @@
 			<label><b>Detalle del Pago</b></label>
 			<div class="mt-2" style="background: #f8f9fa; border-radius: 6px; padding: 1rem;">
 				<div class="detalle-pago-grid">
-					<ng-container *ngFor="let pago of lstDetallePago; let i = index">
-						<div class="pago-item flex align-items-center gap-2">
-							<div style="flex:1;">{{pago.metodo}}</div>
-							<div style="flex:1; text-align:right;">
-								<span>{{data.simboloMoneda}} </span>
-								<input pInputText type="number" min="0" step="0.01"
-									style="width: 100px; text-align: right;" [(ngModel)]="pago.monto"
-									(ngModelChange)="onMontoChange(pago, $event)"
-									[ngClass]="{'p-invalid': pago.monto < 0 || pago.monto === null || pago.monto === undefined}" />
+					<div style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
+						<ng-container *ngFor="let pago of lstDetallePago; let i = index">
+							<div class="pago-item"
+								style="display: flex; align-items: center; gap: 0.5rem; width: 100%; overflow: hidden;">
+								<div
+									style="flex: 0 0 140px; min-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+									{{pago.metodo}}</div>
+								<div style="display: flex; align-items: center; gap: 0.5rem; margin-left: auto;">
+									<span style="margin-right: 2px;">{{data.simboloMoneda}}</span>
+									<input pInputText type="number" min="0" step="0.01"
+										style="width: 80px; text-align: right; min-width: 60px; max-width: 100px;"
+										[(ngModel)]="pago.monto" (ngModelChange)="onMontoChange(pago, $event)"
+										[ngClass]="{'p-invalid': pago.monto < 0 || pago.monto === null || pago.monto === undefined}" />
+									<ng-container *ngIf="pago.coditem !== '1'">
+										<input pInputText type="text" [(ngModel)]="pago.referencia"
+											placeholder="Referencia"
+											style="width: 160px; min-width: 80px; max-width: 160px; text-align: right; overflow: hidden; text-overflow: ellipsis;" />
+									</ng-container>
+								</div>
+								<button pButton type="button" icon="pi pi-trash"
+									class="p-button-danger p-button-sm ml-2" (click)="eliminarDetallePago(i)"
+									style="margin-left: 8px; flex-shrink: 0;" title="Eliminar"></button>
 							</div>
-							<button pButton type="button" icon="pi pi-trash" class="p-button-danger p-button-sm ml-2"
-								(click)="eliminarDetallePago(i)" style="margin-left: 8px;" title="Eliminar"></button>
-						</div>
-					</ng-container>
+						</ng-container>
+					</div>
 				</div>
 				<div class="flex justify-end mt-2" style="border-top: 1px solid #e0e0e0; padding-top: 0.5rem;">
 					<div style="flex:1; text-align:right;"><b>Total: S/ {{ totalPago | number:'1.2-2' }}</b></div>
@@ -82,3 +93,10 @@
 		(click)="getPagar()"></button>
 	<button pButton type="button" label="Cancelar" class="p-button-secondary min-w-14rem" (click)="cerrar([])"></button>
 </div>
+
+<p-blockUI [blocked]="blockedDocument">
+	<div class="flex align-items-center justify-content-center">
+		<p-progressSpinner></p-progressSpinner>
+		<span class="ml-2">{{mensajeSpinner}}</span>
+	</div>
+</p-blockUI>
