@@ -36,6 +36,11 @@ const routes: Routes = [
     path: 'tipo-cambio',
     loadChildren: () => import('./tipo-cambio/tipo-cambio.module').then(m => m.TipoCambioModule),
     data: { breadcrumb: 'Tipo Cambio' }
+  },
+    {
+    path: 'room-list-hotel',
+    loadChildren: () => import('./room-list/room-list.module').then(m => m.RoomListModule),
+    data: { breadcrumb: 'Room List Hotel' }
   }
 ];
 

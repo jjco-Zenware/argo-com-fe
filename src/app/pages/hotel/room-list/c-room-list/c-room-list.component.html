@@ -1,0 +1,150 @@
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+
+<div class="card m-4">
+    <div class="flex flex-column flex-wrap gap-2 mt-2 mb-3">
+        <div class="flex align-items-center w-full p-3 border-round shadow-1 bg-white">
+            <span class="text-xl font-bold text-primary mr-3">ROOM LIST</span>
+            <button pButton type="button" (click)="getListar()" pTooltip="Buscar registros" tooltipPosition="bottom"
+                class="p-button-rounded p-button-text p-button-primary mr-2" icon="pi pi-search"></button>
+            <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar a Excel" tooltipPosition="bottom"
+                class="p-button-rounded p-button-success" icon="pi pi-file-excel"></button>
+        </div>
+    </div>
+
+    <p-table #dt1 [value]="listado" [rows]="25" [rowHover]="true" responsiveLayout="stack"
+        [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+        [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        styleClass="p-datatable-sm card border-1 border-round surface-border">
+
+        <ng-template pTemplate="header">
+            <tr class="text-sm">
+                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
+                    <div class="flex justify-content-between align-items-center">
+                        N°
+                    </div>
+                </th>
+                <th style="width: 30px;" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                       HABITACION
+                    </div>
+                </th>
+                <th style="width: 30px;" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        TIPO
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'10px'}" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        ESTADO
+                    </div>
+                </th>
+                <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        PAX
+                    </div>
+                </th>
+                <th style="width: 20px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        TIPO DOCUMENTO
+                    </div>
+                </th>
+                <th style="width: 20px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        NRO DOCUMENTO
+                    </div>
+                </th>
+                <th style="width: 70px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        NACIONALIDAD
+                    </div>
+                </th>
+                <th style="width: 40px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        EMPRESA
+                    </div>
+                </th>
+                <th style="width: 50px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        FECHA DE INGRESO
+                    </div>
+                </th>
+                <th style="width: 50px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        FECHA DE SALIDA
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td>
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{rowIndex + 1}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.nomhabitacion}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.tipohabitacion}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'30px'}">
+                        {{data.estado}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'150px'}">
+                        {{data.PAX}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.tipodoc}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.nrodoc}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'70px'}">
+                        {{data.nacionalidad}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'70px'}">
+                        {{data.empresa}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'70px'}">
+                        {{data.ingreso}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'70px'}">
+                        {{data.salida}}
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6">No se encontraron registros.</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="6">Cargando datos. Espere por favor.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>

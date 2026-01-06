@@ -12,4 +12,10 @@ export class HotelService {
     const url = `${constantesApiWeb.listarProduccionHotel}`;
     return this.http.post<any>(url, objeto)
   }
+
+  roomingList(objeto: any) {
+    const url = `${constantesApiWeb.RoomingList}`;
+    return this.http.post<any>(url, objeto)
+  }
+  
 }
