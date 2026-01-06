@@ -1,25 +1,37 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
     <div class="p-fluid p-3 mb-1 m-4">
-        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm">
-
-            <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
-                <label class="font-semibold text-blue-600 text-base">Desde</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechainicio" formControlName="fechainicio"
-                    [showOnFocus]="false" [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}"
-                    class="p-inputtext-sm">
-                </p-calendar>
-            </div>
-            <div class="md:col-6 sm:col-3 lg:col-2 col-6 -mt-3">
-                <label class="font-semibold text-blue-600 text-base">Hasta</label>
-                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
-                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"
-                    [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-            </div>
-            <div class="field sm:col-3 md:col-2 gap-2">
-                <button pButton type="button" (click)="obtenerData()" pTooltip="Buscar" tooltipPosition="bottom"
-                    class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem" icon="pi pi-search"></button>
+        <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid md:col-12 sm:col-12 lg:col-9 text-sm"
+            style="margin-bottom: 0;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; width: 100%;">
+                <div class="md:col-6 sm:col-3 lg:col-2 col-6" style="margin-bottom: 0;">
+                    <label class="font-semibold text-blue-600 text-base">Desde</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechainicio"
+                        formControlName="fechainicio" [showOnFocus]="false" [readonlyInput]="true" appendTo="body"
+                        [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
+                    </p-calendar>
+                </div>
+                <div class="md:col-6 sm:col-3 lg:col-2 col-6" style="margin-bottom: 0;">
+                    <label class="font-semibold text-blue-600 text-base">Hasta</label>
+                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fechafin"
+                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"
+                        [inputStyle]="{'height':'2.5rem'}"></p-calendar>
+                </div>
+                <div class="field sm:col-3 md:col-2 gap-1" style="margin-bottom: 0;">
+                    <button pButton type="button" (click)="obtenerData()" pTooltip="Buscar" tooltipPosition="bottom"
+                        class="font-semibold mt-2 justify-content-center h-2.5rem w-3rem" icon="pi pi-search"></button>
+                </div>
             </div>
         </form>
+        <div class="leyenda-container"
+            style="display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; margin-left: 0.5rem;">
+            <ng-container *ngFor="let leyenda of dataLeyenda">
+                <span style="display: flex; align-items: center; gap: 0.3rem;">
+                    <span [style.background-color]="leyenda.color"
+                        style="display: inline-block; width: 16px; height: 16px; border-radius: 4px; border: 1px solid #ccc;"></span>
+                    <span style="font-size: 14px; color: #333;">{{ leyenda.nomestado }}</span>
+                </span>
+            </ng-container>
+        </div>
 
         <div class="p-datatable p-component custom-table-wrapper ">
             <table class="p-datatable-table">

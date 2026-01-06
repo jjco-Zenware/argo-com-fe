@@ -23,6 +23,7 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
   vistaLista: boolean = true;
   visSeccionReserva: boolean = false;
   dataPrc: any;
+  dataLeyenda: any = [];
 
   constructor(
     private fb: FormBuilder,
@@ -80,6 +81,7 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
         next: (rpta: any) => {
           this.setSpinner(false);
           this.dataHabitaciones = rpta.hotel[0].habitaciones;
+          this.dataLeyenda = rpta.hotel[0].leyenda;
           //console.log("dataHabitaciones: ", this.dataHabitaciones);
           
           this.loadDias(rpta.hotel[0].nrodias || 0);
