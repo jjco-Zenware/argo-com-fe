@@ -224,44 +224,46 @@
                 </div>
                 <ng-container *ngIf="verDetraccion">
                     <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
-                    <label class=" text-900 mb-1">% Detracción</label>
-                    <span class="p-fluid">
-                        <p-inputNumber class="mt-1" formControlName="porc_detraccion" locale="es-PE" mode="decimal"
-                            [minFractionDigits]="0" name="porc_detraccion" [min]="0" [max]="99" class="p-inputtext-sm"
-                            inputStyleClass="text-right" (onInput)="recalcularRegistro($event.value)"></p-inputNumber>
-                    </span>
-                </div>
-                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
-                    <div class="flex justify-content-end mb-1">
-                        <label class="text-900">Editar </label>
+                        <label class=" text-900 mb-1">% Detracción</label>
+                        <span class="p-fluid">
+                            <p-inputNumber class="mt-1" formControlName="porc_detraccion" locale="es-PE" mode="decimal"
+                                [minFractionDigits]="0" name="porc_detraccion" [min]="0" [max]="99"
+                                class="p-inputtext-sm" inputStyleClass="text-right"
+                                (onInput)="recalcularRegistro($event.value)"></p-inputNumber>
+                        </span>
                     </div>
-                    <span class="flex justify-content-end flex-wrap mt-2">
-                        <p-checkbox formControlName="indmanualdetraccion" inputId="ny" [binary]="true"
-                            class="align-items-end" (onChange)="changeEditaDetra($event.checked)"
-                            pTooltip="Editar el Monto Detracción" tooltipPosition="bottom" />
-                    </span>
-                </div>
-                <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field ">
-                    <label class="text-900 mb-1">Monto Detracción S/</label>
-                    <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
-                        formControlName="monto_detraccion_mn_CTB" Monto inputStyleClass="text-right"></p-inputNumber>
-                </div>
-                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
-                    <label class="text-900 mb-1">Tipo Detracción</label>
-                    <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstTipoDetra" formControlName="detraccion_tipo"
-                            placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
-                            class="p-inputtext-sm" [filter]="true"></p-dropdown>
-                    </span>
-                </div>
-                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
-                    <label class="text-900 mb-1">Tipo Pago</label>
-                    <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstTipoPagoDetra" formControlName="detraccion_tipo_pago"
-                            placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
-                            class="p-inputtext-sm" [filter]="true"></p-dropdown>
-                    </span>
-                </div>
+                    <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                        <div class="flex justify-content-end mb-1">
+                            <label class="text-900">Editar </label>
+                        </div>
+                        <span class="flex justify-content-end flex-wrap mt-2">
+                            <p-checkbox formControlName="indmanualdetraccion" inputId="ny" [binary]="true"
+                                class="align-items-end" (onChange)="changeEditaDetra($event.checked)"
+                                pTooltip="Editar el Monto Detracción" tooltipPosition="bottom" />
+                        </span>
+                    </div>
+                    <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field ">
+                        <label class="text-900 mb-1">Monto Detracción S/</label>
+                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
+                            formControlName="monto_detraccion_mn_CTB" Monto
+                            inputStyleClass="text-right"></p-inputNumber>
+                    </div>
+                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                        <label class="text-900 mb-1">Tipo Detracción</label>
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstTipoDetra" formControlName="detraccion_tipo"
+                                placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
+                                class="p-inputtext-sm" [filter]="true"></p-dropdown>
+                        </span>
+                    </div>
+                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                        <label class="text-900 mb-1">Tipo Pago</label>
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstTipoPagoDetra" formControlName="detraccion_tipo_pago"
+                                placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
+                                class="p-inputtext-sm" [filter]="true"></p-dropdown>
+                        </span>
+                    </div>
                 </ng-container>
                 <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
                     <label class="text-900 mb-1">Tipo Retención</label>
@@ -439,7 +441,14 @@
     </p-tabView>
 </div>
 
-    <div class="flex justify-content-end">
-        <button pButton icon="pi pi-save" label="Facturar" class="p-button-primary mr-2" (click)="guardarOC()"></button>
-        <button pButton icon="pi pi-times" label="Cancelar" class="p-button-secondary" (click)="cerrar(false)"></button>
+<div class="flex justify-content-end">
+    <button pButton icon="pi pi-save" label="Facturar" class="p-button-primary mr-2" (click)="guardarOC()"></button>
+    <button pButton icon="pi pi-times" label="Cancelar" class="p-button-secondary" (click)="cerrar(false)"></button>
+</div>
+
+<p-blockUI [blocked]="blockedDocument">
+    <div class="flex align-items-center justify-content-center">
+        <p-progressSpinner></p-progressSpinner>
+        <span class="ml-2">{{mensajeSpinner}}</span>
     </div>
+</p-blockUI>

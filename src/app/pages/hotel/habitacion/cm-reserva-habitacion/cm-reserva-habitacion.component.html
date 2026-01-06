@@ -133,9 +133,13 @@
         </div>
 
         <ng-container *ngIf="esExtranjero">
-            <div class="card-header">
-                <h5 class="m-0 text-primary">TAM</h5>
-            </div>
+            <div class="col-12 h-4rem">
+                    <div class="flex align-items-center justify-content-start h-full">
+                        <p-checkbox formControlName="indtam" inputId="ny" [binary]="true"
+                            class="align-items-center" (onChange)="changeAplicaTAM($event.checked)" />
+                        <p class="m-0 ml-2">TAM</p>
+                    </div>
+                </div>
             <div class="grid">
                 <div class="col-12 md:col-4">
                     <div class="field">

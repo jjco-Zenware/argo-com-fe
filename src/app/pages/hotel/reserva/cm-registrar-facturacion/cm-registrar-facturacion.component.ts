@@ -97,7 +97,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       nrodocumentoadd: [{ value: '', disabled: false }],
-      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
+      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       idordencompra: [{ value: this.idOrdenC, disabled: false }],
       condicionescomerciales: [{ value: '', disabled: false }],
       idproveedor: [{ value: '', disabled: false }],
@@ -117,12 +117,12 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       codigonroorden: [{ value: '', disabled: true }],
       nomproyecto: [{ value: '', disabled: false }],
       nrodocumento: [{ value: '', disabled: false }],
-      fecemision: [{ value: null, disabled: false, }],
+      fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       tc: [{ value: 0, disabled: false }],
       tipodoc_ctb: [{ value: '', disabled: false }],
       nroserie_ctb: [{ value: '', disabled: false }],
       nrodocumento_ctb: [{ value: '', disabled: false }],
-      fecvencimiento: [{ value: null, disabled: false, }],
+      fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       nrocuotas: [{ value: 1, disabled: false }],
       porc_detraccion: [{ value: 0, disabled: false }],
       monto_detraccion_mn_CTB: [{ value: 0, disabled: false }],
@@ -182,6 +182,9 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         this.s_monto = itemFrmDatos.s_monto;
         this.s_igv = itemFrmDatos.s_igv;
         this.montoTotal = itemFrmDatos.montoTotal;
+        this.frmDatos.get('fechaingreso')?.setValue(this.serviceUtilitario.obtenerFechaActual());
+        this.frmDatos.get('fecemision')?.setValue(this.serviceUtilitario.obtenerFechaActual());
+        this.frmDatos.get('fecvencimiento')?.setValue(this.serviceUtilitario.obtenerFechaActual());
         this.minimaFechaHasta = this.parsearFecha(this.frmDatos.value.fecemision);
         this.maximaFechaDesde = this.parsearFecha(this.frmDatos.value.fecvencimiento);
         this.setSpinner(false);

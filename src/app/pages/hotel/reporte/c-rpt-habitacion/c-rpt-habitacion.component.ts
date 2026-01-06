@@ -129,8 +129,12 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
 
   reservarHabitacion(item: any) {
     console.log('Reservar habitación:', item);
+    const data = {
+      ...item,
+      tipoProceso: 'PLANING',
+    }
     const ref = this.dialogService.open(CmReservaHabitacionComponent, {
-      data: item,
+      data,
       header: item.nomHabitacion,
       closeOnEscape: false,
       styleClass: 'testDialog',

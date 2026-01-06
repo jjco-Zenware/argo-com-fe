@@ -82,6 +82,15 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     this.listaClientes();
     this.listarItemsTablaComprobante();
     this.listarTiposDoc();
+
+    const _tipoProceso: string = this.data.tipoProceso;
+    if (_tipoProceso === 'RESERVA') {
+      this.frmDatos.get('fecha_ini')?.setValue(this.serviceUtilitario.obtenerFechaActual());
+      this.frmDatos.get('fecha_fin')?.setValue(this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1));
+    } else if (_tipoProceso === 'PLANING') {
+      this.frmDatos.get('fecha_ini')?.setValue(this.data.fechaSeleccionada);
+      this.frmDatos.get('fecha_fin')?.setValue(this.addDays(this.data.fechaSeleccionada, 1));
+    }
   }
 
   ngAfterViewInit(): void {
@@ -135,13 +144,13 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       nomproyecto: [{ value: '', disabled: false }],
       nrodocumento: [{ value: '', disabled: false }],
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-      fecha_ini: [{ value: this.data.fechaSeleccionada, disabled: false, }],
+      fecha_ini: [{ value: null, disabled: false, }],
       tc: [{ value: 0, disabled: false }],
       tipodoc_ctb: [{ value: 1, disabled: false }],
       nroserie_ctb: [{ value: '', disabled: false }],
       nrodocumento_ctb: [{ value: '', disabled: false }],
       fecvencimiento: [{ value: this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1), disabled: false, }],
-      fecha_fin: [{ value: this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1), disabled: false, }],
+      fecha_fin: [{ value: null, disabled: false, }],
       nrocuotas: [{ value: 1, disabled: false }],
       porc_detraccion: [{ value: 0, disabled: false }],
       monto_detraccion_mn_CTB: [{ value: 0, disabled: false }],
@@ -179,7 +188,8 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       fecingresopais: [{ value: null, disabled: false }],
       tiempopermanencia: [{ value: null, disabled: false }],
       tipopermanencia: [{ value: 'D', disabled: false }],
-      codverificaciontam: [{ value: null, disabled: false }]
+      codverificaciontam: [{ value: null, disabled: false }],
+      indtam: [{ value: false, disabled: false }],
     });
   }
 
@@ -286,7 +296,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
 
   editPersona() {
     const { idproveedor, idtipodoc, nrodocumento } = this.frmDatos.getRawValue();
-    
+
     let _tipopersona = '';
     if (idtipodoc === 'RUC') {
       _tipopersona = 'J';
@@ -296,7 +306,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       idrolpersona: 'PRO',
       idtipodoc,
       idproveedor,
-      nroDocumento: nrodocumento, 
+      nroDocumento: nrodocumento,
       tipopersona: _tipopersona,
       esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS',
       tipoProceso: 'E'
@@ -391,13 +401,13 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     fecha_fin?.setValue(fecha);
   }
 
-  listaClientes(idPersona?:number) {
+  listaClientes(idPersona?: number) {
     let tiporol = "CLI";
     this.proyectosService.obtenerClientes(tiporol).subscribe({
       next: (rpta: any) => {
         this.lstCliente = rpta;
         console.log('listaClientes', this.lstCliente);
-        if(idPersona){
+        if (idPersona) {
           this.frmDatos.get('idproveedor')?.setValue(idPersona);
         }
       },
@@ -499,6 +509,30 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
         _error = true;
       }
     }
+
+    if (!_error && this.frmDatos.value.indtam) {
+      if (!_error && this.frmDatos.value.fecingresopais === null) {
+        this.errorMensaje = "Seleccionar Fecha Ingreso País...!";
+        _error = true;
+      }
+
+      if (!_error && (this.frmDatos.value.tiempopermanencia === null || this.frmDatos.value.tiempopermanencia === 0)) {
+        this.errorMensaje = "Ingresar Tipo Permanencia...!";
+        _error = true;
+      }
+
+      if (!_error && this.frmDatos.value.tipopermanencia === null) {
+        this.errorMensaje = "Seleccionar Tipo Permanencia...!";
+        _error = true;
+      }
+
+      if (!_error && this.frmDatos.value.codverificaciontam === null) {
+        this.errorMensaje = "Ingresar Codigo de Verificación...!";
+        _error = true;
+      }
+
+    }
+
     return _error;
   }
 
@@ -920,6 +954,42 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
         break;
     }
 
+    this.changeAplicaTAM(false);
+  }
+
+  changeAplicaTAM(value: boolean) {
+    if (value) {
+      this.frmDatos.get('fecingresopais')?.enable();
+      this.frmDatos.get('tiempopermanencia')?.enable();
+      this.frmDatos.get('tipopermanencia')?.enable();
+      this.frmDatos.get('codverificaciontam')?.enable();
+
+      this.frmDatos.get('fecingresopais')?.setValidators([Validators.required]);
+      this.frmDatos.get('tiempopermanencia')?.setValidators([Validators.required]);
+      this.frmDatos.get('tipopermanencia')?.setValidators([Validators.required]);
+      this.frmDatos.get('codverificaciontam')?.setValidators([Validators.required]);
+
+    } else {
+      this.frmDatos.get('fecingresopais')?.clearValidators();
+      this.frmDatos.get('tiempopermanencia')?.clearValidators();
+      this.frmDatos.get('tipopermanencia')?.clearValidators();
+      this.frmDatos.get('codverificaciontam')?.clearValidators();
+
+      this.frmDatos.get('fecingresopais')?.reset();
+      this.frmDatos.get('tiempopermanencia')?.reset();
+      this.frmDatos.get('tipopermanencia')?.reset();
+      this.frmDatos.get('codverificaciontam')?.reset();
+
+      this.frmDatos.get('fecingresopais')?.disable();
+      this.frmDatos.get('tiempopermanencia')?.disable();
+      this.frmDatos.get('tipopermanencia')?.disable();
+      this.frmDatos.get('codverificaciontam')?.disable();
+    }
+
+    this.frmDatos.get('fecingresopais')?.updateValueAndValidity();
+    this.frmDatos.get('tiempopermanencia')?.updateValueAndValidity();
+    this.frmDatos.get('tipopermanencia')?.updateValueAndValidity();
+    this.frmDatos.get('codverificaciontam')?.updateValueAndValidity();
   }
 
 }

@@ -174,8 +174,12 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
 
   reservarHabitacion(item: any) {
     console.log('Reservar habitación:', item);
+    const data = {
+      ...item,
+      tipoProceso: 'RESERVA',
+    }
     const ref = this.dialogService.open(CmReservaHabitacionComponent, {
-      data: item,
+      data,
       header: item.nomHabitacion,
       closeOnEscape: false,
       styleClass: 'testDialog',
