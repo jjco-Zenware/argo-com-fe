@@ -135,7 +135,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       nomproyecto: [{ value: '', disabled: false }],
       nrodocumento: [{ value: '', disabled: false }],
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-      fecha_ini: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      fecha_ini: [{ value: this.data.fechaSeleccionada, disabled: false, }],
       tc: [{ value: 0, disabled: false }],
       tipodoc_ctb: [{ value: 1, disabled: false }],
       nroserie_ctb: [{ value: '', disabled: false }],

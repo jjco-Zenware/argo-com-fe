@@ -94,140 +94,6 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($planingReservasTraer)
   }
 
-  dataMockup() {
-    this.dataHabitaciones = {
-      "nrodias": 30,
-      "habitaciones": [
-        {
-          "idhabitacion": 101,
-          "nrohabitacion": 201,
-          "deshabitacion": "Habitación Simple",
-          "mensaje": "Disponible parcialmente",
-          "idestado": 1,
-          "estado": "Disponible",
-          "idpersona": 0,
-          "nompersona": "",
-          "fechas": [
-            {
-              "nrodia": 10,
-              "nromes": 7,
-              "mes": "Julio",
-              "nroano": 2025,
-              "fecha": "2025-07-10",
-              "idoperacion": 0,
-              "idestado": 1,
-              "estado": "Libre",
-              "idpersona": 0,
-              "nompersona": "",
-              "mensaje": "Disponible",
-              "color": "#4CAF50",
-              "icono": "check"
-            },
-            {
-              "nrodia": 11,
-              "nromes": 7,
-              "mes": "Julio",
-              "nroano": 2025,
-              "fecha": "2025-07-11",
-              "idoperacion": 3456,
-              "idestado": 2,
-              "estado": "Reservado",
-              "idpersona": 501,
-              "nompersona": "Juan Pérez",
-              "mensaje": "Reserva confirmada",
-              "color": "#F44336",
-              "icono": "lock"
-            }
-          ]
-        },
-        {
-          "idhabitacion": 102,
-          "nrohabitacion": 202,
-          "deshabitacion": "Habitación Doble",
-          "mensaje": "Ocupada",
-          "idestado": 2,
-          "estado": "Ocupada",
-          "idpersona": 502,
-          "nompersona": "María Gómez",
-          "fechas": [
-            {
-              "nrodia": 10,
-              "nromes": 7,
-              "mes": "Julio",
-              "nroano": 2025,
-              "fecha": "2025-07-10",
-              "idoperacion": 6789,
-              "idestado": 2,
-              "estado": "Ocupada",
-              "idpersona": 502,
-              "nompersona": "María Gómez",
-              "mensaje": "Check-in realizado",
-              "color": "#FF9800",
-              "icono": "hotel"
-            },
-            {
-              "nrodia": 11,
-              "nromes": 7,
-              "mes": "Julio",
-              "nroano": 2025,
-              "fecha": "2025-07-11",
-              "idoperacion": 6789,
-              "idestado": 2,
-              "estado": "Ocupada",
-              "idpersona": 502,
-              "nompersona": "María Gómez",
-              "mensaje": "Continúa hospedaje",
-              "color": "#FF9800",
-              "icono": "hotel"
-            }
-          ]
-        },
-        {
-          "idhabitacion": 103,
-          "nrohabitacion": 203,
-          "deshabitacion": "Suite",
-          "mensaje": "En limpieza",
-          "idestado": 3,
-          "estado": "Mantenimiento",
-          "idpersona": 0,
-          "nompersona": "",
-          "fechas": [
-            {
-              "nrodia": 10,
-              "nromes": 7,
-              "mes": "Julio",
-              "nroano": 2025,
-              "fecha": "2025-07-10",
-              "idoperacion": 0,
-              "idestado": 3,
-              "estado": "Limpieza",
-              "idpersona": 0,
-              "nompersona": "",
-              "mensaje": "Limpieza programada",
-              "color": "#2196F3",
-              "icono": "broom"
-            },
-            {
-              "nrodia": 11,
-              "nromes": 7,
-              "mes": "Julio",
-              "nroano": 2025,
-              "fecha": "2025-07-11",
-              "idoperacion": 0,
-              "idestado": 1,
-              "estado": "Disponible",
-              "idpersona": 0,
-              "nompersona": "",
-              "mensaje": "Lista para reserva",
-              "color": "#4CAF50",
-              "icono": "check"
-            }
-          ]
-        }
-      ]
-    };
-  }
-
   loadDias(nrodias:number) {
     this.dias = Array.from({ length: nrodias }, (_, i) => i + 1);
   }
@@ -282,10 +148,17 @@ export class CRptHabitacionComponent implements OnInit, OnDestroy {
   procesarSinFecha(item: any, dia: number) {
     console.log('Procesar sin fecha para:', item);
     console.log('Procesar sin fecha - dia:', dia);
+    let _fechaInicio = this.frmDatos.get('fechainicio')?.value;
+    if (_fechaInicio) {
+      const fecha = new Date(_fechaInicio);
+      fecha.setDate(dia);
+      _fechaInicio = fecha;
+    }
     const habitacionData = {
       idprod: item.idhabitacion,
       idtipoprod: 0,
-      nomHabitacion: item.deshabitacion
+      nomHabitacion: item.nomHabitacion,
+      fechaSeleccionada: _fechaInicio
     };
     this.reservarHabitacion(habitacionData);
   }
