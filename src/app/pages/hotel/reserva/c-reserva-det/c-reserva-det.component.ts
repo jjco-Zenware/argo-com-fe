@@ -57,6 +57,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
   menuItems: MenuItem[] = [];
+  menuItemsAcciones: MenuItem[] = [];
   verbtnGrabar: boolean = false;
   verbtnPreliminar: boolean = false;
   verbtnOrden: boolean = false;
@@ -403,9 +404,9 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       case 'CFM':
         this.verbtnGrabar = true;
         this.onlyRead = false;
+        this.verbtnAcciones = true;
         /*this.verbtnPreliminar= true;
         this.verbtnOrden = false;
-        this.verbtnAcciones = true;
         this.verItems = false;*/
         break;
       default:
@@ -472,6 +473,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
           this.registerFormRegistro.get('direccion').setValue(rpta.ordencompra[0].direcresumen);
           this.nrocuotas = rpta.ordencompra[0].nrocuotas
           this.getBusquedaRUC();
+          this.cargarMenuAcciones(rpta.ordencompra[0].acciones);
           this.setSpinner(false);
         },
         error: (err) => {
@@ -1548,6 +1550,32 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($cargarOrdenC)
   }
 
+  cargarMenuAcciones(data: any) {
+    this.menuItemsAcciones = [];
+    data.forEach((item: any) => {
+      this.menuItemsAcciones.push({
+        label: item.nomtrx,
+        icon: 'pi pi-cog',
+        command: () => this.onAccionAcciones(item)
+      })
+    });
+  }
+
+  onAccionAcciones(item: any) {
+    this.ordenCompra.idtrx = item.idtrx;
+    const ref = this.dialogService.open(CmExcTransacReservaComponent, {
+      data: this.ordenCompra,
+      header: item.nomtrx,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+    ref.onClose.subscribe(() => {
+      this.traerUno();
+      this.listarTransacciones();
+    });
+  }
+
   toggleMenu(event: Event, data: any) {
     if (data.acciones) {
       this.cargarMenu(data.acciones);
@@ -1756,7 +1784,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
   }
 
-  getAgregarProdHabit(tipoProceso:string) {
+  getAgregarProdHabit(tipoProceso: string) {
     const data: any = {
       nroindex: 0,
       idordencompra: this.idOrdenC,
@@ -1845,7 +1873,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       simboloMoneda,
       idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
     }*/
-    const data = { 
+    const data = {
       ...this.registerFormRegistro.getRawValue(),
       idordencompra,
       detalleCompra: this.selectedDetalle,

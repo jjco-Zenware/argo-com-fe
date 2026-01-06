@@ -54,6 +54,7 @@ import { InplaceModule } from 'primeng/inplace';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { TreeTableModule } from 'primeng/treetable';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
   declarations: [],
@@ -162,7 +163,8 @@ import { TreeTableModule } from 'primeng/treetable';
     InplaceModule,
     OverlayPanelModule,
     SliderModule,
-    TreeTableModule
+    TreeTableModule,
+    SplitButtonModule,
   ],
   providers: [ConfirmationService, MessageService],
 })

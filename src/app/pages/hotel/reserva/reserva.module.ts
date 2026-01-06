@@ -28,6 +28,7 @@ import { CmExcTransacReservaComponent } from './cm-exc-transac-reserva/cm-exc-tr
 import { CMAgregarProductoComponent } from './cm-agregar-producto/cm-agregar-producto.component';
 import { CmRegistrarPagoComponent } from './cm-registrar-pago/cm-registrar-pago.component';
 import { CmRegistrarFacturacionComponent } from './cm-registrar-facturacion/cm-registrar-facturacion.component';
+import { HabitacionesService } from '../habitacion/habitaciones.service';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,8 @@ import { CmRegistrarFacturacionComponent } from './cm-registrar-facturacion/cm-r
     AlmacenService, 
     ContabilidadService,
     ConfirmationService,
-    ReservaService
+    ReservaService,
+    HabitacionesService
   ],
   exports: [
     CReservaDetComponent,
