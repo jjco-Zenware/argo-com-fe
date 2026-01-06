@@ -43,7 +43,7 @@ export class CModalExcTransacHotelComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.habitacion = this.config.data;
-    this.visLstUsuariosAux = this.config.data.idtrx === 416;
+    this.visLstUsuariosAux = this.config.data.idtrx === 416 ||this.config.data.idtrx === 419 ;
     console.log('habitacion Modal', this.habitacion);
     this._transaccion = this.config.data.acciones.filter((x: { idtrx: any; }) => x.idtrx === this.config.data.idtrx);
     this.cargarData();
