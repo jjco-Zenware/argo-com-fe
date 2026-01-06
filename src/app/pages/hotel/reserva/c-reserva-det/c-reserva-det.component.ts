@@ -325,6 +325,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       //codctactble:[{ value: '0', disabled: false }],
       idtipodoc: [{ value: '', disabled: false }],
 
+      indtam: [{ value: false, disabled: false }],
       fecingresopais: [{ value: null, disabled: false }],
       tiempopermanencia: [{ value: null, disabled: false }],
       tipopermanencia: [{ value: 'D', disabled: false }],
@@ -1104,7 +1105,28 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     //             _error = true;
     //   }
     // }
+    if (!_error && this.registerFormRegistro.value.indtam) {
+      if (!_error && this.registerFormRegistro.value.fecingresopais === null) {
+        this.errorMensaje = "Seleccionar Fecha Ingreso País...!";
+        _error = true;
+      }
 
+      if (!_error && (this.registerFormRegistro.value.tiempopermanencia === null || this.registerFormRegistro.value.tiempopermanencia === 0)) {
+        this.errorMensaje = "Ingresar Tipo Permanencia...!";
+        _error = true;
+      }
+
+      if (!_error && this.registerFormRegistro.value.tipopermanencia === null) {
+        this.errorMensaje = "Seleccionar Tipo Permanencia...!";
+        _error = true;
+      }
+
+      if (!_error && this.registerFormRegistro.value.codverificaciontam === null) {
+        this.errorMensaje = "Ingresar Codigo de Verificación...!";
+        _error = true;
+      }
+
+    }
 
     return _error;
   }
@@ -1782,6 +1804,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
         break;
     }
 
+    this.changeAplicaTAM(false);
   }
 
   getAgregarProdHabit(tipoProceso: string) {
@@ -1894,6 +1917,41 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     ref.onClose.subscribe((rpta: any) => {
       if (!rpta) { return; }
     });
+  }
+
+  changeAplicaTAM(value: boolean) {
+    if (value) {
+      this.registerFormRegistro.get('fecingresopais')?.enable();
+      this.registerFormRegistro.get('tiempopermanencia')?.enable();
+      this.registerFormRegistro.get('tipopermanencia')?.enable();
+      this.registerFormRegistro.get('codverificaciontam')?.enable();
+
+      this.registerFormRegistro.get('fecingresopais')?.setValidators([Validators.required]);
+      this.registerFormRegistro.get('tiempopermanencia')?.setValidators([Validators.required]);
+      this.registerFormRegistro.get('tipopermanencia')?.setValidators([Validators.required]);
+      this.registerFormRegistro.get('codverificaciontam')?.setValidators([Validators.required]);
+
+    } else {
+      this.registerFormRegistro.get('fecingresopais')?.clearValidators();
+      this.registerFormRegistro.get('tiempopermanencia')?.clearValidators();
+      this.registerFormRegistro.get('tipopermanencia')?.clearValidators();
+      this.registerFormRegistro.get('codverificaciontam')?.clearValidators();
+
+      this.registerFormRegistro.get('fecingresopais')?.reset();
+      this.registerFormRegistro.get('tiempopermanencia')?.reset();
+      this.registerFormRegistro.get('tipopermanencia')?.reset();
+      this.registerFormRegistro.get('codverificaciontam')?.reset();
+
+      this.registerFormRegistro.get('fecingresopais')?.disable();
+      this.registerFormRegistro.get('tiempopermanencia')?.disable();
+      this.registerFormRegistro.get('tipopermanencia')?.disable();
+      this.registerFormRegistro.get('codverificaciontam')?.disable();
+    }
+
+    this.registerFormRegistro.get('fecingresopais')?.updateValueAndValidity();
+    this.registerFormRegistro.get('tiempopermanencia')?.updateValueAndValidity();
+    this.registerFormRegistro.get('tipopermanencia')?.updateValueAndValidity();
+    this.registerFormRegistro.get('codverificaciontam')?.updateValueAndValidity();
   }
 
 }

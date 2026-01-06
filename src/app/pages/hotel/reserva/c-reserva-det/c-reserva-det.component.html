@@ -3,7 +3,8 @@
         <div *ngIf="verbtnGrabar" class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
             <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Grabar" class="p-button-primary w-auto h-2rem"
                 (click)="guardarOC()"></button>
-            <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItemsAcciones" appendTo="body" styleClass="p-button-success h-2rem"></p-splitButton>
+            <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItemsAcciones" appendTo="body"
+                styleClass="p-button-success h-2rem"></p-splitButton>
         </div>
         <div class="card p-2">
             <p-tabView>
@@ -172,6 +173,13 @@
                         </div>
 
                         <ng-container *ngIf="esExtranjero">
+                            <div class="col-12 h-4rem">
+                                <div class="flex align-items-center justify-content-start h-full">
+                                    <p-checkbox formControlName="indtam" inputId="ny" [binary]="true"
+                                        class="align-items-center" (onChange)="changeAplicaTAM($event.checked)" />
+                                    <p class="m-0 ml-2">TAM</p>
+                                </div>
+                            </div>
                             <div class="sm:col-4 lg:col-4 md:col-4 col-4 -mt-1">
                                 <label class="block text-900 font-medium">
                                     <i class="pi pi-calendar text-orange-600 mr-2"></i>

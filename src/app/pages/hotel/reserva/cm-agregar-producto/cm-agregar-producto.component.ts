@@ -104,6 +104,10 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
         {
           codigo: 325,
           descripcion: "Tiendita"
+        },
+        {
+          codigo: 126,
+          descripcion: "Otros Serv."
         }
       ]
     } else {

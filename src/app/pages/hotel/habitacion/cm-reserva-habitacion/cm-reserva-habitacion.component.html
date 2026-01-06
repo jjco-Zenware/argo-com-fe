@@ -46,8 +46,7 @@
                     </label>
                     <p-calendar formControlName="fecha_ini" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true"
                         [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
-                        [minDate]="minimaFechaDesde" [readonlyInput]="true"
-                        (onSelect)="changeFechaDesde($event)">
+                        [minDate]="minimaFechaDesde" [readonlyInput]="true" (onSelect)="changeFechaDesde($event)">
                     </p-calendar>
                 </div>
             </div>
@@ -58,8 +57,8 @@
                         <i class="pi pi-calendar text-orange-600 mr-2"></i>
                         Fecha Salida
                     </label>
-                    <p-calendar formControlName="fecha_fin" dateFormat="dd/mm/yy" [showTime]="false"
-                        [showIcon]="true" [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
+                    <p-calendar formControlName="fecha_fin" dateFormat="dd/mm/yy" [showTime]="false" [showIcon]="true"
+                        [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
                         [minDate]="minimaFechaHasta" [readonlyInput]="true" (onSelect)="changeFechaHasta($event)">
                     </p-calendar>
                 </div>
@@ -104,8 +103,8 @@
                 <div class="field">
                     <label class="block text-900 font-medium">
                         Cliente
-                        <i *ngIf="esVisEditPersona" class="pi pi-user-edit cursor-pointer text-primary ml-2" pTooltip="Editar Cliente"
-                            tooltipPosition="right" (click)="editPersona()"></i>
+                        <i *ngIf="esVisEditPersona" class="pi pi-user-edit cursor-pointer text-primary ml-2"
+                            pTooltip="Editar Cliente" tooltipPosition="right" (click)="editPersona()"></i>
                     </label>
                     <p-dropdown [options]="lstCliente" placeholder="Seleccione cliente..." formControlName="idproveedor"
                         styleClass="w-full" optionLabel="razonsocial" optionValue="idcliente" appendTo="body"
@@ -134,12 +133,12 @@
 
         <ng-container *ngIf="esExtranjero">
             <div class="col-12 h-4rem">
-                    <div class="flex align-items-center justify-content-start h-full">
-                        <p-checkbox formControlName="indtam" inputId="ny" [binary]="true"
-                            class="align-items-center" (onChange)="changeAplicaTAM($event.checked)" />
-                        <p class="m-0 ml-2">TAM</p>
-                    </div>
+                <div class="flex align-items-center justify-content-start h-full">
+                    <p-checkbox formControlName="indtam" inputId="ny" [binary]="true" class="align-items-center"
+                        (onChange)="changeAplicaTAM($event.checked)" />
+                    <p class="m-0 ml-2">TAM</p>
                 </div>
+            </div>
             <div class="grid">
                 <div class="col-12 md:col-4">
                     <div class="field">
@@ -164,9 +163,9 @@
                 <div class="col-12 md:col-4">
                     <div class="field">
                         <label class="block text-900 font-medium">&nbsp;</label>
-                        <p-dropdown [options]="lsTipoTAM" placeholder="Seleccione..."
-                            formControlName="tipopermanencia" styleClass="w-full" optionLabel="descripcion"
-                            optionValue="codigo" appendTo="body" [filter]="true" [showClear]="true">
+                        <p-dropdown [options]="lsTipoTAM" placeholder="Seleccione..." formControlName="tipopermanencia"
+                            styleClass="w-full" optionLabel="descripcion" optionValue="codigo" appendTo="body"
+                            [filter]="true" [showClear]="true">
                         </p-dropdown>
                     </div>
                 </div>
