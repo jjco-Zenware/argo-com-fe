@@ -727,7 +727,7 @@ createFormRegistro() {
       next: (rpta: any) => {
       this.lstOrigen = rpta.filter((x: { idtipoproyecto: number; }) => x.idtipoproyecto === 1);
       const objeto = {
-        idtipoproyecto: 4,
+        idtipoproyecto: 0,
         nomtipoproyecto: 'Otros',
         codproceso:'OTR'
       }
@@ -847,11 +847,11 @@ createFormRegistro() {
   }
 
   cargarProyectos(dato:any){
-    debugger
+    
     let idcliente = this.registerFormRegistro.value.idproveedor;
     console.log('dato...',dato,idcliente);
     //this.ordencompraService.portipoProyectoList(dato).subscribe({
-    this.ordencompraService.portipoProyectoList(idcliente).subscribe({
+    this.ordencompraService.portipoProyectoList(dato).subscribe({
       next: (rpta: any) => {
       this.lstProyectos = rpta;
       console.log('rpta...',rpta);
