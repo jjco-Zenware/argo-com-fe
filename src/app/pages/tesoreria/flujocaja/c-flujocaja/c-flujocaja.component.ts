@@ -27,10 +27,14 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
   lstMonedas: any;
   lstProveedor: any;
   lstFlujoCaja: any[] = [];
-  lstmontomes: number[] = [];
+  lstmontomesA: number[] = [];
+  lstmontomesB: number[] = [];
+  lstmontomesC: number[] = [];
   
   
-    chartMonthlyData: any;
+    chartMonthlyDataA: any;
+    chartMonthlyDataB: any;
+    chartMonthlyDataC: any;
     chartMonthlyOptions: any;
 
   constructor(
@@ -87,12 +91,17 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
             console.log('rpta getListar', rpta);
 
             this.lstFlujoCaja = rpta;
-            this.lstmontomes = [];
+            this.lstmontomesC = [];
             this.lstFlujoCaja.forEach(element => {
               if (element.tipo === "C" ) {
-                this.lstmontomes = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.septiembre, element.octubre, element.noviembre, element.diciembre];
+                this.lstmontomesC = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.septiembre, element.octubre, element.noviembre, element.diciembre];
               }
-              
+               if (element.tipo === "A" ) {
+                this.lstmontomesA = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.septiembre, element.octubre, element.noviembre, element.diciembre];
+              }
+               if (element.tipo === "B" ) {
+                this.lstmontomesB = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.septiembre, element.octubre, element.noviembre, element.diciembre];
+              }
             });
         },
         error:(err)=>{
@@ -118,7 +127,7 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
 
   getExportarExcel(data :any) {
     this.lstExportar = [];
-    console.log(data.filteredValue);
+    console.log(data);
     if (data.filteredValue !== undefined) {
       this.lstExportExcel = data.filteredValue;
     }
@@ -178,25 +187,67 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
   }
 
    monthlyChartInit() {
-    this.chartMonthlyData = this.getChartData();
+    this.chartMonthlyDataA = this.getChartDataA();
+    this.chartMonthlyDataB = this.getChartDataB();
+    this.chartMonthlyDataC = this.getChartDataC();
     this.chartMonthlyOptions = this.getChartOptions();
   }
 
-  getChartData() {
+   getChartDataA() {
       const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
           cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
 
       return {
-          labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
           datasets: [               
 
               {
-                  label: '2025',
-                  data: this.lstmontomes,
+                  label: (this.frmDatos.value.fecini).getFullYear().toString(),
+                  data: this.lstmontomesA,
                   borderColor: greenColor,
-                  backgroundColor: cyanColor,
+                  //backgroundColor: cyanColor,
                   borderWidth: 2,
-                  fill: true
+                  //fill: true
+              }
+          ]
+      };
+  }
+
+  getChartDataC() {
+      const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
+          cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
+
+      return {
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+          datasets: [               
+
+              {
+                  label: (this.frmDatos.value.fecini).getFullYear().toString(),
+                  data: this.lstmontomesC,
+                  borderColor: orangeColor,
+                  //backgroundColor: cyanColor,
+                  borderWidth: 2,
+                  //fill: true
+              }
+          ]
+      };
+  }
+
+  getChartDataB() {
+      const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
+          cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
+
+      return {
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+          datasets: [               
+
+              {
+                  label: (this.frmDatos.value.fecini).getFullYear().toString(),
+                  data: this.lstmontomesB,
+                  borderColor: lightblueColor,
+                  //backgroundColor: cyanColor,
+                  borderWidth: 2,
+                  //fill: true
               }
           ]
       };
@@ -209,7 +260,7 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
       return {
           plugins: {
               legend: {
-                  display: true,
+                  display: false,
                   labels: {
                       fontFamily,
                       color: textColor

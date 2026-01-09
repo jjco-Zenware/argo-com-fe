@@ -16,7 +16,7 @@
                     <p-calendar view="month" dateFormat="mm/yy" [showIcon]="true" inputId="periodo" formControlName="periodo" (onSelect)="changePeriodo($event)"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
                 </div>
-                <!-- <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
+                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
                     <label class="font-semibold text-blue-600 text-base">Desde</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini"
                         [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
@@ -26,23 +26,15 @@
                     <label class="font-semibold text-blue-600 text-base">Hasta</label>
                     <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-                </div> -->
-                <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">
+                </div>
+                <div class="sm:col-12 lg:col-2 md:col-6 col-12 -mt-3">
                     <label class=" font-semibold text-blue-600 text-base">Moneda</label>
                     <span class="p-fluid mt-1">
                         <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda"
                             appendTo="body" class="p-inputtext-sm"></p-dropdown>
                     </span>
                 </div>
-                
-                <!-- <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">                            
-                    <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
-                    <span>
-                        <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
-                        optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [filter]="true"></p-dropdown>            
-                    </span>
-                </div> 
-                <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">
+                <div class="sm:col-12 lg:col-2 md:col-6 col-12 -mt-3">
                     <label class=" font-semibold text-blue-600 text-base">Centro Costo</label>
                     <span class="p-fluid mt-1">
                          <span class="p-fluid mt-1">
@@ -51,7 +43,15 @@
                                 optionValue="idcentrocosto" appendTo="body" autoWidth="false"></p-dropdown>
                         </span>
                     </span>
-                </div> -->
+                </div> 
+                <!-- <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">                            
+                    <label class=" font-semibold text-blue-600 text-base">Proveedor</label>                            
+                    <span>
+                        <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
+                        optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [filter]="true"></p-dropdown>            
+                    </span>
+                </div> 
+                -->
                 <div class="field md:col-2 -mt-3 gap-2">
                     <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                         class="font-semibold mt-3 justify-content-center  w-3rem w-auto h-auto" icon="pi pi-search"></button>

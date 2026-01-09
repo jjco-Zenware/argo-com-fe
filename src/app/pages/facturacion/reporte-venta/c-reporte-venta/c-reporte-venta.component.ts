@@ -111,20 +111,20 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
                     console.log('rpta getListar', rpta);
                     let lista = rpta.ordenescompra;
                     this.lstCompras = lista.filter(
-                        (item: any) => item.ind_estado_fel === 1 || item.ind_estado_fel === 4
+                        (item: any) => item.ind_estado_fel === 1 
                     );
 
                     //poner en cero las anuladas
-                    this.lstCompras.forEach(item => {
-                        if (item.ind_estado_fel === 4) {
-                            item.s_monto = 0;
-                            item.s_igv = 0;
-                            item.s_monto_total = 0;
-                            item.s_monto_rep = 0;
-                            item.s_igv_rep = 0;
-                            item.s_monto_total_rep = 0;
-                        }
-                    });
+                    // this.lstCompras.forEach(item => {
+                    //     if (item.ind_estado_fel === 4) {
+                    //         item.s_monto = 0;
+                    //         item.s_igv = 0;
+                    //         item.s_monto_total = 0;
+                    //         item.s_monto_rep = 0;
+                    //         item.s_igv_rep = 0;
+                    //         item.s_monto_total_rep = 0;
+                    //     }
+                    // });
 
                     if (this.frmDatos.value.idproveedor === 0) {
                         this.listaProveedores();

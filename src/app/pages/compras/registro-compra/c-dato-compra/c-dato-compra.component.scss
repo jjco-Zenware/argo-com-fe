@@ -2,3 +2,9 @@
     background:#0288d1;
     color: #ffffff;
   }
+
+  ::ng-deep  .sin-borde input {
+  border: none;
+  box-shadow: none;
+  font-weight: bold;
+}

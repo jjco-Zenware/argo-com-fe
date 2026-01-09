@@ -482,6 +482,14 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td colspan="6" class="text-right">RC:</td>
+                                <td>                                    
+                                    <p-inputNumber [(ngModel)]="rc_compra" locale="es-PE" mode="decimal"
+                                        [minFractionDigits]="2" class="p-inputtext-sm sin-borde"
+                                        inputStyleClass="text-right"></p-inputNumber>                                    
+                                </td>
+                            </tr>
+                            <tr>
                                 <td colspan="6" class="text-right">Total:</td>
                                 <td>
                                     <div [ngStyle]="{ 'text-align': 'right' }">
@@ -489,6 +497,7 @@
                                     </div>
                                 </td>
                             </tr>
+                             
                         </ng-template>
                     </p-table>
                 </div>

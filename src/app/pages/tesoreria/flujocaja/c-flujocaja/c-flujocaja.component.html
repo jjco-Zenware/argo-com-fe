@@ -1,4 +1,4 @@
-<div class="card m-4">
+<div class="card m-4 gap-2">
     <div class="grid mt-2">
         <div class="flex justify-content-between col-12 -mt-3 gap-2">                                  
             <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
@@ -7,41 +7,43 @@
         </div>
     </div>
 
-    <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-9 col-12 text-sm">
-        <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
+    <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-9 col-12 text-sm" >
+        <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-3 ">
             <label class="font-semibold text-blue-600 text-base">Año</label>
             <p-calendar view="year" dateFormat="yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
                 [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
             </p-calendar>
         </div>
+        <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+                class="font-semibold mt-3 justify-content-center h-3rem" icon="pi pi-search"></button>
         <!-- <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
             <label class="font-semibold text-blue-600 text-base">Hasta</label>
             <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                 [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
-        </div>     -->
-        <div class="sm:col-6 lg:col-3 md:col-6 col-6 -mt-4">
+        </div>    --> 
+       <!-- <div class="sm:col-6 lg:col-3 md:col-6 col-6 -mt-4">
             <label class="font-semibold text-blue-600 text-base">Moneda</label>  
             <span class="p-fluid mt-1">
                 <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar..." optionLabel="desmoneda" 
                 optionValue="idmoneda" appendTo="body" class="p-inputtext-sm"></p-dropdown>
             </span>                                      
-        </div>          
+        </div>            
         
         <div class="field col-12 md:col-2 -mt-4 gap-2">
             <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-            <button pButton type="button" pTooltip="Exportar Excel" tooltipPosition="bottom" 
+                class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem" icon="pi pi-search"></button>
+            <button pButton type="button" pTooltip="Exportar Excel" tooltipPosition="bottom" (click)="getExportarExcel(dt1)"
                 class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
-        </div>
+        </div>-->
     </form> 
 
-    <p-table [value]="lstFlujoCaja" 
+    <p-table #dt1 [value]="lstFlujoCaja" 
         rowGroupMode="subheader" 
         groupRowsBy="tipo" 
         sortField="tipo" 
         sortMode="single"  
         [tableStyle]="{'min-width': '75rem'}"
-        styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped -mt-3">
+        styleClass="p-datatable-sm p-datatable-striped -mt-3">
         <ng-template pTemplate="header">
             <tr>
                 <th  style="width: 100px;" class="bg-teal-50 border-1"></th>
@@ -122,14 +124,13 @@
             </tr>
         </ng-template>
     </p-table>
-   
-    <div class="lg:col-12 md:col-12 col-12">
-        <div class="card">
+
+    <div class="flex grid p-2 mt-6 surface-border border-top-1">
+        <div class="lg:col-6 md:col-12">        
             <div class="flex align-items-center justify-content-between mb-3">
                 <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0 text-blue-500">Gráfico Estadístico</h5>
-                    <i class="pi pi-chart-bar ml-3 mt-1 text-blue-500 text-1xl" pTooltip="Cantidad de dinero que entra y sale de su empresa"
-                        tooltipPosition="bottom"></i>
+                    <h5 class="text-green-500">Ventas Netas</h5>
+                    <i class="pi pi-chart-bar ml-3 text-2xl text-green-500"></i>
                 </div> 
             </div>
 
@@ -139,29 +140,53 @@
                         <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
                     </div> -->
                     
-                    <p-chart #bar type="line" [data]="chartMonthlyData" [options]="chartMonthlyOptions" [responsive]="true"
+                    <p-chart type="line" [data]="chartMonthlyDataA" [options]="chartMonthlyOptions" [responsive]="true"
                         height="200px"></p-chart>
-                </div>
+                </div>                
+            </div>
+        </div> 
 
-                
+        <div class="lg:col-6 md:col-12">        
+            <div class="flex align-items-center justify-content-between mb-3">
+                <div class="justify-content-between flex gap-2">
+                    <h5 class="text-orange-500">Costo de Ventas</h5>
+                    <i class="pi pi-chart-bar ml-3 text-orange-500 text-2xl"></i>
+                </div> 
             </div>
 
-            <!-- <div class="border-top-1 surface-border flex justify-content-between mt-3 col-12 h-full align-content-end">
-                <div class="w-4 text-center p-1 flex flex-column surface-border">
-                    <span class="font-medium text-green-500  text-1xl">Entrante (+)</span>
-                    <span class="text-color-secondary text-1xl">10.000</span>
-                </div>
-                <div class="w-4 text-center p-1 flex flex-column border-left-1 surface-border">
-                    <span class="font-medium text-red-500 text-1xl">Saliente (-)</span>
-                    <span class="text-color-secondary text-1xl">50.702</span>
-                </div>
-                <div class="w-4 text-center p-1 flex flex-column border-left-1 surface-border">
-                    <span class="font-medium text-blue-500 text-1xl">Efectivo al (fecha) (=) </span>
-                    <span class="text-color-secondary text-1xl">50.702</span>
-                </div>
-            </div> -->
-        </div>
-    </div> 
+            <div class="flex align-items-center justify-content-between">
+                <div class="border-top-1 surface-border col-12">
+                    <!-- <div class="flex  justify-content-between mb-3">
+                        <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
+                    </div> -->
+                    
+                    <p-chart type="line" [data]="chartMonthlyDataB" [options]="chartMonthlyOptions" [responsive]="true"
+                        height="200px"></p-chart>
+                </div>                
+            </div>
+        </div> 
+    
+   
+    <div class="lg:col-12 md:col-12 surface-border border-top-1">        
+            <div class="flex align-items-center justify-content-between mb-3">
+                <div class="justify-content-between flex gap-2">
+                    <h5 class="m-0 text-blue-500">Utilidad Bruta</h5>
+                    <i class="pi pi-chart-bar ml-3 mt-1 text-blue-500 text-2xl"></i>
+                </div> 
+            </div>
+
+            <div class="flex align-items-center justify-content-between">
+                <div class="border-top-1 surface-border col-12">
+                    <!-- <div class="flex  justify-content-between mb-3">
+                        <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
+                    </div> -->
+                    
+                    <p-chart type="line" [data]="chartMonthlyDataC" [options]="chartMonthlyOptions" [responsive]="true"
+                        height="200px"></p-chart>
+                </div>                
+            </div>
+        </div> 
+    </div>
 </div>
 
 <p-toast></p-toast>

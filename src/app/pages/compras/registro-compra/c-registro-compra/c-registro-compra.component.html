@@ -58,11 +58,11 @@
                             N°
                         </div>
                     </th>
-                    <!-- <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1" >
+                    <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
-                           ID  
+                            FECHA <br> REGISTRO
                         </div>
-                    </th> -->
+                    </th>
                     <th style="width: 60px; text-align:center;" class="bg-teal-50 border-1" >
                         <div class="justify-content-between align-items-center">
                             N° OC
@@ -160,6 +160,11 @@
                     <td>                        
                         <div [ngStyle]="{'width':'20px'}">
                             {{rowIndex + 1}}
+                        </div>
+                    </td>
+                    <td >
+                        <div [ngStyle]="{'width':'60px'}">
+                            {{data.fechaingreso}}
                         </div>
                     </td>
                     <td >

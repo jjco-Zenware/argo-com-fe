@@ -123,6 +123,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     lstAreas: any[] = [];
     lstIgv: any[] = [];
   indtipoingreso: boolean = false;
+  rc_compra: number = 0;
 
     constructor(
         private fb: FormBuilder,
@@ -416,7 +417,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
                     this.s_monto = rpta.ordencompra[0].s_monto;
                     this.s_igv = rpta.ordencompra[0].s_igv;
-                    this.montoTotal = rpta.ordencompra[0].s_monto_total;
+                    this.montoTotal = parseFloat(rpta.ordencompra[0].s_monto_total) + rpta.ordencompra[0].rc_compra;
                     this.mostrarBotones(rpta.ordencompra[0].estado);
                     this.setearDias(
                         rpta.ordencompra[0].fecvencimiento,
@@ -446,6 +447,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     );
 
                     this.getOrigen(rpta.ordencompra[0].codtipodoc);
+
+                    this.rc_compra = rpta.ordencompra[0].rc_compra;
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -552,6 +555,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
             tipodoc_ctb: this.registerFormRegistro.value.tipodoc_ctb.toString(),
             cuotas: this.listaCuotas,
             nrocuotas: this.nrocuotas,
+            rc_compra: this.rc_compra
         };
 
         console.log('guardarOC...', objeto);
@@ -1057,7 +1061,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                         ?.setValue(0);
                     this.registerFormRegistro
                         .get('monto_detraccion_mn_CTB')
-                        ?.setValue('');
+                        ?.setValue(0);
                     this.registerFormRegistro
                         .get('monto_pen_pago')
                         ?.setValue(0);
@@ -1644,7 +1648,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                         /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
                         this.s_monto = rpta[0].s_monto_valor_venta_CTB;
                         this.s_igv = rpta[0].s_monto_igv_CTB;
-                        this.montoTotal = rpta[0].s_monto_total_CTB;
+                        this.montoTotal = parseFloat(rpta[0].s_monto_total_CTB) + this.rc_compra;
 
                         this.listaCuotas = [];
 
