@@ -141,6 +141,8 @@
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'60px'}">
                         <button pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenu($event, data)"
                             pTooltip="Transacciones Disponibles" tooltipPosition="bottom"></button>
+                        <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onVerDetalle(data)"></button>
+
                         <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
                         <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text text-green-500" (click)="onVer(data)"></button>
                         <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button>

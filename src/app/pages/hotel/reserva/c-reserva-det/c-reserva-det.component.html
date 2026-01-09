@@ -5,6 +5,8 @@
                 (click)="guardarOC()"></button>
             <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItemsAcciones" appendTo="body"
                 styleClass="p-button-success h-2rem"></p-splitButton>
+            <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>        
+
         </div>
         <div class="card p-2">
             <p-tabView>
