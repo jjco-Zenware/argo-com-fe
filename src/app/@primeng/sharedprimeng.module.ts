@@ -55,6 +55,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { TreeTableModule } from 'primeng/treetable';
 import { SplitButtonModule } from 'primeng/splitbutton';
+import { TagModule } from 'primeng/tag';
+import { FieldsetModule } from 'primeng/fieldset';
 
 @NgModule({
   declarations: [],
@@ -165,6 +167,8 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     SliderModule,
     TreeTableModule,
     SplitButtonModule,
+    FieldsetModule ,
+    TagModule
   ],
   providers: [ConfirmationService, MessageService],
 })

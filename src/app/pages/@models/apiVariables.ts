@@ -284,4 +284,5 @@ export const constantesApiWeb = {
     tipoCambioPRC: controllerTesoreria + '/tipocambioprc',
     ListarUsuariosAuxHouseKeeping: controllerHotel + '/ListarUsuariosAuxHouseKeeping',
     RoomingList: controllerHotel + '/roominglist',
+    listarHabitacionesCombo3: controllerHotel + '/listarHabitacionesCombo3/',
 }

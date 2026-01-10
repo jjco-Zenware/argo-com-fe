@@ -24,6 +24,9 @@ import { CModalPersonaComponent } from './registro-compra/modalPersona/c-modalpe
     ReactiveFormsModule,
     ComprasRoutingModule
   ],
+  exports: [
+    CModalTransacComponent
+  ],
   providers: [ComprasService]
 })
 export class ComprasModule { }
