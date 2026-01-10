@@ -358,6 +358,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     switch (data) {
       case 'CKI':
       case 'REG':
+      case 'CFM':
         this.verbtnGrabar = true;
         this.verbtnPreliminar = true;
         this.verbtnOrden = false;
@@ -915,10 +916,11 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     const objeto = {
       idusuario: constantesLocalStorage.idusuario,
       iddocumentoprc: this.idOrdenC,
-      codtipoprc: 6
+      codtipoprc: c_habitacion.tipoDocPRC,
+      idplantilla: 0
     }
 
-    const $cargarOrdenC = this.ordencompraService.prcDocumento(objeto).subscribe({
+    const $cargarOrdenC = this.ordencompraService.prcDocumentoDet(objeto).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
 
@@ -1427,7 +1429,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
     const objeto = {
       ...this.registerFormPago.value,
-      idtipodocprc: 6,
+      idtipodocprc: c_habitacion.tipoDocPRC,
       iddocumentoprc_origen
     }
     console.log("objeto recibido: ", objeto);

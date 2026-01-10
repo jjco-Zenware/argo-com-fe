@@ -221,7 +221,7 @@ visXperfil: boolean = true;
         const objeto = {
           idusuario : constantesLocalStorage.idusuario,
           iddocumentoprc: data.idordencompra,
-          codtipoprc: 6,
+          codtipoprc: c_habitacion.tipoDocPRC,
           idplantilla: 0
         }
     
