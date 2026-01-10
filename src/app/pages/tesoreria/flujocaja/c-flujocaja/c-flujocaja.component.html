@@ -11,12 +11,12 @@
         <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-3 ">
             <label class="font-semibold text-blue-600 text-base">Año</label>
             <p-calendar view="year" dateFormat="yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
-                [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
+                [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" (onSelect)="getListar()">
             </p-calendar>
         </div>
-        <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
+        <!-- <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
                 class="font-semibold mt-3 justify-content-center h-3rem" icon="pi pi-search"></button>
-        <!-- <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
+        <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
             <label class="font-semibold text-blue-600 text-base">Hasta</label>
             <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
                 [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
@@ -126,7 +126,7 @@
     </p-table>
 
     <div class="flex grid p-2 mt-6 surface-border border-top-1">
-        <div class="lg:col-6 md:col-12">        
+        <div class="lg:col-4 md:col-12">        
             <div class="flex align-items-center justify-content-between mb-3">
                 <div class="justify-content-between flex gap-2">
                     <h5 class="text-green-500">Ventas Netas</h5>
@@ -146,11 +146,11 @@
             </div>
         </div> 
 
-        <div class="lg:col-6 md:col-12">        
+        <div class="lg:col-4 md:col-12">        
             <div class="flex align-items-center justify-content-between mb-3">
                 <div class="justify-content-between flex gap-2">
-                    <h5 class="text-orange-500">Costo de Ventas</h5>
-                    <i class="pi pi-chart-bar ml-3 text-orange-500 text-2xl"></i>
+                    <h5 class="text-blue-500">Costo de Ventas</h5>
+                    <i class="pi pi-chart-bar ml-3 text-blue-500 text-2xl"></i>
                 </div> 
             </div>
 
@@ -164,14 +164,13 @@
                         height="200px"></p-chart>
                 </div>                
             </div>
-        </div> 
-    
+        </div>     
    
-    <div class="lg:col-12 md:col-12 surface-border border-top-1">        
+        <div class="lg:col-4 md:col-12 surface-border border-top-1">        
             <div class="flex align-items-center justify-content-between mb-3">
                 <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0 text-blue-500">Utilidad Bruta</h5>
-                    <i class="pi pi-chart-bar ml-3 mt-1 text-blue-500 text-2xl"></i>
+                    <h5 class="m-0 text-orange-500">Utilidad Bruta</h5>
+                    <i class="pi pi-chart-bar ml-3 mt-1 text-orange-500 text-2xl"></i>
                 </div> 
             </div>
 
@@ -186,6 +185,26 @@
                 </div>                
             </div>
         </div> 
+
+         <div class="lg:col-12 md:col-12 surface-border border-top-1">        
+            <div class="flex align-items-center justify-content-between mb-3">
+                <div class="justify-content-between flex gap-2">
+                    <h5 class="m-0 text-blue-500">Consolidado</h5>
+                    <i class="pi pi-chart-bar ml-3 mt-1 text-blue-500 text-2xl"></i>
+                </div> 
+            </div>
+
+            <div class="flex align-items-center justify-content-between">
+                <div class="border-top-1 surface-border col-12">
+                    <!-- <div class="flex  justify-content-between mb-3">
+                        <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
+                    </div> -->
+                    
+                    <p-chart type="line" [data]="chartMonthlyDataT" [options]="chartMonthlyOptionsT" [responsive]="true"
+                        height="200px"></p-chart>
+                </div>                
+            </div>
+        </div>
     </div>
 </div>
 

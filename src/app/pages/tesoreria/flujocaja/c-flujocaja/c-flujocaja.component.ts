@@ -35,7 +35,10 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
     chartMonthlyDataA: any;
     chartMonthlyDataB: any;
     chartMonthlyDataC: any;
+    chartMonthlyDataT: any;
     chartMonthlyOptions: any;
+    chartMonthlyOptionsT: any;
+
 
   constructor(
       private fb: FormBuilder,
@@ -190,7 +193,9 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
     this.chartMonthlyDataA = this.getChartDataA();
     this.chartMonthlyDataB = this.getChartDataB();
     this.chartMonthlyDataC = this.getChartDataC();
+    this.chartMonthlyDataT = this.getChartDataT();
     this.chartMonthlyOptions = this.getChartOptions();
+    this.chartMonthlyOptionsT = this.getChartOptionsT();
   }
 
    getChartDataA() {
@@ -205,6 +210,27 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
                   label: (this.frmDatos.value.fecini).getFullYear().toString(),
                   data: this.lstmontomesA,
                   borderColor: greenColor,
+                  //backgroundColor: cyanColor,
+                  borderWidth: 2,
+                  //fill: true
+              }
+          ]
+      };
+  }
+
+  getChartDataB() {
+      const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
+          cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
+
+      return {
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+          datasets: [               
+
+              
+              {
+                  label: (this.frmDatos.value.fecini).getFullYear().toString(),
+                  data: this.lstmontomesB,
+                  borderColor: lightblueColor,
                   //backgroundColor: cyanColor,
                   borderWidth: 2,
                   //fill: true
@@ -233,18 +259,36 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
       };
   }
 
-  getChartDataB() {
+  getChartDataT() {
       const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
           cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
 
       return {
           labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
           datasets: [               
-
               {
-                  label: (this.frmDatos.value.fecini).getFullYear().toString(),
+                  //type: 'bar',
+                  label: 'Ventas',
+                  data: this.lstmontomesA,
+                  borderColor: greenColor,
+                  //backgroundColor: cyanColor,
+                  borderWidth: 2,
+                  //fill: true
+              },
+              {
+                //type: 'bar',
+                  label: 'Costos',
                   data: this.lstmontomesB,
                   borderColor: lightblueColor,
+                  //backgroundColor: cyanColor,
+                  borderWidth: 2,
+                  //fill: true
+              },
+              {
+                //type: 'bar',
+                  label: 'Utilidad',
+                  data: this.lstmontomesC,
+                  borderColor: orangeColor,
                   //backgroundColor: cyanColor,
                   borderWidth: 2,
                   //fill: true
@@ -317,6 +361,52 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
           orangeColor: isLight ? '#FFA726' : '#FFCC80',
           deeporangeColor: isLight ? '#FF7043' : '#FFAB91',
           brownColor: isLight ? '#8D6E63' : '#BCAAA4'
+      };
+  }
+
+  getChartOptionsT() {
+      const textColor = getComputedStyle(document.body).getPropertyValue('--text-color') || 'rgba(0, 0, 0, 0.87)';
+      const gridLinesColor = getComputedStyle(document.body).getPropertyValue('--surface-border') || 'rgba(160, 167, 181, .3)';
+      const fontFamily = getComputedStyle(document.body).getPropertyValue('--font-family');
+      return {
+          plugins: {
+              legend: {
+                  //display: true,
+                  labels: {
+                      fontFamily,
+                      color: textColor
+                  }
+              },
+          },
+          animation: {
+              animateScale: true,
+              animateRotate: true
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+          aspectRatio: 0.8,
+          scales: {
+              y: {
+                  ticks: {
+                      fontFamily,
+                      color: textColor
+                  },
+                  grid: {
+                      color: gridLinesColor
+                  }
+              },
+              x: {
+                  categoryPercentage: .9,
+                  barPercentage: .8,
+                  ticks: {
+                      fontFamily,
+                      color: textColor
+                  },
+                  grid: {
+                      color: gridLinesColor
+                  }
+              }
+          },
       };
   }
 }
