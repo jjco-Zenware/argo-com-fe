@@ -37,10 +37,15 @@ const routes: Routes = [
     loadChildren: () => import('./tipo-cambio/tipo-cambio.module').then(m => m.TipoCambioModule),
     data: { breadcrumb: 'Tipo Cambio' }
   },
-    {
+  {
     path: 'room-list-hotel',
     loadChildren: () => import('./room-list/room-list.module').then(m => m.RoomListModule),
     data: { breadcrumb: 'Room List Hotel' }
+  },
+  {
+    path: 'punto-venta',
+    loadChildren: () => import('./punto-venta/punto-venta.module').then(m => m.PuntoVentaModule),
+    data: { breadcrumb: 'Punto Venta' }
   },
   {
     path:'listar-liquidacion-hotel',

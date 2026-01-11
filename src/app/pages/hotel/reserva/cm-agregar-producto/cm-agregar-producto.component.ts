@@ -157,53 +157,6 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
     this.$listSubcription.push($getListarOrdenCompra)
   }
 
-  /*listarFamilia() {
-    const $listarFamilia = this.almacenService.listarFamilia().subscribe({
-      next: (rpta: any) => {
-        this.lstFamilia = rpta;
-        const objet = {
-          idfamilia: 0,
-          nomfamilia: 'TODOS'
-        }
-        this.lstFamilia.unshift(objet);
-      },
-      error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => {
-      },
-    });
-    this.$listSubcription.push($listarFamilia);
-  }
- 
-  getSubFamilia(dato: any) {
-    const $getSubFamilia = this.almacenService.listarSubFamilia(dato).subscribe({
-      next: (rpta: any) => {
-        this.setSpinner(false);
-        console.info('next : ', rpta);
-        this.lstSubFamilia = rpta;
-        const objet = {
-          idsubfamilia: 0,
-          nomsubfamilia: 'TODOS'
-        }
-        this.lstSubFamilia.unshift(objet);
-      },
-      error: (err) => {
-        this.setSpinner(false);
-        console.info('error : ', err);
-        this.messageService.clear();
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-        });
-      },
-      complete: () => { },
-    });
-    this.$listSubcription.push($getSubFamilia);
-  }*/
-
   seleccionarProducto(dato: any) {
     console.log("seleccionarProducto: ", dato);
     if (!dato.cantidad) {

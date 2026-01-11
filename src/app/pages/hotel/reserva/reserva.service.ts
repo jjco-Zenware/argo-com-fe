@@ -48,4 +48,10 @@ export class ReservaService {
     const url = `${constantesApiWeb.pagoVentaPRC}`;
     return this.http.post<any>(url, objeto)
   }
+
+  listarHabitacionesCombo3(objeto: any) {
+    const url = `${constantesApiWeb.listarHabitacionesCombo3}`;
+    return this.http.post<any>(url, objeto)
+  }
+
 }

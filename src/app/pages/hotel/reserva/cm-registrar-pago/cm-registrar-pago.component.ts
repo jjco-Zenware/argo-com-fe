@@ -23,12 +23,12 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
   frmDatos!: FormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private readonly fb: FormBuilder,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
     public refDatoItem: DynamicDialogRef,
-    private serviceSharedApp: SharedAppService,
-    private serviceReserva: ReservaService
+    private readonly serviceSharedApp: SharedAppService,
+    private readonly serviceReserva: ReservaService
   ) { }
 
   ngOnInit(): void {
