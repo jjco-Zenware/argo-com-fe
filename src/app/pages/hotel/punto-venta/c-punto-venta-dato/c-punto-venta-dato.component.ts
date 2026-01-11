@@ -94,6 +94,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       fechaingreso: this.serviceUtilitario.obtenerFechaActual(),
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
+      idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
     })
   }
 

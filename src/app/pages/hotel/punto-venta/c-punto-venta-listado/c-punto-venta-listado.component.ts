@@ -202,7 +202,7 @@ visXperfil: boolean = true;
         idordencompra: data.idordencompra,
         paramReg:'V'
       }
-      this.tituloDetalle = "Ver Factura N° " + data.nrofactura;
+      this.tituloDetalle = "Ver Punto de Venta N° " + data.idordencompra;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
@@ -275,7 +275,7 @@ visXperfil: boolean = true;
         idordencompra: data.idordencompra,
         paramReg:'E'
       }
-      this.tituloDetalle = "Editar Factura N° " + data.nrofactura;
+      this.tituloDetalle = "Editar Punto de Venta N° " + data.idordencompra;
       this.vistaLista = false;
       this.visDetalle = true;
       this.visQuote = false;
@@ -295,7 +295,7 @@ visXperfil: boolean = true;
     }
 
     onNuevo() {        
-      this.tituloDetalle = "REGISTRAR VENTA";
+      this.tituloDetalle = "REGISTRAR PUNTO DE VENTA";
       this.dataPrc = {
         idordencompra: 0,
         paramReg:'N'
