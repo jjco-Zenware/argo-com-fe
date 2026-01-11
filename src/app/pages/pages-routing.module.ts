@@ -58,6 +58,11 @@ const routes: Routes = [
         data: { breadcrumb: 'Operaciones' }
       },
       {
+        path: 'hotel',
+        loadChildren: () => import('./hotel/hotel.module').then(m => m.HotelModule),
+        data: { breadcrumb: 'Hotel' }
+      },
+      {
         path: 'caja',
         loadChildren: () => import('./caja/caja.module').then(m => m.CajaModule),
         data: { breadcrumb: 'Caja' }
