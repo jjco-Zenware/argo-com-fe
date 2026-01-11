@@ -41,19 +41,19 @@
                         formControlName="idordencompra" readonly />
                 </div>
             </div>
-
-            <div class="col-12 md:col-4">
-                <div class="field">
-                    <label class="block text-900 font-medium">
-                        Comprobante <span class="text-red-500 font-bold">*</span>
-                    </label>
-                    <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb"
-                        placeholder="Seleccione tipo documento" optionLabel="nomitemsunat" optionValue="codsunat"
-                        styleClass="w-full">
-                    </p-dropdown>
+            <ng-container *ngIf="visSeccionReserva">
+                <div class="col-12 md:col-4">
+                    <div class="field">
+                        <label class="block text-900 font-medium">
+                            Comprobante <span class="text-red-500 font-bold">*</span>
+                        </label>
+                        <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb"
+                            placeholder="Seleccione tipo documento" optionLabel="nomitemsunat" optionValue="codsunat"
+                            styleClass="w-full">
+                        </p-dropdown>
+                    </div>
                 </div>
-            </div>
-
+            </ng-container>
             <div class="col-12 md:col-4">
                 <div class="field">
                     <label class="block text-900 font-medium">
