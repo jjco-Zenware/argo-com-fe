@@ -1,5 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ViewChild, ElementRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { c_habitacion, constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, OrdenCompraItem } from '@interfaces';
@@ -59,6 +58,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       descripcion: 'Mes'
     }
   ]
+  titulo:string='Reserva de Habitación'
 
   constructor(
     private fb: FormBuilder,
@@ -997,6 +997,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   getChangeTipoOrden(codigo: string) {
     console.log("getChangeTipoOrden: ", codigo);
     this.visSeccionReserva = codigo === 'OC';
+    this.titulo = codigo === 'OC' ? 'Reserva de Habitación' : 'Bloqueo de Habitación';
     const { idproveedor } = this.frmDatos.controls;
     idproveedor.setValue(codigo === 'OC' ? idproveedor.getRawValue() : 1);
   }
