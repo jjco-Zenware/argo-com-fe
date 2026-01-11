@@ -285,4 +285,6 @@ export const constantesApiWeb = {
     ListarUsuariosAuxHouseKeeping: controllerHotel + '/ListarUsuariosAuxHouseKeeping',
     RoomingList: controllerHotel + '/roominglist',
     listarHabitacionesCombo3: controllerHotel + '/listarHabitacionesCombo3/',
+    
+    prcDocumentoRoom: controllerMain + '/prcdetdocumentoroom',
 }

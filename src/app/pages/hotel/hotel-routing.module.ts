@@ -46,6 +46,11 @@ const routes: Routes = [
     path: 'punto-venta',
     loadChildren: () => import('./punto-venta/punto-venta.module').then(m => m.PuntoVentaModule),
     data: { breadcrumb: 'Punto Venta' }
+  },
+  {
+    path:'listar-liquidacion-hotel',
+    loadChildren: () => import('./liquidacion/liquidacion.module').then(m => m.LiquidacionModule),
+    data: { breadcrumb: 'Liquidacion' }
   }
 ];
 
