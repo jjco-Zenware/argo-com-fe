@@ -21,27 +21,27 @@
                 </div>
             </div>
 
-            <div class="col-12 md:col-4">
-                <div class="field">
-                    <label class="block text-900 font-medium">
-                        <i class="pi pi-calendar text-orange-600 mr-2"></i>
-                        Fecha Registro
-                    </label>
-                    <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false"
-                        [showIcon]="true" [required]="true" inputStyleClass="w-full" appendTo="body" styleClass="w-full"
-                        [readonlyInput]="true">
-                    </p-calendar>
-                </div>
-            </div>
-
-            <div class="col-12 md:col-4">
-                <div class="field">
-                    <label class="block text-900 font-medium">ID Registro</label>
-                    <input pInputText type="text" class="w-full surface-100 font-semibold"
-                        formControlName="idordencompra" readonly />
-                </div>
-            </div>
             <ng-container *ngIf="visSeccionReserva">
+                <div class="col-12 md:col-4">
+                    <div class="field">
+                        <label class="block text-900 font-medium">
+                            <i class="pi pi-calendar text-orange-600 mr-2"></i>
+                            Fecha Registro
+                        </label>
+                        <p-calendar formControlName="fechaingreso" dateFormat="dd/mm/yy" [showTime]="false"
+                            [showIcon]="true" [required]="true" inputStyleClass="w-full" appendTo="body"
+                            styleClass="w-full" [readonlyInput]="true">
+                        </p-calendar>
+                    </div>
+                </div>
+
+                <div class="col-12 md:col-4">
+                    <div class="field">
+                        <label class="block text-900 font-medium">ID Registro</label>
+                        <input pInputText type="text" class="w-full surface-100 font-semibold"
+                            formControlName="idordencompra" readonly />
+                    </div>
+                </div>
                 <div class="col-12 md:col-4">
                     <div class="field">
                         <label class="block text-900 font-medium">
