@@ -203,14 +203,15 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
     console.log('Acción seleccionada:', accion, 'para habitación:', habitacion);
     this.menuContextualVisible = false;
     const ordenHabitacion = {
-      idtrx: habitacion.idtrx,
+      ...habitacion,
+      idtrx: accion.idtrx,
       idoperacion: habitacion.idnrooperacion,
       idoperacion_item: habitacion.idnrooperacion_item,
     }
     console.log('onAccion', habitacion);
     const ref = this.dialogService.open(CModalExcTransacHotelComponent, {
       data: ordenHabitacion,
-      header: habitacion.nomtrx + ' - ' + habitacion.nomHabitacion,
+      header: accion.nomtrx + ' - ' + habitacion.nomHabitacion,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '40%'
@@ -235,8 +236,8 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   accionMenuContextual(item: any) {
-    if (item && typeof item.action === 'function') {
-      item.action(this.menuContextualData);
+    if (item && typeof item.accion === 'function') {
+      item.accion(this.menuContextualData);
       this.menuContextualVisible = false;
     }
   }
