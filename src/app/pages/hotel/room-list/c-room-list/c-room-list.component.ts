@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { constantesLocalStorage, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { SharedAppService } from '@sharedAppService';
 
 import * as FileSaver from 'file-saver';
 import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { HotelService } from '../../produccion/hotel.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-c-room-list',
@@ -27,6 +28,7 @@ export class CRoomListComponent implements OnInit, OnDestroy {
     private readonly utilitariosService: UtilitariosService,
     private readonly serviceSharedApp: SharedAppService,
     private readonly serviceHotel: HotelService,
+    private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
@@ -124,4 +126,50 @@ export class CRoomListComponent implements OnInit, OnDestroy {
     });
     FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
   }
+
+   vistaPreliminar() {
+      this.setSpinner(true);
+      this.mensajeSpinner = 'Descargando Vista Preliminar...!';
+  
+      const objeto = {
+      ...this.frmDatos.getRawValue()
+    };
+  
+      const $cargarOrdenC = this.serviceHotel.roomingList(objeto).subscribe({
+        next: (rpta: any) => {
+          this.setSpinner(false);
+  
+          const mediaType = 'application/pdf';
+          const blob = new Blob([rpta.body], { type: mediaType });
+          const filename = 'Room-list';
+  
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.target = '_blank';
+          a.click();
+  
+          window.open(url);
+  
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.messageService.clear();
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: mensajesQuestion.msgErrorGenerico,
+          });
+        },
+        complete: () => {
+        },
+      });
+      this.$listSubcription.push($cargarOrdenC)
+    }
 }

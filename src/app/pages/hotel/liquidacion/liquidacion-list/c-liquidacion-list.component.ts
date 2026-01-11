@@ -2,17 +2,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { constantesLocalStorage, mensajesSpinner, c_habitacion } from '@constantes';
 import { Subscription } from 'rxjs';
-import { HotelService } from '../hotel.service';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
+import { HotelService } from '../hotel.service';
 
 @Component({
-  selector: 'app-c-produccion-list',
-  templateUrl: './c-produccion-list.component.html',
-  styleUrls: ['./c-produccion-list.component.scss']
+  selector: 'app-c-liquidacion-list',
+  templateUrl: './c-liquidacion-list.component.html',
+  styleUrls: ['./c-liquidacion-list.component.scss']
 })
-export class CProduccionListComponent implements OnInit, OnDestroy {
+export class CLiquidacionListComponent implements OnInit, OnDestroy {
   $listSubcription: Subscription[] = [];
   frmDatos!: FormGroup;
   blockedDocument: boolean = false;
@@ -49,7 +49,7 @@ export class CProduccionListComponent implements OnInit, OnDestroy {
       fechaInicio: [{ value: this.utilitariosService.obtenerFechaInicioMes(), disabled: false }],
       fechaFin: [{ value: this.utilitariosService.obtenerFechaFinMes(), disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
-      tipo: [{ value: 1, disabled: false }]
+      tipo: [{ value: 2, disabled: false }]
     })
   }
 
@@ -113,7 +113,7 @@ export class CProduccionListComponent implements OnInit, OnDestroy {
       const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
       const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, 'PRODUCCION_HOTEL');
+      this.saveAsExcelFile(excelBuffer, 'LIQUIDACION_HOTEL');
     });
 
     this.setSpinner(false);
