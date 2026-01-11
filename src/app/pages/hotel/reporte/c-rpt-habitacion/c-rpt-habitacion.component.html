@@ -65,7 +65,8 @@
                                 <span [style.background-color]="fechaInfo.color" [attr.title]="fechaInfo.mensaje"
                                     class="cell-content"
                                     style="display: flex; align-items: center; justify-content: center; width: 100%; height: 16px; min-height: 12px; border-radius: 6px; cursor: pointer; color: #fff; font-weight: 500; box-shadow: 0 1px 2px rgba(0,0,0,0.04); font-size: 13px;"
-                                    (click)="procesarReserva(fechaInfo)">
+                                    (click)="procesarReserva(fechaInfo)"
+                                    (contextmenu)="onCellContextMenu($event, habitacion)">
                                 </span>
                             </ng-container>
                             <ng-template #sindata>
@@ -101,3 +102,16 @@
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
 <p-toast></p-toast>
+
+<div *ngIf="menuContextualVisible"
+         class="custom-context-menu"
+         [ngStyle]="{'top.px': menuContextualTop, 'left.px': menuContextualLeft, 'position': 'fixed', 'z-index': 9999}"
+         (contextmenu)="$event.preventDefault()">
+    <ul class="custom-context-menu-list">
+        <li *ngFor="let opcion of opcionesMenuContextual"
+                (click)="accionMenuContextual(opcion)"
+                class="custom-context-menu-item">
+            <i *ngIf="opcion.icono" [class]="opcion.icono" style="margin-right: 6px;"></i>{{ opcion.etiqueta }}
+        </li>
+    </ul>
+</div>
