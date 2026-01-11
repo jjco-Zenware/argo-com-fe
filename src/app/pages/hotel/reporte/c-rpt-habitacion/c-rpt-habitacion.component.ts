@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { DialogService } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
@@ -7,6 +7,7 @@ import { HabitacionesService } from '../../habitacion/habitaciones.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { SharedAppService } from '@sharedAppService';
+import { CModalExcTransacHotelComponent } from '../../habitacion/modal-exc-transac-hotel/modal-exc-transac-hotel.component';
 
 @Component({
   selector: 'app-c-rpt-habitacion',
@@ -33,11 +34,11 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
   opcionesMenuContextual: any[] = [];
 
   constructor(
-    private fb: FormBuilder,
+    private readonly fb: FormBuilder,
     public dialogService: DialogService,
     public serviceHotel: HabitacionesService,
-    private utilitariosService: UtilitariosService,
-    private serviceSharedApp: SharedAppService,
+    private readonly utilitariosService: UtilitariosService,
+    private readonly serviceSharedApp: SharedAppService,
   ) { }
 
   ngOnInit() {
@@ -201,6 +202,29 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
   ejecutarAccionHabitacion(accion: any, habitacion: any) {
     console.log('Acción seleccionada:', accion, 'para habitación:', habitacion);
     this.menuContextualVisible = false;
+    const ordenHabitacion = {
+      idtrx: habitacion.idtrx,
+      idoperacion: habitacion.idnrooperacion,
+      idoperacion_item: habitacion.idnrooperacion_item,
+    }
+    console.log('onAccion', habitacion);
+    const ref = this.dialogService.open(CModalExcTransacHotelComponent, {
+      data: ordenHabitacion,
+      header: habitacion.nomtrx + ' - ' + habitacion.nomHabitacion,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+
+    ref.onClose.subscribe((rpta: any) => {
+      if (!rpta) { return; }
+
+      this.serviceSharedApp.messageToast({
+        severity: rpta.data.procesoSwitch === 0 ? 'success' : 'info',
+        summary: rpta.data.procesoSwitch === 0 ? 'Exito' : 'Validación...!',
+        detail: rpta.data.mensaje
+      });
+    });
   }
 
   closeContextMenu = (event?: any) => {

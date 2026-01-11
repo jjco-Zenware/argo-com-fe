@@ -48,6 +48,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   tituloTipoDocumento: string = 'Nro. Documento';
   esExtranjero: boolean = false;
   esVisEditPersona: boolean = false;
+  visSeccionReserva: boolean = true;
   lsTipoTAM: any[] = [
     {
       codigo: 'D',
@@ -441,6 +442,8 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   }
 
   validarDatos(): boolean {
+    if (this.frmDatos.get('codtipoorden')?.getRawValue() === 'BL') { return false; }
+
     let _error = false;
     this.errorMensaje = "";
     console.log('this.formValue...', this.frmDatos.value);
@@ -537,7 +540,6 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
   }
 
   guardar() {
-
     if (this.validarDatos()) {
       this.setSpinner(false);
       this.messageService.add({ severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
@@ -990,6 +992,13 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
     this.frmDatos.get('tiempopermanencia')?.updateValueAndValidity();
     this.frmDatos.get('tipopermanencia')?.updateValueAndValidity();
     this.frmDatos.get('codverificaciontam')?.updateValueAndValidity();
+  }
+
+  getChangeTipoOrden(codigo: string) {
+    console.log("getChangeTipoOrden: ", codigo);
+    this.visSeccionReserva = codigo === 'OC';
+    const { idproveedor } = this.frmDatos.controls;
+    idproveedor.setValue(codigo === 'OC' ? idproveedor.getRawValue() : 1);
   }
 
 }

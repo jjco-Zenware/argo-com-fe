@@ -3,8 +3,24 @@
         <div class="card-header">
             <h5 class="m-0 text-primary">Reserva de Habitación</h5>
         </div>
-
         <div class="grid">
+            <div class="col-12">
+                <div class="field" style="margin-top:1rem; margin-bottom:0.15rem;">
+                    <div class="flex flex-row gap-4">
+                        <div class="field-radiobutton flex align-items-center">
+                            <p-radioButton name="codtipoorden" value="OC" formControlName="codtipoorden"
+                                inputId="reserva" (onClick)="getChangeTipoOrden($event.value)"></p-radioButton>
+                            <label for="reserva" class="ml-2">Reserva</label>
+                        </div>
+                        <div class="field-radiobutton flex align-items-center">
+                            <p-radioButton name="codtipoorden" value="BL" formControlName="codtipoorden"
+                                inputId="bloqueo" (onClick)="getChangeTipoOrden($event.value)"></p-radioButton>
+                            <label for="bloqueo" class="ml-2">Bloqueo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12 md:col-4">
                 <div class="field">
                     <label class="block text-900 font-medium">
@@ -73,54 +89,56 @@
                 </div>
             </div>
 
-            <div class="col-12 md:col-6">
-                <div class="field">
-                    <label class="block text-900 font-medium">Tipo Documento</label>
-                    <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="destipodoc"
-                        placeholder="Seleccionar Documento" optionValue="idtipodoc"
-                        (onChange)="cambioTipoDoc($event.value)" inputStyleClass="w-full" appendTo="body"
-                        styleClass="w-full"></p-dropdown>
-                    <!-- <p class="p-error" *ngIf="submitted && formCliente.idtipodoc.errors" >Tipo Documento es requerido.</p> -->
+            <ng-container *ngIf="visSeccionReserva">
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label class="block text-900 font-medium">Tipo Documento</label>
+                        <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="destipodoc"
+                            placeholder="Seleccionar Documento" optionValue="idtipodoc"
+                            (onChange)="cambioTipoDoc($event.value)" inputStyleClass="w-full" appendTo="body"
+                            styleClass="w-full"></p-dropdown>
+                        <!-- <p class="p-error" *ngIf="submitted && formCliente.idtipodoc.errors" >Tipo Documento es requerido.</p> -->
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-12 md:col-6">
-                <div class="field">
-                    <label class="block text-900 font-medium">
-                        {{tituloTipoDocumento}} <span class="text-red-500 font-bold">*</span>
-                    </label>
-                    <span class="p-input-icon-right w-full">
-                        <i class="pi pi-search cursor-pointer text-primary" pTooltip="Buscar por RUC"
-                            tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
-                        <input pInputText type="text" formControlName="nrodocumento" class="w-full"
-                            placeholder="Ingrese {{tituloTipoDocumento}}"
-                            (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" #nrodocumentoInput />
-                    </span>
+                <div class="col-12 md:col-6">
+                    <div class="field">
+                        <label class="block text-900 font-medium">
+                            {{tituloTipoDocumento}} <span class="text-red-500 font-bold">*</span>
+                        </label>
+                        <span class="p-input-icon-right w-full">
+                            <i class="pi pi-search cursor-pointer text-primary" pTooltip="Buscar por RUC"
+                                tooltipPosition="bottom" (click)="getBusquedaRUC()"></i>
+                            <input pInputText type="text" formControlName="nrodocumento" class="w-full"
+                                placeholder="Ingrese {{tituloTipoDocumento}}"
+                                (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" #nrodocumentoInput />
+                        </span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-12 md:col-12">
-                <div class="field">
-                    <label class="block text-900 font-medium">
-                        Cliente
-                        <i *ngIf="esVisEditPersona" class="pi pi-user-edit cursor-pointer text-primary ml-2"
-                            pTooltip="Editar Cliente" tooltipPosition="right" (click)="editPersona()"></i>
-                    </label>
-                    <p-dropdown [options]="lstCliente" placeholder="Seleccione cliente..." formControlName="idproveedor"
-                        styleClass="w-full" optionLabel="razonsocial" optionValue="idcliente" appendTo="body"
-                        [filter]="true" [showClear]="true" (onChange)="getDatos($event.value)">
-                    </p-dropdown>
+                <div class="col-12 md:col-12">
+                    <div class="field">
+                        <label class="block text-900 font-medium">
+                            Cliente
+                            <i *ngIf="esVisEditPersona" class="pi pi-user-edit cursor-pointer text-primary ml-2"
+                                pTooltip="Editar Cliente" tooltipPosition="right" (click)="editPersona()"></i>
+                        </label>
+                        <p-dropdown [options]="lstCliente" placeholder="Seleccione cliente..."
+                            formControlName="idproveedor" styleClass="w-full" optionLabel="razonsocial"
+                            optionValue="idcliente" appendTo="body" [filter]="true" [showClear]="true"
+                            (onChange)="getDatos($event.value)">
+                        </p-dropdown>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-12">
-                <div class="field">
-                    <label class="block text-900 font-medium">Dirección</label>
-                    <input pInputText type="text" formControlName="direccion" readonly class="w-full surface-100"
-                        placeholder="Dirección del cliente" />
+                <div class="col-12">
+                    <div class="field">
+                        <label class="block text-900 font-medium">Dirección</label>
+                        <input pInputText type="text" formControlName="direccion" readonly class="w-full surface-100"
+                            placeholder="Dirección del cliente" />
+                    </div>
                 </div>
-            </div>
-
+            </ng-container>
             <div class="col-12">
                 <div class="field">
                     <label class="block text-900 font-medium">Observación</label>
