@@ -3,17 +3,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
 import { map, Subscription, forkJoin, Observable } from 'rxjs';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
-import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ReservaService } from '../../reserva/reserva.service';
 import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/modalPersona/c-modalpersona.component';
-import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 import { CMAgregarProductoComponent } from '../../reserva/cm-agregar-producto/cm-agregar-producto.component';
 import { CmRegistrarPagoComponent } from '../../reserva/cm-registrar-pago/cm-registrar-pago.component';
 
@@ -50,27 +48,19 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly formBuilder: FormBuilder,
     private readonly proyectosService: ProyectosService,
     private readonly messageService: MessageService,
     private readonly serviceSharedApp: SharedAppService,
     private readonly serviceUtilitario: UtilitariosService,
     public readonly dialogService: DialogService,
-    private readonly confirmationService: ConfirmationService,
     private readonly ordencompraService: OrdencompraService,
-    private readonly comprasService: ComprasService,
     private readonly contabilidadService: ContabilidadService,
     private readonly serviceReserva: ReservaService,
   ) { }
 
   ngOnInit(): void {
-    //this.idOrdenC = this.IA_data.idordencompra;
     this.createFrm();
     this.traerUno();
-    /*this.listarTiposDoc();
-    this.listaClientes();
-    this.listaHabitaciones();
-    this.listarItemsTablaComprobante();*/
   }
 
   ngOnDestroy() {
@@ -81,12 +71,13 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
 
   createFrm() {
     this.frmDatos = this.fb.group({
+      iddocumentoprc_origen: [{ value: 0, disabled: false }],
       idtipodocprc: [{ value: 6, disabled: false }],
       idprod: [{ value: 0, disabled: false }],
       idordencompra: [{ value: this.IA_data.idordencompra, disabled: true }],
       idtipodoc: [{ value: '', disabled: false }],
       nrodocumento: [{ value: '', disabled: false }],
-      idproveedor: [{ value: '', disabled: true }],
+      idproveedor: [{ value: 0, disabled: true }],
       codtipodoc: [{ value: 'OPO', disabled: false }],
       lugarentrega: [{ value: '', disabled: false }],
       idmoneda: [{ value: 1, disabled: false }],
@@ -127,6 +118,17 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         return this.lstHabitaciones;
       })
     );
+  }
+
+  changeHabitacion(codHabitacion: number) {
+    const habitacion = this.lstHabitaciones.find(x => x.idprod === codHabitacion);
+    console.log('habitacion', habitacion);
+
+    const { iddocumentoprc_origen, idtipodoc, nrodocumento, idproveedor } = this.frmDatos.controls;
+    iddocumentoprc_origen?.setValue(habitacion?.idreserva || 0);
+    idtipodoc?.setValue(habitacion?.idtipodoc || "");
+    nrodocumento?.setValue(habitacion?.nrodocumento || "");
+    idproveedor?.setValue(habitacion?.idpersona || "");
   }
 
   listarTiposDoc$(): Observable<any> {

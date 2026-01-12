@@ -21,7 +21,7 @@
                 <span>
                     <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="nomHabitacion"
                         placeholder="Seleccionar..." optionValue="idprod" appendTo="body" [readonly]="onlyRead"
-                        class="p-inputtext-sm"></p-dropdown>
+                        class="p-inputtext-sm" (onChange)="changeHabitacion($event.value)"></p-dropdown>
                 </span>
             </div>
             <div class="col-12 md:col-4 lg:col-4 mb-0">
@@ -60,7 +60,7 @@
         </div>
     </form>
 
-    <div class="grid" style="width:66%; margin-left:0; justify-content:flex-start; margin-top: 1rem;">
+    <div class="grid" style="width:80%; margin-left:0; justify-content:flex-start; margin-top: 1rem;">
         <div class="ml-2 lg:col-9 border-1 border-round surface-border">
             <p-table [value]="lstItemOC" responsiveLayout="stack" [breakpoint]="'960px'"
                 [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm ">
