@@ -181,17 +181,17 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
     this.reservarHabitacion(habitacionData);
   }
 
-  onCellContextMenu(event: MouseEvent, habitacion: any) {
+  onCellContextMenu(event: MouseEvent, habitacionPorFecha: any) {
     event.preventDefault();
-    this.menuContextualData = habitacion;
+    this.menuContextualData = habitacionPorFecha;
     this.menuContextualTop = event.clientY;
     this.menuContextualLeft = event.clientX;
-    if (habitacion && Array.isArray(habitacion.acciones) && habitacion.acciones.length > 0) {
-      this.opcionesMenuContextual = habitacion.acciones.map((accion: any) => ({
+    if (habitacionPorFecha && Array.isArray(habitacionPorFecha.acciones) && habitacionPorFecha.acciones.length > 0) {
+      this.opcionesMenuContextual = habitacionPorFecha.acciones.map((accion: any) => ({
         ...accion,
         etiqueta: accion.nomtrxbtn || accion.nomtrx || 'Acción',
         icono: accion.icono || '',
-        accion: () => this.ejecutarAccionHabitacion(accion, habitacion)
+        accion: () => this.ejecutarAccionHabitacion(accion, habitacionPorFecha)
       }));
     } else {
       this.opcionesMenuContextual = [];

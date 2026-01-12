@@ -404,12 +404,10 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
         this.onlyRead = true;
         break;
       case 'CFM':
+      case 'PCF':
         this.verbtnGrabar = true;
         this.onlyRead = false;
         this.verbtnAcciones = true;
-        /*this.verbtnPreliminar= true;
-        this.verbtnOrden = false;
-        this.verItems = false;*/
         break;
       default:
         break;
