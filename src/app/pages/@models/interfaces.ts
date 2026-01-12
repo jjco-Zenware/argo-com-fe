@@ -20,6 +20,7 @@ export interface I_rptaDataLogin {
     tipoacceso: string;
     idperfil: number;
     nomperfil: string;
+    idlocal: number;
 }
 
 export interface I_respuestaGeneral {

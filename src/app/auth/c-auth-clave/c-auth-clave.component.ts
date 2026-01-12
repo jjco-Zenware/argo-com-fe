@@ -21,9 +21,9 @@ export class CAuthClaveComponent implements OnInit, OnDestroy {
 
   constructor(
     protected router: Router,
-    private messageService: MessageService,
-    private authService: AuthService,
-    private localStorage: LocalStorageService
+    private readonly messageService: MessageService,
+    private readonly authService: AuthService,
+    private readonly localStorage: LocalStorageService
   ) {}
 
   ngOnInit(): void { }

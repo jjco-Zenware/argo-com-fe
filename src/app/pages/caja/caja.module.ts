@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { CajaRoutingModule } from './caja-routing.module';
 import { SharedAppService } from '@sharedAppService';
 import { ConfirmationService } from 'primeng/api';
+import { CajaService } from './caja.service';
 
 
 @NgModule({
@@ -12,6 +13,10 @@ import { ConfirmationService } from 'primeng/api';
     CommonModule,
     CajaRoutingModule
   ],
-  providers: [SharedAppService, ConfirmationService]
+  providers: [
+    SharedAppService,
+    ConfirmationService,
+    CajaService
+  ]
 })
 export class CajaModule { }

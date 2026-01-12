@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CAperturaListadoComponent } from './c-apertura-listado/c-apertura-listado.component';
+import { CAperturaCierreListadoComponent } from './c-apertura-cierre-listado/c-apertura-cierre-listado.component';
 
 const routes: Routes = [
   {
-    path:'',
-    component: CAperturaListadoComponent
+    path: '',
+    component: CAperturaCierreListadoComponent
   }
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AperturaRoutingModule { }
+export class AperturaCierreRoutingModule { }

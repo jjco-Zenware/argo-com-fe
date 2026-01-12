@@ -10,25 +10,23 @@ export class LocalStorageService {
 
   setearLocalStorage(respuestaData: I_rptaDataLogin) {
     console.log('setearLocalStorage', respuestaData );
-    localStorage.setItem('ZENWARE_SEG', JSON.stringify(respuestaData));
+    localStorage.setItem('HR_HUASCARAN', JSON.stringify(respuestaData));
   }
 
   limpiar() {
-    localStorage.removeItem('ZENWARE_SEG');
+    localStorage.removeItem('HR_HUASCARAN');
   }
 
   obtenerDataGeneral():I_rptaDataLogin{
-    const ZW:any = JSON.parse(localStorage.getItem('ZENWARE_SEG')!);
+    const ZW:any = JSON.parse(localStorage.getItem('HR_HUASCARAN')!);
     return ZW;
   }
 
   obtenerUsuario(): string {
     return this.obtenerDataGeneral().nombreUsuario??'';
-    //return 'ZenWare';
   }
 
   obtenerLogin(): string {
-    //return this.obtenerDataGeneral().login??'';
     return 'HR Huascaran';
   }
 
@@ -43,9 +41,7 @@ export class LocalStorageService {
   }
 
   logout() {
-    /*localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');*/
-    localStorage.removeItem('ZENWARE_SEG');
+    localStorage.removeItem('HR_HUASCARAN');
   }
 
 }

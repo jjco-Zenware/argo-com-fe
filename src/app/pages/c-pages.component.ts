@@ -31,11 +31,11 @@ export class CPagesComponent implements OnInit  {
     @ViewChild(AppTopbarComponent) appTopbar!: AppTopbarComponent;
 
     constructor(
-        private menuService: MenuService,
+        private readonly menuService: MenuService,
         public layoutService: LayoutService,
         public renderer: Renderer2,
         public router: Router,
-        private localStorageService:LocalStorageService,
+        private readonly localStorageService:LocalStorageService,
     ) {
         constantesLocalStorage.nombreUsuario = localStorageService.obtenerUsuario();
         constantesLocalStorage.login = localStorageService.obtenerDataGeneral().login;
@@ -43,6 +43,7 @@ export class CPagesComponent implements OnInit  {
         constantesLocalStorage.imagen = localStorageService.obtenerDataGeneral().imagen;
         constantesLocalStorage.idperfil = localStorageService.obtenerDataGeneral().idperfil;
         constantesLocalStorage.nomperfil = localStorageService.obtenerDataGeneral().nomperfil;
+        constantesLocalStorage.idlocal = localStorageService.obtenerDataGeneral().idlocal;
 
         this.hideMenuProfile();
         this.overlayMenuOpenSubscription =
