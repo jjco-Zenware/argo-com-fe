@@ -1,6 +1,7 @@
 export const environment = {
     production: true,
     webAPI: 'https://ion.net.pe/huascaran-backend/api/',
+    //webAPI: 'https://ion.net.pe/elmercado-backend/api/',
     msalConfig: {
         
         /*PRODUCCIÓN*/
