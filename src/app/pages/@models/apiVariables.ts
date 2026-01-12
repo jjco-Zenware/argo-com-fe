@@ -286,6 +286,8 @@ export const constantesApiWeb = {
     RoomingList: controllerHotel + '/roominglist',
     listarHabitacionesCombo3: controllerHotel + '/listarHabitacionesCombo3/',
     
-    prcDocumentoRoom: controllerMain + '/prcdetdocumentoroom',
     cajaList: controllerTesoreria + '/cajalist',
+    prcDocumentoRoom: controllerMain + '/roomlistrdlc',
+    exportarexcelhotelProd: controllerMain + '/exportarexcelhotel',
+    exportarexcelhotelLiqui: controllerMain + '/exportarexcelhotel',
 }

@@ -135,7 +135,7 @@ export class CRoomListComponent implements OnInit, OnDestroy {
       ...this.frmDatos.getRawValue()
     };
   
-      const $cargarOrdenC = this.serviceHotel.roomingList(objeto).subscribe({
+      const $cargarOrdenC = this.serviceHotel.prcDocumentoRoom(objeto).subscribe({
         next: (rpta: any) => {
           this.setSpinner(false);
   
