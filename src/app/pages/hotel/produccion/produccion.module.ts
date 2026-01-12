@@ -12,6 +12,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { TagModule } from 'primeng/tag';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { AlmacenModule } from '../../almacen/almacen.module';
+import { Toast, ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -29,7 +30,7 @@ import { AlmacenModule } from '../../almacen/almacen.module';
     AlmacenModule,
     InputNumberModule,
     TagModule,
-    DropdownModule,
+    DropdownModule,ToastModule
   ],
   providers: [HotelService]
 })

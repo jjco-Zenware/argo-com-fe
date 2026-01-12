@@ -287,4 +287,6 @@ export const constantesApiWeb = {
     listarHabitacionesCombo3: controllerHotel + '/listarHabitacionesCombo3/',
     
     prcDocumentoRoom: controllerMain + '/roomlistrdlc',
+    exportarexcelhotelProd: controllerMain + '/exportarexcelhotel',
+    exportarexcelhotelLiqui: controllerMain + '/exportarexcelhotel',
 }

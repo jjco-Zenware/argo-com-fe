@@ -6,6 +6,7 @@ import { HotelService } from '../hotel.service';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { SharedAppService } from '@sharedAppService';
 import * as FileSaver from 'file-saver';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-c-produccion-list',
@@ -26,6 +27,7 @@ export class CProduccionListComponent implements OnInit, OnDestroy {
     private utilitariosService: UtilitariosService,
     private serviceSharedApp: SharedAppService,
     private serviceHotel: HotelService,
+    private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
@@ -83,48 +85,79 @@ export class CProduccionListComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($listarProduccionHotel)
   }
 
-  getExportarExcel(data: any) {
-    this.setSpinner(true);
-    this.mensajeSpinner = "Exportando datos a Excel..."
+  // getExportarExcel(data: any) {
+  //   this.setSpinner(true);
+  //   this.mensajeSpinner = "Exportando datos a Excel..."
 
-    this.lstExportar = [];
-    if (data.filteredValue !== undefined) {
-      this.lstExportExcel = data.filteredValue;
-    } else {
-      this.lstExportExcel = data._value
+  //   this.lstExportar = [];
+  //   if (data.filteredValue !== undefined) {
+  //     this.lstExportExcel = data.filteredValue;
+  //   } else {
+  //     this.lstExportExcel = data._value
+  //   }
+
+  //   for (let i = 0; i < this.lstExportExcel.length; i++) {
+  //     const objeto = {
+  //       'N°': i + 1,
+  //       'ID DOC': this.lstExportExcel[i].idordencompraitem,
+  //       'ID PROD': this.lstExportExcel[i].idprod,
+  //       'FAMILIA': this.lstExportExcel[i].nomfamilia,
+  //       'PRODUCTO': this.lstExportExcel[i].descripcion,
+  //       'CANTIDAD': this.lstExportExcel[i].cantidad,
+  //       'MONEDA': this.lstExportExcel[i].desmoneda,
+  //       'PRECIO': this.lstExportExcel[i].preciocosto,
+  //       'TOTAL': this.lstExportExcel[i].totalmn,
+  //     }
+  //     this.lstExportar.push(objeto);
+  //   }
+
+  //   import('xlsx').then((xlsx) => {
+  //     const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
+  //     const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+  //     const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+  //     this.saveAsExcelFile(excelBuffer, 'PRODUCCION_HOTEL');
+  //   });
+
+  //   this.setSpinner(false);
+  // }
+
+  // saveAsExcelFile(buffer: any, fileName: string): void {
+  //   let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+  //   let EXCEL_EXTENSION = '.xlsx';
+  //   const data: Blob = new Blob([buffer], {
+  //     type: EXCEL_TYPE
+  //   });
+  //   FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+  // }
+
+   getExportarExcel() {
+     if (this.listado === undefined || this.listado === null) {
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'No existen registros para exportar...' });
+
+      return;
     }
 
-    for (let i = 0; i < this.lstExportExcel.length; i++) {
-      const objeto = {
-        'N°': i + 1,
-        'ID DOC': this.lstExportExcel[i].idordencompraitem,
-        'ID PROD': this.lstExportExcel[i].idprod,
-        'FAMILIA': this.lstExportExcel[i].nomfamilia,
-        'PRODUCTO': this.lstExportExcel[i].descripcion,
-        'CANTIDAD': this.lstExportExcel[i].cantidad,
-        'MONEDA': this.lstExportExcel[i].desmoneda,
-        'PRECIO': this.lstExportExcel[i].preciocosto,
-        'TOTAL': this.lstExportExcel[i].totalmn,
-      }
-      this.lstExportar.push(objeto);
-    }
-
-    import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, 'PRODUCCION_HOTEL');
-    });
-
-    this.setSpinner(false);
-  }
-
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
-  }
+     this.setSpinner(true);
+     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+ 
+     const objeto = {
+       ...this.frmDatos.value,
+     }
+ 
+     const $getListar = this.serviceHotel.exportarexcelhotelProd(objeto)
+     .subscribe({
+       next: (rpta:any) => {
+           this.setSpinner(false);
+           this.utilitariosService.descargarExcel(rpta, 'ProduccionHotel');
+       },
+       error:(err)=>{
+           this.setSpinner(false);
+           this.serviceSharedApp.messageToast()
+       },
+       complete:() => {
+         this.setSpinner(false);
+       }
+     });
+   this.$listSubcription.push($getListar)
+   }
 }

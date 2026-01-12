@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { constantesApiWeb } from '@apiVariables';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,14 @@ export class HotelService {
               observe: 'response',
               responseType: 'blob'
             })
+      }
+
+   exportarexcelhotelProd(data: any) {
+      const url = `${constantesApiWeb.exportarexcelhotelProd}`;
+      return this.http
+          .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+          .pipe(
+          map((resp: Blob) => resp));
       }
   
 }
