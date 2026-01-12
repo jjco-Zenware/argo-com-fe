@@ -205,13 +205,13 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
     const ordenHabitacion = {
       ...habitacion,
       idtrx: accion.idtrx,
-      idoperacion: habitacion.idnrooperacion,
-      idoperacion_item: habitacion.idnrooperacion_item,
+      /*idoperacion: habitacion.idnrooperacion,
+      idoperacion_item: habitacion.idnrooperacion_item,*/
     }
     console.log('onAccion', habitacion);
     const ref = this.dialogService.open(CModalExcTransacHotelComponent, {
       data: ordenHabitacion,
-      header: accion.nomtrx + ' - ' + habitacion.nomHabitacion,
+      header: accion.nomtrx,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '40%'
