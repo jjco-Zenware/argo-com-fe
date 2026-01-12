@@ -43,6 +43,7 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit() {
     this.createFrm();
+    this.changeFechas();
     this.obtenerData();
   }
 
@@ -62,7 +63,7 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
       fechafin: [{ value: this.utilitariosService.obtenerFechaFinMes(), disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idhotel: [{ value: 0, disabled: false }],
-    })
+    });
   }
 
   setSpinner(valor: boolean) {
@@ -243,4 +244,27 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
       this.menuContextualVisible = false;
     }
   }
+
+  changeFechas() {
+    this.frmDatos.get('fechainicio')?.valueChanges.subscribe((fechaInicio: any) => {
+      if (!fechaInicio) return;
+      const fecha = new Date(fechaInicio);
+      const lastDay = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
+      const actualFin = this.frmDatos.get('fechafin')?.value;
+      if (!actualFin || new Date(actualFin).getTime() !== lastDay.getTime()) {
+        this.frmDatos.get('fechafin')?.setValue(lastDay, { emitEvent: false });
+      }
+    });
+
+    this.frmDatos.get('fechafin')?.valueChanges.subscribe((fechaFin: any) => {
+      if (!fechaFin) return;
+      const fecha = new Date(fechaFin);
+      const firstDay = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
+      const actualInicio = this.frmDatos.get('fechainicio')?.value;
+      if (!actualInicio || new Date(actualInicio).getTime() !== firstDay.getTime()) {
+        this.frmDatos.get('fechainicio')?.setValue(firstDay, { emitEvent: false });
+      }
+    });
+  }
+
 }
