@@ -88,6 +88,26 @@
                         TOTAL
                     </div>
                 </th>
+                <th style="width: 60px" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                        PAGO
+                    </div>
+                </th>
+                <th style="width: 60px;" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                       COMPROBANTE
+                    </div>
+                </th>
+                <th style="width: 60px;" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                       SERIE
+                    </div>
+                </th>
+                <th style="width: 60px;" class="bg-teal-50 border-1">
+                    <div class="justify-content-between align-items-center">
+                       NUMMERO
+                    </div>
+                </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
@@ -135,6 +155,26 @@
                 <td>
                     <div [ngStyle]="{'width':'100px'}">
                         {{data.totalmn}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.nomestadopago}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.comprobante}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.nroserie_ctb}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.nrodocumento_ctb}}
                     </div>
                 </td>
             </tr>
