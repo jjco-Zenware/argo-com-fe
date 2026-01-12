@@ -225,6 +225,8 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
         summary: rpta.data.procesoSwitch === 0 ? 'Exito' : 'Validación...!',
         detail: rpta.data.mensaje
       });
+
+      this.obtenerData();
     });
   }
 
