@@ -1,6 +1,6 @@
 <div>
     <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
-        <button pButton icon="pi pi-save" label="Pagar" class="p-button-primary w-auto h-2rem"
+        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Pagar" class="p-button-primary w-auto h-2rem"
             (click)="guardarOC()"></button>
     </div>
 

@@ -45,6 +45,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   lstComprobante: any;
   s_monto!: number;
   s_igv!: number;
+  verbtnGrabar: boolean = true;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -61,6 +62,9 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.createFrm();
     this.traerUno();
+    console.log("IA_data: ", this.IA_data);
+    
+    this.verbtnGrabar = this.IA_data.idordencompra === 0
   }
 
   ngOnDestroy() {
@@ -85,7 +89,8 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       fechaingreso: this.serviceUtilitario.obtenerFechaActual(),
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-      idusuario: [{value: constantesLocalStorage.idusuario,disabled: false}],
+      iduserreg: [{value: constantesLocalStorage.idusuario,disabled: false}],
+      codformapago : [{ value: 14328, disabled: false }],
     })
   }
 

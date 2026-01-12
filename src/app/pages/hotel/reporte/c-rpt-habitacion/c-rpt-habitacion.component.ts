@@ -189,7 +189,7 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
     if (habitacionPorFecha && Array.isArray(habitacionPorFecha.acciones) && habitacionPorFecha.acciones.length > 0) {
       this.opcionesMenuContextual = habitacionPorFecha.acciones.map((accion: any) => ({
         ...accion,
-        etiqueta: accion.nomtrxbtn || accion.nomtrx || 'Acción',
+        etiqueta: accion.nomtrx || 'Acción',
         icono: accion.icono || '',
         accion: () => this.ejecutarAccionHabitacion(accion, habitacionPorFecha)
       }));
