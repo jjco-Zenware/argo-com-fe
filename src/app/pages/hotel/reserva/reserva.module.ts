@@ -29,6 +29,8 @@ import { CMAgregarProductoComponent } from './cm-agregar-producto/cm-agregar-pro
 import { CmRegistrarPagoComponent } from './cm-registrar-pago/cm-registrar-pago.component';
 import { CmRegistrarFacturacionComponent } from './cm-registrar-facturacion/cm-registrar-facturacion.component';
 import { HabitacionesService } from '../habitacion/habitaciones.service';
+import { CmAgregarHabitacionComponent } from './cm-agregar-habitacion/cm-agregar-habitacion.component';
+import { CatalogoHabitacionService } from '../catalogo-habitacion/catalogo-habitacion.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,8 @@ import { HabitacionesService } from '../habitacion/habitaciones.service';
     CmExcTransacReservaComponent,
     CMAgregarProductoComponent,
     CmRegistrarPagoComponent,
-    CmRegistrarFacturacionComponent
+    CmRegistrarFacturacionComponent,
+    CmAgregarHabitacionComponent
   ],
   imports: [
     CommonModule,
@@ -67,7 +70,8 @@ import { HabitacionesService } from '../habitacion/habitaciones.service';
     ContabilidadService,
     ConfirmationService,
     ReservaService,
-    HabitacionesService
+    HabitacionesService,
+    CatalogoHabitacionService
   ],
   exports: [
     CReservaDetComponent,

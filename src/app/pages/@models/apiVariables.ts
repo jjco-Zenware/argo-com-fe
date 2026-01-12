@@ -132,6 +132,7 @@ export const constantesApiWeb = {
     grabarOficina: controllerAlmacen + '/oficinaprc/',
     ListarOficina: controllerAlmacen + '/listaroficina/',
     buscarProducto03: controllerAlmacen + '/buscarproducto03',
+    buscarProducto06: controllerAlmacen + '/buscarproducto06',
     
     prcBanco: controllerTesoreria + '/bancoprc/',
     listarBanco: controllerTesoreria + '/bancolist/',

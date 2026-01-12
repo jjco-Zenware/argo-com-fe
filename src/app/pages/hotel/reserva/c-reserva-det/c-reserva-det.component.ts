@@ -22,6 +22,7 @@ import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-regist
 import { CMAgregarProductoComponent } from '../cm-agregar-producto/cm-agregar-producto.component';
 import { CmRegistrarPagoComponent } from '../cm-registrar-pago/cm-registrar-pago.component';
 import { CmRegistrarFacturacionComponent } from '../cm-registrar-facturacion/cm-registrar-facturacion.component';
+import { CmAgregarHabitacionComponent } from '../cm-agregar-habitacion/cm-agregar-habitacion.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -1952,6 +1953,63 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     this.registerFormRegistro.get('tiempopermanencia')?.updateValueAndValidity();
     this.registerFormRegistro.get('tipopermanencia')?.updateValueAndValidity();
     this.registerFormRegistro.get('codverificaciontam')?.updateValueAndValidity();
+  }
+
+  getAsignarHabit(){
+    const data: any = {
+      nroindex: 0,
+      idordencompra: this.idOrdenC,
+      origenreg: 'RV',
+      idalmacen: 0
+    }
+    console.log('CmAgregarHabitacionComponent', data);
+    const refItem = this.dialogService.open(CmAgregarHabitacionComponent, {
+      data,
+      header: "Asignar Habitacion " + this.idOrdenC,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+      console.log('onClose', rpta);
+      if (rpta != undefined) {
+        console.log('getAsignarHabit', rpta.data);
+        const dataOC = {
+          idordencompraitem: 0,
+          idprod: rpta.data.idprod,
+          codproducto: rpta.data.codproducto,
+          descripcion: rpta.data.despro,
+          idunidad: 130,
+          nomunidad: "UNIDAD",
+          preciocosto: rpta.data.valorunit,
+          cantidad: rpta.data.cantidad,
+          preciocostototal: rpta.data.valorunit * rpta.data.cantidad,
+          idtipoprod: rpta.data.idtipoprod,
+          precioventa: 0,
+          precioventatotal: 0,
+          preprofit: 0,
+          idnvoitem: 0,
+          nroindex: 0,
+          nromeses: 0,
+          rutaubicacion: '',
+          coptipoexistencia: '',
+          nomtipoexistencia: '',
+          idfamilia: rpta.data.idfamilia,
+          idmarca: rpta.data.idmarca,
+          idsubfamilia: rpta.data.idsubfamilia,
+          modelo: rpta.data.modelo,
+          nomfamilia: rpta.data.nomfamilia,
+          nommarca: rpta.data.nommarca,
+          nomsubfamilia: rpta.data.nomsubfamilia,
+          preciovenmax: rpta.data.preciovenmax,
+          preciovenmin: rpta.data.preciovenmin,
+          serialnumber: rpta.data.serialnumber,
+          valorunit: rpta.data.valorunit,
+        }
+        this.lstItemOC.push(dataOC);
+        console.log('this.lstItemOC', this.lstItemOC);
+      }
+    });
   }
 
 }

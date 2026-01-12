@@ -81,19 +81,20 @@
                 </td>
                 <td>
                     <div [ngStyle]="{'width':'60px'}">
-                        {{data.estado}}
+                        {{data.nomestadpcaja}}
                     </div>
                 </td>
                 <td>
                     <div [ngStyle]="{'width':'80px'}">
-                        {{data.idapertura }}
+                        {{data.idaperturacaja }}
                     </div>
                 </td>
                 <td>
                     <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'60px'}">
-                        <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom"
-                            pTooltip="Vista Preliminar" class="p-button-rounded p-button-text text-red-500"
-                            (click)="onVerDetalle(data)"></button>
+                        <button pButton pRipple type="button"
+                            [icon]="data.estadoCerrado ? 'pi pi-lock-open' : 'pi pi-unlock'" tooltipPosition="bottom"
+                            [pTooltip]="data.estadoCerrado ? 'Abrir Caja' : 'Cerrar Caja'" class="p-button-rounded p-button-text text-red-500"
+                            (click)="procesarCaja(data)"></button>
                     </div>
                 </td>
             </tr>

@@ -111,6 +111,11 @@ export class AlmacenService {
         return this.http.post<any>(url, objeto)
     }
 
+    buscarProducto06(objeto: any) {
+        const url = `${constantesApiWeb.buscarProducto06}`;
+        return this.http.post<any>(url, objeto)
+    }
+
     traerUbicaciones(codigo: any) {
         const url = `${constantesApiWeb.traerUbicaciones}${codigo}`;
         return this.http.get<any>(url);

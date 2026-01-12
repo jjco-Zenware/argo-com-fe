@@ -44,7 +44,6 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
   }
 
   getListar() {
-
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     const { idlocal } = constantesLocalStorage;
@@ -54,11 +53,17 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
         next: (rpta: any) => {
           this.setSpinner(false);
           console.log('rpta cajaList', rpta);
-          
+          const _estadoCerrado = 2;
+          const data = rpta.map((item:any)=>({
+            ...item,
+            estadoCerrado: item.idestadocaja === _estadoCerrado
+          }))
+
+          this.listado = data
         },
         error: (err) => {
           this.setSpinner(false);
-          this.serviceSharedApp.messageToast()
+          this.serviceSharedApp.messageToast();
         },
         complete: () => {
           this.setSpinner(false);
@@ -69,10 +74,10 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
 
   getExportarExcel(data: any) {
     this.lstExportar = [];
-    if (data.filteredValue !== undefined) {
-      this.lstExportExcel = data.filteredValue;
-    } else {
+    if (data.filteredValue === undefined) {
       this.lstExportExcel = data._value
+    } else {
+      this.lstExportExcel = data.filteredValue;
     }
 
     for (let i = 0; i < this.lstExportExcel.length; i++) {
@@ -138,4 +143,8 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
     return color;
   }
 
+  procesarCaja(data: any){
+    console.log('procesarCaja', data);
+  }
+  
 }
