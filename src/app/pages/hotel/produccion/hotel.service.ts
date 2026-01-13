@@ -39,5 +39,13 @@ export class HotelService {
           .pipe(
           map((resp: Blob) => resp));
       }
+
+    exportarexcelhotelRoom(data: any) {
+      const url = `${constantesApiWeb.exportarexcelhotelRoom}`;
+      return this.http
+          .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+          .pipe(
+          map((resp: Blob) => resp));
+      }
   
 }
