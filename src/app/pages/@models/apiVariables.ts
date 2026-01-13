@@ -291,4 +291,5 @@ export const constantesApiWeb = {
     prcDocumentoRoom: controllerMain + '/roomlistrdlc',
     exportarexcelhotelProd: controllerMain + '/exportarexcelhotel',
     exportarexcelhotelLiqui: controllerMain + '/exportarexcelhotel',
+    exportarexcelhotelRoom: controllerMain + '/exportarexcelroom',
 }

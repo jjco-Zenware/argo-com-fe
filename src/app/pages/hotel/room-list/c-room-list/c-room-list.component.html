@@ -6,7 +6,7 @@
             <span class="text-xl font-bold text-primary mr-3">ROOM LIST</span>
             <button pButton type="button" (click)="getListar()" pTooltip="Buscar registros" tooltipPosition="bottom"
                 class="p-button-rounded p-button-text p-button-primary" icon="pi pi-search"></button>
-            <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar a Excel" tooltipPosition="bottom"
+            <button pButton type="button" (click)="getExportarExcel()" pTooltip="Exportar a Excel" tooltipPosition="bottom"
                 class="p-button-rounded p-button-success ml-2" icon="pi pi-file-excel"></button>
             <button pButton type="button" icon="pi pi-file-pdf"  class="p-button-rounded p-button-outlined text-red-500 ml-2" (click)="vistaPreliminar()"></button>        
 
@@ -43,7 +43,7 @@
                 </th>
                 <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        PAX
+                        EMPRESA
                     </div>
                 </th>
                 <th style="width: 10px" class="bg-teal-50 border-1">
@@ -68,7 +68,7 @@
                 </th>
                 <th style="width: 40px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        EMPRESA
+                        PAX
                     </div>
                 </th>
                 <th style="width: 50px" class="bg-teal-50 border-1">

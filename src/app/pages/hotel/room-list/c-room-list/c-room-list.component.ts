@@ -80,53 +80,6 @@ export class CRoomListComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($roomingList)
   }
 
-  getExportarExcel(data: any) {
-    this.setSpinner(true);
-    this.mensajeSpinner = "Exportando datos a Excel..."
-
-    this.lstExportar = [];
-    if (data.filteredValue !== undefined) {
-      this.lstExportExcel = data.filteredValue;
-    } else {
-      this.lstExportExcel = data._value
-    }
-
-    for (let i = 0; i < this.lstExportExcel.length; i++) {
-      const objeto = {
-        'N°': i + 1,
-        'HABITACION': this.lstExportExcel[i].nomhabitacion,
-        'TIPO': this.lstExportExcel[i].tipohabitacion,
-        'ESTADO': this.lstExportExcel[i].estado,
-        'PAX': this.lstExportExcel[i].PAX,
-        'TIPO DOCUMENTO': this.lstExportExcel[i].tipodoc,
-        'NRO DOCUMENTO': this.lstExportExcel[i].nrodoc,
-        'NACIONALIDAD': this.lstExportExcel[i].nacionalidad,
-        'EMPRESA': this.lstExportExcel[i].empresa,
-        'FECHA DE INGRESO': this.lstExportExcel[i].ingreso,
-        'FECHA DE SALIDA': this.lstExportExcel[i].salida,
-      }
-      this.lstExportar.push(objeto);
-    }
-
-    import('xlsx').then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, 'ROOMING_LIST_HOTEL');
-    });
-
-    this.setSpinner(false);
-  }
-
-  saveAsExcelFile(buffer: any, fileName: string): void {
-    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    let EXCEL_EXTENSION = '.xlsx';
-    const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE
-    });
-    FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
-  }
-
    vistaPreliminar() {
       this.setSpinner(true);
       this.mensajeSpinner = 'Descargando Vista Preliminar...!';
@@ -172,4 +125,35 @@ export class CRoomListComponent implements OnInit, OnDestroy {
       });
       this.$listSubcription.push($cargarOrdenC)
     }
+
+    getExportarExcel() {
+     if (this.listado === undefined || this.listado === null) {
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'No existen registros para exportar...' });
+
+      return;
+    }
+
+     this.setSpinner(true);
+     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+ 
+     const objeto = {
+       ...this.frmDatos.value,
+     }
+ 
+     const $getListar = this.serviceHotel.exportarexcelhotelRoom(objeto)
+     .subscribe({
+       next: (rpta:any) => {
+           this.setSpinner(false);
+           this.utilitariosService.descargarExcel(rpta, 'RoomList');
+       },
+       error:(err)=>{
+           this.setSpinner(false);
+           this.serviceSharedApp.messageToast()
+       },
+       complete:() => {
+         this.setSpinner(false);
+       }
+     });
+   this.$listSubcription.push($getListar)
+   }
 }
