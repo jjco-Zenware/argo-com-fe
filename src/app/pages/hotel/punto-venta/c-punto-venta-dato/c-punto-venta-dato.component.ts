@@ -85,7 +85,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       codtipodoc: [{ value: 'OPO', disabled: false }],
       lugarentrega: [{ value: '', disabled: false }],
       idmoneda: [{ value: 1, disabled: false }],
-      tipodoc_ctb: [{ value: '', disabled: false }],
+      tipodoc_ctb: [{ value: 2, disabled: false }],
       fechaingreso: this.serviceUtilitario.obtenerFechaActual(),
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
