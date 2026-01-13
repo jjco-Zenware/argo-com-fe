@@ -36,15 +36,20 @@
                         N°
                     </div>
                 </th>
-                <th class="surface-200">
+                <!-- <th class="surface-200">
                     <div [ngStyle]="{'text-align': 'center'}">
                         CÓDIGO
                     </div>
-                </th>
+                </th> -->
                 <th style="width: 300px;" class="surface-200">PRODUCTO</th>
-                <th style="width: 300px;" class="surface-200">GRUPO</th>
-                <th style="width: 300px;" class="surface-200">CATEGORIA</th>
+                <!-- <th style="width: 300px;" class="surface-200">GRUPO</th>
+                <th style="width: 300px;" class="surface-200">CATEGORIA</th> -->
                 <th style="width: 300px;" class="surface-200">CANTIDAD</th>
+                <th style="width: 300px;" class="surface-200">CONDICION</th>
+                <th style="width: 300px;" class="surface-200">FECHA INICIO</th>
+                <th style="width: 300px;" class="surface-200">FECHA FIN</th>
+                <th style="width: 300px;" class="surface-200">ID RESERVA</th>
+                <th style="width: 300px;" class="surface-200">ESTADO RESERVA</th>
                 <th style="width: 300px;" class="surface-200" *ngIf="verAlm">CANTIDAD</th>
                 <th style="width: 300px;" class="surface-200" *ngIf="verAlm">UBICACIÓN</th>
                 <th style="width: 300px;" class="surface-200">SELECCIONAR</th>
@@ -53,21 +58,26 @@
         <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
             <tr>
                 <td>{{rowIndex + 1}}</td>
-                <td>{{data.codproducto}}</td>
+                <!-- <td>{{data.codproducto}}</td> -->
                 <td>
                     <div pTooltip="{{data.despro | uppercase}}">
                         {{(data.despro.length > 40) ? ((data.despro).slice(0, 40) + '...' | uppercase) : data.despro |
                         uppercase}}
                     </div>
                 </td>
-                <td>{{data.nomfamilia}}</td>
-                <td>{{data.nomsubfamilia}}</td>
+                <!-- <td>{{data.nomfamilia}}</td>
+                <td>{{data.nomsubfamilia}}</td> -->
                 <td>
                     <p-inputNumber [(ngModel)]="data.cantidad" [showButtons]="true" buttonLayout="horizontal"
                         inputId="horizontal" spinnerMode="horizontal" [step]="1" [min]="0"
                         decrementButtonClass="p-button-danger" incrementButtonClass="p-button-success"
                         incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" />
                 </td>
+                <td>{{data.condicion}}</td>
+                <td>{{data.fecha_ini}}</td>
+                <td>{{data.fecha_fin}}</td>
+                <td>{{data.idreserva}}</td>
+                <td>{{data.estado_reserva}}</td>
                 <td *ngIf="verAlm">{{data.saldostock}}</td>
                 <td *ngIf="verAlm">{{data.rutaubicacion}}</td>
                 <td>
