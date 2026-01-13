@@ -107,7 +107,8 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
       ...this.frmDatos.value,
       idfamilia,
       idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia,
-      idalmacen: this.config.data.idalmacen
+      idalmacen: this.config.data.idalmacen,
+      idreserva: this.config.data.idordencompra
     }
     console.log('this.objeto...', objeto);
 
