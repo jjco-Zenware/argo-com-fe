@@ -21,6 +21,8 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
   lstExportar: any[] = [];
   lstExportExcel: any[] = [];
   visXperfil: boolean = true;
+  visListadoGeneral: boolean = true;
+  lstRptaProceso: any[] = [];
 
   constructor(
     public readonly dialogService: DialogService,
@@ -54,7 +56,7 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
           this.setSpinner(false);
           console.log('rpta cajaList', rpta);
           const _estadoCerrado = 2;
-          const data = rpta.map((item:any)=>({
+          const data = rpta.map((item: any) => ({
             ...item,
             estadoCerrado: item.idestadocaja === _estadoCerrado
           }))
@@ -118,33 +120,82 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
     FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
   }
 
-  getSeverity(data: any) {
-    let color;
-    switch (data) {
-      case 0:
-        color = 'primary'
-        break;
-      case 1:
-        color = 'success'
-        break;
-      case 2:
-        color = 'danger'
-        break;
-      case 3:
-        color = 'warning'
-        break;
-      case 4:
-        color = 'danger'
-        break;
-      case 5:
-        color = 'warning'
-        break;
+  procesarCaja(data: any) {
+    console.log('procesarCaja', data);
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+    const objeto = {
+      idaperturacaja: data.idaperturacaja,
+      idcaja: data.idcaja,
+      idusuario: constantesLocalStorage.idusuario
     }
-    return color;
+
+    const $aperturaCierreCaja = this.serviceCaja.aperturaCierreCaja(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          this.setSpinner(false);
+          console.log('rpta aperturaCierreCaja', rpta);
+          this.getDataDetalle(rpta);
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($aperturaCierreCaja)
   }
 
-  procesarCaja(data: any){
-    console.log('procesarCaja', data);
+  getDataDetalle(data: any) {
+    if (data.length === 0) {
+      this.lstRptaProceso = [];
+      this.visListadoGeneral = true;
+      return
+    }
+
+    this.visListadoGeneral = false;
+    this.lstRptaProceso = data;
   }
-  
+
+  cerrarCaja(item:any) {
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+    const { idaperturacaja, idaperturacajadetalle, monto_arqueo,monto_saldo_final } = item;
+    const objeto = {
+      idaperturacaja,
+      idusuario: constantesLocalStorage.idusuario,
+      items: [
+        {
+          idaperturacajadetalle,
+          monto_arqueo,
+          monto_diferencia: monto_arqueo - monto_saldo_final,
+          idusuario: constantesLocalStorage.idusuario
+        }
+      ]
+    }
+
+    const $cierreCaja = this.serviceCaja.cierreCaja(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          this.setSpinner(false);
+          console.log('rpta cierreCaja', rpta);
+          this.getBackListado();
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($cierreCaja)
+  }
+
+  getBackListado() {
+    this.visListadoGeneral = true;
+  }
+
 }
