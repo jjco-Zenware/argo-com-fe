@@ -8,6 +8,7 @@ import { Table } from 'primeng/table';
 import { Subscription } from 'rxjs';
 import { AlmacenService } from 'src/app/pages/almacen/service/almacenServices';
 import { CatalogoHabitacionService } from '../../catalogo-habitacion/catalogo-habitacion.service';
+import { UtilitariosService } from 'src/app/services/utilitarios.service';
 
 @Component({
   selector: 'app-cm-agregar-habitacion',
@@ -41,6 +42,7 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
     private readonly serviceCatalogoHabitacion: CatalogoHabitacionService,
     public refDatoItem: DynamicDialogRef,
     public config: DynamicDialogConfig,
+    private readonly utilitariosService: UtilitariosService
   ) { }
 
   ngOnInit(): void {
@@ -89,12 +91,12 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
 
   getDataBotones() {
     let data: any[] = [
-        {
-          codigo: 125,
-          descripcion: "Buscar"
-        },
-      ]
-    
+      {
+        codigo: 125,
+        descripcion: "Buscar"
+      },
+    ]
+
     this.lstBotones = data;
   }
 
@@ -108,13 +110,16 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
       idfamilia,
       idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia,
       idalmacen: this.config.data.idalmacen,
-      idreserva: this.config.data.idordencompra
+      idreserva: this.config.data.idordencompra,
+      fecha_ini: this.utilitariosService.obtenerFechaFormatDDMMYY(this.config.data.fecha_ini),
+      fecha_fin: this.utilitariosService.obtenerFechaFormatDDMMYY(this.config.data.fecha_fin)
     }
     console.log('this.objeto...', objeto);
 
     const $buscarProducto06 = this.almacenService.buscarProducto06(objeto)
       .subscribe({
         next: (rpta: any) => {
+          if(rpta.length === 0){ return; }
           this.setSpinner(false);
           console.log('rpta buscarProducto06', rpta);
           //this.lstProducto = rpta

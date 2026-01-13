@@ -1956,11 +1956,14 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   }
 
   getAsignarHabit(){
+    const { fecha_ini, fecha_fin } = this.registerFormRegistro.getRawValue();
     const data: any = {
       nroindex: 0,
       idordencompra: this.idOrdenC,
       origenreg: 'RV',
-      idalmacen: 0
+      idalmacen: 0,
+      fecha_ini,
+      fecha_fin
     }
     console.log('CmAgregarHabitacionComponent', data);
     const refItem = this.dialogService.open(CmAgregarHabitacionComponent, {

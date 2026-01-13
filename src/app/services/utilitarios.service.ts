@@ -22,9 +22,20 @@ export class UtilitariosService {
 
   obtenerFechaActualFormat() {
     let fecha = new Date();
-    let fechaFormat =  `${fecha.getDate()}/${('0'+(fecha.getMonth()+1)).slice(-2)}/${fecha.getFullYear()}`;
+    let fechaFormat = `${fecha.getDate()}/${('0' + (fecha.getMonth() + 1)).slice(-2)}/${fecha.getFullYear()}`;
 
-        return fechaFormat;
+    return fechaFormat;
+  }
+
+  obtenerFechaFormatDDMMYY(fecha: string): Date {
+    const partes = fecha.split('/');
+    if (partes.length !== 3) {
+      throw new Error('Formato de fecha inválido. Se espera DD/MM/YYYY');
+    }
+    const dia = Number.parseInt(partes[0], 10);
+    const mes = Number.parseInt(partes[1], 10) - 1;
+    const anio = Number.parseInt(partes[2], 10);
+    return new Date(anio, mes, dia);
   }
 
   obtenerFechaInicioMes(): Date {
@@ -46,7 +57,7 @@ export class UtilitariosService {
   obtenerFechaFinMesTotal(): Date {
     return new Date(
       this.fechaActual.getFullYear(),
-      this.fechaActual.getMonth()+1,
+      this.fechaActual.getMonth() + 1,
       1
     );
   }
@@ -103,7 +114,7 @@ export class UtilitariosService {
     }, 100);
   }
 
-  obtenerFechaFormateado(fecha?:any): string {
+  obtenerFechaFormateado(fecha?: any): string {
 
     let dateOpt: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -114,10 +125,10 @@ export class UtilitariosService {
       hour12: true,
     };
 
-    if (fecha == null )
+    if (fecha == null)
       return new Date().toLocaleDateString('es-PE', dateOpt);
     else
-      return  new Date(Date.parse(fecha)).toLocaleDateString('es-PE', dateOpt);
+      return new Date(Date.parse(fecha)).toLocaleDateString('es-PE', dateOpt);
   }
 
   obtenerHora() {
@@ -162,7 +173,7 @@ export class UtilitariosService {
 
   }
 
-  obtenerFechaValidaRango(fecha?:any): string {
+  obtenerFechaValidaRango(fecha?: any): string {
 
     let dateOpt: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -170,10 +181,10 @@ export class UtilitariosService {
       day: '2-digit'
     };
 
-    if (fecha == null )
+    if (fecha == null)
       return new Date().toLocaleDateString('es-PE', dateOpt);
     else
-      return  new Date(Date.parse(fecha)).toLocaleDateString('es-PE', dateOpt);
+      return new Date(Date.parse(fecha)).toLocaleDateString('es-PE', dateOpt);
   }
 
   isMarkDirtyCampo(formGroup: FormGroup, control: string) {
@@ -181,12 +192,12 @@ export class UtilitariosService {
     formGroup.controls[control].updateValueAndValidity({ onlySelf: true });
   }
 
-  soloNumeros(dato:string){
+  soloNumeros(dato: string) {
     //console.log("numerosss : ", dato)
-    if (dato !== null){
+    if (dato !== null) {
       for (let index = 0; index < dato.length; index++) {
         const element = dato.charCodeAt(index);
-        if (element < 48 || element > 57){
+        if (element < 48 || element > 57) {
           return false;
         }
       }
@@ -194,13 +205,13 @@ export class UtilitariosService {
     return true;
   }
 
-  eliminarLetra(dato:string):string{
+  eliminarLetra(dato: string): string {
     //console.log("eliminarLetra : ", dato)
-    let valor:string='';
-    if (dato !== null){
+    let valor: string = '';
+    if (dato !== null) {
       for (let index = 0; index < dato.length; index++) {
         const element = dato.charCodeAt(index);
-        if (element < 48 || element > 57){
+        if (element < 48 || element > 57) {
           valor = dato.slice(0, index) + dato.slice(index + 1, dato.length)
         }
       }
@@ -208,13 +219,13 @@ export class UtilitariosService {
     return valor;
   }
 
-  soloNumerosDecimales(dato:string){
+  soloNumerosDecimales(dato: string) {
     //console.log("numerosss : ", dato)
-    if (dato !== null){
+    if (dato !== null) {
       for (let index = 0; index < dato.length; index++) {
         const element = dato.charCodeAt(index);
-        if (element < 48 || element > 57){
-          if (element != 46){
+        if (element < 48 || element > 57) {
+          if (element != 46) {
             return false;
           }
         }
@@ -223,15 +234,15 @@ export class UtilitariosService {
     return true;
   }
 
-  truncateString(dato:string, cantidad:number):string{
+  truncateString(dato: string, cantidad: number): string {
     return dato.length > cantidad
-    ? `${dato.substring(0, cantidad)}…`
-    : dato
+      ? `${dato.substring(0, cantidad)}…`
+      : dato
   }
 
-  eliminarCaracter(dato:string):string{
-    let valor:string='';
-    if (dato !== null){
+  eliminarCaracter(dato: string): string {
+    let valor: string = '';
+    if (dato !== null) {
       for (let index = 0; index < dato.length; index++) {
         valor = dato.slice(0, index) + dato.slice(index + 1, dato.length)
       }
@@ -269,15 +280,15 @@ export class UtilitariosService {
   }
 
   formatFecha(fecha: string) {
-    let mes = fecha.substring(3,5);
-    let dia = fecha.substring(0,2);
-    let anio = fecha.substring(6,10);
+    let mes = fecha.substring(3, 5);
+    let dia = fecha.substring(0, 2);
+    let anio = fecha.substring(6, 10);
 
-    let _fecha = anio+'/'+mes+'/'+dia;
+    let _fecha = anio + '/' + mes + '/' + dia;
     return _fecha;
   }
 
-  obtenerFechaFormateadoDMA(fecha?:any){
+  obtenerFechaFormateadoDMA(fecha?: any) {
 
     let dateOpt: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -286,10 +297,10 @@ export class UtilitariosService {
     };
 
 
-    if (fecha == null )
+    if (fecha == null)
       return new Date().toLocaleDateString('es-PE', dateOpt);
     else
-      return  new Date(Date.parse(fecha)).toLocaleDateString('es-PE', dateOpt);
+      return new Date(Date.parse(fecha)).toLocaleDateString('es-PE', dateOpt);
   }
 
   obtenerFechaInicioMesPeriodo(fecha: Date): Date {
@@ -309,15 +320,15 @@ export class UtilitariosService {
   }
 
   diferenciaEnDias(fechaInicio: Date, fechaFin: Date): number {
-  const milisegundosPorDia = 1000 * 60 * 60 * 24;
-  
-  // Convertimos ambas fechas a solo fecha (sin horas)
-  const inicio = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), fechaInicio.getDate());
-  const fin = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), fechaFin.getDate());
+    const milisegundosPorDia = 1000 * 60 * 60 * 24;
 
-  const diferenciaMs = fin.getTime() - inicio.getTime();
-  return Math.floor(diferenciaMs / milisegundosPorDia);
-}
+    // Convertimos ambas fechas a solo fecha (sin horas)
+    const inicio = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), fechaInicio.getDate());
+    const fin = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), fechaFin.getDate());
+
+    const diferenciaMs = fin.getTime() - inicio.getTime();
+    return Math.floor(diferenciaMs / milisegundosPorDia);
+  }
 
   obtenerFechaFormatoISO(fecha?: Date): string {
     const fechaObj = fecha || new Date();
