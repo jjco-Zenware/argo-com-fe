@@ -129,7 +129,8 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     const habitacion = this.lstHabitaciones.find(x => x.idprod === codHabitacion);
     console.log('habitacion', habitacion);
 
-    const { iddocumentoprc_origen, idtipodoc, nrodocumento, idproveedor } = this.frmDatos.controls;
+    const { idordencompra, iddocumentoprc_origen, idtipodoc, nrodocumento, idproveedor } = this.frmDatos.controls;
+    idordencompra?.setValue(habitacion?.idreserva || 0);
     iddocumentoprc_origen?.setValue(habitacion?.idreserva || 0);
     idtipodoc?.setValue(habitacion?.idtipodoc || "");
     nrodocumento?.setValue(habitacion?.nrodocumento || "");
