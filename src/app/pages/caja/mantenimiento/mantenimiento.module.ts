@@ -12,11 +12,13 @@ import { OrdencompraService } from '../../compras/orden-compra-servicio/service/
 import { ProyectosService } from '../../compras/proyectos-ganados/service/proyectos.service';
 import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 import { ReservaService } from '../../hotel/reserva/reserva.service';
+import { CmMantenimientoCajaComponent } from './cm-mantenimiento-caja/cm-mantenimiento-caja.component';
 
 
 @NgModule({
   declarations: [
-    CMantenimientoListadoComponent
+    CMantenimientoListadoComponent,
+    CmMantenimientoCajaComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,14 @@
+<div class="mt-5">
+<form [formGroup]="frmDatos">
+    <div class="p-fluid grid">
+        <div class="lg:col-12 col-12 field">
+            <label class="font-semibold">Nombre Caja</label>
+            <input #nombreCaja pInputText type="text" formControlName="nomcaja" 
+            class="p-inputtext-sm" />
+        </div>
+    </div>
+    <div class="flex justify-content-end">
+        <button pButton icon="pi pi-save" label="Grabar" class="p-button-primary" (click)="guardar()"></button>
+    </div>
+</form>
+</div>

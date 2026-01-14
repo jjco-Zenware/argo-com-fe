@@ -294,4 +294,6 @@ export const constantesApiWeb = {
     aperturaCierreCaja: controllerTesoreria + '/aperturacierrecaja',
     cierreCaja: controllerTesoreria + '/cierrecaja',
     exportarexcelhotelRoom: controllerMain + '/exportarexcelroom',
+    cajaPRC: controllerTesoreria + '/cajaprc',
+    cajaDelete: controllerTesoreria + '/cajadel',
 }
