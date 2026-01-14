@@ -69,6 +69,11 @@
                         N°
                     </div>
                 </th>
+                <th [ngStyle]="{'width':'20px'}"  class="bg-teal-50 border-1">
+                    <div class="flex justify-content-between align-items-center">
+                        ID ORDEN <br> DOCUMENTO
+                    </div>
+                </th>
                 <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1" >
                     <div class="justify-content-between align-items-center">
                        ENVIO <br> SUNAT  
@@ -167,6 +172,11 @@
                 <td>                        
                     <div [ngStyle]="{'width':'20px'}">
                         {{rowIndex + 1}}
+                    </div>
+                </td>
+                <td >
+                    <div [ngStyle]="{'width':'60px'}">
+                        {{data.idordendocumento}}
                     </div>
                 </td>
                 <td>
