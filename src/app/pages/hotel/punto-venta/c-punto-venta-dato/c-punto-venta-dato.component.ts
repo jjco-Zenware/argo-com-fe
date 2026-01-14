@@ -63,7 +63,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     this.createFrm();
     this.traerUno();
     console.log("IA_data: ", this.IA_data);
-    
+
     this.verbtnGrabar = this.IA_data.idordencompra === 0
   }
 
@@ -89,8 +89,8 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       fechaingreso: this.serviceUtilitario.obtenerFechaActual(),
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
-      iduserreg: [{value: constantesLocalStorage.idusuario,disabled: false}],
-      codformapago : [{ value: 14328, disabled: false }],
+      iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
+      codformapago: [{ value: 14328, disabled: false }],
     })
   }
 
@@ -585,4 +585,43 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($procesarTrx)
   }
 
+  async eliminarItem(data: any) {
+    const rpta = await this.serviceSharedApp.confirmDialog({
+      message: '¿Desea Eliminar Item ' + '<b>' + data.descripcion + '</b>' + '?',
+      header: 'Confirmación'
+    });
+
+    if(!rpta) { return; }
+
+    if (data.idordencompra > 0) {
+      const _posAll: number = this.lstItemOC.findIndex((x => x.idordencompraitem == data.idordencompraitem))
+      if (_posAll != -1) {
+        this.lstItemOC.splice(_posAll, 1)
+      }
+    } else {
+      const _posAll: number = this.lstItemOC.findIndex((x => x.idnvoitem == data.idnvoitem))
+      if (_posAll != -1) {
+        this.lstItemOC.splice(_posAll, 1)
+      }
+    }
+    if (this.lstItemOC.length === 0) {
+      this.frmDatos.get('nrocuota')?.setValue(0);
+      //this.nrocuotas = 0;
+      this.listaCuotas = [];
+
+      this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(0);
+      this.frmDatos.get('s_monto_igv_CTB')?.setValue(0);
+      this.frmDatos.get('s_monto_total_CTB')?.setValue(0);
+      this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue('');
+      this.frmDatos.get('monto_pen_pago')?.setValue(0);
+
+      /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
+      this.s_monto = 0;
+      this.s_igv = 0;
+      this.montoTotal = 0;
+    } /*else {
+      this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
+    }*/
+
+  }
 }
