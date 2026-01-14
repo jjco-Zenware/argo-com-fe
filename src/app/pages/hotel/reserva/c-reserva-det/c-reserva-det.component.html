@@ -5,7 +5,8 @@
                 (click)="guardarOC()"></button>
             <!-- <p-splitButton *ngIf="verbtnAcciones" label="Acciones" [model]="menuItemsAcciones" appendTo="body"
                 styleClass="p-button-success h-2rem"></p-splitButton> -->
-            <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>        
+            <button *ngIf="verbtnPreliminar" pButton icon="pi pi-file" label="Vista Preliminar"
+                class="p-button-outlined w-auto h-2rem" (click)="vistaPreliminar()"></button>
 
         </div>
         <div class="card p-2">
@@ -244,14 +245,14 @@
                                         (click)="getItem([],0)"></button> -->
                                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
                                         pTooltip="Pagar Item" icon="pi pi-money-bill" label="Pagar"
-                                        (click)="pagarItemDetalle()"></button>
+                                        (click)="pagarPuntoVenta()"></button>
                                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
                                         pTooltip="Agregar Producto" icon="pi pi-plus" label="Agregar Producto"
                                         (click)="getAgregarProdHabit('P')"></button>
                                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
                                         pTooltip="Agregar Producto" icon="pi pi-plus" label="Agregar Habitacion"
                                         (click)="getAgregarProdHabit('H')"></button>
-                                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
+                                    <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
                                         pTooltip="Asignar Habitacion" icon="pi pi-plus" label="Asignar Habitacion"
                                         (click)="getAsignarHabit()"></button>
                                     <button pButton class="font-semibold p-button-outlined w-auto h-2rem"
@@ -993,9 +994,8 @@
     </div>
 </ng-container>
 <ng-template #visSecciones>
-
-    <ng-container *ngIf="visDetalle" (OB_back)="getDetalle($event)">
-        <div class="grid ">
+    <ng-container *ngIf="visRegistrarPago; else visDetQuote">
+        <!-- <div class="grid ">
             <div class="flex justify-content-between col-12 gap-2">
                 <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
                     <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
@@ -1006,27 +1006,42 @@
                     <span class="text-lg font-semibold">{{tituloDetalle}}</span>
                 </div>
             </div>
-        </div>
-        <app-c-dato-venta [IA_data]="dataPrc"></app-c-dato-venta>
+        </div> -->
+        <app-c-punto-venta-dato [IA_data]="dataRegistrarPago"></app-c-punto-venta-dato>
     </ng-container>
-
-    <ng-container *ngIf="visQuote" (OB_back)="getDetalle($event)">
-        <div class="grid ">
-            <div class="flex justify-content-between col-12 -mt-3">
-                <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
-                    <span class="text-base font-semibold">{{tituloDetalle}}</span>
-                </div>
-                <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
-                        label="Regresar" pTooltip="Regresar" tooltipPosition="left" (click)="getBack()"></button>
+    <ng-template #visDetQuote>
+        <ng-container *ngIf="visDetalle" (OB_back)="getDetalle($event)">
+            <div class="grid ">
+                <div class="flex justify-content-between col-12 gap-2">
+                    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
+                        <button pButton class="font-semibold p-button-outlined justify-content-center"
+                            icon="pi pi-backward" label="Regresar" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                            (click)="getBackFactura()"></button>
+                    </div>
+                    <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
+                        <span class="text-lg font-semibold">{{tituloDetalle}}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- <app-c-cotizacion ></app-c-cotizacion> -->
-    </ng-container>
+            <app-c-dato-venta [IA_data]="dataPrc"></app-c-dato-venta>
+        </ng-container>
 
-
-
+        <ng-container *ngIf="visQuote" (OB_back)="getDetalle($event)">
+            <div class="grid ">
+                <div class="flex justify-content-between col-12 -mt-3">
+                    <div class="mb-1 border-1 surface-border py-3 h-3rem flex border-round mt-2 p-2 fonthead w-full">
+                        <span class="text-base font-semibold">{{tituloDetalle}}</span>
+                    </div>
+                    <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-3rem">
+                        <button pButton class="font-semibold p-button-outlined justify-content-center"
+                            icon="pi pi-backward" label="Regresar" pTooltip="Regresar" tooltipPosition="left"
+                            (click)="getBack()"></button>
+                    </div>
+                </div>
+            </div>
+            <!-- <app-c-cotizacion ></app-c-cotizacion> -->
+        </ng-container>
+    </ng-template>
 </ng-template>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

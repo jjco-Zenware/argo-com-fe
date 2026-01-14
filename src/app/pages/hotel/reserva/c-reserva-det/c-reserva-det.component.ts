@@ -127,6 +127,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   vistaLista: boolean = true;
   visDetalle: boolean = false;
   visQuote: boolean = false;
+  visRegistrarPago: boolean = false;
   visXperfil: boolean = true;
   lstEstados: any[] = [
     { codestadofel: 0, nomestadofel: 'TODOS' },
@@ -149,6 +150,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       descripcion: 'Mes'
     }
   ]
+  dataRegistrarPago:any
 
   constructor(
     private fb: FormBuilder,
@@ -1451,7 +1453,37 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($getListarOrdenCompra)
   }
 
-  pagarItemDetalle() {
+  pagarPuntoVenta() {
+    if (this.selectedDetalle.length === 0) {
+      this.messageService.clear();
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
+      return
+    }
+
+    const { idordencompra } = this.IA_data;
+    const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
+    console.log("lstCliente : ", this.lstCliente);
+    const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
+    const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;
+
+    this.dataRegistrarPago = {
+      idordencompra,
+      nombreCliente,
+      fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
+      totalPagar: this.montoTotal,
+      idproveedor,
+      idmoneda,
+      simboloMoneda,
+      paramReg: 'RES',
+      idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
+    }
+
+    this.tituloDetalle = "Registrar Pago " + idordencompra;
+    this.vistaLista = false;
+    this.visRegistrarPago = true;
+  }
+
+  /*pagarItemDetalle() {
     console.log("lstItemOC : ", this.lstItemOC);
     console.log("selectedDetalle : ", this.selectedDetalle);
 
@@ -1479,11 +1511,6 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     }
     console.log("selectedDetalle data : ", data);
 
-    /*this.ordenHabitacion.idtrx = item.idtrx;
-    this.ordenHabitacion.idoperacion = item.idnrooperacion;
-    this.ordenHabitacion.idoperacion_item = item.idnrooperacion_item;*/
-    //console.log('onAccion', item);
-    //const ref = this.dialogService.open(CmExcTransacReservaComponent, {
     const ref = this.dialogService.open(CmRegistrarPagoComponent, {
       data, //this.ordenHabitacion,
       header: 'Registrar Pago', //+ ' - ' + this.ordenHabitacion.nomHabitacion,
@@ -1495,7 +1522,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     ref.onClose.subscribe((rpta: any) => {
       if (!rpta) { return; }
     });
-  }
+  }*/
 
   onVer(data: any) {
     console.log("onVer data : ", data);
@@ -1507,6 +1534,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     }
     this.tituloDetalle = "Ver Factura N° " + data.nrofactura;
     this.vistaLista = false;
+    this.visRegistrarPago = false;
     this.visDetalle = true;
     this.visQuote = false;
   }
@@ -1520,6 +1548,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     }
     this.tituloDetalle = "Editar Factura N° " + data.nrofactura;
     this.vistaLista = false;
+    this.visRegistrarPago = false;
     this.visDetalle = true;
     this.visQuote = false;
   }
@@ -1750,6 +1779,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
   getBackFactura() {
     this.vistaLista = true;
+    this.visRegistrarPago = false;
     this.visDetalle = false;
     this.visQuote = false;
   }
@@ -1955,7 +1985,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     this.registerFormRegistro.get('codverificaciontam')?.updateValueAndValidity();
   }
 
-  getAsignarHabit(){
+  getAsignarHabit() {
     const { fecha_ini, fecha_fin } = this.registerFormRegistro.getRawValue();
     const data: any = {
       nroindex: 0,

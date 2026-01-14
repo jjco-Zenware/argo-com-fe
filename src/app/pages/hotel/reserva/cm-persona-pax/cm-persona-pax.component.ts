@@ -254,6 +254,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       desproducto: "",
       idalmacen: 0,
       idprod: 0,
+      idreserva: this.param.idreserva,
       idusuario: constantesLocalStorage.idusuario
     }
 

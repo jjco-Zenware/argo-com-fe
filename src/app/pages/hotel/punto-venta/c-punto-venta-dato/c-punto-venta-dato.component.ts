@@ -64,7 +64,12 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     this.traerUno();
     console.log("IA_data: ", this.IA_data);
 
-    this.verbtnGrabar = this.IA_data.idordencompra === 0
+    if (this.IA_data.paramReg === 'RES') {
+      this.listarHabitacionReserva();
+      this.verbtnGrabar = this.IA_data.idordencompra > 0
+    } else {
+      this.verbtnGrabar = this.IA_data.idordencompra === 0
+    }
   }
 
   ngOnDestroy() {
@@ -86,7 +91,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       lugarentrega: [{ value: '', disabled: false }],
       idmoneda: [{ value: 1, disabled: false }],
       tipodoc_ctb: [{ value: 2, disabled: false }],
-      fechaingreso: this.serviceUtilitario.obtenerFechaActual(),
+      fechaingreso: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       fecvencimiento: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       iduserreg: [{ value: constantesLocalStorage.idusuario, disabled: false }],
@@ -96,6 +101,33 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
 
   setSpinner(valor: boolean) {
     this.blockedDocument = valor;
+  }
+
+  listarHabitacionReserva() {
+    const objeto =
+    {
+      codproducto: "",
+      idfamilia: 325,
+      idsubfamilia: 525,
+      desproducto: "",
+      idalmacen: 0,
+      idprod: 0,
+      idreserva: this.IA_data.idordencompra,
+      idusuario: constantesLocalStorage.idusuario
+    }
+
+    const $listarHabitacionesCombo = this.serviceReserva.listarHabitacionesCombo(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta listarHabitacionesCombo: ', rpta);
+          this.lstHabitaciones = rpta.habitaciones;
+        },
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => { }
+      });
+    this.$listSubcription.push($listarHabitacionesCombo)
   }
 
   listarItemsTablaComprobante$(): Observable<any> {
@@ -126,6 +158,10 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   }
 
   changeHabitacion(codHabitacion: number) {
+    if (this.IA_data.paramReg === 'RES') {
+      return;
+    }
+
     const habitacion = this.lstHabitaciones.find(x => x.idprod === codHabitacion);
     console.log('habitacion', habitacion);
 
@@ -361,9 +397,19 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
               const ordenCompra = rpta.ordencompra[0];
               this.frmDatos.patchValue(ordenCompra);
               const { fecemision, fechaingreso, fecvencimiento } = this.frmDatos.controls;
-              fecemision?.setValue(new Date(ordenCompra.fecemision));
+              if (this.IA_data.paramReg === 'RES') {
+                this.frmDatos.get('iddocumentoprc_origen')?.setValue(this.IA_data.idordencompra);
+                fecemision?.setValue(this.serviceUtilitario.obtenerFechaFormatDDMMYY(ordenCompra.fecemision));
+                fechaingreso?.setValue(this.serviceUtilitario.obtenerFechaFormatDDMMYY(ordenCompra.fechaingreso));
+                fecvencimiento?.setValue(this.serviceUtilitario.obtenerFechaFormatDDMMYY(ordenCompra.fecvencimiento));
+              } else {
+                fecemision?.setValue(new Date(ordenCompra.fecemision));
+                fechaingreso?.setValue(new Date(ordenCompra.fechaingreso));
+                fecvencimiento?.setValue(new Date(ordenCompra.fecvencimiento));
+              }
+              /*fecemision?.setValue(new Date(ordenCompra.fecemision));
               fechaingreso?.setValue(new Date(ordenCompra.fechaingreso));
-              fecvencimiento?.setValue(new Date(ordenCompra.fecvencimiento));
+              fecvencimiento?.setValue(new Date(ordenCompra.fecvencimiento));*/
 
               if (ordenCompra.items !== undefined) {
                 this.lstItemOC = ordenCompra.items;
@@ -591,7 +637,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       header: 'Confirmación'
     });
 
-    if(!rpta) { return; }
+    if (!rpta) { return; }
 
     if (data.idordencompra > 0) {
       const _posAll: number = this.lstItemOC.findIndex((x => x.idordencompraitem == data.idordencompraitem))

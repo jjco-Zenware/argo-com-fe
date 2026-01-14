@@ -31,6 +31,9 @@ import { SharedAppService } from '@sharedAppService';
     ComprasModule,
     FacturacionModule,
   ],
+  exports: [
+    CPuntoVentaDatoComponent
+  ],
   providers: [
     DatePipe,
     ProyectosService,

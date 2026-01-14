@@ -31,6 +31,7 @@ import { CmRegistrarFacturacionComponent } from './cm-registrar-facturacion/cm-r
 import { HabitacionesService } from '../habitacion/habitaciones.service';
 import { CmAgregarHabitacionComponent } from './cm-agregar-habitacion/cm-agregar-habitacion.component';
 import { CatalogoHabitacionService } from '../catalogo-habitacion/catalogo-habitacion.service';
+import { PuntoVentaModule } from '../punto-venta/punto-venta.module';
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { CatalogoHabitacionService } from '../catalogo-habitacion/catalogo-habit
     RegistroProveedorModule,
     DropdownModule,
     //FacturacionModule
-    RegistroVentaModule
+    RegistroVentaModule,
+    PuntoVentaModule
   ],
   providers: [
     SharedAppService, 
