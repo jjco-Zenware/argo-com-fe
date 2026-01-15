@@ -54,15 +54,22 @@
 									style="flex: 0 0 140px; min-width: 90px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
 									{{pago.metodo}}</div>
 								<div style="display: flex; align-items: center; gap: 0.5rem; margin-left: auto;">
-									<span style="margin-right: 2px;">{{data.simboloMoneda}}</span>
+									<!-- <span style="margin-right: 2px;">{{data.simboloMoneda}}</span>
+									<ng-container> -->
+										<p-dropdown [options]="lstMonedas" [(ngModel)]="pago.idmoneda"
+											placeholder="Seleccionar Moneda" optionLabel="desmoneda"
+											optionValue="idmoneda" 
+											class="p-inputtext-sm" appendTo="body"></p-dropdown>
+									<!-- </ng-container> -->
 									<input pInputText type="number" min="0" step="0.01"
 										style="width: 80px; text-align: right; min-width: 60px; max-width: 100px;"
-										[(ngModel)]="pago.montoPago" (ngModelChange)="onMontoPagoChange(pago, $event)"
+										[(ngModel)]="pago.montoPago" (ngModelChange)="onMontoPagoChange(pago, $event, i)"
 										[ngClass]="{'p-invalid': pago.montoPago < 0 || pago.montoPago === null || pago.montoPago === undefined}" />
 									<ng-container *ngIf="pago.idmoneda !== 1">
+										{{data.simboloMoneda}}
 										<input pInputText type="number" min="0" step="0.01"
 											style="width: 80px; text-align: right; min-width: 60px; max-width: 100px;"
-											[(ngModel)]="pago.montoAplicado"
+											[(ngModel)]="pago.montoAplicado" disabled
 											[ngClass]="{'p-invalid': pago.montoAplicado < 0 || pago.montoAplicado === null || pago.montoAplicado === undefined}" />
 									</ng-container>
 									<ng-container *ngIf="pago.coditem !== '1'">

@@ -5,6 +5,8 @@ import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 import { ReservaService } from '../reserva.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Moneda } from '@interfaces';
+import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 
 @Component({
   selector: 'app-cm-registrar-pago',
@@ -22,6 +24,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
   data!: any;
   frmDatos!: FormGroup;
   lstTipoCambio: any[] = [];
+  lstMonedas: Moneda[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -29,7 +32,8 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     public config: DynamicDialogConfig,
     public refDatoItem: DynamicDialogRef,
     private readonly serviceSharedApp: SharedAppService,
-    private readonly serviceReserva: ReservaService
+    private readonly serviceReserva: ReservaService,
+    private readonly proyectosService: ProyectosService,
   ) { }
 
   ngOnInit(): void {
@@ -38,6 +42,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     this.createFrm();
     this.obtenerItemsTabla();
     this.obtenerTipoCambio();
+    this.listaMonedas();
   }
 
   ngOnDestroy() {
@@ -96,6 +101,19 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($obtenerItemsTabla)
   }
 
+  /*changeTipoMoneda(codMoneda: number, index: number) {
+    console.log("changeTipoMoneda: ", codMoneda);
+    const monedaSoles: number = 1;
+    let montoAplicado: number;
+    if (codMoneda === monedaSoles) {
+      montoAplicado = this.lstDetallePago[index].montoPago;
+    } else {
+      const tipoCambio = this.lstTipoCambio.length > 0 ? this.lstTipoCambio[0].tc_venta : 0;
+      montoAplicado = this.lstDetallePago[index].montoPago * tipoCambio;
+    }
+    this.lstDetallePago[index].montoAplicado = montoAplicado;
+  }*/
+
   getPagar() {
     if (!this.isTotalPagoValido()) {
       this.serviceSharedApp.messageToast({
@@ -110,22 +128,14 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     this.mensajeSpinner = mensajesSpinner.msjProcesando;
     console.log("data : ", JSON.stringify(this.data));
 
-    const monedaSoles:number = 1;
     const lstformapago = this.lstDetallePago.map((item: any) => {
-      let montoAplicado: number;
-      if (this.data.idmoneda === monedaSoles) {
-        montoAplicado = item.montoPago;
-      } else {
-        const tipoCambio = this.lstTipoCambio.length > 0 ? this.lstTipoCambio[0].tc_venta : 1;
-        montoAplicado = item.montoPago * tipoCambio;
-      }
       return {
         idpagodocitem: 0,
         idpagodocprc: 0,
         idformapago: item.iditem,
-        idmoneda: this.data.idmoneda,
+        idmoneda: item.idmoneda,
         montopago: item.montoPago,
-        montoaplicado: montoAplicado,
+        montoaplicado: item.montoAplicado,
         referencia: item.referencia || '',
         idbanco: 0,
         idusuario: constantesLocalStorage.idusuario
@@ -135,7 +145,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     const objeto = {
       idpagodocprc: 0,
       iddocumentoprc: this.data.idordencompra,
-      tc: 0,
+      tc: this.lstTipoCambio.length > 0 ? this.lstTipoCambio[0].tc_venta : 0,
       observacion: this.frmDatos.get('observaciones')?.value,
       idusuario: constantesLocalStorage.idusuario,
       tipodeuda: 0,
@@ -171,17 +181,29 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
   }
 
   get totalPago(): number {
-    return this.lstDetallePago.reduce((acc, p) => acc + p.montoPago, 0);
+    return this.lstDetallePago.reduce((acc, p) => acc + p.montoAplicado, 0);
   }
 
-  onMontoPagoChange(pago: any, value: number) {
+  onMontoPagoChange(pago: any, value: number, index:number) {
     const montoValido = typeof value === 'number' && value >= 0;
     pago.montoPago = montoValido ? value : 0;
+    
+    if(pago.montoPago === 0) { return; }
+
+    const monedaSoles: number = 1;
+    let montoAplicado: number = 0;
+    const codMoneda = this.lstDetallePago[index].idmoneda;;
+    if (codMoneda === monedaSoles) {
+      montoAplicado = pago.montoPago;
+    } else {
+      const tipoCambio = this.lstTipoCambio.length > 0 ? this.lstTipoCambio[0].tc_venta : 0;
+      montoAplicado = Number((pago.montoPago * tipoCambio).toFixed(2));
+    }
+
+    this.lstDetallePago[index].montoAplicado = montoAplicado;
   }
 
   obtenerTipoCambio() {
-    const monedaSoles:number = 1;
-    if (this.data.idmoneda === monedaSoles) { return; }
     const $obtenerTipoCambio = this.serviceReserva.obtenerTipoCambio().subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
@@ -195,6 +217,22 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
       complete: () => { },
     });
     this.$listSubcription.push($obtenerTipoCambio)
+  }
+
+  listaMonedas() {
+    const $obtenerTipoCambio = this.proyectosService.obtenerMonedas().subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        this.lstMonedas = rpta;
+      },
+      error: (err: any) => {
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($obtenerTipoCambio)
+
   }
 
   cerrar(data: any) {
