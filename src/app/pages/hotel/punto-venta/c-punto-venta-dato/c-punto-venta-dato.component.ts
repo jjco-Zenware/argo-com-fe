@@ -320,9 +320,11 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     idproveedor?.setValue(null);
     direccion?.setValue(null)
 
+    const dctsNaturales: string[] = ['DNI', 'CEX', 'CDI', 'PAS'];
     const objet = {
       idrolpersona: 'PRO',
-      ...itemDocumento
+      ...itemDocumento,
+      tipopersona: itemDocumento.idtipodoc && dctsNaturales.includes(itemDocumento.idtipodoc) ? 'N' : 'J',
     }
 
     const refItem = this.dialogService.open(CModalPersonaComponent, {

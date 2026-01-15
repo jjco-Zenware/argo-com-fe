@@ -297,20 +297,22 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
 
   editPersona() {
     const { idproveedor, idtipodoc, nrodocumento } = this.frmDatos.getRawValue();
-
-    let _tipopersona = '';
+    const dctsNaturales: string[] = ['DNI', 'CEX', 'CDI', 'PAS'];
+    /*let _tipopersona = '';
     if (idtipodoc === 'RUC') {
       _tipopersona = 'J';
-    } else { _tipopersona = 'N'; }
+    } else { _tipopersona = 'N'; }*/
 
     const objet = {
       idrolpersona: 'PRO',
       idtipodoc,
       idproveedor,
       nroDocumento: nrodocumento,
-      tipopersona: _tipopersona,
+      //tipopersona,: _tipopersona,
+      tipopersona: idtipodoc && dctsNaturales.includes(idtipodoc) ? 'N' : 'J',
       esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS',
-      tipoProceso: 'E'
+      tipoProceso: 'E',
+      
     }
     this.getModalPersona(objet);
   }

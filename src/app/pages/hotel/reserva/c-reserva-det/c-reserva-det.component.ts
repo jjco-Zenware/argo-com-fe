@@ -885,9 +885,11 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
   }
 
   NuevoPersona(itemDocumento?: any) {
+    const dctsNaturales: string[] = ['DNI', 'CEX', 'CDI', 'PAS'];
     const objet = {
       idrolpersona: 'PRO',
-      ...itemDocumento
+      ...itemDocumento,
+      tipopersona: itemDocumento.idtipodoc && dctsNaturales.includes(itemDocumento.idtipodoc) ? 'N' : 'J',
     }
 
     const refItem = this.dialogService.open(CModalPersonaComponent, {
