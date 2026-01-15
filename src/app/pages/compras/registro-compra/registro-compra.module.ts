@@ -46,6 +46,9 @@ import { SplitButtonModule } from 'primeng/splitbutton';
     DropdownModule ,
     SplitButtonModule
   ],
+  exports: [
+    CModalPersonaComponent
+  ],
   providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, ProyectosService, OrdencompraService, AlmacenService, MarketingService]
 })
 export class RegistroCompraModule { }

@@ -12,6 +12,7 @@ import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabil
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ReservaService } from '../reserva.service';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
+import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/modalPersona/c-modalpersona.component';
 
 @Component({
   selector: 'app-cm-registrar-facturacion',
@@ -546,7 +547,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         console.log('rpta...', rpta);
         if (rpta.length === 0) {
           this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Cliente no encontrado...' });
-          //this.NuevoPersona({ idtipodoc: _idtipodoc, nroDocumento: _nro });
+          this.NuevoPersona({ idtipodoc: _idtipodoc, nroDocumento: _nro });
           return;
         }
         this.frmDatos.get('idproveedor')?.setValue(rpta[0].idcliente);
@@ -566,12 +567,16 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  listaClientes() {
+  listaClientes(data?:any) {
     let tiporol = "CLI";
     return this.proyectosService.obtenerClientes(tiporol).pipe(
       tap((rpta: any) => {
         this.lstCliente = rpta;
         console.log('listaClientes', this.lstCliente);
+        if(!data) { return; }
+        this.frmDatos.get('nrodocumento').setValue(data.nrodocumento);
+        this.frmDatos.get('idproveedor').setValue(Number.parseInt(data.idpersona));
+        this.frmDatos.get('direccion').setValue(data.direcresumen);
       }),
       catchError((err) => {
         this.messageService.clear();
@@ -585,7 +590,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     );
   }
 
-  /*NuevoPersona(itemDocumento?: any) {
+  NuevoPersona(itemDocumento?: any) {
     const objet = {
       idrolpersona: 'PRO',
       ...itemDocumento
@@ -603,13 +608,13 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
  
       console.log('onClose', rpta);
       if (rpta != undefined) {
-        this.listaClientes();
-        this.frmDatos.get('nrodocumento').setValue(parseInt(rpta.objeto.nrodocumento));
-        this.frmDatos.get('idproveedor').setValue(parseInt(rpta.objeto.idpersona));
-        this.frmDatos.get('direccion').setValue(rpta.objeto.direcresumen);
+        this.listaClientes(rpta.objeto);
+        /*this.frmDatos.get('nrodocumento').setValue(Number.parseInt(rpta.objeto.nrodocumento));
+        this.frmDatos.get('idproveedor').setValue(Number.parseInt(rpta.objeto.idpersona));
+        this.frmDatos.get('direccion').setValue(rpta.objeto.direcresumen);*/
       }
     });
-  }*/
+  }
 
   prcCuota(data: number) {
     if (this.frmDatos.value.monto_pen_pago === 0) {
