@@ -28,6 +28,10 @@ export class UtilitariosService {
   }
 
   obtenerFechaFormatDDMMYY(fecha: string): Date {
+    if(!fecha) {
+      return new Date();
+    }
+    
     const partes = fecha.split('/');
     if (partes.length !== 3) {
       throw new Error('Formato de fecha inválido. Se espera DD/MM/YYYY');

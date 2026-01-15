@@ -1864,6 +1864,10 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
         if (_posAll != -1) {
           this.lstItemOC.splice(_posAll, 1)
         }*/
+       let tipoigv = 1;
+       if(this.ordenCompra?.tipoigv_item) {
+          tipoigv = this.ordenCompra?.tipoigv_item
+       }
         console.log('getAgregarProducto', rpta.data);
         const dataOC = {
           idordencompraitem: 0,
@@ -1896,6 +1900,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
           preciovenmin: rpta.data.preciovenmin,
           serialnumber: rpta.data.serialnumber,
           valorunit: rpta.data.valorunit,
+          tipoigv
         }
         this.lstItemOC.push(dataOC);
         console.log('this.lstItemOC', this.lstItemOC);
@@ -2009,6 +2014,10 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
       console.log('onClose', rpta);
       if (rpta != undefined) {
         console.log('getAsignarHabit', rpta.data);
+        let tipoigv = 1;
+        if(this.ordenCompra?.tipoigv_item) {
+          tipoigv = this.ordenCompra?.tipoigv_item
+        }
         const dataOC = {
           idordencompraitem: 0,
           idprod: rpta.data.idprod,
@@ -2040,6 +2049,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
           preciovenmin: rpta.data.preciovenmin,
           serialnumber: rpta.data.serialnumber,
           valorunit: rpta.data.valorunit,
+          tipoigv
         }
         this.lstItemOC.push(dataOC);
         console.log('this.lstItemOC', this.lstItemOC);

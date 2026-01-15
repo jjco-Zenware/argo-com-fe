@@ -46,6 +46,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   s_monto!: number;
   s_igv!: number;
   verbtnGrabar: boolean = true;
+  tipoigv:number=1;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -159,6 +160,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
 
   changeHabitacion(codHabitacion: number) {
     if (this.IA_data.paramReg === 'RES') {
+      this.tipoigv = 1;
       return;
     }
 
@@ -170,6 +172,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     idtipodoc?.setValue(habitacion?.idtipodoc || "");
     nrodocumento?.setValue(habitacion?.nrodocumento || "");
     idproveedor?.setValue(habitacion?.idpersona || "");
+    this.tipoigv = habitacion?.tipoigv_item || 1;
   }
 
   listarTiposDoc$(): Observable<any> {
@@ -457,6 +460,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     refItem.onClose.subscribe((rpta: any) => {
       if (rpta === undefined) { return; }
       console.log('onClose agregar prod/habit', rpta);
+
       const dataOC = {
         idordencompraitem: 0,
         idprod: rpta.data.idprod,
@@ -488,6 +492,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         preciovenmin: rpta.data.preciovenmin,
         serialnumber: rpta.data.serialnumber,
         valorunit: rpta.data.valorunit,
+        tipoigv: this.tipoigv
       }
       this.lstItemOC.push(dataOC);
       this.calcularMontosCompra();
