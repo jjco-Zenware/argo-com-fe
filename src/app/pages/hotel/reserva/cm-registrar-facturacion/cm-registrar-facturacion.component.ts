@@ -593,7 +593,8 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   NuevoPersona(itemDocumento?: any) {
     const objet = {
       idrolpersona: 'PRO',
-      ...itemDocumento
+      ...itemDocumento,
+      tipopersona: 'N'
     }
  
     const refItem = this.dialogService.open(CModalPersonaComponent, {
