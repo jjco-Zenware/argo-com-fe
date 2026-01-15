@@ -57,8 +57,14 @@
 									<span style="margin-right: 2px;">{{data.simboloMoneda}}</span>
 									<input pInputText type="number" min="0" step="0.01"
 										style="width: 80px; text-align: right; min-width: 60px; max-width: 100px;"
-										[(ngModel)]="pago.monto" (ngModelChange)="onMontoChange(pago, $event)"
-										[ngClass]="{'p-invalid': pago.monto < 0 || pago.monto === null || pago.monto === undefined}" />
+										[(ngModel)]="pago.montoPago" (ngModelChange)="onMontoPagoChange(pago, $event)"
+										[ngClass]="{'p-invalid': pago.montoPago < 0 || pago.montoPago === null || pago.montoPago === undefined}" />
+									<ng-container *ngIf="pago.idmoneda !== 1">
+										<input pInputText type="number" min="0" step="0.01"
+											style="width: 80px; text-align: right; min-width: 60px; max-width: 100px;"
+											[(ngModel)]="pago.montoAplicado"
+											[ngClass]="{'p-invalid': pago.montoAplicado < 0 || pago.montoAplicado === null || pago.montoAplicado === undefined}" />
+									</ng-container>
 									<ng-container *ngIf="pago.coditem !== '1'">
 										<input pInputText type="text" [(ngModel)]="pago.referencia"
 											placeholder="Referencia"

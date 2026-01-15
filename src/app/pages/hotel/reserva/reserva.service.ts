@@ -54,4 +54,9 @@ export class ReservaService {
     return this.http.post<any>(url, objeto)
   }
 
+  obtenerTipoCambio() {
+    const url = `${constantesApiWeb.obtenerTipoCambio}`;
+    return this.http.get<any>(url);
+  }
+
 }

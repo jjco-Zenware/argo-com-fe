@@ -21,6 +21,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
   mensajeSpinner: string = "";
   data!: any;
   frmDatos!: FormGroup;
+  lstTipoCambio: any[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -36,6 +37,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     console.log('data Modal', this.data);
     this.createFrm();
     this.obtenerItemsTabla();
+    this.obtenerTipoCambio();
   }
 
   ngOnDestroy() {
@@ -57,8 +59,11 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
       this.lstDetallePago.push({
         iditem: metodo.iditem,
         coditem: metodo.coditem,
+        idmoneda: this.data.idmoneda,
         metodo: metodo.valoritem,
-        monto: 0
+        montoPago: 0,
+        montoAplicado: 0,
+        referencia: ''
       });
       this.selectedMetodoPago = metodo.iditem;
     } else {
@@ -105,17 +110,27 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     this.mensajeSpinner = mensajesSpinner.msjProcesando;
     console.log("data : ", JSON.stringify(this.data));
 
-    const lstformapago = this.lstDetallePago.map((item: any) => ({
-      idpagodocitem: 0,
-      idpagodocprc: 0,
-      idformapago: item.iditem,
-      idmoneda: this.data.idmoneda,
-      montopago: item.monto,
-      montoaplicado: item.monto,
-      referencia: item.referencia || '',
-      idbanco: 0,
-      idusuario: constantesLocalStorage.idusuario
-    }));
+    const monedaSoles:number = 1;
+    const lstformapago = this.lstDetallePago.map((item: any) => {
+      let montoAplicado: number;
+      if (this.data.idmoneda === monedaSoles) {
+        montoAplicado = item.montoPago;
+      } else {
+        const tipoCambio = this.lstTipoCambio.length > 0 ? this.lstTipoCambio[0].tc_venta : 1;
+        montoAplicado = item.montoPago * tipoCambio;
+      }
+      return {
+        idpagodocitem: 0,
+        idpagodocprc: 0,
+        idformapago: item.iditem,
+        idmoneda: this.data.idmoneda,
+        montopago: item.montoPago,
+        montoaplicado: montoAplicado,
+        referencia: item.referencia || '',
+        idbanco: 0,
+        idusuario: constantesLocalStorage.idusuario
+      };
+    });
 
     const objeto = {
       idpagodocprc: 0,
@@ -156,12 +171,30 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
   }
 
   get totalPago(): number {
-    return this.lstDetallePago.reduce((acc, p) => acc + p.monto, 0);
+    return this.lstDetallePago.reduce((acc, p) => acc + p.montoPago, 0);
   }
 
-  onMontoChange(pago: any, value: number) {
+  onMontoPagoChange(pago: any, value: number) {
     const montoValido = typeof value === 'number' && value >= 0;
-    pago.monto = montoValido ? value : 0;
+    pago.montoPago = montoValido ? value : 0;
+  }
+
+  obtenerTipoCambio() {
+    const monedaSoles:number = 1;
+    if (this.data.idmoneda === monedaSoles) { return; }
+    const $obtenerTipoCambio = this.serviceReserva.obtenerTipoCambio().subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        console.log("obtenerTipoCambio response: ", rpta);
+        this.lstTipoCambio = rpta
+      },
+      error: (err: any) => {
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($obtenerTipoCambio)
   }
 
   cerrar(data: any) {
