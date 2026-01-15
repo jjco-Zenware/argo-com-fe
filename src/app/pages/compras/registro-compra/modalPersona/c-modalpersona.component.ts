@@ -300,6 +300,11 @@ esPersonaJuridica: boolean = false;
  
   listarTiposDoc(){
     const { tipopersona, idtipodoc } = this.registerFormCliente.controls;
+    /*let _tipoPersona = tipopersona.value;
+
+    if(this.param?.tipopersona){
+      _tipoPersona = this.param?.tipopersona;
+    }*/
     const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat(tipopersona.value)
       .subscribe({
         next: (rpta: any) => {
