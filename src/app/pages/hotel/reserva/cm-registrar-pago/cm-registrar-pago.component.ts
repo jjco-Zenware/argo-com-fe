@@ -30,7 +30,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig,
-    public refDatoItem: DynamicDialogRef,
+    //public refDatoItem: DynamicDialogRef,
     private readonly serviceSharedApp: SharedAppService,
     private readonly serviceReserva: ReservaService,
     private readonly proyectosService: ProyectosService,
@@ -164,7 +164,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
           detail: rpta.mensaje
         });
         if (rpta.procesoSwitch === 0) {
-          this.cerrar(objeto)
+          this.cerrar(objeto, true)
         }
       },
       error: (err: any) => {
@@ -235,8 +235,8 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
 
   }
 
-  cerrar(data: any) {
-    this.refDatoItem.close({ data });
+  cerrar(data: any, proceso: boolean = false) {
+    this.ref.close({ proceso, data });
   }
 
 }

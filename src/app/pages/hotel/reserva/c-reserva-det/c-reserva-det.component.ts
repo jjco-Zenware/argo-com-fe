@@ -2069,4 +2069,11 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
+  getBackListado(){
+    this.vistaLista = true;
+    this.visRegistrarPago = false;
+    this.visDetalle = false;
+    this.visQuote = false;
+  }
+
 }

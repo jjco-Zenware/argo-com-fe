@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
@@ -23,6 +23,7 @@ import { CmRegistrarPagoComponent } from '../../reserva/cm-registrar-pago/cm-reg
 export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   private readonly IGV = 0.18;
   @Input() IA_data: any;
+  @Output() O_GetBackListado = new EventEmitter<void>();
   $listSubcription: Subscription[] = [];
   frmDatos!: FormGroup;
   //idOrdenC: number = 0;
@@ -58,6 +59,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     private readonly ordencompraService: OrdencompraService,
     private readonly contabilidadService: ContabilidadService,
     private readonly serviceReserva: ReservaService,
+    private readonly zone: NgZone,
   ) { }
 
   ngOnInit(): void {
@@ -563,6 +565,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   }
 
   pagarItemDetalle(idordencompra: number) {
+    this.verbtnGrabar = false;
     console.log("lstItemOC : ", this.lstItemOC);
 
     //const { idordencompra } = this.IA_data;
@@ -593,13 +596,22 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     });
 
     ref.onClose.subscribe(async (rpta: any) => {
-      if (!rpta) { return; }
+      if (!rpta?.proceso) { 
+        this.verbtnGrabar = true;
+        return; 
+      }
+      
       const rptaFacturar = await this.serviceSharedApp.confirmDialog({
         message: '¿Desea facturar?',
         header: 'Aviso'
       });
 
-      if (!rptaFacturar) { return; }
+      if (!rptaFacturar) { 
+        setTimeout(() => {
+          this.O_GetBackListado.emit();
+        });
+        return; 
+      }
 
       this.setSpinner(true);
       this.mensajeSpinner = 'Generando Factura...!';
@@ -615,19 +627,28 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       idordendocumento
     }
 
-    const $procesarTrx = this.proyectosService.emitirDocumento(objeto).subscribe({
+    const $emitirDocumento = this.proyectosService.emitirDocumento(objeto).subscribe({
       next: (rpta: any) => {
         console.log('emitirDocumento', rpta);
         this.setSpinner(false);
         if (rpta.aceptada_por_sunat) {
           this.messageService.add({ severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
+          setTimeout(() => {
+            this.O_GetBackListado.emit();
+          });
           return;
         }
 
         this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.errors });
+        setTimeout(() => {
+          this.O_GetBackListado.emit();
+        });
       },
       error: (err) => {
         this.setSpinner(false);
+        setTimeout(() => {
+          this.O_GetBackListado.emit();
+        });
         console.error('error : ', err);
         this.serviceSharedApp.messageToast();
       },
@@ -635,7 +656,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         this.setSpinner(false);
       },
     });
-    this.$listSubcription.push($procesarTrx)
+    this.$listSubcription.push($emitirDocumento)
   }
 
   async eliminarItem(data: any) {

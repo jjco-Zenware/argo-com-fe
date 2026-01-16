@@ -1007,7 +1007,7 @@
                 </div>
             </div>
         </div> -->
-        <app-c-punto-venta-dato [IA_data]="dataRegistrarPago"></app-c-punto-venta-dato>
+        <app-c-punto-venta-dato [IA_data]="dataRegistrarPago" (O_GetBackListado)="getBackListado()"></app-c-punto-venta-dato>
     </ng-container>
     <ng-template #visDetQuote>
         <ng-container *ngIf="visDetalle" (OB_back)="getDetalle($event)">
