@@ -292,6 +292,26 @@
                                             TOTAL
                                         </div>
                                     </th>
+                                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            PAGO
+                                        </div>
+                                    </th>
+                                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            COMPROBANTE
+                                        </div>
+                                    </th>
+                                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            SERIE
+                                        </div>
+                                    </th>
+                                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                                        <div class="justify-content-end ">
+                                            NUMERO
+                                        </div>
+                                    </th>
                                     <th style="width: 30px;" class="bg-teal-50 border-1">
                                         <div class="flex justify-content-between align-items-center">
                                             ACCIONES
@@ -341,6 +361,28 @@
                                             {{ product.preciocostototal | number: '0.2'}}
                                         </div>
                                     </td>
+
+                                    <td>
+                                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                            {{ product.nomestadopago}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                            {{ product.comprobante}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                            {{ product.nroserie_ctb}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                            {{ product.nrodocumento_ctb}}
+                                        </div>
+                                    </td>
+
                                     <td>
                                         <div *ngIf="verItems" class="flex"
                                             [ngStyle]="{'width':'30px','text-align':'right'}">

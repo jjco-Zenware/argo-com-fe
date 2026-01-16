@@ -445,7 +445,11 @@ export interface OrdenCompraItem{
     coptipoexistencia: string;
     nomtipoexistencia: string;
     mtodescuento?: number;
-    gas_indsuma? :boolean
+    gas_indsuma? :boolean;
+    nomestadopago?: string;
+    comprobante?: string;
+    nroserie_ctb?: string;
+    nrodocumento_ctb?: string;
 }
 
 export interface OrdenCompra {
