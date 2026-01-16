@@ -39,6 +39,9 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   dataPrc: any;
   visSeccionReserva: boolean = false;
   visSeccionFacturacion: boolean = false;
+  visBtnSalir: boolean = false;
+  visBtnRegresar: boolean = false;
+  resetReserva: boolean = false;
 
   constructor(
     public dialogService: DialogService,
@@ -212,6 +215,8 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
 
   onAccionReservas(item: any) {
     this.vistaLista = false;
+    this.visBtnSalir = true;
+    this.visBtnRegresar = false;
     this.visSeccionReserva = true;
     this.visSeccionFacturacion = false;
     this.dataPrc = {
@@ -219,11 +224,6 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
       paramReg: 'E',
       visBtnFacturacion: true
     }
-  }
-
-  getBack() {
-    this.vistaLista = true;
-    this.listarHabitacion();
   }
 
   toggleMenuFacturacion(event: Event, data: any) {
@@ -270,6 +270,30 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     ref.onClose.subscribe(() => {
       this.listarHabitacion();
     });
+  }
+
+  getBackHabitaciones() {
+    this.vistaLista = true;
+    this.visBtnSalir = false;
+    this.visBtnRegresar = false;
+    this.resetReserva = false;
+    this.listarHabitacion();
+  }
+
+  getBackReserva(){
+    this.vistaLista = false;
+    this.visSeccionReserva = true;
+    this.visSeccionFacturacion = false;
+    this.visBtnSalir = true;
+    this.visBtnRegresar = false;
+    this.resetReserva = true;
+  }
+
+  getMostrarBackReserva(){
+    this.vistaLista = false;
+    this.visBtnSalir = false;
+    this.visBtnRegresar = true;
+    this.resetReserva = false;
   }
 
 }

@@ -62,7 +62,7 @@
 
     <div class="grid" style="width:80%; margin-left:0; justify-content:flex-start; margin-top: 1rem;">
         <div class="ml-2 lg:col-9 border-1 border-round surface-border">
-            <p-table [value]="lstItemOC" responsiveLayout="stack" [breakpoint]="'960px'"
+            <p-table [value]="lstItemOC" [breakpoint]="'960px'"
                 [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm ">
                 <ng-template pTemplate="caption">
                     <div class="flex gap-2 mb-2">
@@ -182,11 +182,12 @@
         </div>
     </div>
 </div>
-<p-blockUI [blocked]="blockedDocument">
+<app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
+<!-- <p-blockUI [blocked]="blockedDocument">
     <div class="flex align-items-center justify-content-center">
         <p-progressSpinner></p-progressSpinner>
         <span class="ml-2">{{mensajeSpinner}}</span>
     </div>
-</p-blockUI>
+</p-blockUI> -->
 <p-toast></p-toast>
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

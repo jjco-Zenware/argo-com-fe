@@ -35,9 +35,10 @@
                                 </section>
                                 <p-divider></p-divider>
                                 <div class="habitacion-actions">
-                                    <button pButton
-                                        class="p-button-outlined p-button-sm" icon="pi pi-arrow-right-arrow-left" pTooltip="Transferir"
-                                        tooltipPosition="bottom" (click)="getTransferenciaReserva(item.idnrooperacion)"></button>
+                                    <button pButton class="p-button-outlined p-button-sm"
+                                        icon="pi pi-arrow-right-arrow-left" pTooltip="Transferir"
+                                        tooltipPosition="bottom"
+                                        (click)="getTransferenciaReserva(item.idnrooperacion)"></button>
                                     <button *ngIf="item.facturacion.length > 0" pButton pRipple type="button"
                                         icon="pi pi-money-bill" class="p-button-rounded p-button-text p-button-sm"
                                         (click)="toggleMenuFacturacion($event, item)" pTooltip="Facturación"
@@ -81,16 +82,23 @@
             <div class="grid ">
                 <div class="flex justify-content-between col-12 gap-2">
                     <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
-                        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
-                            label="Salir" pTooltip="Regresar a Bandeja" tooltipPosition="left"
-                            (click)="getBack()"></button>
+                        <ng-container *ngIf="visBtnSalir">
+                            <button pButton class="font-semibold p-button-outlined justify-content-center"
+                                icon="pi pi-backward" label="Salir" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                                (click)="getBackHabitaciones()"></button>
+                        </ng-container>
+                        <ng-container *ngIf="visBtnRegresar">
+                            <button pButton class="font-semibold p-button-outlined justify-content-center"
+                                icon="pi pi-backward" label="Salir" pTooltip="Regresar a Reserva" tooltipPosition="left"
+                                (click)="getBackReserva()"></button>
+                        </ng-container>
                     </div>
                     <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                        <span class="text-lg font-semibold">RESERVA N° {{dataPrc.idordencompra}}</span>
+                        <span class="text-lg font-semibold">RESERVA 01 N° {{dataPrc.idordencompra}}</span>
                     </div>
                 </div>
             </div>
-            <app-c-reserva-det [IA_data]="dataPrc"></app-c-reserva-det>
+            <app-c-reserva-det [IA_data]="dataPrc" [I_resetReserva]="resetReserva" (O_GetBackHabitacion)="getMostrarBackReserva()"></app-c-reserva-det>
         </div>
     </ng-container>
     <ng-container *ngIf="visSeccionFacturacion">
@@ -98,8 +106,8 @@
             <div class="grid ">
                 <div class="flex justify-content-between col-12 gap-2">
                     <div style="display: flex; justify-content: end;" class="mt-2 pl-2 h-2rem -ml-1">
-                        <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward"
-                            label="Salir" pTooltip="Regresar a Bandeja" tooltipPosition="left"
+                        <button pButton class="font-semibold p-button-outlined justify-content-center"
+                            icon="pi pi-backward" label="Salir" pTooltip="Regresar a Bandeja" tooltipPosition="left"
                             (click)="getBack()"></button>
                     </div>
                     <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
@@ -120,5 +128,6 @@
 </p-blockUI>
 
 <p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
-acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+    acceptButtonStyleClass="p-button p-button-info surface-border"
+    rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
 <p-toast></p-toast>

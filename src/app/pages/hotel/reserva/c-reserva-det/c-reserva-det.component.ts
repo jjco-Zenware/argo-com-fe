@@ -1,5 +1,5 @@
 
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { c_habitacion, constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
@@ -20,7 +20,6 @@ import { CmExcTransacReservaComponent } from '../cm-exc-transac-reserva/cm-exc-t
 import { Menu } from 'primeng/menu';
 import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-registro/modal-transac.component';
 import { CMAgregarProductoComponent } from '../cm-agregar-producto/cm-agregar-producto.component';
-import { CmRegistrarPagoComponent } from '../cm-registrar-pago/cm-registrar-pago.component';
 import { CmRegistrarFacturacionComponent } from '../cm-registrar-facturacion/cm-registrar-facturacion.component';
 import { CmAgregarHabitacionComponent } from '../cm-agregar-habitacion/cm-agregar-habitacion.component';
 
@@ -29,8 +28,10 @@ import { CmAgregarHabitacionComponent } from '../cm-agregar-habitacion/cm-agrega
   templateUrl: './c-reserva-det.component.html',
   styleUrls: ['./c-reserva-det.component.scss']
 })
-export class CReservaDetComponent implements OnInit, OnDestroy {
+export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
   @Input() IA_data: any;
+  @Input() I_resetReserva: any;
+  @Output() O_GetBackHabitacion = new EventEmitter<void>();
   @ViewChild('menu') menu!: Menu;
   $listSubcription: Subscription[] = [];
   frmDatosCab!: FormGroup;
@@ -226,6 +227,14 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['I_resetReserva'] && !changes['I_resetReserva'].firstChange) {
+      if (this.I_resetReserva) {
+        this.vistaLista = true;
+        this.visRegistrarPago = false;
+      }
+    }
+  }
 
   createFormContacto() {
     //Agregar validaciones de formulario
@@ -1457,6 +1466,7 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
 
   pagarPuntoVenta() {
     if (this.selectedDetalle.length === 0) {
+      //this.verbtnGrabar = true;
       this.messageService.clear();
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
       return
@@ -1483,6 +1493,8 @@ export class CReservaDetComponent implements OnInit, OnDestroy {
     this.tituloDetalle = "Registrar Pago " + idordencompra;
     this.vistaLista = false;
     this.visRegistrarPago = true;
+    //this.verbtnGrabar = false
+    this.O_GetBackHabitacion.emit();
   }
 
   /*pagarItemDetalle() {
