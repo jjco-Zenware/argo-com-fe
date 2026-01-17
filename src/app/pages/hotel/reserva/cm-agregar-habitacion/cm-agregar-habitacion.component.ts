@@ -32,6 +32,7 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
   verAlm!: boolean;
   lstBotones: any[] = []
   lstTipoHabitacion: any[] = [];
+  selectedDetalle: any[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -119,7 +120,7 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
     const $buscarProducto06 = this.almacenService.buscarProducto06(objeto)
       .subscribe({
         next: (rpta: any) => {
-          if(rpta.length === 0){ return; }
+          if (rpta.length === 0) { return; }
           this.setSpinner(false);
           console.log('rpta buscarProducto06', rpta);
           //this.lstProducto = rpta
@@ -140,7 +141,7 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
     this.$listSubcription.push($buscarProducto06)
   }
 
-  seleccionarProducto(dato: any) {
+  /*seleccionarProducto(dato: any) {
     console.log("seleccionarProducto: ", dato);
     if (!dato.cantidad) {
       this.messageService.clear();
@@ -161,7 +162,7 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
       dato.idmarca = producto.idmarca;
       this.cerrar({ ...dato });
     });
-  }
+  }*/
 
   traerUnoProducto(codigo: any): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -178,6 +179,42 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
           complete: () => { }
         });
       this.$listSubcription.push($traerUno);
+    });
+  }
+
+  guardar() {
+    if (this.selectedDetalle.length === 0) {
+      this.messageService.clear();
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
+      return;
+    }
+
+    const promesas = this.selectedDetalle.map((dato: any) => {
+      if (!dato.cantidad) {
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Aviso',
+          detail: 'La cantidad debe ser mayor a cero.',
+        });
+        return null;
+      }
+      dato.serialnumber = dato.serie ?? '';
+      return this.traerUnoProducto(dato.codproducto).then((producto: any) => {
+        return {
+          ...dato,
+          idprod: producto.idprod,
+          nommarca: producto.nommarca,
+          despro: producto.despro,
+          idmarca: producto.idmarca
+        };
+      });
+    });
+
+    const promesasValidas = promesas.filter((p) => p !== null);
+
+    Promise.all(promesasValidas).then((item) => {
+      this.cerrar(item);
     });
   }
 

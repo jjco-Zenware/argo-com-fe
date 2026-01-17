@@ -530,7 +530,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
     fechaFin = this.registerFormRegistro.value.fecha_fin;
 
-    try{
+    try {
       if (fechaingreso.toString().length === 10) {
         fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
       }
@@ -546,7 +546,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       if (fechaFin.toString().length === 10) {
         fechaFin = new Date(this.serviceUtilitario.formatFecha(fechaFin));
       }
-    } catch(error){
+    } catch (error) {
       this.setSpinner(false);
     }
 
@@ -2037,17 +2037,18 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
         if (this.ordenCompra?.tipoigv_item) {
           tipoigv = this.ordenCompra?.tipoigv_item
         }
-        const dataOC = {
+
+        const dataOC = rpta.data.map((item: any) => ({
           idordencompraitem: 0,
-          idprod: rpta.data.idprod,
-          codproducto: rpta.data.codproducto,
-          descripcion: rpta.data.despro,
+          idprod: item.idprod,
+          codproducto: item.codproducto,
+          descripcion: item.despro,
           idunidad: 130,
           nomunidad: "UNIDAD",
-          preciocosto: rpta.data.valorunit,
-          cantidad: rpta.data.cantidad,
-          preciocostototal: rpta.data.valorunit * rpta.data.cantidad,
-          idtipoprod: rpta.data.idtipoprod,
+          preciocosto: item.valorunit,
+          cantidad: item.cantidad,
+          preciocostototal: item.valorunit * item.cantidad,
+          idtipoprod: item.idtipoprod,
           precioventa: 0,
           precioventatotal: 0,
           preprofit: 0,
@@ -2057,21 +2058,26 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
           rutaubicacion: '',
           coptipoexistencia: '',
           nomtipoexistencia: '',
-          idfamilia: rpta.data.idfamilia,
-          idmarca: rpta.data.idmarca,
-          idsubfamilia: rpta.data.idsubfamilia,
-          modelo: rpta.data.modelo,
-          nomfamilia: rpta.data.nomfamilia,
-          nommarca: rpta.data.nommarca,
-          nomsubfamilia: rpta.data.nomsubfamilia,
-          preciovenmax: rpta.data.preciovenmax,
-          preciovenmin: rpta.data.preciovenmin,
-          serialnumber: rpta.data.serialnumber,
-          valorunit: rpta.data.valorunit,
+          idfamilia: item.idfamilia,
+          idmarca: item.idmarca,
+          idsubfamilia: item.idsubfamilia,
+          modelo: item.modelo,
+          nomfamilia: item.nomfamilia,
+          nommarca: item.nommarca,
+          nomsubfamilia: item.nomsubfamilia,
+          preciovenmax: item.preciovenmax,
+          preciovenmin: item.preciovenmin,
+          serialnumber: item.serialnumber,
+          valorunit: item.valorunit,
           tipoigv
-        }
-        this.lstItemOC.push(dataOC);
+        }))
+        this.lstItemOC.push(...dataOC);
         console.log('this.lstItemOC', this.lstItemOC);
+
+        const igv = 0.18;
+        this.montoTotal = this.lstItemOC.reduce((acc, item) => acc + item.preciocostototal, 0);
+        this.s_igv = this.montoTotal * igv;
+        this.s_monto = this.montoTotal - this.s_igv;
       }
     });
   }

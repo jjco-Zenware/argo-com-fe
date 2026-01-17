@@ -155,7 +155,7 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
     this.$listSubcription.push($getListarOrdenCompra)
   }
 
-  seleccionarProducto(dato: any) {
+  /*seleccionarProducto(dato: any) {
     console.log("seleccionarProducto: ", dato);
     if (!dato.cantidad) {
       this.messageService.clear();
@@ -176,7 +176,7 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
       dato.idmarca = producto.idmarca;
       this.cerrar({ ...dato });
     });
-  }
+  }*/
 
   traerUnoProducto(codigo: any): Promise<any> {
     return new Promise((resolve, reject) => {
