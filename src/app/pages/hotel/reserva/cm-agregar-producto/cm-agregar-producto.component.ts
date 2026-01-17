@@ -1,12 +1,11 @@
 
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
+import { constantesLocalStorage, mensajesSpinner } from '@constantes';
 import { Subscription } from 'rxjs';
-import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { AlmacenService } from 'src/app/pages/almacen/service/almacenServices';
 
@@ -30,14 +29,15 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
   lstFamilia: any;
   lstSubFamilia: any;
   verAlm!: boolean;
-  lstBotones: any[] = []
+  lstBotones: any[] = [];
+  selectedDetalle: any[] = [];
 
   constructor(
-    private fb: FormBuilder,
+    private readonly fb: FormBuilder,
     public dialogService: DialogService,
-    private serviceSharedApp: SharedAppService,
-    private messageService: MessageService,
-    private almacenService: AlmacenService,
+    private readonly serviceSharedApp: SharedAppService,
+    private readonly messageService: MessageService,
+    private readonly almacenService: AlmacenService,
     public refDatoItem: DynamicDialogRef,
     public config: DynamicDialogConfig,
   ) { }
@@ -45,7 +45,6 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
   ngOnInit(): void {
     this.createFrm();
     this.getDataBotones();
-    //this.listarFamilia();
     console.log('this.config.data 01', this.config.data);
     if (this.config.data > 0) {
       this.verAlm = true;
@@ -122,7 +121,6 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
   }
 
   getListar(idfamilia: number) {
-    //this.dt1.reset();
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     console.log('this.frmDatos...', this.frmDatos.value);
@@ -195,6 +193,42 @@ export class CMAgregarProductoComponent implements OnInit, AfterViewInit, OnDest
           complete: () => { }
         });
       this.$listSubcription.push($traerUno);
+    });
+  }
+
+  guardar() {
+    if (this.selectedDetalle.length === 0) {
+      this.messageService.clear();
+      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
+      return;
+    }
+
+    const promesas = this.selectedDetalle.map((dato: any) => {
+      if (!dato.cantidad) {
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Aviso',
+          detail: 'La cantidad debe ser mayor a cero.',
+        });
+        return null;
+      }
+      dato.serialnumber = dato.serie ?? '';
+      return this.traerUnoProducto(dato.codproducto).then((producto: any) => {
+        return {
+          ...dato,
+          idprod: producto.idprod,
+          nommarca: producto.nommarca,
+          despro: producto.despro,
+          idmarca: producto.idmarca
+        };
+      });
+    });
+
+    const promesasValidas = promesas.filter((p) => p !== null);
+
+    Promise.all(promesasValidas).then((item) => {
+      this.cerrar(item);
     });
   }
 

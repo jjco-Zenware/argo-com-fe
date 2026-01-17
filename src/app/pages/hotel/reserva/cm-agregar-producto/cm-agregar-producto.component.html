@@ -1,30 +1,35 @@
 <div class="mt-3">
-    
+
     <form [formGroup]="frmDatos" class="p-fluid grid" (keydown.enter)="getListar(0)">
-       
-            <div class="field col-12 mb-0 pb-0">
-                <label class="font-semibold mb-1 text-blue-600">DESCRIPCIÓN</label>                        
-                <span class="p-fluid">
-                    <textarea #descripcion type="text" pInputTextarea [rows]="1" formControlName="desproducto" style="resize: none" class="w-full p-inputtext-sm" (keydown.enter)="$event.preventDefault(); getListar(0)"></textarea>
-                </span>
-            </div>
 
-            <div class="field col-12 mt-1 pt-0">
-                <div class="flex flex-col gap-2 w-full flex-wrap">
-                    <button *ngFor="let button of lstBotones" pButton (click)="getListar(button.codigo)"
-                        tooltipPosition="bottom" type="button"
-                        class="font-semibold mt-0 md:mt-4 justify-content-center h-2.5rem w-full md:w-auto px-6 h-auto">{{button.descripcion}}</button>
-                </div>
-            </div>
-    </form> 
+        <div class="field col-12 mb-0 pb-0">
+            <label class="font-semibold mb-1 text-blue-600">DESCRIPCIÓN</label>
+            <span class="p-fluid">
+                <textarea #descripcion type="text" pInputTextarea [rows]="1" formControlName="desproducto"
+                    style="resize: none" class="w-full p-inputtext-sm"
+                    (keydown.enter)="$event.preventDefault(); getListar(0)"></textarea>
+            </span>
+        </div>
 
-    <p-table #dt1 [value]="lstProducto" [rows]="5" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-        [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[5,10]"
-        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
-        styleClass="p-datatable-sm">
-           <ng-template pTemplate="header">
-            <tr class="text-sm" >
-                <th style="width: 20px" class="surface-200" >
+        <div class="field col-12 mt-1 pt-0">
+            <div class="flex flex-col gap-2 w-full flex-wrap">
+                <button *ngFor="let button of lstBotones" pButton (click)="getListar(button.codigo)"
+                    tooltipPosition="bottom" type="button"
+                    class="font-semibold mt-0 md:mt-4 justify-content-center h-2.5rem w-full md:w-auto px-6 h-auto">{{button.descripcion}}</button>
+            </div>
+        </div>
+    </form>
+
+    <p-table #dt1 [value]="lstProducto" [rows]="5" [rowHover]="true" responsiveLayout="stack"
+        [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+        [resizableColumns]="true" [rowsPerPageOptions]="[5,10]" [(selection)]="selectedDetalle"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+            <tr class="text-sm">
+                <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">
+                    <p-tableHeaderCheckbox style="width:15px; height:15px;"></p-tableHeaderCheckbox>
+                </th>
+                <th style="width: 20px" class="surface-200">
                     <div class="flex justify-content-between align-items-center">
                         N°
                     </div>
@@ -40,40 +45,36 @@
                 <th style="width: 300px;" class="surface-200">CANTIDAD</th>
                 <th style="width: 300px;" class="surface-200" *ngIf="verAlm">CANTIDAD</th>
                 <th style="width: 300px;" class="surface-200" *ngIf="verAlm">UBICACIÓN</th>
-                <th style="width: 300px;" class="surface-200">SELECCIONAR</th>            
+                <!-- <th style="width: 300px;" class="surface-200">SELECCIONAR</th> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
             <tr>
+                <td>
+                    <p-tableCheckbox [value]="data" [disabled]="data.codproducto === 0" />
+                </td>
                 <td>{{rowIndex + 1}}</td>
                 <td>{{data.codproducto}}</td>
                 <td>
                     <div pTooltip="{{data.despro | uppercase}}">
-                        {{(data.despro.length > 40) ? ((data.despro).slice(0, 40) + '...' | uppercase) : data.despro | uppercase}}
-                    </div>  
+                        {{(data.despro.length > 40) ? ((data.despro).slice(0, 40) + '...' | uppercase) : data.despro |
+                        uppercase}}
+                    </div>
                 </td>
                 <td>{{data.nomfamilia}}</td>
                 <td>{{data.nomsubfamilia}}</td>
-                <td> 
-                    <p-inputNumber 
-                        [(ngModel)]="data.cantidad" 
-                        [showButtons]="true" 
-                        buttonLayout="horizontal" 
-                        inputId="horizontal" 
-                        spinnerMode="horizontal" 
-                        [step]="1"
-                        [min]="0" 
-                        decrementButtonClass="p-button-danger"
-                        incrementButtonClass="p-button-success"
-                        incrementButtonIcon="pi pi-plus" 
-                        decrementButtonIcon="pi pi-minus" 
-                    />
+                <td>
+                    <p-inputNumber [(ngModel)]="data.cantidad" [showButtons]="true" buttonLayout="horizontal"
+                        inputId="horizontal" spinnerMode="horizontal" [step]="1" [min]="0"
+                        decrementButtonClass="p-button-danger" incrementButtonClass="p-button-success"
+                        incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" />
                 </td>
                 <td *ngIf="verAlm">{{data.saldostock}}</td>
                 <td *ngIf="verAlm">{{data.rutaubicacion}}</td>
-                <td>
-                    <button pButton type="button" icon="pi pi-check" tooltipPosition="bottom" pTooltip="Seleccionar Producto" (click)="seleccionarProducto(data)"></button>
-                </td>
+                <!-- <td>
+                    <button pButton type="button" icon="pi pi-check" tooltipPosition="bottom"
+                        pTooltip="Seleccionar Producto" (click)="seleccionarProducto(data)"></button>
+                </td> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
@@ -87,6 +88,9 @@
             </tr>
         </ng-template>
     </p-table>
+    <div class="flex justify-content-end mt-3">
+        <button pButton icon="pi pi-save" label="Agregar" class="p-button-primary" (click)="guardar()"></button>
+    </div>
 </div>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>

@@ -151,7 +151,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       descripcion: 'Mes'
     }
   ]
-  dataRegistrarPago:any
+  dataRegistrarPago: any
 
   constructor(
     private fb: FormBuilder,
@@ -530,22 +530,25 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
     fechaFin = this.registerFormRegistro.value.fecha_fin;
 
-    if (fechaingreso.toString().length === 10) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
+    try{
+      if (fechaingreso.toString().length === 10) {
+        fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
+      }
+      if (fecemision.toString().length === 10) {
+        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
+      }
+      if (fechaIni.toString().length === 10) {
+        fechaIni = new Date(this.serviceUtilitario.formatFecha(fechaIni));
+      }
+      if (fecvencimiento.toString().length === 10) {
+        fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
+      }
+      if (fechaFin.toString().length === 10) {
+        fechaFin = new Date(this.serviceUtilitario.formatFecha(fechaFin));
+      }
+    } catch(error){
+      this.setSpinner(false);
     }
-    if (fecemision.toString().length === 10) {
-      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
-    }
-    if (fechaIni.toString().length === 10) {
-      fechaIni = new Date(this.serviceUtilitario.formatFecha(fechaIni));
-    }
-    if (fecvencimiento.toString().length === 10) {
-      fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
-    }
-    if (fechaFin.toString().length === 10) {
-      fechaFin = new Date(this.serviceUtilitario.formatFecha(fechaFin));
-    }
-
 
     for (let i = 0; i < this.lstItemOC.length; i++) {
       if (this.lstItemOC[i].cantidad.toString() === '') {
@@ -1466,7 +1469,6 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
   pagarPuntoVenta() {
     if (this.selectedDetalle.length === 0) {
-      //this.verbtnGrabar = true;
       this.messageService.clear();
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
       return
@@ -1876,22 +1878,22 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
         if (_posAll != -1) {
           this.lstItemOC.splice(_posAll, 1)
         }*/
-       let tipoigv = 1;
-       if(this.ordenCompra?.tipoigv_item) {
+        let tipoigv = 1;
+        if (this.ordenCompra?.tipoigv_item) {
           tipoigv = this.ordenCompra?.tipoigv_item
-       }
+        }
         console.log('getAgregarProducto', rpta.data);
-        const dataOC = {
+        const dataOC = rpta.data.map((item: any) => ({
           idordencompraitem: 0,
-          idprod: rpta.data.idprod,
-          codproducto: rpta.data.codproducto,
-          descripcion: rpta.data.despro,
+          idprod: item.idprod,
+          codproducto: item.codproducto,
+          descripcion: item.despro,
           idunidad: 130,
           nomunidad: "UNIDAD",
-          preciocosto: rpta.data.valorunit,
-          cantidad: rpta.data.cantidad,
-          preciocostototal: rpta.data.valorunit * rpta.data.cantidad,
-          idtipoprod: rpta.data.idtipoprod,
+          preciocosto: item.valorunit,
+          cantidad: item.cantidad,
+          preciocostototal: item.valorunit * item.cantidad,
+          idtipoprod: item.idtipoprod,
           precioventa: 0,
           precioventatotal: 0,
           preprofit: 0,
@@ -1901,21 +1903,26 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
           rutaubicacion: '',
           coptipoexistencia: '',
           nomtipoexistencia: '',
-          idfamilia: rpta.data.idfamilia,
-          idmarca: rpta.data.idmarca,
-          idsubfamilia: rpta.data.idsubfamilia,
-          modelo: rpta.data.modelo,
-          nomfamilia: rpta.data.nomfamilia,
-          nommarca: rpta.data.nommarca,
-          nomsubfamilia: rpta.data.nomsubfamilia,
-          preciovenmax: rpta.data.preciovenmax,
-          preciovenmin: rpta.data.preciovenmin,
-          serialnumber: rpta.data.serialnumber,
-          valorunit: rpta.data.valorunit,
+          idfamilia: item.idfamilia,
+          idmarca: item.idmarca,
+          idsubfamilia: item.idsubfamilia,
+          modelo: item.modelo,
+          nomfamilia: item.nomfamilia,
+          nommarca: item.nommarca,
+          nomsubfamilia: item.nomsubfamilia,
+          preciovenmax: item.preciovenmax,
+          preciovenmin: item.preciovenmin,
+          serialnumber: item.serialnumber,
+          valorunit: item.valorunit,
           tipoigv
-        }
-        this.lstItemOC.push(dataOC);
+        }))
+        this.lstItemOC.push(...dataOC);
         console.log('this.lstItemOC', this.lstItemOC);
+
+        const igv = 0.18;
+        this.montoTotal = this.lstItemOC.reduce((acc, item) => acc + item.preciocostototal, 0);
+        this.s_igv = this.montoTotal * igv;
+        this.s_monto = this.montoTotal - this.s_igv;
       }
     });
   }
@@ -1931,9 +1938,9 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     const { idordencompra } = this.IA_data;
-    const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
+    /*const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
     console.log("lstCliente : ", this.lstCliente);
-    /*const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
+    const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
     const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;*/
 
     /*const data = {
@@ -2027,7 +2034,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       if (rpta != undefined) {
         console.log('getAsignarHabit', rpta.data);
         let tipoigv = 1;
-        if(this.ordenCompra?.tipoigv_item) {
+        if (this.ordenCompra?.tipoigv_item) {
           tipoigv = this.ordenCompra?.tipoigv_item
         }
         const dataOC = {
@@ -2069,7 +2076,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  getBackListado(){
+  getBackListado() {
     this.vistaLista = true;
     this.visRegistrarPago = false;
     this.visDetalle = false;
