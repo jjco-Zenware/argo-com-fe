@@ -418,11 +418,14 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
               fechaingreso?.setValue(new Date(ordenCompra.fechaingreso));
               fecvencimiento?.setValue(new Date(ordenCompra.fecvencimiento));*/
 
-              if (ordenCompra.items !== undefined) {
-                this.lstItemOC = ordenCompra.items;
-                this.calcularMontosCompra();
+              if(this.IA_data.paramReg === 'RES'){
+                this.lstItemOC = this.IA_data.items
+              } else {
+                if (ordenCompra.items !== undefined) {
+                  this.lstItemOC = ordenCompra.items;
+                }
               }
-
+              this.calcularMontosCompra();
               this.setSpinner(false);
               this.mensajeSpinner = '';
             },
@@ -463,17 +466,17 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       if (rpta === undefined) { return; }
       console.log('onClose agregar prod/habit', rpta);
 
-      const dataOC = {
+      const dataOC = rpta.data.map((item: any) => ({
         idordencompraitem: 0,
-        idprod: rpta.data.idprod,
-        codproducto: rpta.data.codproducto,
-        descripcion: rpta.data.despro,
+        idprod: item.idprod,
+        codproducto: item.codproducto,
+        descripcion: item.despro,
         idunidad: 130,
         nomunidad: "UNIDAD",
-        preciocosto: rpta.data.valorunit,
-        cantidad: rpta.data.cantidad,
-        preciocostototal: rpta.data.valorunit * rpta.data.cantidad,
-        idtipoprod: rpta.data.idtipoprod,
+        preciocosto: item.valorunit,
+        cantidad: item.cantidad,
+        preciocostototal: item.valorunit * item.cantidad,
+        idtipoprod: item.idtipoprod,
         precioventa: 0,
         precioventatotal: 0,
         preprofit: 0,
@@ -484,24 +487,31 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         coptipoexistencia: '',
         nomtipoexistencia: '',
         idfamilia: rpta.data.idfamilia,
-        idmarca: rpta.data.idmarca,
-        idsubfamilia: rpta.data.idsubfamilia,
-        modelo: rpta.data.modelo,
-        nomfamilia: rpta.data.nomfamilia,
-        nommarca: rpta.data.nommarca,
-        nomsubfamilia: rpta.data.nomsubfamilia,
-        preciovenmax: rpta.data.preciovenmax,
-        preciovenmin: rpta.data.preciovenmin,
-        serialnumber: rpta.data.serialnumber,
-        valorunit: rpta.data.valorunit,
+        idmarca: item.idmarca,
+        idsubfamilia: item.idsubfamilia,
+        modelo: item.modelo,
+        nomfamilia: item.nomfamilia,
+        nommarca: item.nommarca,
+        nomsubfamilia: item.nomsubfamilia,
+        preciovenmax: item.preciovenmax,
+        preciovenmin: item.preciovenmin,
+        serialnumber: item.serialnumber,
+        valorunit: item.valorunit,
         tipoigv: this.tipoigv
-      }
-      this.lstItemOC.push(dataOC);
+      }))
+      this.lstItemOC.push(...dataOC);
       this.calcularMontosCompra();
     });
   }
 
   calcularMontosCompra() {
+    if(this.lstItemOC.length === 0){
+      this.s_monto = 0;
+      this.s_igv = 0;
+      this.montoTotal = 0;
+      return;
+    }
+
     const total = this.lstItemOC.reduce((acc, item) => acc + (item.preciocostototal || 0), 0);
     const igvFactor = 1 + this.IGV;
     this.s_monto = +(total / igvFactor).toFixed(2);
@@ -528,8 +538,11 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
       }
     }
 
+    const idordencompra = this.IA_data.paramReg === 'RES' ? this.IA_data.idDocPrcVentaTrx : this.IA_data.idordencompra
+
     const objeto = {
       ...this.frmDatos.getRawValue(),
+      idordencompra,
       items: this.lstItemOC,
       tipodoc_ctb: this.frmDatos.get('tipodoc_ctb')?.value.toString(),
       cuotas: this.listaCuotas,

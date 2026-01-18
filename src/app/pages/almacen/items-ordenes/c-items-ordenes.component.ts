@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Marca, Tag, TipoProducto } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
-import { Subscription } from 'rxjs';
+import { forkJoin, map, Observable, Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
@@ -31,13 +31,15 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
   registerFormMarca: any = FormGroup;
   verporTipo: boolean = false;
   verMarca: boolean = true;
-  lstUnidades: any[]=[];
-  lstTag: any[]=[];
+  lstUnidades: any[] = [];
+  lstTag: any[] = [];
   listaTag: any = [];
   tagVisible: boolean = false;
-  registerFormTag!: FormGroup; 
+  registerFormTag!: FormGroup;
   verTag: boolean = true;
-  lstTipoND: any[]=[];
+  lstTipoND: any[] = [];
+  blockedDocument: boolean = false;
+  mensajeSpinner: string = "";
 
   constructor(
     private fb: FormBuilder,
@@ -59,20 +61,10 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.param = this.config.data;
-    
-    this.createFrm();
-    this.createFormContacto(); 
-    this.createFormTag();   
-    this.listarTipoProducto();
-    //this.listarMarcas();
-    this.listarItemsTabla();
-    this.listarItemsTag();
-    this.listarItemsTablaSunat();
 
-    // if (this.param.idordencompra === 0) {
-    // }else{
-    //   this.verControles(this.param.idtipoprod);
-    // }    
+    this.createFrm();
+    this.createFormContacto();
+    this.createFormTag();
     this.getRegistro();
     this.verControles(this.param.origenreg);
   }
@@ -98,7 +90,7 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
       precioventa: [{ value: 0, disabled: true }],
       indvig: [{ value: true, disabled: true }],
       iduserreg: [{ value: 0, disabled: false }],
-      fecreg :[{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: true }],
+      fecreg: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: true }],
       iduseract: [{ value: 0, disabled: false }],
       fecact: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: true }],
       coditem: [{ value: '0', disabled: false }],
@@ -129,78 +121,73 @@ export class CItemOrdenesComponent implements OnInit, OnDestroy {
   createFormContacto() {
     //Agregar validaciones de formulario
     this.registerFormMarca = this.fb.group({
-    nommarca: ['', [Validators.required]],
+      nommarca: ['', [Validators.required]],
     });
-}
-
-createFormTag() {
-  //Agregar validaciones de formulario
-  this.registerFormTag = this.fb.group({
-  nomtag: ['', [Validators.required]],
-  });
-}
-
-  getRegistro(){
-    this.frmDatosItem.patchValue(this.param);
-    console.log('getRegistro... : ', this.param);
-    if (this.param.origenreg !=='OC') {
-      this.verTag = false;
-    }
-    // if (this.param.idordencompra > 0) {
-       this.listaTag = this.param.tags;
-    // }
-    if (this.param.idtipoprod === 3) {
-      this.verMarca = false;
-    }
   }
 
-  listarItemsTabla() {
-    this.comprasService.obtenerItemsTabla(107).subscribe({
-        next: (rpta: any) => {
-            this.lstUnidades = rpta;
-            console.log('lstUnidades : ', rpta);
-        },
-        error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-        },
-        complete: () => {
-        },
+  createFormTag() {
+    //Agregar validaciones de formulario
+    this.registerFormTag = this.fb.group({
+      nomtag: ['', [Validators.required]],
     });
-  
-    }
+  }
 
-    listarItemsTag() {
-      this.comprasService.obtenerItemsTabla(108).subscribe({
-          next: (rpta: any) => {
-              this.lstTag = rpta;
-          },
-          error: (err) => {
-          console.info('error : ', err);
-          this.serviceSharedApp.messageToast()
-          },
-          complete: () => {
-          },
-      });
-    
+  setSpinner(valor: boolean) {
+    this.blockedDocument = valor;
+  }
+
+  getRegistro() {
+    forkJoin([
+      this.listarTipoProducto(),
+      this.listarItemsTabla(),
+      this.listarItemsTag(),
+      this.listarItemsTablaSunat()
+    ]).subscribe({
+      next: () => {
+        this.frmDatosItem.patchValue(this.param);
+        console.log('getRegistro... : ', this.param);
+        if (this.param.origenreg !== 'OC') {
+          this.verTag = false;
+        }
+        // if (this.param.idordencompra > 0) {
+        this.listaTag = this.param.tags;
+        // }
+        if (this.param.idtipoprod === 3) {
+          this.verMarca = false;
+        }
+      },
+      error: (err: any) => {
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast();
       }
+    });
 
-  listarTipoProducto() {
-    const $listarTipoProducto = this.proyectosService.obtenerTipoProducto().subscribe({
-      next: (rpta: any) => {
+  }
+
+  listarItemsTabla(): Observable<any> {
+    return this.comprasService.obtenerItemsTabla(107).pipe(
+      map((rpta: any) => {
+        this.lstUnidades = rpta;
+        console.log('lstUnidades : ', rpta);
+      }),
+    );
+  }
+
+  listarItemsTag(): Observable<any> {
+    return this.comprasService.obtenerItemsTabla(108).pipe(
+      map((rpta: any) => {
+        this.lstTag = rpta;
+      }),
+    );
+  }
+
+  listarTipoProducto(): Observable<any> {
+    return this.proyectosService.obtenerTipoProducto().pipe(
+      map((rpta: any) => {
         this.lstTipoProductoTot = rpta;
         this.lstTipoProducto = this.lstTipoProductoTot.filter(x => x.idtipoprod !== 0 && x.idtipoprod !== 8);
-        //this.frmDatosItem.get('idtipoprod')?.setValue(1);
-      },
-      error: (err) => {
-        console.info('error : ', err);
-        this.serviceSharedApp.messageToast()
-      },
-      complete: () => {
-      },
-    });
-    this.$listSubcription.push($listarTipoProducto);
-
+      })
+    );
   }
 
   // listarMarcas() {
@@ -235,22 +222,22 @@ createFormTag() {
 
   guardarItem() {
     if (this.frmDatosItem.get('idprod')?.value === 0 || this.frmDatosItem.get('idprod')?.value === null) {
-      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Ingresar Código'});
+      this.messageService.add({ severity: 'info', summary: 'Validación...', detail: 'Ingresar Código' });
       return;
     }
 
-    if (this.frmDatosItem.get('nommarca')?.value === '' || 
-      this.frmDatosItem.get('nommarca')?.value === null|| 
-      this.frmDatosItem.get('descripcion')?.value === ''|| 
+    if (this.frmDatosItem.get('nommarca')?.value === '' ||
+      this.frmDatosItem.get('nommarca')?.value === null ||
+      this.frmDatosItem.get('descripcion')?.value === '' ||
       this.frmDatosItem.get('descripcion')?.value === null) {
-        this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Debe buscar el Producto...'});
-        return;
+      this.messageService.add({ severity: 'info', summary: 'Validación...', detail: 'Debe buscar el Producto...' });
+      return;
     }
 
-   if (this.param.origenreg === 'RC' && this.frmDatosItem.get('preciocosto')?.value === 0 ) {
-      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Ingresar Precio Unitario...'});
+    if (this.param.origenreg === 'RC' && this.frmDatosItem.get('preciocosto')?.value === 0) {
+      this.messageService.add({ severity: 'info', summary: 'Validación...', detail: 'Ingresar Precio Unitario...' });
       return;
-   }
+    }
 
     // if (this.frmDatosItem.get('idtipoprod')?.value  === 6 || this.frmDatosItem.get('idtipoprod')?.value  === 7) {
     //   if (this.frmDatosItem.get('fecini')?.value === null) {
@@ -266,45 +253,45 @@ createFormTag() {
     //   const _fecfin = this.serviceUtilitario.obtenerFechaFormateadoDMA(this.frmDatosItem.get('fecfin')?.value);
     //   this.frmDatosItem.get('fecfin')?.setValue(_fecfin);
     // }   
-    
-    const _nomunidad:string=this.lstUnidades.filter(x=>x.iditem == this.frmDatosItem.get('idunidad')?.value)[0].valoritem;
+
+    const _nomunidad: string = this.lstUnidades.filter(x => x.iditem == this.frmDatosItem.get('idunidad')?.value)[0].valoritem;
     this.frmDatosItem.get('nomunidad')?.setValue(_nomunidad)
 
-    this.cerrar({...this.frmDatosItem.getRawValue()})
+    this.cerrar({ ...this.frmDatosItem.getRawValue() })
   }
 
-  cerrar(data:any) {
+  cerrar(data: any) {
     const objeto = {
       ...data,
       tags: this.listaTag
     }
-    this.refDatoItem.close({objeto});
+    this.refDatoItem.close({ objeto });
   }
 
 
-  
 
-  verControles(dato: any){
+
+  verControles(dato: any) {
     console.log('verControles', dato);
     switch (dato) {
-      case 'RC':  
+      case 'RC':
         this.verporTipo = false;
-      break;
+        break;
       case 'OC':
         this.verporTipo = true;
-      break;
-      case 'RV':  
+        break;
+      case 'RV':
         this.verporTipo = false;
-      break;
+        break;
     }
   }
 
-  changeDatePicker(data:any): any {
+  changeDatePicker(data: any): any {
     let fecha = this.datepipe.transform(data, 'dd/MM/yyyy');
     return fecha;
   }
 
-  NuevoTag(){
+  NuevoTag() {
     this.submitted = false;
     this.registerFormTag.get('nomtag')?.setValue('');
     this.tagVisible = true;
@@ -313,68 +300,67 @@ createFormTag() {
   guardarTag() {
     this.submitted = true;
     if (this.registerFormTag.invalid) {
-        this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Ingresar Descripción ..." });
-        return;
+      this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Validación...', detail: "Ingresar Descripción ..." });
+      return;
     }
-    if(this.submitted)
-    {
-        const objeto = {
-            iditem: 0,
-            idtabla: 108,
-            valor: this.registerFormTag.value.nomtag,
-            coditem: ''
-          }
-          const $prcMarcas = this.proyectosService.prcItem(objeto).subscribe({
-            next: (rpta: any) => {
-              if (rpta.procesoSwitch === 0){
-                this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
-                this.tagVisible=false;
-                this.listarItemsTag();
-              }else{
-              this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
-              }
-                
-                
-              
-            },
-            error: (err) => {
-              console.info('error : ', err);
-              this.serviceSharedApp.messageToast()
-            },
-            complete: () => {
-            },
-          });
-          this.$listSubcription.push($prcMarcas);
-
-        
-    }
-}
-
-  eliminarTag(data:any){
-    const _posAll: number = this.listaTag.findIndex(((x: { idtag: any; }) => x.idtag == data.idtag))
-      if (_posAll != -1) {
-      this.listaTag.splice(_posAll, 1)
+    if (this.submitted) {
+      const objeto = {
+        iditem: 0,
+        idtabla: 108,
+        valor: this.registerFormTag.value.nomtag,
+        coditem: ''
       }
+      const $prcMarcas = this.proyectosService.prcItem(objeto).subscribe({
+        next: (rpta: any) => {
+          if (rpta.procesoSwitch === 0) {
+            this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+            this.tagVisible = false;
+            this.listarItemsTag();
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+          }
+
+
+
+        },
+        error: (err) => {
+          console.info('error : ', err);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+        },
+      });
+      this.$listSubcription.push($prcMarcas);
+
+
+    }
   }
 
-  addTag(data:any){
-    if (this.listaTag === undefined) { this.listaTag =[]}
+  eliminarTag(data: any) {
+    const _posAll: number = this.listaTag.findIndex(((x: { idtag: any; }) => x.idtag == data.idtag))
+    if (_posAll != -1) {
+      this.listaTag.splice(_posAll, 1)
+    }
+  }
+
+  addTag(data: any) {
+    if (this.listaTag === undefined) { this.listaTag = [] }
 
     //if (this.listaTag !== undefined) {
-      if (this.listaTag.length > 0) {
-        let _idtagtabla = this.listaTag.filter((x: { idtag: any; }) => x.idtag === data);
-        
-        if (_idtagtabla.length > 0) {
-          if (_idtagtabla[0].idtag === data) {
-            this.messageService.add({ severity: 'info', summary: 'OK...', detail: 'El TAG ya fue registrado...' });
+    if (this.listaTag.length > 0) {
+      let _idtagtabla = this.listaTag.filter((x: { idtag: any; }) => x.idtag === data);
+
+      if (_idtagtabla.length > 0) {
+        if (_idtagtabla[0].idtag === data) {
+          this.messageService.add({ severity: 'info', summary: 'OK...', detail: 'El TAG ya fue registrado...' });
           return;
-          }
-        }            
+        }
       }
+    }
     //}    
 
     let _objeto = this.lstTag.filter(x => x.iditem === data);
-    
+
     const objeto = {
       idtag: data,
       nomtag: _objeto[0].valoritem,
@@ -384,135 +370,128 @@ createFormTag() {
     this.listaTag.unshift(objeto);
   }
 
-  buscarProducto(){
+  buscarProducto() {
     const valor = this.frmDatosItem.get('codproducto')?.value;
     console.log('buscarProducto...', valor);
 
     if (valor === '' || valor === null) {
-      this.messageService.add({severity: 'info', summary: 'Validación...', detail: 'Ingresar Código Producto...'});
+      this.messageService.add({ severity: 'info', summary: 'Validación...', detail: 'Ingresar Código Producto...' });
       return;
     }
 
     this.traerUnoProducto(valor);
   }
 
-  traerUnoProducto(codigo: any){   
+  traerUnoProducto(codigo: any) {
     const $traerUno = this.almacenService.traerProductoPorCodigo(codigo)
       .subscribe({
-        next: (rpta:any) => {
-          console.log('rpta.traerUnoProducto', rpta);  
+        next: (rpta: any) => {
+          console.log('rpta.traerUnoProducto', rpta);
           this.frmDatosItem.get('idprod')?.setValue(rpta.idprod);
           this.frmDatosItem.get('nommarca')?.setValue(rpta.nommarca);
-          this.frmDatosItem.get('despro')?.setValue(rpta.despro); 
-          this.frmDatosItem.get('idmarca')?.setValue(rpta.idmarca);     
-          
+          this.frmDatosItem.get('despro')?.setValue(rpta.despro);
+          this.frmDatosItem.get('idmarca')?.setValue(rpta.idmarca);
+
           if (rpta.idtipoprod === 3) {
             this.verMarca = false;
           }
         },
-        error:(err)=>{
-            this.serviceSharedApp.messageToast()
+        error: (err) => {
+          this.serviceSharedApp.messageToast()
         },
-        complete:() => {        
+        complete: () => {
         }
       });
     this.$listSubcription.push($traerUno)
   }
 
   getBusquedaAvanzada(data: any) {
-      console.log('CBusquedaProductoComponent', data);
-      let idalmacen = 0
-      const refItem = this.dialogService.open(CBusquedaProductoComponent, {
-        data: idalmacen,
-        header: "Busqueda Avanzada por Productos",
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: '60%'
-      });
-      refItem.onClose.subscribe((rpta: any) => {
-        
-        console.log('onClose',rpta);
-        if (rpta !== undefined) {
-          this.frmDatosItem.get('idprod')?.setValue(rpta.data.idprod);
-          this.frmDatosItem.get('codproducto')?.setValue(rpta.data.codproducto); 
-          this.frmDatosItem.get('idmarca')?.setValue(rpta.data.idmarca);
-          this.frmDatosItem.get('despro')?.setValue(rpta.data.despro);
-          this.frmDatosItem.get('idtipoprod')?.setValue(rpta.data.idtipoprod);    
-          this.frmDatosItem.get('nommarca')?.setValue(rpta.data.nommarca);
-          this.frmDatosItem.get('descripcion')?.setValue(rpta.data.despro);
+    console.log('CBusquedaProductoComponent', data);
+    let idalmacen = 0
+    const refItem = this.dialogService.open(CBusquedaProductoComponent, {
+      data: idalmacen,
+      header: "Busqueda Avanzada por Productos",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '60%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
 
-          this.verControles(rpta.data.idtipoprod);
-          if (rpta.data.idtipoprod === 3) {
+      console.log('onClose', rpta);
+      if (rpta !== undefined) {
+        this.frmDatosItem.get('idprod')?.setValue(rpta.data.idprod);
+        this.frmDatosItem.get('codproducto')?.setValue(rpta.data.codproducto);
+        this.frmDatosItem.get('idmarca')?.setValue(rpta.data.idmarca);
+        this.frmDatosItem.get('despro')?.setValue(rpta.data.despro);
+        this.frmDatosItem.get('idtipoprod')?.setValue(rpta.data.idtipoprod);
+        this.frmDatosItem.get('nommarca')?.setValue(rpta.data.nommarca);
+        this.frmDatosItem.get('descripcion')?.setValue(rpta.data.despro);
+
+        this.verControles(rpta.data.idtipoprod);
+        if (rpta.data.idtipoprod === 3) {
+          this.verMarca = false;
+        }
+
+      }
+    });
+  }
+
+  altaRapida() {
+    const refItem = this.dialogService.open(CModalProductoComponent, {
+      //data: data,
+      header: "Alta Rapida de Producto",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '30%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+
+      console.log('onClose', rpta);
+      if (rpta !== undefined) {
+        console.log('altaRapida', rpta.objeto.codigo);
+        this.traerUno(rpta.objeto.codigo);
+      }
+    });
+  }
+
+  traerUno(data: any) {
+    console.log('traerUno', data);
+    const $traerUno = this.almacenService.traerunoProducto(data)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta.traerUno', rpta.producto[0]);
+          this.frmDatosItem.get('idprod')?.setValue(rpta.producto[0].idprod);
+          this.frmDatosItem.get('despro')?.setValue(rpta.producto[0].despro);
+          this.frmDatosItem.get('idmarca')?.setValue(rpta.producto[0].idmarca);
+          this.frmDatosItem.get('codproducto')?.setValue(rpta.producto[0].codproducto);
+          this.frmDatosItem.get('idtipoprod')?.setValue(rpta.producto[0].idtipoprod);
+          this.frmDatosItem.get('nommarca')?.setValue(rpta.producto[0].nommarca);
+
+          this.verControles(rpta.producto[0].idtipoprod);
+          if (rpta.producto[0].idtipoprod === 3) {
             this.verMarca = false;
           }
-          
-        }
-      });
-    }
-  
-    altaRapida() {
-      const refItem = this.dialogService.open(CModalProductoComponent, {
-        //data: data,
-        header: "Alta Rapida de Producto",
-        closeOnEscape: false,
-        styleClass: 'testDialog',
-        width: '30%'
-      });
-      refItem.onClose.subscribe((rpta: any) => {
-        
-        console.log('onClose',rpta);
-        if (rpta !== undefined) {
-          console.log('altaRapida',rpta.objeto.codigo);
-          this.traerUno(rpta.objeto.codigo);        
-        }
-      });
-    }
-
-    traerUno(data:any){   
-      console.log('traerUno', data);
-      const $traerUno = this.almacenService.traerunoProducto(data)
-        .subscribe({
-          next: (rpta:any) => {
-            console.log('rpta.traerUno', rpta.producto[0]);  
-            this.frmDatosItem.get('idprod')?.setValue(rpta.producto[0].idprod);
-              this.frmDatosItem.get('despro')?.setValue(rpta.producto[0].despro); 
-              this.frmDatosItem.get('idmarca')?.setValue(rpta.producto[0].idmarca);      
-              this.frmDatosItem.get('codproducto')?.setValue(rpta.producto[0].codproducto);  
-              this.frmDatosItem.get('idtipoprod')?.setValue(rpta.producto[0].idtipoprod); 
-              this.frmDatosItem.get('nommarca')?.setValue(rpta.producto[0].nommarca);  
-              
-              this.verControles(rpta.producto[0].idtipoprod);
-              if (rpta.producto[0].idtipoprod === 3) {
-                this.verMarca = false;
-              }
-          },
-          error:(err)=>{
-              this.serviceSharedApp.messageToast()
-          },
-          complete:() => {        
-          }
-        });
-      this.$listSubcription.push($traerUno)
-    }
-
-    listarItemsTablaSunat() {
-      this.contabilidadService.listarItemsTablaSunat(3).subscribe({
-          next: (rpta: any) => {
-            console.info('listarItemsTablaSunat : ', rpta);
-
-            if (this.param.origenreg === 'RC') {
-              this.lstTipoND = rpta.filter((x: { codsunat: number; }) => x.codsunat === 1 || x.codsunat === 9);
-            }else{
-              this.lstTipoND = rpta.filter((x: { codsunat: number; }) => x.codsunat === 1 || x.codsunat === 8 || x.codsunat === 9);
-            }
-          },
-          error: (err) => {
-          console.info('error : ', err);
+        },
+        error: (err) => {
           this.serviceSharedApp.messageToast()
-          },
-          complete: () => {
-          },
+        },
+        complete: () => {
+        }
       });
-    
-      }
+    this.$listSubcription.push($traerUno)
+  }
+
+  listarItemsTablaSunat(): Observable<any> {
+    return this.contabilidadService.listarItemsTablaSunat(3).pipe(
+      map((rpta: any) => {
+        console.info('listarItemsTablaSunat : ', rpta);
+
+        if (this.param.origenreg === 'RC') {
+          this.lstTipoND = rpta.filter((x: { codsunat: number; }) => x.codsunat === 1 || x.codsunat === 9);
+        } else {
+          this.lstTipoND = rpta.filter((x: { codsunat: number; }) => x.codsunat === 1 || x.codsunat === 8 || x.codsunat === 9);
+        }
+      })
+    )
+  }
 }

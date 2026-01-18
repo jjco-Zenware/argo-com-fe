@@ -1471,7 +1471,22 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     if (this.selectedDetalle.length === 0) {
       this.messageService.clear();
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
-      return
+      return;
+    }
+    const codigosSeleccionados = this.selectedDetalle.map((x: any) => x.idordencompraitem ?? x);
+    const items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
+
+    const idsVentaTrx = items.map((item: any) => item.iddocprcventa_trx);
+    const idVentaTrx = idsVentaTrx[0];
+    const todosIguales = idsVentaTrx.every((id: any) => id === idVentaTrx);
+
+    if (!todosIguales) {
+      this.serviceSharedApp.messageToast({
+      severity: 'info',
+      summary: 'Aviso...!',
+      detail: 'Los ítems seleccionados tienen diferentes números de venta.'
+      });
+      return;
     }
 
     const { idordencompra } = this.IA_data;
@@ -1489,8 +1504,10 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       idmoneda,
       simboloMoneda,
       paramReg: 'RES',
-      idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
-    }
+      idDocPrcVentaTrx: idVentaTrx,
+      idordencompraitemArray: codigosSeleccionados,
+      items
+    };
 
     this.tituloDetalle = "Registrar Pago " + idordencompra;
     this.vistaLista = false;
