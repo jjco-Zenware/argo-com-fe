@@ -47,7 +47,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   s_monto!: number;
   s_igv!: number;
   verbtnGrabar: boolean = true;
-  tipoigv:number=1;
+  tipoigv: number = 1;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -161,10 +161,12 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   }
 
   changeHabitacion(codHabitacion: number) {
-    if (this.IA_data.paramReg === 'RES') {
+    console.log("lstHabitaciones: ", this.lstHabitaciones);
+    
+    /*if (this.IA_data.paramReg === 'RES') {
       this.tipoigv = 1;
       return;
-    }
+    }*/
 
     const habitacion = this.lstHabitaciones.find(x => x.idprod === codHabitacion);
     console.log('habitacion', habitacion);
@@ -392,15 +394,27 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
           return;
         }
 
+        if (this.IA_data.codtipodoc === 'RSV' && !this.IA_data.idDocPrcVentaTrx) {
+          this.lstItemOC = this.IA_data.items
+          this.calcularMontosCompra();
+          this.setSpinner(false);
+          this.mensajeSpinner = '';
+          return;
+        }
+
         const objeto = {
-          idordencompra: this.IA_data.idordencompra,
+          idordencompra: this.IA_data.codtipodoc === 'RSV' ? this.IA_data.idDocPrcVentaTrx : this.IA_data.idordencompra,
           idusuario: constantesLocalStorage.idusuario
         };
 
         const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
           .subscribe({
             next: (rpta: any) => {
+              if (!rpta) {
+                return;
+              }
               console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+
               const ordenCompra = rpta.ordencompra[0];
               this.frmDatos.patchValue(ordenCompra);
               const { fecemision, fechaingreso, fecvencimiento } = this.frmDatos.controls;
@@ -414,16 +428,9 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
                 fechaingreso?.setValue(new Date(ordenCompra.fechaingreso));
                 fecvencimiento?.setValue(new Date(ordenCompra.fecvencimiento));
               }
-              /*fecemision?.setValue(new Date(ordenCompra.fecemision));
-              fechaingreso?.setValue(new Date(ordenCompra.fechaingreso));
-              fecvencimiento?.setValue(new Date(ordenCompra.fecvencimiento));*/
 
-              if(this.IA_data.paramReg === 'RES'){
-                this.lstItemOC = this.IA_data.items
-              } else {
-                if (ordenCompra.items !== undefined) {
-                  this.lstItemOC = ordenCompra.items;
-                }
+              if (ordenCompra.items !== undefined) {
+                this.lstItemOC = ordenCompra.items;
               }
               this.calcularMontosCompra();
               this.setSpinner(false);
@@ -505,7 +512,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
   }
 
   calcularMontosCompra() {
-    if(this.lstItemOC.length === 0){
+    if (this.lstItemOC.length === 0) {
       this.s_monto = 0;
       this.s_igv = 0;
       this.montoTotal = 0;
@@ -542,6 +549,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
 
     const objeto = {
       ...this.frmDatos.getRawValue(),
+      codtipodoc: this.IA_data.codtipodoc ?? 'OPO',
       idordencompra,
       items: this.lstItemOC,
       tipodoc_ctb: this.frmDatos.get('tipodoc_ctb')?.value.toString(),
@@ -609,21 +617,21 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     });
 
     ref.onClose.subscribe(async (rpta: any) => {
-      if (!rpta?.proceso) { 
+      if (!rpta?.proceso) {
         this.verbtnGrabar = true;
-        return; 
+        return;
       }
-      
+
       const rptaFacturar = await this.serviceSharedApp.confirmDialog({
         message: '¿Desea facturar?',
         header: 'Aviso'
       });
 
-      if (!rptaFacturar) { 
+      if (!rptaFacturar) {
         setTimeout(() => {
           this.O_GetBackListado.emit();
         });
-        return; 
+        return;
       }
 
       this.setSpinner(true);

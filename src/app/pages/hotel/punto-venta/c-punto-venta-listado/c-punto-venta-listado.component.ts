@@ -298,7 +298,8 @@ export class CPuntoVentaListadoComponent implements OnInit, OnDestroy {
     this.tituloDetalle = "REGISTRAR PUNTO DE VENTA";
     this.dataPrc = {
       idordencompra: 0,
-      paramReg: 'N'
+      paramReg: 'N',
+      codtipodoc: 'PVE'
     }
     this.vistaLista = false;
     this.visDetalle = true;

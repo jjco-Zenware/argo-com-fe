@@ -1474,9 +1474,9 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
     const codigosSeleccionados = this.selectedDetalle.map((x: any) => x.idordencompraitem ?? x);
-    const items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
+    const _items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
 
-    const idsVentaTrx = items.map((item: any) => item.iddocprcventa_trx);
+    const idsVentaTrx = _items.map((item: any) => item.iddocprcventa_trx);
     const idVentaTrx = idsVentaTrx[0];
     const todosIguales = idsVentaTrx.every((id: any) => id === idVentaTrx);
 
@@ -1489,6 +1489,14 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
+    const items = _items.map((dato: any) => { 
+      return {
+        ...dato,
+        iddocumentoprcitem_trx: dato.idordencompraitem,
+        idordencompraitem: 0
+      }
+    })
+
     const { idordencompra } = this.IA_data;
     const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
     console.log("lstCliente : ", this.lstCliente);
@@ -1496,6 +1504,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;
 
     this.dataRegistrarPago = {
+      codtipodoc: 'RSV',
       idordencompra,
       nombreCliente,
       fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
