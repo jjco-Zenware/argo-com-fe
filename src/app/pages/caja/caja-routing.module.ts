@@ -4,7 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'apertura-cajas',
-    loadChildren: () => import('./apertura-cierre/apertura-cierre.module').then(m => m.AperturaCierreModule)
+    loadChildren: () => import('./apertura/apertura.module').then(m => m.AperturaModule)
+  },
+  {
+    path: 'cierre-cajas',
+    loadChildren: () => import('./cierre/cierre.module').then(m => m.CierreModule)
   },
   {
     path: 'crud-cajas',

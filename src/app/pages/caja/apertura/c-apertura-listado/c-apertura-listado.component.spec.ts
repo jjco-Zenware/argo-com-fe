@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CAperturaCierreListadoComponent } from './c-apertura-cierre-listado.component';
+import { CAperturaListadoComponent } from './c-apertura-listado.component';
 
-describe('CAperturaCierreListadoComponent', () => {
-  let component: CAperturaCierreListadoComponent;
-  let fixture: ComponentFixture<CAperturaCierreListadoComponent>;
-
+describe('CAperturaListadoComponent', () => {
+  let component: CAperturaListadoComponent;
+  let fixture: ComponentFixture<CAperturaListadoComponent>;
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ CAperturaCierreListadoComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CAperturaCierreListadoComponent);
+    fixture = TestBed.createComponent(CAperturaListadoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -46,7 +46,7 @@ export class CMantenimientoListadoComponent implements OnInit, OnDestroy {
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     const { idlocal } = constantesLocalStorage;
 
-    const $cajaList = this.serviceCaja.cajaList(idlocal)
+    const $cajaList = this.serviceCaja.cajaList(idlocal, 0)
       .subscribe({
         next: (rpta: any) => {
           this.setSpinner(false);

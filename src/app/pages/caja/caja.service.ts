@@ -9,8 +9,8 @@ export class CajaService {
 
   constructor(private readonly http: HttpClient) { }
 
-  cajaList(idlocal: number) {
-    const url = `${constantesApiWeb.cajaList}/${idlocal}`;
+  cajaList(idlocal: number, idaccion?: number) {
+    const url = `${constantesApiWeb.cajaList}/${idlocal}/${idaccion}`;
     return this.http.get<any>(url);
   }
 

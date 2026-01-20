@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 
-import { AperturaCierreRoutingModule } from './apertura-cierre-routing.module';
-import { CAperturaCierreListadoComponent } from './c-apertura-cierre-listado/c-apertura-cierre-listado.component';
+import { AperturaRoutingModule } from './apertura-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { SharedAppService } from '@sharedAppService';
 import { SharedAppModule } from 'src/app/shared/shared-App.module';
+import { CAperturaListadoComponent } from './c-apertura-listado/c-apertura-listado.component';
 
 
 @NgModule({
   declarations: [
-    CAperturaCierreListadoComponent
+    CAperturaListadoComponent
   ],
   imports: [
     CommonModule,
-    AperturaCierreRoutingModule,
+    AperturaRoutingModule,
     SharedAppModule,
     SharedPrimeNgModule,
     FormsModule,
@@ -26,4 +26,4 @@ import { SharedAppModule } from 'src/app/shared/shared-App.module';
     SharedAppService
   ]
 })
-export class AperturaCierreModule { }
+export class AperturaModule { }

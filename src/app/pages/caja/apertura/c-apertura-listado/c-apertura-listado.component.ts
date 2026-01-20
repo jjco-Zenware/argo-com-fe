@@ -7,11 +7,11 @@ import * as FileSaver from 'file-saver';
 import { CajaService } from '../../caja.service';
 
 @Component({
-  selector: 'app-c-apertura-cierre-listado',
-  templateUrl: './c-apertura-cierre-listado.component.html',
-  styleUrls: ['./c-apertura-cierre-listado.component.scss']
+  selector: 'app-c-apertura-listado',
+  templateUrl: './c-apertura-listado.component.html',
+  styleUrls: ['./c-apertura-listado.component.scss']
 })
-export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
+export class CAperturaListadoComponent implements OnInit, OnDestroy {
   $listSubcription: Subscription[] = [];
 
   listado: any[] = [];
@@ -50,7 +50,7 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     const { idlocal } = constantesLocalStorage;
 
-    const $cajaList = this.serviceCaja.cajaList(idlocal)
+    const $cajaList = this.serviceCaja.cajaList(idlocal, 1)
       .subscribe({
         next: (rpta: any) => {
           this.setSpinner(false);
