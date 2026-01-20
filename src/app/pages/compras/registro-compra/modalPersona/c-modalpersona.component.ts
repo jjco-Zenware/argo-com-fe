@@ -290,7 +290,7 @@ esPersonaJuridica: boolean = false;
               this.registerFormCliente.get('direcresumen')?.setValue(direcresumen);
               this.registerFormCliente.get('telefresumen')?.setValue(telefresumen);
               this.registerFormCliente.get('email')?.setValue(email);
-              this.registerFormCliente.get('adm_fechanacimiento')?.setValue(new Date(adm_fechanacimiento));
+              this.registerFormCliente.get('adm_fechanacimiento')?.setValue(adm_fechanacimiento === null ? null : new Date(adm_fechanacimiento));
               /*if (tipopersona === 'N') {
                 this.registerFormCliente.get('appaterno')?.setValue(appaterno);
                 this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);
