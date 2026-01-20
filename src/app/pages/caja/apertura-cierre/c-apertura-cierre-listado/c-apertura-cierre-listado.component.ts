@@ -134,6 +134,11 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (rpta: any) => {
           this.setSpinner(false);
+          this.serviceSharedApp.messageToast({
+            severity: 'info',
+            summary: 'Información',
+            detail: rpta.length === 0 ? 'No se encontraron registros para procesar.' : 'Se procesaron los registros correctamente.'
+          });
           console.log('rpta aperturaCierreCaja', rpta);
           this.getDataDetalle(rpta);
         },
@@ -159,10 +164,10 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
     this.lstRptaProceso = data;
   }
 
-  cerrarCaja(item:any) {
+  cerrarCaja(item: any) {
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-    const { idaperturacaja, idaperturacajadetalle, monto_arqueo,monto_saldo_final } = item;
+    const { idaperturacaja, idaperturacajadetalle, monto_arqueo, monto_saldo_final } = item;
     const objeto = {
       idaperturacaja,
       idusuario: constantesLocalStorage.idusuario,
@@ -196,6 +201,8 @@ export class CAperturaCierreListadoComponent implements OnInit, OnDestroy {
 
   getBackListado() {
     this.visListadoGeneral = true;
+    this.lstRptaProceso = [];
+    this.getListar();
   }
 
 }
