@@ -1,96 +1,106 @@
-<form [formGroup]="registerFormCliente" class="p-2" >
+<form [formGroup]="registerFormCliente" class="p-2">
     <div class="p-fluid grid">
-        
-            <div class="lg:col-4 col-12 field">
-                <label class="font-semibold">Tipo Persona</label>
-                    <p-dropdown [options]="dropdownItemsTipPer" formControlName="tipopersona" optionLabel="name" placeholder="Seleccionar Persona"
-                        optionValue="code" (onChange)="cambioTipoPer($event.value)" class="p-inputtext-sm"></p-dropdown>
-            </div>
-            <div class="lg:col-4 col-12 field">
-                <label class="font-semibold">Nacionalidad</label>
-                <p-dropdown [options]="dropdownItemsNac" formControlName="indnacionalidad" optionLabel="name" placeholder="Seleccionar Nacionalidad"
-                        optionValue="code"class="p-inputtext-sm"></p-dropdown>
-                <!-- <small class="p-error" *ngIf="submitted && !formCliente.indnacionalidad.requiered">Nacionalidad es requerido.</small> -->
-                <!-- <p class="p-error" *ngIf="submitted && formCliente.indnacionalidad.errors">Nacionalidad es requerido.</p> -->
-            </div>
-            <!-- <div class="col-12 field sm:col-6 lg:col-4 md:col-3">
+
+        <div class="lg:col-4 col-12 field">
+            <label class="font-semibold">Tipo Persona</label>
+            <p-dropdown [options]="dropdownItemsTipPer" formControlName="tipopersona" optionLabel="name"
+                placeholder="Seleccionar Persona" optionValue="code" (onChange)="cambioTipoPer($event.value)"
+                class="p-inputtext-sm"></p-dropdown>
+        </div>
+        <div class="lg:col-4 col-12 field">
+            <label class="font-semibold">Nacionalidad</label>
+            <p-dropdown [options]="dropdownItemsNac" formControlName="indnacionalidad" optionLabel="name"
+                placeholder="Seleccionar Nacionalidad" optionValue="code" class="p-inputtext-sm"></p-dropdown>
+            <!-- <small class="p-error" *ngIf="submitted && !formCliente.indnacionalidad.requiered">Nacionalidad es requerido.</small> -->
+            <!-- <p class="p-error" *ngIf="submitted && formCliente.indnacionalidad.errors">Nacionalidad es requerido.</p> -->
+        </div>
+        <!-- <div class="col-12 field sm:col-6 lg:col-4 md:col-3">
                 <label class="font-semibold">Tipo Rol</label>
                 <p-dropdown [options]="lstRol" formControlName="idrolpersona" optionLabel="valoritem" placeholder="Seleccionar Rol...!"
                     optionValue="coditem" class="p-inputtext-sm"></p-dropdown>
             </div> -->
-        
-            <div class="lg:col-4 col-12 field">
-                <label class="font-semibold">Tipo Documento</label>
-                <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="destipodoc" placeholder="Seleccionar Documento"
-                    optionValue="idtipodoc" (onChange)="cambioTipoDoc($event.value)"class="p-inputtext-sm" appendTo="body"></p-dropdown>
+
+        <div class="lg:col-4 col-12 field">
+            <label class="font-semibold">Tipo Documento</label>
+            <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="destipodoc"
+                placeholder="Seleccionar Documento" optionValue="idtipodoc" (onChange)="cambioTipoDoc($event.value)"
+                class="p-inputtext-sm" appendTo="body"></p-dropdown>
+        </div>
+        <div class="lg:col-4 col-12 field -mt-5">
+            <label class="font-semibold">N° Documento</label>
+            <span class="p-inputgroup">
+                <input pInputText type="text" formControlName="nrodocumento" class="p-inputtext-sm" />
+                <button pButton type="button" icon="pi pi-search" (click)="getBuscarPersonaPAX()"
+                    class="p-button-sm p-button-outlined" pTooltip="Buscar documento" tooltipPosition="top"></button>
+            </span>
+        </div>
+        <div *ngIf="esPersonaJuridica" class="lg:col-4 col-12 field -mt-5">
+            <label class="font-semibold">Tipo Entidad</label>
+            <p-dropdown [options]="lstEnti" formControlName="tipoentidad" optionLabel="name"
+                placeholder="Seleccionar Entidad" optionValue="id" class="p-inputtext-sm"></p-dropdown>
+            <!-- <p class="p-error" *ngIf="submitted && formCliente.tipoentidad.errors" >Tipo Entidad es requerido.</p> -->
+        </div>
+        <ng-container *ngIf="personaNatural ; else mostrarjuridico">
+
+            <div class="lg:col-4 col-12 field -mt-5">
+                <label class="font-semibold">Paterno</label>
+                <input pInputText type="text" formControlName="appaterno" class="p-inputtext-sm" />
+                <!-- <p class="p-error" *ngIf="submitted && formCliente.appaterno.errors">Paterno es requerido.</p> -->
             </div>
             <div class="lg:col-4 col-12 field -mt-5">
-                <label class="font-semibold">N° Documento</label>
-                <span class="p-inputgroup">
-                    <input pInputText type="text" formControlName="nrodocumento"
-                    class="p-inputtext-sm"/>
-                    <button pButton type="button" icon="pi pi-search" (click)="getBuscarPersonaPAX()" class="p-button-sm p-button-outlined" 
-                    pTooltip="Buscar documento" tooltipPosition="top"></button>
+                <label class="font-semibold">Materno</label>
+                <input pInputText type="text" formControlName="apmaterno" class="p-inputtext-sm" />
+                <!-- <p class="p-error" *ngIf="submitted && formCliente.apmaterno.errors">Materno es requerido.</p> -->
+            </div>
+            <div class="lg:col-4 col-12 field -mt-5">
+                <label class="font-semibold">Nombre</label>
+                <input pInputText type="text" formControlName="nombres" class="p-inputtext-sm" />
+                <!-- <p class="p-error" *ngIf="submitted && formCliente.nombres.errors">Nombre es requerido.</p> -->
+            </div>
+            <div class="lg:col-4 col-12 field -mt-5">
+                <label class="font-semibold">Fecha de Nacimiento</label>
+                <i class="pi pi-calendar text-orange-600" style="margin-left: 5px;"></i>
+                <span class="p-input-icon-left w-auto p-fluid " style="height: 2rem;">
+                    <p-calendar formControlName="adm_fechanacimiento" dateFormat="dd/mm/yy" [showTime]="false"
+                        [showIcon]="false" [required]="true" inputId="start" inputStyleClass="w-full cursor-pointer"
+                        appendTo="body" class="p-inputtext-sm" [readonlyInput]="true"></p-calendar>
                 </span>
             </div>
-            <div *ngIf="esPersonaJuridica" class="lg:col-4 col-12 field -mt-5">
-                <label class="font-semibold">Tipo Entidad</label>
-                <p-dropdown [options]="lstEnti" formControlName="tipoentidad" optionLabel="name" placeholder="Seleccionar Entidad"
-                    optionValue="id" class="p-inputtext-sm"></p-dropdown>
-                <!-- <p class="p-error" *ngIf="submitted && formCliente.tipoentidad.errors" >Tipo Entidad es requerido.</p> -->
-            </div>
-        <ng-container *ngIf="personaNatural ; else mostrarjuridico">
-            
-                <div class="lg:col-4 col-12 field -mt-5">
-                    <label  class="font-semibold">Paterno</label>
-                    <input pInputText type="text" formControlName="appaterno" class="p-inputtext-sm"/>
-                    <!-- <p class="p-error" *ngIf="submitted && formCliente.appaterno.errors">Paterno es requerido.</p> -->
-                </div>
-                <div class="lg:col-4 col-12 field -mt-5">
-                    <label  class="font-semibold">Materno</label>
-                    <input pInputText type="text" formControlName="apmaterno" class="p-inputtext-sm"/>
-                    <!-- <p class="p-error" *ngIf="submitted && formCliente.apmaterno.errors">Materno es requerido.</p> -->
-                </div>
-                <div class="lg:col-4 col-12 field -mt-5">
-                    <label class="font-semibold">Nombre</label>
-                    <input pInputText type="text" formControlName="nombres" class="p-inputtext-sm"/>
-                    <!-- <p class="p-error" *ngIf="submitted && formCliente.nombres.errors">Nombre es requerido.</p> -->
-                </div>
-            
         </ng-container>
 
         <ng-template #mostrarjuridico>
-                <div class="col-12 field -mt-5">
-                    <label  class="font-semibold">Razón Social</label>
-                    <input pInputText type="text" formControlName="razonsocial" class="p-inputtext-sm"/>
-                    <!-- <p class="p-error" *ngIf="submitted && formCliente.razonsocial.errors">Razón Social es requerido.</p> -->
-                </div>
-            
-                <div class="col-12 field -mt-5">
-                    <label  class="font-semibold">Nombre Comercial</label>
-                    <input pInputText type="text" formControlName="nomcomercial" class="p-inputtext-sm"/>
-                </div>
-        </ng-template>
-        
-            <div class="lg:col-12 col-12 field -mt-5">
-                <label  class="font-semibold">Dirección</label>
-                <input pInputText type="text" formControlName="direcresumen" class="p-inputtext-sm"/>
-                <!-- <p class="p-error" *ngIf="submitted && formCliente.direcresumen.errors">Dirección es requerido.</p> -->
+            <div class="col-12 field -mt-5">
+                <label class="font-semibold">Razón Social</label>
+                <input pInputText type="text" formControlName="razonsocial" class="p-inputtext-sm" />
+                <!-- <p class="p-error" *ngIf="submitted && formCliente.razonsocial.errors">Razón Social es requerido.</p> -->
             </div>
-        
-            <div class="lg:col-4 col-12 field -mt-5">
-                <label  class="font-semibold">Email</label>
-                <input pInputText type="email" formControlName="email" class="p-inputtext-sm">
-            </div> 
-            <!-- <div class="lg:col-4 col-12 field -mt-5" >
+
+            <div class="col-12 field -mt-5">
+                <label class="font-semibold">Nombre Comercial</label>
+                <input pInputText type="text" formControlName="nomcomercial" class="p-inputtext-sm" />
+            </div>
+        </ng-template>
+
+        <div class="lg:col-12 col-12 field -mt-5">
+            <label class="font-semibold">Dirección</label>
+            <input pInputText type="text" formControlName="direcresumen" class="p-inputtext-sm" />
+            <!-- <p class="p-error" *ngIf="submitted && formCliente.direcresumen.errors">Dirección es requerido.</p> -->
+        </div>
+
+        <div class="lg:col-4 col-12 field -mt-5">
+            <label class="font-semibold">Email</label>
+            <input pInputText type="email" formControlName="email" class="p-inputtext-sm">
+        </div>
+        <!-- <div class="lg:col-4 col-12 field -mt-5" >
                 <label  class="font-semibold">Telefono</label>
                 <input pInputText type="text" formControlName="telefresumen" class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
             </div> -->
-            <div class="lg:col-4 col-12 field -mt-5" >
-                <label  class="font-semibold">Movil</label>
-                <input pInputText type="text" formControlName="telefmovil" class="p-inputtext-sm" oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
-            </div>
-            <!-- <div class="lg:col-4 col-12 field -mt-5">
+        <div class="lg:col-4 col-12 field -mt-5">
+            <label class="font-semibold">Movil</label>
+            <input pInputText type="text" formControlName="telefmovil" class="p-inputtext-sm"
+                oninput="this.value=this.value.replace(/[^0-9]/g,'');" />
+        </div>
+        <!-- <div class="lg:col-4 col-12 field -mt-5">
                 <label  class="font-semibold">Pagina Web</label>
                 <input pInputText type="text" formControlName="paginaweb" class="p-inputtext-sm"/>
             </div> -->

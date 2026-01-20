@@ -51,6 +51,11 @@ const routes: Routes = [
     path:'listar-liquidacion-hotel',
     loadChildren: () => import('./liquidacion/liquidacion.module').then(m => m.LiquidacionModule),
     data: { breadcrumb: 'Liquidacion' }
+  },
+  {
+    path:'base-datos-hotel',
+    loadChildren: () => import('./base-datos/base-datos.module').then(m => m.BaseDatosModule),
+    data: { breadcrumb: 'Base Datos' }
   }
 ];
 

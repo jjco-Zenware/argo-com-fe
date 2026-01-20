@@ -126,6 +126,7 @@ esPersonaJuridica: boolean = false;
     tipocambio: [{ value: 0, disabled: false }],
     tipoentidad: [{ value: 'P', disabled: false }, [Validators.required]],
     nroctadetraccion: [{ value: null, disabled: false }],
+    adm_fechanacimiento: [{ value: null, disabled: false }, [Validators.required]],
     });
 }
 
@@ -147,6 +148,9 @@ esPersonaJuridica: boolean = false;
       this.registerFormCliente.get('appaterno')?.clearValidators();
       this.registerFormCliente.get('appaterno')?.updateValueAndValidity();
 
+      this.registerFormCliente.get('adm_fechanacimiento')?.clearValidators();
+      this.registerFormCliente.get('adm_fechanacimiento')?.updateValueAndValidity();
+
       /*this.registerFormCliente.get('apmaterno')?.clearValidators();
       this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();*/
     }else{
@@ -160,6 +164,10 @@ esPersonaJuridica: boolean = false;
       this.registerFormCliente.get('appaterno')?.clearValidators();
       this.registerFormCliente.get('appaterno')?.setValidators(Validators.required);
       this.registerFormCliente.get('appaterno')?.updateValueAndValidity();
+
+      this.registerFormCliente.get('adm_fechanacimiento')?.clearValidators();
+      this.registerFormCliente.get('adm_fechanacimiento')?.setValidators(Validators.required);
+      this.registerFormCliente.get('adm_fechanacimiento')?.updateValueAndValidity();
 
       /*this.registerFormCliente.get('apmaterno')?.clearValidators();
       this.registerFormCliente.get('apmaterno')?.setValidators(Validators.required);
@@ -272,7 +280,7 @@ esPersonaJuridica: boolean = false;
             next: (rpta: any) => {
               console.log('rpta personaTraerUnoTipoDoc: ', rpta);
               if(!rpta) {return;}
-              const { idpersona, appaterno, apmaterno, nombres, razonsocial, direcresumen, telefresumen, email } = rpta;
+              const { idpersona, appaterno, apmaterno, nombres, razonsocial, direcresumen, telefresumen, email, adm_fechanacimiento } = rpta;
               this.registerFormCliente.get('idpersona')?.setValue(idpersona);
     
               this.registerFormCliente.get('appaterno')?.setValue(appaterno);
@@ -282,6 +290,7 @@ esPersonaJuridica: boolean = false;
               this.registerFormCliente.get('direcresumen')?.setValue(direcresumen);
               this.registerFormCliente.get('telefresumen')?.setValue(telefresumen);
               this.registerFormCliente.get('email')?.setValue(email);
+              this.registerFormCliente.get('adm_fechanacimiento')?.setValue(new Date(adm_fechanacimiento));
               /*if (tipopersona === 'N') {
                 this.registerFormCliente.get('appaterno')?.setValue(appaterno);
                 this.registerFormCliente.get('apmaterno')?.setValue(apmaterno);

@@ -152,6 +152,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     }
   ]
   dataRegistrarPago: any
+  esVisEditPersona: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -917,12 +918,56 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       console.log('onClose', rpta);
       if (rpta != undefined) {
         this.listaClientes();
-        this.registerFormRegistro.get('nrodocumento').setValue(parseInt(rpta.objeto.nrodocumento));
+        this.registerFormRegistro.get('nrodocumento').setValue(rpta.objeto.nrodocumento);
         this.registerFormRegistro.get('idproveedor').setValue(parseInt(rpta.objeto.idpersona));
         this.registerFormRegistro.get('direccion').setValue(rpta.objeto.direcresumen);
       }
     });
   }
+
+  /*TODO-MZR*/
+  editPersona() {
+    const { idproveedor, idtipodoc, nrodocumento } = this.registerFormRegistro.getRawValue();
+    const dctsNaturales: string[] = ['DNI', 'CEX', 'CDI', 'PAS'];
+    /*let _tipopersona = '';
+    if (idtipodoc === 'RUC') {
+      _tipopersona = 'J';
+    } else { _tipopersona = 'N'; }*/
+
+    const objet = {
+      idrolpersona: 'PRO',
+      idtipodoc,
+      idproveedor,
+      nroDocumento: nrodocumento,
+      //tipopersona,: _tipopersona,
+      tipopersona: idtipodoc && dctsNaturales.includes(idtipodoc) ? 'N' : 'J',
+      esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS',
+      tipoProceso: 'E',
+      
+    }
+    this.getModalPersona(objet);
+  }
+
+  getModalPersona(data: any) {
+    const refItem = this.dialogService.open(CModalPersonaComponent, {
+      data,
+      header: "Agregar Cliente",
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%'
+    });
+    refItem.onClose.subscribe((rpta: any) => {
+
+      console.log('onClose', rpta);
+      if (rpta != undefined) {
+        /*this.listaClientes(rpta.objeto.idpersona);
+        this.frmDatos.get('nrodocumento')?.setValue(rpta.objeto.nrodocumento);
+        //this.frmDatos.get('idproveedor')?.setValue(parseInt(rpta.objeto.idpersona));
+        this.frmDatos.get('direccion')?.setValue(rpta.objeto.direcresumen);*/
+      }
+    });
+  }
+  /*TODO-MZR*/
 
   vistaPreliminar() {
     this.setSpinner(true);
@@ -1202,6 +1247,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       nrodocumento: _nro
     }
 
+    this.esVisEditPersona = false;
     this.ordencompraService.buscarporRUC(objet).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
@@ -1211,6 +1257,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
           this.NuevoPersona({ idtipodoc: _idtipodoc, nroDocumento: _nro });
           return;
         }
+        this.esVisEditPersona = true;
         this.registerFormRegistro.get('idproveedor')?.setValue(rpta[0].idcliente);
         this.registerFormRegistro.get('direccion')?.setValue(rpta[0].direcresumen);
       },
