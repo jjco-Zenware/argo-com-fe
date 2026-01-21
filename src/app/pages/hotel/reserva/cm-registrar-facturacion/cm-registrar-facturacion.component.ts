@@ -785,9 +785,17 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       retencion_tipo = 0;
     }
 
+    const items = this.lstItemOC.map((item:any)=>{
+      return {
+        ...item,
+        idordencompra: 0,
+        idordencompraitem: 0,
+      }
+    })
+
     const objeto = {
       ...this.frmDatos.getRawValue(),
-      items: this.lstItemOC,
+      items,
       fechaingreso,
       fecemision,
       fecvencimiento,
