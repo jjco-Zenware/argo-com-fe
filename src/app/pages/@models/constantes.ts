@@ -72,3 +72,11 @@ export const c_habitacion = {
   unidad: 130,
   tipoDocPRCVenta: 6
 }
+
+export const c_estado_facturacion = {
+  aceptado: 1,
+  procesadoConErrores: 2,
+  enProceso: 3,
+  anulado: 4,
+  enProcesoDeAnulacion: 5
+}

@@ -1,7 +1,7 @@
 
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { c_habitacion, constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
+import { c_estado_facturacion, c_habitacion, constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
 import { map, Subscription } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -1820,12 +1820,51 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
             this.setSpinner(false);
             this.getListarPagos();
 
-            if (rpta.aceptada_por_sunat) {
+            const estadoConfig: Record<number, { severity: string; summary: string; detail: string }> = {
+              [c_estado_facturacion.aceptado]: {
+                severity: 'success',
+                summary: 'Éxito',
+                detail: 'Documento aceptado correctamente'
+              },
+              [c_estado_facturacion.procesadoConErrores]: {
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'Documento procesado con errores'
+              },
+              [c_estado_facturacion.enProceso]: {
+                severity: 'info',
+                summary: 'En Proceso',
+                detail: 'Documento en proceso de emisión'
+              },
+              [c_estado_facturacion.anulado]: {
+                severity: 'error',
+                summary: 'Anulado',
+                detail: 'Documento anulado'
+              },
+              [c_estado_facturacion.enProcesoDeAnulacion]: {
+                severity: 'warn',
+                summary: 'En Proceso de Anulación',
+                detail: 'Documento en proceso de anulación'
+              }
+            };
+
+            const config = estadoConfig[rpta.estado] || {
+              severity: 'info',
+              summary: 'Aviso',
+              detail: `Comprobante ${rpta.sunat_description}` || 'Estado desconocido'
+            };
+
+            this.messageService.add({
+              severity: config.severity,
+              summary: config.summary,
+              detail: config.detail
+            });
+            /*if (rpta.aceptada_por_sunat) {
               this.messageService.add({ severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
               return;
             }
 
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.errors });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.errors });*/
           },
           error: (err) => {
             this.setSpinner(false);

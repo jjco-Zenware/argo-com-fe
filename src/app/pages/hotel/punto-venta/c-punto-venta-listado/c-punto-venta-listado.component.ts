@@ -133,8 +133,8 @@ export class CPuntoVentaListadoComponent implements OnInit, OnDestroy {
   }
   createFrm() {
     this.frmDatos = this.fb.group({
-      fecini: [{ value: this.utilitariosService.obtenerFechaInicioMes(), disabled: false }],
-      fecfin: [{ value: this.utilitariosService.obtenerFechaFinMes(), disabled: false }],
+      fecini: [{ value: this.utilitariosService.obtenerFechaActual(), disabled: false }],
+      fecfin: [{ value: this.utilitariosService.obtenerFechaActual(), disabled: false }],
       idusuario: [{ value: constantesLocalStorage.idusuario, disabled: false }],
       idproveedor: [{ value: 0, disabled: false }],
       idmoneda: [{ value: 0, disabled: false }],

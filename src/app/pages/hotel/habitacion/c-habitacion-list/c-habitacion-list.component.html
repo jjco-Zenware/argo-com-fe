@@ -24,7 +24,7 @@
                                         <i [class]="item.icono || 'pi pi-home'" [style.color]="item.color"></i>
                                     </div>
                                     <div class="habitacion-nombre">
-                                        <span>{{item.nomHabitacion}} - #123</span>
+                                        <span>{{item.nomHabitacion}} <span *ngIf="item.reservas[0]?.idnrooperacion">- #{{item.reservas[0]?.idnrooperacion}}</span></span>
                                     </div>
                                     <div class="habitacion-estado">
                                         <span class="custom-badge" [style.backgroundColor]="item.color"
