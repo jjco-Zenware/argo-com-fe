@@ -786,7 +786,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       retencion_tipo = 0;
     }
 
-    const items = this.lstItemOC.map((item:any)=>{
+    const items = this.lstItemOC.map((item: any) => {
       return {
         ...item,
         idordencompra: 0,
@@ -812,14 +812,26 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     console.log('guardarOC...', objeto);
 
     this.ordencompraService.ordenCompraprc(objeto).subscribe({
-      next: (rpta: any) => {
+      next: async (rpta: any) => {
         this.setSpinner(false);
-        if (rpta.procesoSwitch === 0) {
-          this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
-        } else {
-          this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+
+
+        const rptaFacturar = await this.serviceSharedApp.confirmDialog({
+          message: '¿Desea facturar?',
+          header: 'Aviso',
+        });
+
+        if (!rptaFacturar) {
+          if (rpta.procesoSwitch === 0) {
+            this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+          } else {
+            this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+          }
+          this.cerrar(true);
+          return;
         }
-        this.cerrar(true);
+
+        this.emitirDocumento(this.data.idordencompra);
       },
       error: (err) => {
         this.setSpinner(false);
@@ -923,4 +935,47 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       this.$listSubcription.push($recalcularRegistro)
     }
   }
+
+  emitirDocumento(idordendocumento: number) {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Generando factura...!';
+    const objeto = {
+      codproceso: 0,
+      idusuario: constantesLocalStorage.idusuario,
+      idordendocumento,
+    };
+
+    const $emitirDocumento = this.proyectosService
+      .emitirDocumento(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('emitirDocumento', rpta);
+          this.setSpinner(false);
+          if (rpta.aceptada_por_sunat) {
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Aviso',
+              detail: rpta.sunat_description,
+            });
+            return;
+          }
+
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: rpta.errors,
+          });
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          console.error('error : ', err);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => {
+          this.setSpinner(false);
+        },
+      });
+    this.$listSubcription.push($emitirDocumento);
+  }
+
 }
