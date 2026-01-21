@@ -57,6 +57,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   montoTotal: number = 0;
   lstTipoDetra: any[] = [];
   lstTipoPagoDetra: any[] = [];
+  esGuardado: boolean = false;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -158,7 +159,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       retencion_base_imponible: [{ value: 0, disabled: false }],
       indmanualdetraccion: [{ value: false, disabled: false }],
       indsunatreg: [{ value: false, disabled: false }],
-      idcategoria: [{ value: null, disabled: false }],
+      idcategoria: [{ value: 2, disabled: false }],
       idtipodoc: [{ value: '', disabled: false }],
     });
   }
@@ -187,11 +188,23 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         this.s_monto = itemFrmDatos.s_monto;
         this.s_igv = itemFrmDatos.s_igv;
         this.montoTotal = itemFrmDatos.montoTotal;
+
+        this.frmDatos.get('idordencompra')?.setValue(0);
+        this.frmDatos.get('tipodoc_ctb')?.setValue(1);
+        this.frmDatos.get('nroserie_ctb')?.setValue('');
+        this.frmDatos.get('nrodocumento_ctb')?.setValue('');
+        this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(0);
+        this.frmDatos.get('s_monto_igv_CTB')?.setValue(0);
+        this.frmDatos.get('s_monto_total_CTB')?.setValue(0);
+        this.frmDatos.get('monto_pen_pago')?.setValue(0);
+
         this.frmDatos.get('fechaingreso')?.setValue(this.serviceUtilitario.obtenerFechaActual());
         this.frmDatos.get('fecemision')?.setValue(this.serviceUtilitario.obtenerFechaActual());
         this.frmDatos.get('fecvencimiento')?.setValue(this.serviceUtilitario.obtenerFechaActual());
+
         this.minimaFechaHasta = this.parsearFecha(this.frmDatos.value.fecemision);
         this.maximaFechaDesde = this.parsearFecha(this.frmDatos.value.fecvencimiento);
+        this.calcularMontosCompra();
         this.setSpinner(false);
       },
       error: (err: any) => {
@@ -481,6 +494,8 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     return this.contabilidadService.listarCategoriasDoc(tipo).pipe(
       tap((rpta: any) => {
         this.setSpinner(false);
+        console.log('listarCategoriaDoc', rpta);
+        
         this.lstCategoriaDoc = rpta;
       }),
       catchError((err) => {
@@ -804,18 +819,18 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       cuotas: this.listaCuotas,
       nrocuotas: this.nrocuotas,
       retencion_tipo: retencion_tipo,
-      idordencompra: 0,
+      idordencompra: this.esGuardado ? this.frmDatos.get('idordencompra')?.value : 0,
       iddocumentoprc_origen: this.data.idordencompra,
       idtipodocprc: 6,
     }
 
     console.log('guardarOC...', objeto);
-
     this.ordencompraService.ordenCompraprc(objeto).subscribe({
       next: async (rpta: any) => {
         this.setSpinner(false);
-
-
+        this.esGuardado = true;
+        this.frmDatos.get('idordencompra')?.setValue(rpta.resultProceso);
+        
         const rptaFacturar = await this.serviceSharedApp.confirmDialog({
           message: '¿Desea facturar?',
           header: 'Aviso',
@@ -830,8 +845,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
           this.cerrar(true);
           return;
         }
-
-        this.emitirDocumento(this.data.idordencompra);
+        this.emitirDocumento(Number.parseInt(rpta.resultProceso));
       },
       error: (err) => {
         this.setSpinner(false);
@@ -953,37 +967,37 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
           this.setSpinner(false);
 
           const estadoConfig: Record<number, { severity: string; summary: string; detail: string }> = {
-            [c_estado_facturacion.aceptado]: { 
-              severity: 'success', 
-              summary: 'Éxito', 
-              detail: 'Documento aceptado correctamente' 
+            [c_estado_facturacion.aceptado]: {
+              severity: 'success',
+              summary: 'Éxito',
+              detail: 'Documento aceptado correctamente'
             },
-            [c_estado_facturacion.procesadoConErrores]: { 
-              severity: 'warn', 
-              summary: 'Advertencia', 
-              detail: 'Documento procesado con errores' 
+            [c_estado_facturacion.procesadoConErrores]: {
+              severity: 'warn',
+              summary: 'Advertencia',
+              detail: 'Documento procesado con errores'
             },
-            [c_estado_facturacion.enProceso]: { 
-              severity: 'info', 
-              summary: 'En Proceso', 
-              detail: 'Documento en proceso de emisión' 
+            [c_estado_facturacion.enProceso]: {
+              severity: 'info',
+              summary: 'En Proceso',
+              detail: 'Documento en proceso de emisión'
             },
-            [c_estado_facturacion.anulado]: { 
-              severity: 'error', 
-              summary: 'Anulado', 
-              detail: 'Documento anulado' 
+            [c_estado_facturacion.anulado]: {
+              severity: 'error',
+              summary: 'Anulado',
+              detail: 'Documento anulado'
             },
-            [c_estado_facturacion.enProcesoDeAnulacion]: { 
-              severity: 'warn', 
-              summary: 'En Proceso de Anulación', 
-              detail: 'Documento en proceso de anulación' 
+            [c_estado_facturacion.enProcesoDeAnulacion]: {
+              severity: 'warn',
+              summary: 'En Proceso de Anulación',
+              detail: 'Documento en proceso de anulación'
             }
           };
 
-          const config = estadoConfig[rpta.estado] || { 
-            severity: 'info', 
-            summary: 'Aviso', 
-            detail: `Comprobante ${rpta.sunat_description}` || 'Estado desconocido' 
+          const config = estadoConfig[rpta.estado] || {
+            severity: 'info',
+            summary: 'Aviso',
+            detail: `Comprobante ${rpta.sunat_description}` || 'Estado desconocido'
           };
 
           this.messageService.add({
@@ -1017,6 +1031,32 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         },
       });
     this.$listSubcription.push($emitirDocumento);
+  }
+
+  calcularMontosCompra() {
+    if (this.lstItemOC.length === 0) {
+      this.s_monto = 0;
+      this.s_igv = 0;
+      this.montoTotal = 0;
+      return;
+    }
+
+    const total = this.lstItemOC.reduce(
+      (acc, item) => acc + (item.preciocostototal || 0),
+      0,
+    );
+    const IGV = 0.18;
+    const igvFactor = 1 + IGV;
+    this.s_monto = +(total / igvFactor).toFixed(2);
+    this.s_igv = +(total - this.s_monto).toFixed(2);
+    this.montoTotal = +total.toFixed(2);
+
+    this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(this.s_monto);
+    this.frmDatos.get('s_monto_igv_CTB')?.setValue(this.s_igv);
+    this.frmDatos.get('s_monto_total_CTB')?.setValue(this.montoTotal);
+    this.frmDatos.get('monto_pen_pago')?.setValue(this.montoTotal);
+    this.frmDatos.get('montoTotal')?.setValue(this.montoTotal);
+    this.frmDatos.get('s_monto_neto_CTB')?.setValue(this.montoTotal);
   }
 
 }

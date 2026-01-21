@@ -2201,10 +2201,10 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     this.visQuote = false;
   }
 
-  ordenDocumentoTraerUnoPdf() {
+  preCuenta() {
     const objeto = {
-      fecini: null,
-      fecfin: null,
+      fecini: this.serviceUtilitario.obtenerFechaFormatoISO(new Date()),
+      fecfin: this.serviceUtilitario.obtenerFechaFormatoISO(new Date()),
       idusuario: constantesLocalStorage.idusuario,
       idordencompra: this.idOrdenC,
       idpersona: 0,
@@ -2227,6 +2227,10 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       },
     });
     this.$listSubcription.push($ordenDocumentoTraerUnoPdf)
+  }
+
+  verDocumento(data: any) {
+    window.open(data.enlaceFEL);
   }
 
 }
