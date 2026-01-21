@@ -298,4 +298,5 @@ export const constantesApiWeb = {
     cajaDelete: controllerTesoreria + '/cajadel',
     obtenerTipoCambio: controllerTesoreria + '/tipocambiohoy',
     ordenDocumentoTraerUnoPdf: controllerComercial + '/ordendocumentotraerunopdf/',
+    roomingListResumen: controllerHotel + '/roominglistresumen',
 }

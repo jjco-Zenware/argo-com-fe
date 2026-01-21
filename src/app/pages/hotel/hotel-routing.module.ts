@@ -56,6 +56,11 @@ const routes: Routes = [
     path:'base-datos-hotel',
     loadChildren: () => import('./base-datos/base-datos.module').then(m => m.BaseDatosModule),
     data: { breadcrumb: 'Base Datos' }
+  },
+  {
+    path:'room-list-resumen-hotel',
+    loadChildren: () => import('./rooming-list-resumen/rooming-list-resumen.module').then(m => m.RoomingListResumenModule),
+    data: { breadcrumb: 'Room List Resumen' }
   }
 ];
 

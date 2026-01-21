@@ -19,33 +19,37 @@ export class HotelService {
     return this.http.post<any>(url, objeto)
   }
 
-  prcDocumentoRoom(objeto:any) {
-          const headers = new HttpHeaders({
-              'Content-Type': 'application/json; charset=utf-8',
-            });
-  
-            const url = `${constantesApiWeb.prcDocumentoRoom}`;
-            return this.http.post(url,objeto, {
-              headers: headers,
-              observe: 'response',
-              responseType: 'blob'
-            })
-      }
+  prcDocumentoRoom(objeto: any) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8',
+    });
 
-   exportarexcelhotelProd(data: any) {
-      const url = `${constantesApiWeb.exportarexcelhotelProd}`;
-      return this.http
-          .post<Blob>(url, data, { responseType: 'blob' as 'json' })
-          .pipe(
-          map((resp: Blob) => resp));
-      }
+    const url = `${constantesApiWeb.prcDocumentoRoom}`;
+    return this.http.post(url, objeto, {
+      headers: headers,
+      observe: 'response',
+      responseType: 'blob'
+    })
+  }
 
-    exportarexcelhotelRoom(data: any) {
-      const url = `${constantesApiWeb.exportarexcelhotelRoom}`;
-      return this.http
-          .post<Blob>(url, data, { responseType: 'blob' as 'json' })
-          .pipe(
-          map((resp: Blob) => resp));
-      }
-  
+  exportarexcelhotelProd(data: any) {
+    const url = `${constantesApiWeb.exportarexcelhotelProd}`;
+    return this.http
+      .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+      .pipe(
+        map((resp: Blob) => resp));
+  }
+
+  exportarexcelhotelRoom(data: any) {
+    const url = `${constantesApiWeb.exportarexcelhotelRoom}`;
+    return this.http
+      .post<Blob>(url, data, { responseType: 'blob' as 'json' })
+      .pipe(
+        map((resp: Blob) => resp));
+  }
+
+  roominglistresumen(objeto: any) {
+    const url = `${constantesApiWeb.roomingListResumen}`;
+    return this.http.post<any>(url, objeto)
+  }
 }
