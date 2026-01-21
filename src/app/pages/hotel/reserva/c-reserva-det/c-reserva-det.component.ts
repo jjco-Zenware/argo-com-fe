@@ -943,7 +943,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       tipopersona: idtipodoc && dctsNaturales.includes(idtipodoc) ? 'N' : 'J',
       esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS',
       tipoProceso: 'E',
-      
+
     }
     this.getModalPersona(objet);
   }
@@ -1529,14 +1529,14 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
     if (!todosIguales) {
       this.serviceSharedApp.messageToast({
-      severity: 'info',
-      summary: 'Aviso...!',
-      detail: 'Los ítems seleccionados tienen diferentes números de venta.'
+        severity: 'info',
+        summary: 'Aviso...!',
+        detail: 'Los ítems seleccionados tienen diferentes números de venta.'
       });
       return;
     }
 
-    const items = _items.map((dato: any) => { 
+    const items = _items.map((dato: any) => {
       return {
         ...dato,
         iddocumentoprcitem_trx: dato.idordencompraitem,
@@ -2160,6 +2160,34 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     this.visRegistrarPago = false;
     this.visDetalle = false;
     this.visQuote = false;
+  }
+
+  ordenDocumentoTraerUnoPdf() {
+    const objeto = {
+      fecini: null,
+      fecfin: null,
+      idusuario: constantesLocalStorage.idusuario,
+      idordencompra: this.idOrdenC,
+      idpersona: 0,
+      idtipodocprc: 0,
+      idalmacen: 0,
+      codigonroorden: ""
+    }
+    const $ordenDocumentoTraerUnoPdf = this.serviceReserva.ordenDocumentoTraerUnoPdf(objeto).subscribe({
+      next: (rpta: any) => {
+        console.log('ordenDocumentoTraerUnoPdf', rpta);
+        this.setSpinner(false);
+      },
+      error: (err: any) => {
+        this.setSpinner(false);
+        console.error('error : ', err);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => {
+        this.setSpinner(false);
+      },
+    });
+    this.$listSubcription.push($ordenDocumentoTraerUnoPdf)
   }
 
 }

@@ -771,6 +771,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     if (fecvencimiento.toString().length === 10) {
       fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
     }
+
     for (let i = 0; i < this.lstItemOC.length; i++) {
       if (this.lstItemOC[i].cantidad.toString() === '') {
         this.lstItemOC[i].cantidad = 0;
@@ -796,9 +797,9 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     const objeto = {
       ...this.frmDatos.getRawValue(),
       items,
-      fechaingreso,
-      fecemision,
-      fecvencimiento,
+      fechaingreso: this.serviceUtilitario.obtenerFechaFormatoISO(fechaingreso),
+      fecemision: this.serviceUtilitario.obtenerFechaFormatoISO(fecemision),
+      fecvencimiento: this.serviceUtilitario.obtenerFechaFormatoISO(fecvencimiento),
       tipodoc_ctb: (this.frmDatos.value.tipodoc_ctb).toString(),
       cuotas: this.listaCuotas,
       nrocuotas: this.nrocuotas,

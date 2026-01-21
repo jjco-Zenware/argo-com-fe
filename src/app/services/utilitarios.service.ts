@@ -326,7 +326,6 @@ export class UtilitariosService {
   diferenciaEnDias(fechaInicio: Date, fechaFin: Date): number {
     const milisegundosPorDia = 1000 * 60 * 60 * 24;
 
-    // Convertimos ambas fechas a solo fecha (sin horas)
     const inicio = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), fechaInicio.getDate());
     const fin = new Date(fechaFin.getFullYear(), fechaFin.getMonth(), fechaFin.getDate());
 
@@ -336,7 +335,10 @@ export class UtilitariosService {
 
   obtenerFechaFormatoISO(fecha?: Date): string {
     const fechaObj = fecha || new Date();
-    return fechaObj.toISOString().split('T')[0]; // yyyy-MM-dd
+    const year = fechaObj.getFullYear();
+    const month = String(fechaObj.getMonth() + 1).padStart(2, '0');
+    const day = String(fechaObj.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
 }

@@ -297,4 +297,5 @@ export const constantesApiWeb = {
     cajaPRC: controllerTesoreria + '/cajaprc',
     cajaDelete: controllerTesoreria + '/cajadel',
     obtenerTipoCambio: controllerTesoreria + '/tipocambiohoy',
+    ordenDocumentoTraerUnoPdf: controllerComercial + '/ordendocumentotraerunopdf/',
 }
