@@ -2202,6 +2202,8 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   preCuenta() {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Generando Pre Cuenta...!';
     const objeto = {
       fecini: this.serviceUtilitario.obtenerFechaFormatoISO(new Date()),
       fecfin: this.serviceUtilitario.obtenerFechaFormatoISO(new Date()),
@@ -2213,8 +2215,9 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       codigonroorden: ""
     }
     const $ordenDocumentoTraerUnoPdf = this.serviceReserva.ordenDocumentoTraerUnoPdf(objeto).subscribe({
-      next: (rpta: any) => {
-        console.log('ordenDocumentoTraerUnoPdf', rpta);
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
         this.setSpinner(false);
       },
       error: (err: any) => {

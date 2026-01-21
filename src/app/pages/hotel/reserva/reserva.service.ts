@@ -59,9 +59,10 @@ export class ReservaService {
     return this.http.get<any>(url);
   }
 
-  ordenDocumentoTraerUnoPdf(objeto:any){
+
+  ordenDocumentoTraerUnoPdf(objeto: any) {
     const url = `${constantesApiWeb.ordenDocumentoTraerUnoPdf}`;
-    return this.http.post<any>(url, objeto)
+    return this.http.post(url, objeto, { responseType: 'blob' });
   }
 
 }
