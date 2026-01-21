@@ -55,6 +55,8 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   s_monto!: number;
   s_igv!: number;
   montoTotal: number = 0;
+  lstTipoDetra: any[] = [];
+  lstTipoPagoDetra: any[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -175,6 +177,8 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       this.listarCategoriaDoc(),
       this.listarItemsTabla(),
       this.listarTipoRetencion(),
+      this.listarTipoDetraccion(),
+      this.listarTipoPagoDetraccion()
     ]).subscribe({
       next: () => {
         const { detalleCompra, ...itemFrmDatos } = this.data;
@@ -190,7 +194,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         this.maximaFechaDesde = this.parsearFecha(this.frmDatos.value.fecvencimiento);
         this.setSpinner(false);
       },
-      error: (err:any) => {
+      error: (err: any) => {
         this.setSpinner(false);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ocurrió un error al cargar los datos.' });
       }
@@ -378,7 +382,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (rpta: any) => {
           this.setSpinner(false);
-          if(!rpta){ return; }
+          if (!rpta) { return; }
           this.frmDatos.get('tc')?.setValue(Number.parseFloat(rpta.valTipo));
         },
         error: (err) => {
@@ -567,13 +571,13 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  listaClientes(data?:any) {
+  listaClientes(data?: any) {
     let tiporol = "CLI";
     return this.proyectosService.obtenerClientes(tiporol).pipe(
       tap((rpta: any) => {
         this.lstCliente = rpta;
         console.log('listaClientes', this.lstCliente);
-        if(!data) { return; }
+        if (!data) { return; }
         this.frmDatos.get('nrodocumento').setValue(data.nrodocumento);
         this.frmDatos.get('idproveedor').setValue(Number.parseInt(data.idpersona));
         this.frmDatos.get('direccion').setValue(data.direcresumen);
@@ -597,9 +601,9 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       ...itemDocumento,
       tipopersona: itemDocumento.idtipodoc && dctsNaturales.includes(itemDocumento.idtipodoc) ? 'N' : 'J',
     }
- 
+
     const refItem = this.dialogService.open(CModalPersonaComponent, {
- 
+
       data: objet,
       header: "Agregar Cliente",
       closeOnEscape: false,
@@ -607,7 +611,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       width: '40%'
     });
     refItem.onClose.subscribe((rpta: any) => {
- 
+
       console.log('onClose', rpta);
       if (rpta != undefined) {
         this.listaClientes(rpta.objeto);
@@ -822,7 +826,92 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  cerrar(proceso:boolean) {
-    this.ref.close({proceso});
+  cerrar(proceso: boolean) {
+    this.ref.close({ proceso });
+  }
+
+  listarTipoDetraccion() {
+    return this.contabilidadService.listarItemsTablaSunat(6).pipe(
+      tap((rpta: any) => {
+        this.lstTipoDetra = rpta;
+      }),
+      catchError((err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        return of(null);
+      })
+    );
+  }
+
+  listarTipoPagoDetraccion() {
+    return this.contabilidadService.listarItemsTablaSunat(7).pipe(
+      tap((rpta: any) => {
+        this.lstTipoPagoDetra = rpta;
+      }),
+      catchError((err) => {
+        console.info('error : ', err);
+        this.serviceSharedApp.messageToast()
+        return of(null);
+      })
+    );
+  }
+
+  recalcularRegistro(dato: any) {
+
+    console.log('recalcularRegistro...', dato);
+    if (this.idOrdenC > 0) {
+      this.setSpinner(true);
+      this.mensajeSpinner = 'Recalculando...!';
+      let subtotal = this.lstItemOC.map(({ preciocostototal }) => preciocostototal).reduce((acc, value) => acc + value, 0);
+
+      const objeto = {
+        subtotal: subtotal,
+        porc_detraccion: dato,
+        tc: this.frmDatos.get('tc')?.value,
+        idmoneda: this.frmDatos.get('idmoneda')?.value,
+        nrocuotas: this.nrocuotas,
+        nrodias: this.frmDatos.get('nrodias')?.value,
+      }
+      const $recalcularRegistro = this.comprasService.recalcularRegistro(objeto)
+        .subscribe({
+          next: (rpta: any) => {
+            console.log('recalcularRegistro...', rpta);
+            this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(rpta[0].s_monto_valor_venta_CTB);
+            this.frmDatos.get('s_monto_igv_CTB')?.setValue(rpta[0].s_monto_igv_CTB);
+            this.frmDatos.get('s_monto_total_CTB')?.setValue(rpta[0].s_monto_total_CTB);
+            this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue(rpta[0].monto_detraccion_mn_CTB);
+            this.frmDatos.get('monto_pen_pago')?.setValue(rpta[0].s_monto_neto_CTB);
+
+            /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
+            this.s_monto = rpta[0].s_monto_valor_venta_CTB;
+            this.s_igv = rpta[0].s_monto_igv_CTB;
+            this.montoTotal = rpta[0].s_monto_total_CTB;
+
+            this.listaCuotas = [];
+
+            const lista = rpta[0].cuotas
+
+            for (let i = 0; i < lista; i++) {
+              const objet = {
+                fechacuota: new Date(lista[i].fechacuota),
+                monto: lista[i].monto,
+                idcuotadoc: 0
+              }
+              this.listaCuotas.push(objet);
+            }
+
+            this.listaCuotas = rpta[0].cuotas;
+            this.setSpinner(false);
+          },
+          error: (err) => {
+            this.setSpinner(false);
+            this.serviceSharedApp.messageToast()
+          },
+          complete: () => {
+            this.setSpinner(false);
+          }
+        });
+      this.$listSubcription.push($recalcularRegistro)
+    }
   }
 }
