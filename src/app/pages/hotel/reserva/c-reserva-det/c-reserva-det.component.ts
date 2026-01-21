@@ -1491,7 +1491,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
     const objeto = {
       ...this.registerFormPago.value,
-      idtipodocprc: c_habitacion.tipoDocPRC,
+      idtipodocprc: c_habitacion.tipoDocPRCVenta,
       iddocumentoprc_origen
     }
     console.log("objeto recibido: ", objeto);

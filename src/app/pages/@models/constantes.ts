@@ -69,5 +69,6 @@ export const c_habitacion = {
   idCentroCosto: 225,
   marcaOtros: 101,
   gravadoOperacionOnerosa: 1,
-  unidad: 130
+  unidad: 130,
+  tipoDocPRCVenta: 6
 }
