@@ -34,16 +34,6 @@
                         HAB
                     </div>
                 </th>
-                <th style="width: 30px;" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        TIPO
-                    </div>
-                </th>
-                <th [ngStyle]="{'width':'10px'}" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        ESTADO HAB
-                    </div>
-                </th>
                 <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
                         EMPRESA
@@ -51,47 +41,17 @@
                 </th>
                 <th style="width: 70px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        RUC
+                        SALDO POR CANCELAR
                     </div>
                 </th>
                 <th style="width: 10px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        DOC.
+                        SALE DIA
                     </div>
                 </th>
                 <th style="width: 20px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        N° DOCUMENTO
-                    </div>
-                </th>
-                <th style="width: 70px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        NACIONALIDAD
-                    </div>
-                </th>
-                <th style="width: 20px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        DL919
-                    </div>
-                </th>
-                <th style="width: 40px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        PAX
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        N° Reserva
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        F. DE INGRESO
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        F. DE SALIDA
+                        OBSERVACIONES
                     </div>
                 </th>
             </tr>
@@ -110,74 +70,34 @@
                 </td>
                 <td>
                     <div [ngStyle]="{'width':'20px'}">
-                        {{data.tipohabitacion}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'30px'}">
-                        {{data.estado}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'150px'}">
-                        {{data.PAX}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.docempresa}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.tipodoc}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.nrodoc}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.nacionalidad}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.dl919}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
                         {{data.empresa}}
                     </div>
                 </td>
                 <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.idreserva}}
+                    <div [ngStyle]="{'width':'30px'}">
+                        {{data.saldoxcancelar | number:'1.2-2'}}
                     </div>
                 </td>
                 <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.ingreso}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
+                    <div [ngStyle]="{'width':'150px'}">
                         {{data.salida}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.observacion}}
                     </div>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="14">No se encontraron registros.</td>
+                <td colspan="6">No se encontraron registros.</td>
             </tr>
         </ng-template>
         <ng-template pTemplate="loadingbody">
             <tr>
-                <td colspan="14">Cargando datos. Espere por favor.</td>
+                <td colspan="6">Cargando datos. Espere por favor.</td>
             </tr>
         </ng-template>
     </p-table>
@@ -203,16 +123,6 @@
                         HAB
                     </div>
                 </th>
-                <th style="width: 30px;" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        TIPO
-                    </div>
-                </th>
-                <th [ngStyle]="{'width':'10px'}" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        ESTADO HAB
-                    </div>
-                </th>
                 <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
                         EMPRESA
@@ -220,47 +130,17 @@
                 </th>
                 <th style="width: 70px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        RUC
+                        SALDO POR CANCELAR
                     </div>
                 </th>
                 <th style="width: 10px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        DOC.
+                        SALE DIA
                     </div>
                 </th>
                 <th style="width: 20px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        N° DOCUMENTO
-                    </div>
-                </th>
-                <th style="width: 70px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        NACIONALIDAD
-                    </div>
-                </th>
-                <th style="width: 20px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        DL919
-                    </div>
-                </th>
-                <th style="width: 40px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        PAX
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        N° Reserva
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        F. DE INGRESO
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        F. DE SALIDA
+                        OBSERVACIONES
                     </div>
                 </th>
             </tr>
@@ -279,74 +159,34 @@
                 </td>
                 <td>
                     <div [ngStyle]="{'width':'20px'}">
-                        {{data.tipohabitacion}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'30px'}">
-                        {{data.estado}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'150px'}">
-                        {{data.PAX}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.docempresa}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.tipodoc}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.nrodoc}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.nacionalidad}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.dl919}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
                         {{data.empresa}}
                     </div>
                 </td>
                 <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.idreserva}}
+                    <div [ngStyle]="{'width':'30px'}">
+                        {{data.saldoxcancelar | number:'1.2-2'}}
                     </div>
                 </td>
                 <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.ingreso}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
+                    <div [ngStyle]="{'width':'150px'}">
                         {{data.salida}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.observacion}}
                     </div>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="14">No se encontraron registros.</td>
+                <td colspan="6">No se encontraron registros.</td>
             </tr>
         </ng-template>
         <ng-template pTemplate="loadingbody">
             <tr>
-                <td colspan="14">Cargando datos. Espere por favor.</td>
+                <td colspan="6">Cargando datos. Espere por favor.</td>
             </tr>
         </ng-template>
     </p-table>
@@ -372,16 +212,6 @@
                         HAB
                     </div>
                 </th>
-                <th style="width: 30px;" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        TIPO
-                    </div>
-                </th>
-                <th [ngStyle]="{'width':'10px'}" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        ESTADO HAB
-                    </div>
-                </th>
                 <th [ngStyle]="{'width':'200px'}" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
                         EMPRESA
@@ -389,47 +219,17 @@
                 </th>
                 <th style="width: 70px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        RUC
+                        SALDO POR CANCELAR
                     </div>
                 </th>
                 <th style="width: 10px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        DOC.
+                        SALE DIA
                     </div>
                 </th>
                 <th style="width: 20px" class="bg-teal-50 border-1">
                     <div class="justify-content-between align-items-center">
-                        N° DOCUMENTO
-                    </div>
-                </th>
-                <th style="width: 70px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        NACIONALIDAD
-                    </div>
-                </th>
-                <th style="width: 20px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        DL919
-                    </div>
-                </th>
-                <th style="width: 40px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        PAX
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        N° Reserva
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        F. DE INGRESO
-                    </div>
-                </th>
-                <th style="width: 50px" class="bg-teal-50 border-1">
-                    <div class="justify-content-between align-items-center">
-                        F. DE SALIDA
+                        OBSERVACIONES
                     </div>
                 </th>
             </tr>
@@ -448,74 +248,34 @@
                 </td>
                 <td>
                     <div [ngStyle]="{'width':'20px'}">
-                        {{data.tipohabitacion}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'30px'}">
-                        {{data.estado}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'150px'}">
-                        {{data.PAX}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.docempresa}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.tipodoc}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.nrodoc}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.nacionalidad}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'20px'}">
-                        {{data.dl919}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
                         {{data.empresa}}
                     </div>
                 </td>
                 <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.idreserva}}
+                    <div [ngStyle]="{'width':'30px'}">
+                        {{data.saldoxcancelar | number:'1.2-2'}}
                     </div>
                 </td>
                 <td>
-                    <div [ngStyle]="{'width':'70px'}">
-                        {{data.ingreso}}
-                    </div>
-                </td>
-                <td>
-                    <div [ngStyle]="{'width':'70px'}">
+                    <div [ngStyle]="{'width':'150px'}">
                         {{data.salida}}
+                    </div>
+                </td>
+                <td>
+                    <div [ngStyle]="{'width':'20px'}">
+                        {{data.observacion}}
                     </div>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
-                <td colspan="14">No se encontraron registros.</td>
+                <td colspan="6">No se encontraron registros.</td>
             </tr>
         </ng-template>
         <ng-template pTemplate="loadingbody">
             <tr>
-                <td colspan="14">Cargando datos. Espere por favor.</td>
+                <td colspan="6">Cargando datos. Espere por favor.</td>
             </tr>
         </ng-template>
     </p-table>
