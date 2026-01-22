@@ -412,6 +412,8 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
           this.changeProyecto(rpta.ordencompra[0].idproyecto);
           this.gettipocambiodia(new Date(this.serviceUtilitario.formatFecha(rpta.ordencompra[0].fecemision)));
           this.changeAplicaSunat2(rpta.ordencompra[0].indsunatreg);
+          
+          this.calcularMontosCompra();
         },
         error: (err) => {
           this.setSpinner(false);
@@ -811,7 +813,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
     });
   }
 
-  eliminarItem(data: any) {
+  eliminarItem(data: any, index: number) {
     this.confirmationService.confirm({
       key: 'confirm1',
       header: 'Confirmación',
@@ -823,10 +825,11 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
             this.lstItemOC.splice(_posAll, 1)
           }
         } else {
-          const _posAll: number = this.lstItemOC.findIndex((x => x.idnvoitem == data.idnvoitem))
+          this.lstItemOC.splice(index, 1);
+          /*const _posAll: number = this.lstItemOC.findIndex((x => x.idnvoitem == data.idnvoitem))
           if (_posAll != -1) {
             this.lstItemOC.splice(_posAll, 1)
-          }
+          }*/
         }
         if (this.lstItemOC.length === 0) {
           this.registerFormRegistro.get('nrocuota')?.setValue(0);
@@ -1748,5 +1751,23 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($listartipodocumentotablasunat)
   }
 
+  calcularMontosCompra() {
+    if (this.lstItemOC.length === 0) {
+      this.s_monto = 0;
+      this.s_igv = 0;
+      this.montoTotal = 0;
+      return;
+    }
+
+    const total = this.lstItemOC.reduce(
+      (acc, item) => acc + (item.preciocostototal || 0),
+      0,
+    );
+    const IGV = 0.18;
+    const igvFactor = 1 + IGV;
+    this.s_monto = +(total / igvFactor).toFixed(2);
+    this.s_igv = +(total - this.s_monto).toFixed(2);
+    this.montoTotal = +total.toFixed(2);
+  }
 
 }

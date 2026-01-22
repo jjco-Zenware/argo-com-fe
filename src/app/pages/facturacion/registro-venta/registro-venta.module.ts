@@ -20,6 +20,7 @@ import { OrdencompraService } from '../../compras/orden-compra-servicio/service/
 import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 import { ConfirmationService } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
+import { ReservaService } from '../../hotel/reserva/reserva.service';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { DropdownModule } from 'primeng/dropdown';
     OrdencompraService, 
     AlmacenService, 
     ContabilidadService,
-    ConfirmationService
+    ConfirmationService,
+    ReservaService
   ]
 })
 export class RegistroVentaModule { }

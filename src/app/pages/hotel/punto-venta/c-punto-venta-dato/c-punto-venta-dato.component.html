@@ -1,6 +1,6 @@
 <div>
     <div class="flex mb-2 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
-        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="Pagar" class="p-button-primary w-auto h-2rem"
+        <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="{{nombreBtnGuardar}}" class="p-button-primary w-auto h-2rem"
             (click)="guardarOC()"></button>
     </div>
 
@@ -146,7 +146,7 @@
                                     tooltipPosition="left" (click)="getItem(product, rowIndex)"
                                     class="p-button-text p-button-rounded text-900 text-blue-600"></button> -->
                                 <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
-                                    tooltipPosition="left" (click)="eliminarItem(product)"
+                                    tooltipPosition="left" (click)="eliminarItem(product, rowIndex)"
                                     class="p-button-text p-button-rounded text-900 text-red-600"></button>
                             </div>
                         </td>

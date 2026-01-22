@@ -55,6 +55,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     s_igv!: number;
     verbtnGrabar: boolean = true;
     tipoigv: number = 1;
+    nombreBtnGuardar: string = 'Vender';
 
     constructor(
         private readonly fb: FormBuilder,
@@ -72,12 +73,13 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         this.createFrm();
         console.log('IA_data: ', this.IA_data);
         this.traerUno();
+        this.nombreBtnGuardar = this.IA_data.idordencompra > 0 ? 'Pagar' : 'Vender';
 
         if (this.IA_data.codtipodoc === 'RSV') {
             this.verbtnGrabar = this.IA_data.idordencompra > 0;
-        } else {
+        } /*else {
             this.verbtnGrabar = this.IA_data.idordencompra === 0;
-        }
+        }*/
 
         if (
             this.IA_data.codtipodoc === 'RSV' &&
@@ -653,6 +655,11 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     }
 
     guardarOC() {
+        if(this.IA_data.idordencompra > 0){
+            this.pagarItemDetalle(this.IA_data.idordencompra);
+            return;
+        }
+
         if (!this.validarDatos()) {
             this.setSpinner(false);
             this.messageService.add({
@@ -832,7 +839,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         this.$listSubcription.push($emitirDocumento);
     }
 
-    async eliminarItem(data: any) {
+    async eliminarItem(data: any, index: number) {
         const rpta = await this.serviceSharedApp.confirmDialog({
             message:
                 '¿Desea Eliminar Item ' +
@@ -855,12 +862,13 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
                 this.lstItemOC.splice(_posAll, 1);
             }
         } else {
-            const _posAll: number = this.lstItemOC.findIndex(
+            this.lstItemOC.splice(index, 1);
+            /*const _posAll: number = this.lstItemOC.findIndex(
                 (x) => x.idnvoitem == data.idnvoitem,
             );
             if (_posAll != -1) {
                 this.lstItemOC.splice(_posAll, 1);
-            }
+            }*/
         }
         if (this.lstItemOC.length === 0) {
             this.frmDatos.get('nrocuota')?.setValue(0);

@@ -279,7 +279,7 @@
                         <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
                         <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text text-red-500" (click)="onVerDetalle(data)"></button>
                         <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text text-green-500" (click)="onVer(data)"></button>
-                        <!-- <button *ngIf="(data.ind_estado_fel == 0 || data.ind_estado_fel == 2) && visXperfil" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button> -->
+                        <button *ngIf="(data.ind_estado_fel == 0 || data.ind_estado_fel == 2) && visXperfil" pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button>
                     </div>
                 </td>
             </tr>
