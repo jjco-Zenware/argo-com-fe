@@ -57,6 +57,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     verbtnGrabar: boolean = true;
     tipoigv: number = 1;
     nombreBtnGuardar: string = 'Vender';
+    esVisEditPersona: boolean = false;
 
     constructor(
         private readonly fb: FormBuilder,
@@ -465,8 +466,12 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     }
 
     getBusquedaRUC() {
-        const { idtipodoc, nrodocumento, idproveedor, direccion } =
-            this.frmDatos.controls;
+        const {
+            idtipodoc,
+            nrodocumento,
+            idproveedor,
+            direccion
+        } = this.frmDatos.controls;
         idproveedor?.setValue(null);
         direccion?.setValue(null);
 
@@ -489,6 +494,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
             nrodocumento: nrodocumento.value,
         };
 
+        this.esVisEditPersona = false;
         this.ordencompraService.buscarporRUC(objet).subscribe({
             next: (rpta: any) => {
                 this.setSpinner(false);
@@ -499,9 +505,10 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
                         summary: 'Aviso...!',
                         detail: 'Cliente no encontrado...',
                     });
-                    this.NuevoPersona({ idtipodoc, nrodocumento });
+                    this.NuevoPersona({ idtipodoc: idtipodoc.getRawValue(), nroDocumento: nrodocumento.getRawValue() });
                     return;
                 }
+                this.esVisEditPersona = true;
                 idproveedor?.setValue(rpta[0].idcliente);
                 direccion?.setValue(rpta[0].direcresumen);
             },
@@ -520,7 +527,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
 
     NuevoPersona(itemDocumento?: any) {
         const { nrodocumento, direccion, idproveedor } = this.frmDatos.controls;
-        nrodocumento?.setValue(null);
+        //nrodocumento?.setValue(null);
         idproveedor?.setValue(null);
         direccion?.setValue(null);
 
@@ -547,8 +554,8 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
             if (rpta === undefined) {
                 return;
             }
-            this.listaClientes$();
-            nrodocumento?.setValue(Number.parseInt(rpta.objeto.nrodocumento));
+            this.listaClientes$().subscribe(() => { });
+            nrodocumento?.setValue(rpta.objeto.nrodocumento);
             idproveedor?.setValue(Number.parseInt(rpta.objeto.idpersona));
             direccion?.setValue(rpta.objeto.direcresumen);
         });
@@ -918,4 +925,48 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
             this.calcularMontosCompra();
         });
     }
+
+    /*TODO-MZR*/
+    editPersona() {
+        const { idproveedor, idtipodoc, nrodocumento } = this.frmDatos.getRawValue();
+        const dctsNaturales: string[] = ['DNI', 'CEX', 'CDI', 'PAS'];
+        /*let _tipopersona = '';
+        if (idtipodoc === 'RUC') {
+          _tipopersona = 'J';
+        } else { _tipopersona = 'N'; }*/
+
+        const objet = {
+            idrolpersona: 'PRO',
+            idtipodoc,
+            idproveedor,
+            nroDocumento: nrodocumento,
+            //tipopersona,: _tipopersona,
+            tipopersona: idtipodoc && dctsNaturales.includes(idtipodoc) ? 'N' : 'J',
+            esExtranjero: idtipodoc === 'CEX' || idtipodoc === 'PAS',
+            tipoProceso: 'E',
+
+        }
+        this.getModalPersona(objet);
+    }
+
+    getModalPersona(data: any) {
+        const refItem = this.dialogService.open(CModalPersonaComponent, {
+            data,
+            header: "Agregar Cliente",
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '40%'
+        });
+        refItem.onClose.subscribe((rpta: any) => {
+
+            console.log('onClose', rpta);
+            if (rpta != undefined) {
+                /*this.listaClientes(rpta.objeto.idpersona);
+                this.frmDatos.get('nrodocumento')?.setValue(rpta.objeto.nrodocumento);
+                //this.frmDatos.get('idproveedor')?.setValue(parseInt(rpta.objeto.idpersona));
+                this.frmDatos.get('direccion')?.setValue(rpta.objeto.direcresumen);*/
+            }
+        });
+    }
+    /*TODO-MZR*/
 }

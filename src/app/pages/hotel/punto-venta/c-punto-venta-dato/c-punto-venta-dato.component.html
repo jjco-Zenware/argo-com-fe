@@ -50,6 +50,8 @@
             <div class="col-12 mb-0">
                 <div class="flex">
                     <label class="block text-900 mb-1">Cliente </label>
+                    <i *ngIf="esVisEditPersona" class="pi pi-user-edit cursor-pointer text-primary ml-2"
+                                pTooltip="Editar Cliente" tooltipPosition="right" (click)="editPersona()"></i>
                 </div>
                 <span inputStyleClass="font-semibold surface-300">
                     <p-dropdown [options]="lstCliente" placeholder="Cliente..." formControlName="idproveedor"
