@@ -148,9 +148,12 @@ export class CPuntoVentaListadoComponent implements OnInit, OnDestroy {
 
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
-
+    this.lstCompras = [];
+    const { fecini, fecfin } = this.frmDatos.value;
     const objeto = {
       ...this.frmDatos.value,
+      fecini: this.utilitariosService.obtenerFechaFormatoISO(fecini),
+      fecfin: this.utilitariosService.obtenerFechaFormatoISO(fecfin),
       idtipodocprc: 6
     }
 
@@ -159,6 +162,7 @@ export class CPuntoVentaListadoComponent implements OnInit, OnDestroy {
         next: (rpta: any) => {
           this.setSpinner(false);
           console.log('rpta getListar', rpta);
+          if(rpta.length === 0) { return; }
           this.lstCompras = rpta.ordenescompra
           if (this.frmDatos.value.idproveedor === 0) {
             this.listaClientes();
