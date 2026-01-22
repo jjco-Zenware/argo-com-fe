@@ -971,7 +971,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
   vistaPreliminar() {
     this.setSpinner(true);
-    this.mensajeSpinner = 'Descargando Vista Preliminar...!';
+    this.mensajeSpinner = 'Generando precuenta...!';
 
     const objeto = {
       idusuario: constantesLocalStorage.idusuario,
