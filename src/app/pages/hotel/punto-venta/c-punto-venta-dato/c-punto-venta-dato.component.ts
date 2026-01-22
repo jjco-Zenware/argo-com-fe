@@ -21,6 +21,7 @@ import { ReservaService } from '../../reserva/reserva.service';
 import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/modalPersona/c-modalpersona.component';
 import { CMAgregarProductoComponent } from '../../reserva/cm-agregar-producto/cm-agregar-producto.component';
 import { CmRegistrarPagoComponent } from '../../reserva/cm-registrar-pago/cm-registrar-pago.component';
+import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 
 @Component({
     selector: 'app-c-punto-venta-dato',
@@ -655,7 +656,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     }
 
     guardarOC() {
-        if(this.IA_data.idordencompra > 0){
+        if (this.IA_data.idordencompra > 0) {
             this.pagarItemDetalle(this.IA_data.idordencompra);
             return;
         }
@@ -687,7 +688,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
                 ? this.IA_data.idDocPrcVentaTrx
                 : this.IA_data.idordencompra;
 
-        const { fecemision, fecvencimiento } = this.frmDatos.getRawValue();   
+        const { fecemision, fecvencimiento } = this.frmDatos.getRawValue();
         const objeto = {
             ...this.frmDatos.getRawValue(),
             fecemision: this.IA_data.codtipodoc === 'RSV' ? null : fecemision,
@@ -888,5 +889,33 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         } /*else {
       this.recalcularRegistro(this.registerFormRegistro.get('porc_detraccion')?.value);
     }*/
+    }
+
+    getItem(data: any, index: number) {
+        data.nroindex = index;
+        data.idordencompra = this.IA_data.idordencompra;
+        data.origenreg = 'RV';
+        console.log('CItemOrdenesComponent', data);
+        const refItem = this.dialogService.open(CItemOrdenesComponent, {
+            data: data,
+            header: data.length == 0 ? "Agregar Detalle" : "Editar Detalle - " + data.idordencompraitem,
+            closeOnEscape: false,
+            styleClass: 'testDialog',
+            width: '40%'
+        });
+        refItem.onClose.subscribe((rpta: any) => {
+
+            console.log('onClose', rpta);
+            if (rpta != undefined) {
+                const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == index))
+                if (_posAll != -1) {
+                    this.lstItemOC.splice(_posAll, 1)
+                }
+                console.log('getItem', rpta.objeto);
+                this.lstItemOC.push(rpta.objeto);
+                console.log('this.lstItemOC', this.lstItemOC);
+            }
+            this.calcularMontosCompra();
+        });
     }
 }
