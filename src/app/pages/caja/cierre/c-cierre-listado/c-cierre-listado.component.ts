@@ -164,12 +164,21 @@ export class CCierreListadoComponent implements OnInit, OnDestroy {
     this.lstRptaProceso = data;
   }
 
-  cerrarCaja() {
+  async cerrarCaja() {
+    const rpta = await this.serviceSharedApp.confirmDialog({
+      header: 'Confirmación',
+      message: '¿Está seguro de cerrar la caja?',
+    });
+
+    if (!rpta) {
+      return;
+    }
+
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista;
     const idusuario = constantesLocalStorage.idusuario;
 
-    const itemInvalido = this.lstRptaProceso.find((item: any) => !item.monto_arqueo || item.monto_arqueo <= 0);
+    const itemInvalido = this.lstRptaProceso.find((item: any) => item.monto_arqueo < 0);
 
     if (itemInvalido) {
       this.setSpinner(false);
