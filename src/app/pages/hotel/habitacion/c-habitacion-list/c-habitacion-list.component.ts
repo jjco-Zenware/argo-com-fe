@@ -257,10 +257,10 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTransferenciaReserva(idnrooperacion: number) {
-    console.log('getTransferenciaReserva:', idnrooperacion);
+  getTransferenciaReserva(/*idnrooperacion: number*/) {
+    //console.log('getTransferenciaReserva:', idnrooperacion);
     const ref = this.dialogService.open(CmTransferenciaReservaComponent, {
-      data: { idnrooperacion, habitacionesAgrupadas: this.habitacionesAgrupadas },
+      data: { /*idnrooperacion,*/ habitacionesAgrupadas: this.habitacionesAgrupadas },
       header: 'Transferencia de Reserva',
       closeOnEscape: false,
       styleClass: 'testDialog',

@@ -3,9 +3,16 @@
         <h5 class="m-0 text-primary mb-4">Reserva de Habitación</h5>
     </div>
 
-    <div class="flex justify-content-end mb-4 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+    <div class="flex justify-content-between mb-4 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <form [formGroup]="frmDatos">
+            <p-dropdown [options]="lstHabitaciones" formControlName="idprod"
+                optionLabel="nomHabitacion" optionValue="idprod"
+                placeholder="Seleccionar Habitacion"
+                inputStyleClass="w-full" appendTo="body"
+                styleClass="w-full"></p-dropdown>
+        </form>
         <button pButton [disabled]="!existeHabitacionTransferible" icon="pi pi-save" label="Transferir"
-            class="p-button-primary w-auto h-2rem" (click)="guardar()"></button>
+            class="p-button-primary w-auto h-2rem" (click)="transferir()"></button>
     </div>
 
     <ng-container *ngIf="habitacionesAgrupadas.length > 0; else noHabitaciones">

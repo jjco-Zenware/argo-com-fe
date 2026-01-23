@@ -14,8 +14,8 @@ export class HabitacionesService {
     return this.http.post<any>(url, objeto)
   }
 
-  transferirReservaItems(objeto: any) {
-    const url = `${constantesApiWeb.TransferirReservaItems}`;
+  TransferirReservaHabitacion(objeto: any) {
+    const url = `${constantesApiWeb.TransferirReservaHabitacion}`;
     return this.http.post<any>(url, objeto)
   }
   
