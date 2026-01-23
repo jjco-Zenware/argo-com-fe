@@ -51,12 +51,10 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
   esPersonaJuridica: boolean = false;
 
   constructor(
-    private fb: FormBuilder,
     public refDatoItem: DynamicDialogRef,
     public config: DynamicDialogConfig,
     public dialogService: DialogService,
     private serviceSharedApp: SharedAppService,
-    private serviceUtilitario: UtilitariosService,
     private messageService: MessageService,
     public datepipe: DatePipe,
     private ordencompraService: OrdencompraService,
@@ -69,11 +67,14 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.param = this.config.data;
+    console.log("param : ", this.param);
+    
     this.createFormCliente();
-    this.cambioTipoPer('N');
+    //this.cambioTipoPer('N');
     this.listarItemsTabla();
     this.listarHabitacion();
     this.listarTiposDoc();
+    this.cambioTipoPer('N');
   }
 
   ngOnDestroy() {
@@ -117,7 +118,8 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       tipocambio: [{ value: 0, disabled: false }],
       tipoentidad: [{ value: 'P', disabled: false }, [Validators.required]],
       nroctadetraccion: [{ value: null, disabled: false }],
-      idprod: [{ value: null, disabled: false }],
+      idprod: [{ value: null, disabled: false }, [Validators.required]],
+      adm_fechanacimiento: [{ value: null, disabled: false }, [Validators.required]],
     });
   }
 
@@ -141,6 +143,9 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
 
       this.registerFormCliente.get('apmaterno')?.clearValidators();
       this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();
+
+      this.registerFormCliente.get('adm_fechanacimiento')?.clearValidators();
+      this.registerFormCliente.get('adm_fechanacimiento')?.updateValueAndValidity();
     } else {
       this.personaNatural = true;
       this.esPersonaJuridica = false;
@@ -156,6 +161,10 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       this.registerFormCliente.get('apmaterno')?.clearValidators();
       this.registerFormCliente.get('apmaterno')?.setValidators(Validators.required);
       this.registerFormCliente.get('apmaterno')?.updateValueAndValidity();
+
+      this.registerFormCliente.get('adm_fechanacimiento')?.clearValidators();
+      this.registerFormCliente.get('adm_fechanacimiento')?.setValidators(Validators.required);
+      this.registerFormCliente.get('adm_fechanacimiento')?.updateValueAndValidity();
 
       this.registerFormCliente.get('razonsocial')?.clearValidators();
       this.registerFormCliente.get('razonsocial')?.updateValueAndValidity();
@@ -284,6 +293,15 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.registerFormCliente.get('idpersona')?.setValue(0);
+    this.registerFormCliente.get('appaterno')?.setValue(null);
+    this.registerFormCliente.get('apmaterno')?.setValue(null);
+    this.registerFormCliente.get('nombres')?.setValue(null);
+    this.registerFormCliente.get('razonsocial')?.setValue(null);
+    this.registerFormCliente.get('direcresumen')?.setValue(null);
+    this.registerFormCliente.get('telefresumen')?.setValue(null);
+    this.registerFormCliente.get('email')?.setValue(null);
+
     const objeto = {
       idusuario: constantesLocalStorage.idusuario,
       idrolpersona: "",
@@ -295,6 +313,10 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (rpta: any) => {
           console.log('rpta personaTraerUnoTipoDoc: ', rpta);
+          if (!rpta) {
+            return;
+          }
+
           const { idpersona, appaterno, apmaterno, nombres, razonsocial, direcresumen, telefresumen, email } = rpta;
           this.registerFormCliente.get('idpersona')?.setValue(idpersona);
 
@@ -321,7 +343,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($personaTraerUnoTipoDoc)
   }
 
-  listarTiposDoc(){
+  listarTiposDoc() {
     const { tipopersona, idtipodoc } = this.registerFormCliente.controls;
     const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat(tipopersona.value)
       .subscribe({
