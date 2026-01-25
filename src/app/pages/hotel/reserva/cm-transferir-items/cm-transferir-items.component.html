@@ -1,0 +1,170 @@
+<div>
+    <div class="flex justify-content-between mb-4 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+        <form [formGroup]="frmDatos">
+            <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="nomHabitacion"
+                optionValue="idprod" placeholder="Seleccionar Habitacion" inputStyleClass="w-full" appendTo="body"
+                styleClass="w-full"></p-dropdown>
+        </form>
+        <button pButton [disabled]="!existeHabitacionTransferible" icon="pi pi-save" label="Transferir"
+            class="p-button-primary w-auto h-2rem" (click)="transferir()"></button>
+    </div>
+    <div class="ml-2 col-12 border-1 border-round surface-border">
+        <p-table [value]="lstItemOC" responsiveLayout="stack" [breakpoint]="'960px'"
+            [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm ">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                    <th style="width: 70px;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            CÓDIGO
+                        </div>
+                    </th>
+                    <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
+                    <th style="width: 70px;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            U. MED
+                        </div>
+                    </th>
+                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            P. UNI.
+                        </div>
+                    </th>
+                    <th style="width: 70px; text-align:center;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            CANT.
+                        </div>
+                    </th>
+                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            TOTAL
+                        </div>
+                    </th>
+                    <!-- <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            PAGO
+                        </div>
+                    </th>
+                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            COMPROBANTE
+                        </div>
+                    </th>
+                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            SERIE
+                        </div>
+                    </th>
+                    <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                        <div class="justify-content-end ">
+                            NUMERO
+                        </div>
+                    </th> -->
+                    <th style="width: 30px;" class="bg-teal-50 border-1">
+                        <div class="flex justify-content-between align-items-center">
+                            ACCIONES
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                <tr>
+                    <td>{{rowIndex + 1}}</td>
+                    <td>
+                        <div [ngStyle]="{'width':'70px'}">
+                            {{ product.codproducto }}
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            {{ product.descripcion | uppercase}}
+                        </div>
+                    </td>
+                    <!-- <td>
+                                <div pTooltip="{{product.descripcion | uppercase}}">
+                                    {{(product.descripcion.length > 70) ? ((product.descripcion).slice(0, 70) + '...' | uppercase) : product.descripcion | uppercase}}
+                                </div>  
+                            </td> -->
+                    <td>
+                        <div [ngStyle]="{'width':'70px'}">
+                            {{ product.nomunidad }}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                            {{ product.preciocosto | number: '0.2'}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                            {{ product.cantidad | number: '0.2'}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                            {{ product.preciocostototal | number: '0.2'}}
+                        </div>
+                    </td>
+
+                    <!-- <td>
+                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                            {{ product.nomestadopago}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                            {{ product.comprobante}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                            {{ product.nroserie_ctb}}
+                        </div>
+                    </td>
+                    <td>
+                        <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                            {{ product.nrodocumento_ctb}}
+                        </div>
+                    </td> -->
+
+                    <td>
+                        <div *ngIf="verItems" class="flex" [ngStyle]="{'width':'30px','text-align':'right'}">
+                            <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left"
+                                (click)="getItem(product, rowIndex)"
+                                class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left"
+                                (click)="eliminarItem(product)"
+                                class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="7" class="text-right">Sub Total: </td>
+                    <td>
+                        <div [ngStyle]="{'text-align':'right'}">
+                            {{s_monto | number: '0.2-2'}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7" class="text-right">IGV: </td>
+                    <td>
+                        <div [ngStyle]="{'text-align':'right'}">
+                            {{s_igv | number: '0.2-2'}}
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="7" class="text-right">Total: </td>
+                    <td>
+                        <div [ngStyle]="{'text-align':'right'}">
+                            {{montoTotal | number: '0.2-2'}}
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

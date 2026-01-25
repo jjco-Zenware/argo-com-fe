@@ -60,7 +60,6 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   esGuardado: boolean = false;
 
   constructor(
-    private readonly fb: FormBuilder,
     private readonly formBuilder: FormBuilder,
     private readonly proyectosService: ProyectosService,
     private readonly messageService: MessageService,
@@ -79,6 +78,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     //this.idOrdenC = this.IA_data.idordencompra;
     this.data = this.config.data;
     console.log("data : ", this.data);
+    this.lstItemOC = [];
 
     this.createFrm();
     this.procesarDataInicial();
@@ -495,7 +495,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       tap((rpta: any) => {
         this.setSpinner(false);
         console.log('listarCategoriaDoc', rpta);
-        
+
         this.lstCategoriaDoc = rpta;
       }),
       catchError((err) => {
@@ -751,7 +751,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  guardarOC() {
+  async guardarOC() {
     if (!this.validarDatos()) {
       this.setSpinner(false);
       this.messageService.add({ severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
@@ -768,6 +768,13 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       }
     }
 
+    const rpta = await this.serviceSharedApp.confirmDialog({
+      message: '¿Desea facturar?',
+      header: 'Aviso',
+    });
+
+    if (!rpta) { return; }
+
     this.setSpinner(true);
     this.mensajeSpinner = 'Guardando...!';
     let fechaingreso;
@@ -777,14 +784,19 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     fecemision = this.frmDatos.value.fecemision;
     fecvencimiento = this.frmDatos.value.fecvencimiento;
 
-    if (fechaingreso.toString().length === 10) {
-      fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
-    }
-    if (fecemision.toString().length === 10) {
-      fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
-    }
-    if (fecvencimiento.toString().length === 10) {
-      fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
+    try {
+      if (fechaingreso.toString().length === 10) {
+        fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
+      }
+      if (fecemision.toString().length === 10) {
+        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
+      }
+      if (fecvencimiento.toString().length === 10) {
+        fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
+      }
+    } catch (error) {
+      this.setSpinner(false);
+      return;
     }
 
     for (let i = 0; i < this.lstItemOC.length; i++) {
@@ -825,27 +837,19 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     }
 
     console.log('guardarOC...', objeto);
-    this.ordencompraService.ordenCompraprc(objeto).subscribe({
-      next: async (rpta: any) => {
+    this.serviceReserva.facturarDocPrcAsync(objeto).subscribe({
+      next: (rpta: any) => {
         this.setSpinner(false);
         this.esGuardado = true;
         this.frmDatos.get('idordencompra')?.setValue(rpta.resultProceso);
-        
-        const rptaFacturar = await this.serviceSharedApp.confirmDialog({
-          message: '¿Desea facturar?',
-          header: 'Aviso',
+        this.serviceSharedApp.messageToast({
+          severity: rpta.resultProceso !== '0' ? 'success' : 'info',
+          summary: rpta.resultProceso !== '0' ? 'Éxito' : 'Información',
+          detail: rpta.resultProceso !== '0' ? 'Se guardó correctamente la factura.' : 'No se pudo guardar la factura.',
         });
-
-        if (!rptaFacturar) {
-          if (rpta.procesoSwitch === 0) {
-            this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
-          } else {
-            this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
-          }
-          this.cerrar(true);
-          return;
+        if (rpta.resultProceso !== '0') { 
+          this.cerrar(true); 
         }
-        this.emitirDocumento(Number.parseInt(rpta.resultProceso));
       },
       error: (err) => {
         this.setSpinner(false);
@@ -1057,6 +1061,109 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     this.frmDatos.get('monto_pen_pago')?.setValue(this.montoTotal);
     this.frmDatos.get('montoTotal')?.setValue(this.montoTotal);
     this.frmDatos.get('s_monto_neto_CTB')?.setValue(this.montoTotal);
+  }
+
+  async vistaPreliminar() {
+    if (!this.validarDatos()) {
+      this.setSpinner(false);
+      this.messageService.add({ severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+      return;
+    }
+
+    if (this.listaCuotas.length > 0) {
+      for (let i = 0; i < this.listaCuotas.length; i++) {
+        this.listaCuotas[i].nrocuota = i + 1;
+        if (this.listaCuotas[i].monto === 0) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso', detail: 'El monto de la cuota debe ser mayor que cero...' });
+          return;
+        }
+      }
+    }
+
+    const rpta = await this.serviceSharedApp.confirmDialog({
+      message: '¿Desea generar la vista preliminar?',
+      header: 'Aviso',
+    });
+
+    if (!rpta) { return; }
+
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Guardando...!';
+    let fechaingreso;
+    let fecemision;
+    let fecvencimiento;
+    fechaingreso = this.frmDatos.value.fechaingreso;
+    fecemision = this.frmDatos.value.fecemision;
+    fecvencimiento = this.frmDatos.value.fecvencimiento;
+
+    try {
+      if (fechaingreso.toString().length === 10) {
+        fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
+      }
+      if (fecemision.toString().length === 10) {
+        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
+      }
+      if (fecvencimiento.toString().length === 10) {
+        fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
+      }
+    } catch (error) {
+      this.setSpinner(false);
+      return;
+    }
+
+    for (let i = 0; i < this.lstItemOC.length; i++) {
+      if (this.lstItemOC[i].cantidad.toString() === '') {
+        this.lstItemOC[i].cantidad = 0;
+      }
+      if (this.lstItemOC[i].preciocosto.toString() === '') {
+        this.lstItemOC[i].preciocosto = 0;
+      }
+    }
+
+    let retencion_tipo = this.frmDatos.value.retencion_tipo;
+    if (!this.frmDatos.value.inddetraccion_ctb) {
+      retencion_tipo = 0;
+    }
+
+    const items = this.lstItemOC.map((item: any) => {
+      return {
+        ...item,
+        idordencompra: 0,
+        idordencompraitem: 0,
+      }
+    })
+
+    const objeto = {
+      ...this.frmDatos.getRawValue(),
+      items,
+      fechaingreso: this.serviceUtilitario.obtenerFechaFormatoISO(fechaingreso),
+      fecemision: this.serviceUtilitario.obtenerFechaFormatoISO(fecemision),
+      fecvencimiento: this.serviceUtilitario.obtenerFechaFormatoISO(fecvencimiento),
+      tipodoc_ctb: (this.frmDatos.value.tipodoc_ctb).toString(),
+      cuotas: this.listaCuotas,
+      nrocuotas: this.nrocuotas,
+      retencion_tipo: retencion_tipo,
+      idordencompra: this.esGuardado ? this.frmDatos.get('idordencompra')?.value : 0,
+      iddocumentoprc_origen: this.data.idordencompra,
+      idtipodocprc: 6,
+    }
+    const $vistaPreliminarPrc = this.serviceReserva.vistaPreliminarPrc(objeto)
+      .subscribe({
+        next: (blob: Blob) => {
+          console.log('vistaPreliminarPrc...', blob);
+          const url = window.URL.createObjectURL(blob);
+          window.open(url, '_blank');
+          this.setSpinner(false);
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($vistaPreliminarPrc)
   }
 
 }

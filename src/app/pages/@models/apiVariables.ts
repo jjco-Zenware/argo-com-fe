@@ -299,4 +299,7 @@ export const constantesApiWeb = {
     obtenerTipoCambio: controllerTesoreria + '/tipocambiohoy',
     ordenDocumentoTraerUnoPdf: controllerComercial + '/ordendocumentotraerunopdf/',
     roomingListResumen: controllerHotel + '/roominglistresumen',
+    transferirReservaHabitacionItems: controllerHotel + '/TransferirReservaHabitacionItems',
+    facturardocprcasync: controllerLogger + '/facturardocprcasync',
+    vistapreliminarprc: controllerMain + '/vistapreliminarprc',
 }

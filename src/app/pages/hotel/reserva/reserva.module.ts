@@ -33,6 +33,7 @@ import { CmAgregarHabitacionComponent } from './cm-agregar-habitacion/cm-agregar
 import { CatalogoHabitacionService } from '../catalogo-habitacion/catalogo-habitacion.service';
 import { PuntoVentaModule } from '../punto-venta/punto-venta.module';
 import { RegistroCompraModule } from '../../compras/registro-compra/registro-compra.module';
+import { CmTransferirItemsComponent } from './cm-transferir-items/cm-transferir-items.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { RegistroCompraModule } from '../../compras/registro-compra/registro-com
     CMAgregarProductoComponent,
     CmRegistrarPagoComponent,
     CmRegistrarFacturacionComponent,
-    CmAgregarHabitacionComponent
+    CmAgregarHabitacionComponent,
+    CmTransferirItemsComponent
   ],
   imports: [
     CommonModule,

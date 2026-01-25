@@ -22,6 +22,7 @@ import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-regist
 import { CMAgregarProductoComponent } from '../cm-agregar-producto/cm-agregar-producto.component';
 import { CmRegistrarFacturacionComponent } from '../cm-registrar-facturacion/cm-registrar-facturacion.component';
 import { CmAgregarHabitacionComponent } from '../cm-agregar-habitacion/cm-agregar-habitacion.component';
+import { CmTransferirItemsComponent } from '../cm-transferir-items/cm-transferir-items.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -1572,47 +1573,6 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     this.O_GetBackHabitacion.emit();
   }
 
-  /*pagarItemDetalle() {
-    console.log("lstItemOC : ", this.lstItemOC);
-    console.log("selectedDetalle : ", this.selectedDetalle);
-
-    if (this.selectedDetalle.length === 0) {
-      this.messageService.clear();
-      this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
-      return
-    }
-
-    const { idordencompra } = this.IA_data;
-    const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
-    console.log("lstCliente : ", this.lstCliente);
-    const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
-    const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;
-
-    const data = {
-      idordencompra,
-      nombreCliente,
-      fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
-      totalPagar: this.montoTotal,
-      idproveedor,
-      idmoneda,
-      simboloMoneda,
-      idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
-    }
-    console.log("selectedDetalle data : ", data);
-
-    const ref = this.dialogService.open(CmRegistrarPagoComponent, {
-      data, //this.ordenHabitacion,
-      header: 'Registrar Pago', //+ ' - ' + this.ordenHabitacion.nomHabitacion,
-      closeOnEscape: false,
-      styleClass: 'testDialog',
-      width: '40%'
-    });
-
-    ref.onClose.subscribe((rpta: any) => {
-      if (!rpta) { return; }
-    });
-  }*/
-
   onVer(data: any) {
     console.log("onVer data : ", data);
 
@@ -2084,6 +2044,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     ref.onClose.subscribe((rpta: any) => {
+      this.selectedDetalle = [];
       if (!rpta) { return; }
     });
   }
@@ -2143,6 +2104,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     });
     refItem.onClose.subscribe((rpta: any) => {
       console.log('onClose', rpta);
+      this.selectedDetalle = [];
       if (rpta != undefined) {
         console.log('getAsignarHabit', rpta.data);
         let tipoigv = 1;
@@ -2234,6 +2196,28 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
   verDocumento(data: any) {
     window.open(data.enlaceFEL);
+  }
+
+  getTransferirItems() {
+    if (this.selectedDetalle.length === 0) {
+      this.serviceSharedApp.messageToast({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
+      return;
+    }
+    const codigosSeleccionados = this.selectedDetalle.map((x: any) => x.idordencompraitem ?? x);
+    const items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
+
+    const data: any = { items }
+    console.log('CmTransferirItemsComponent', data);
+    const refItem = this.dialogService.open(CmTransferirItemsComponent, {
+      data,
+      header: "Transferir Items" + this.idOrdenC,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '60%'
+    });
+    refItem.onClose.subscribe((rpta: any) => { 
+      this.selectedDetalle = [];
+    });
   }
 
 }
