@@ -106,14 +106,25 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
     console.log('this.frmDatos...', this.frmDatos.value);
+
+    let fecha_ini = null;
+    let fecha_fin = null;
+    if (this.config.data.idordencompra === 0) {
+      fecha_ini = this.utilitariosService.obtenerFechaFormatoISO(this.utilitariosService.obtenerFechaActual());
+      fecha_fin = this.utilitariosService.obtenerFechaFormatoISO(this.utilitariosService.obtenerFechaActual());
+    } else {
+      fecha_ini = this.utilitariosService.obtenerFechaFormatDDMMYY(this.config.data.fecha_ini);
+      fecha_fin = this.utilitariosService.obtenerFechaFormatDDMMYY(this.config.data.fecha_fin);
+    }
+
     const objeto = {
       ...this.frmDatos.value,
       idfamilia,
       idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia,
       idalmacen: this.config.data.idalmacen,
       idreserva: this.config.data.idordencompra,
-      fecha_ini: this.utilitariosService.obtenerFechaFormatoISO(this.config.data.fecha_ini),
-      fecha_fin: this.utilitariosService.obtenerFechaFormatoISO(this.config.data.fecha_fin)
+      fecha_ini,
+      fecha_fin
     }
     console.log('this.objeto...', objeto);
 
