@@ -33,23 +33,23 @@
             </ng-container>
         </div>
 
-        <div class="p-datatable p-component custom-table-wrapper ">
-            <table class="p-datatable-table">
+        <div class="p-datatable p-component custom-table-wrapper">
+            <table class="p-datatable-table sticky-header">
                 <thead class="p-datatable-thead">
-                    <tr>
+                    <tr class="header-row-1">
                         <th class="p-datatable-thead-cell p-text-center p-px-2"
-                            style="background: #f4f4f4; border-bottom: none; min-width: 50px;"></th>
+                            style="border-bottom: none; min-width: 50px;"></th>
                         <th class="p-datatable-thead-cell p-text-center p-px-1" [attr.colspan]="dias.length"
-                            style="background: #f4f4f4; border-bottom: none; min-width: 38px; max-width: 48px; width: 42px; text-align: center; font-size: 16px; font-weight: 700;">
+                            style="border-bottom: none; min-width: 38px; max-width: 48px; width: 42px; text-align: center; font-size: 16px; font-weight: 700;">
                             {{ dataHabitaciones?.[0]?.fechas?.[0]?.mes || '' }}
                         </th>
                     </tr>
-                    <tr>
+                    <tr class="header-row-2">
                         <th class="p-datatable-thead-cell p-text-center p-px-2"
-                            style="min-width: 50px; background: #f4f4f4;">
+                            style="min-width: 50px;">
                             Hab.</th>
                         <th *ngFor="let dia of dias" class="p-datatable-thead-cell p-text-center p-px-1"
-                            style="background: #f4f4f4; min-width: 38px; max-width: 48px; width: 42px;">{{ dia }}</th>
+                            style="min-width: 38px; max-width: 48px; width: 42px;">{{ dia }}</th>
                     </tr>
                 </thead>
                 <tbody class="p-datatable-tbody">
