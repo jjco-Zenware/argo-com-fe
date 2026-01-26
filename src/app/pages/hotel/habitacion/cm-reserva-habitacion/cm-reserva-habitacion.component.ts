@@ -147,7 +147,7 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
       fecemision: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false, }],
       fecha_ini: [{ value: null, disabled: false, }],
       tc: [{ value: 0, disabled: false }],
-      tipodoc_ctb: [{ value: 1, disabled: false }],
+      tipodoc_ctb: [{ value: 2, disabled: false }],
       nroserie_ctb: [{ value: '', disabled: false }],
       nrodocumento_ctb: [{ value: '', disabled: false }],
       fecvencimiento: [{ value: this.addDays(this.serviceUtilitario.obtenerFechaActual(), 1), disabled: false, }],
@@ -930,31 +930,38 @@ export class CmReservaHabitacionComponent implements OnInit, OnDestroy {
 
   cambioTipoDoc(dato: any) {
     console.log('cambioTipoDoc...', dato);
-
+    const tipoDocCtb:any = {
+      factura: 1,
+      boleta: 2
+    };
     switch (dato) {
       case 'DNI':
         this.esExtranjero = false;
         this.tituloTipoDocumento = 'Nro. Documento de Identidad (DNI)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(8)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        this.frmDatos.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
       case 'RUC':
         this.esExtranjero = false;
         this.tituloTipoDocumento = 'Número de RUC';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        this.frmDatos.get('tipodoc_ctb')?.setValue(tipoDocCtb.factura);
         break;
       case 'CEX':
         this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(12), Validators.maxLength(16)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        this.frmDatos.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
       case 'PAS':
         this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Pasaporte (PAS)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(16)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        this.frmDatos.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
     }
 
