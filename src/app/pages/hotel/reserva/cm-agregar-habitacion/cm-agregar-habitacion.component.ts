@@ -112,8 +112,8 @@ export class CmAgregarHabitacionComponent implements OnInit, AfterViewInit, OnDe
       idsubfamilia: this.frmDatos.value.idsubfamilia === null ? 0 : this.frmDatos.value.idsubfamilia,
       idalmacen: this.config.data.idalmacen,
       idreserva: this.config.data.idordencompra,
-      fecha_ini: this.utilitariosService.obtenerFechaFormatDDMMYY(this.config.data.fecha_ini),
-      fecha_fin: this.utilitariosService.obtenerFechaFormatDDMMYY(this.config.data.fecha_fin)
+      fecha_ini: this.utilitariosService.obtenerFechaFormatoISO(this.config.data.fecha_ini),
+      fecha_fin: this.utilitariosService.obtenerFechaFormatoISO(this.config.data.fecha_fin)
     }
     console.log('this.objeto...', objeto);
 
