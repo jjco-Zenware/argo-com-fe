@@ -1895,31 +1895,38 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
   cambioTipoDoc(dato: any) {
     console.log('cambioTipoDoc...', dato);
-
+    const tipoDocCtb:any = {
+      factura: 1,
+      boleta: 2
+    };
     switch (dato) {
       case 'DNI':
         this.esExtranjero = false;
         this.tituloTipoDocumento = 'Nro. Documento de Identidad (DNI)';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(8)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();
+        this.registerFormRegistro.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
       case 'RUC':
         this.esExtranjero = false;
         this.tituloTipoDocumento = 'Número de RUC';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();
+        this.registerFormRegistro.get('tipodoc_ctb')?.setValue(tipoDocCtb.factura);
         break;
       case 'CEX':
         this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(12), Validators.maxLength(16)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();
+        this.registerFormRegistro.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
       case 'PAS':
         this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Pasaporte (PAS)';
         this.registerFormRegistro.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(16)]);
         this.registerFormRegistro.get('nrodocumento')?.updateValueAndValidity();
+        this.registerFormRegistro.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
     }
 
