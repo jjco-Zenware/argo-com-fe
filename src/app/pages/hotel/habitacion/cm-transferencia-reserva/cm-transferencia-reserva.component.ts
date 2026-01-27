@@ -121,7 +121,14 @@ export class CmTransferenciaReservaComponent implements OnInit, OnDestroy {
     });
   }
 
-  transferir() {
+  async transferir() {
+    const rpta = await this.serviceSharedApp.confirmDialog({
+      message: '¿Está seguro de transferir las reservas seleccionadas a la habitación destino?',
+      header: 'Confirmar Transferencia'
+    });
+
+    if(!rpta) { return; }
+
     const { idprod } = this.frmDatos.getRawValue();
     if(!idprod) {
       this.serviceSharedApp.messageToast({
