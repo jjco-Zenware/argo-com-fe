@@ -190,7 +190,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         this.montoTotal = itemFrmDatos.montoTotal;
 
         this.frmDatos.get('idordencompra')?.setValue(0);
-        this.frmDatos.get('tipodoc_ctb')?.setValue(1);
+        //this.frmDatos.get('tipodoc_ctb')?.setValue(1);
         this.frmDatos.get('nroserie_ctb')?.setValue('');
         this.frmDatos.get('nrodocumento_ctb')?.setValue('');
         this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(0);
@@ -269,31 +269,38 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
 
   cambioTipoDoc(dato: any) {
     console.log('cambioTipoDoc...', dato);
-
+    const tipoDocCtb:any = {
+      factura: 1,
+      boleta: 2
+    };
     switch (dato) {
       case 'DNI':
         this.esExtranjero = false;
         this.tituloTipoDocumento = 'Nro. Documento de Identidad (DNI)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(8)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        this.frmDatos.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
       case 'RUC':
         this.esExtranjero = false;
         this.tituloTipoDocumento = 'Número de RUC';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(11), Validators.maxLength(11)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        this.frmDatos.get('tipodoc_ctb')?.setValue(tipoDocCtb.factura);
         break;
       case 'CEX':
         this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Carné de Extranjería (CEX)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(12), Validators.maxLength(16)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        this.frmDatos.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
       case 'PAS':
         this.esExtranjero = true;
         this.tituloTipoDocumento = 'Número de Pasaporte (PAS)';
         this.frmDatos.get('nrodocumento')?.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(16)]);
         this.frmDatos.get('nrodocumento')?.updateValueAndValidity();
+        this.frmDatos.get('tipodoc_ctb')?.setValue(tipoDocCtb.boleta);
         break;
     }
   }
@@ -752,6 +759,12 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   }
 
   async guardarOC() {
+    if(!this.validarTipoDocComprob()){
+      this.setSpinner(false);
+      this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "No se puede emitir factura para una persona natural" });
+      return;
+    }
+
     if (!this.validarDatos()) {
       this.setSpinner(false);
       this.messageService.add({ severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
@@ -1064,6 +1077,12 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   }
 
   async vistaPreliminar() {
+    if(!this.validarTipoDocComprob()){
+      this.setSpinner(false);
+      this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "No se puede emitir factura para una persona natural" });
+      return;
+    }
+
     if (!this.validarDatos()) {
       this.setSpinner(false);
       this.messageService.add({ severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
@@ -1166,4 +1185,14 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($vistaPreliminarPrc)
   }
 
+  validarTipoDocComprob():boolean{
+    const tipoDocCtb:any = {
+      factura: 1,
+      boleta: 2
+    };
+
+    const { idtipodoc, tipodoc_ctb } = this.frmDatos.getRawValue();
+    console.log("idtipodoc :", idtipodoc, "tipodoc_ctb:", tipodoc_ctb);
+    return idtipodoc === 'RUC' && tipodoc_ctb === tipoDocCtb.factura;
+  }
 }
