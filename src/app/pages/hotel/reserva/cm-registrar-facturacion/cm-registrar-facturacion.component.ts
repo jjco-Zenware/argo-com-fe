@@ -43,7 +43,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     { name: '4', code: 4 },
     { name: '5', code: 5 }
   ];
-  nrocuotas!: number;
+  nrocuotas: number = 1;
   listaCuotas: any[] = [];
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
@@ -205,6 +205,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         this.minimaFechaHasta = this.parsearFecha(this.frmDatos.value.fecemision);
         this.maximaFechaDesde = this.parsearFecha(this.frmDatos.value.fecvencimiento);
         this.calcularMontosCompra();
+        this.gettipocambiodia(new Date());
         this.setSpinner(false);
       },
       error: (err: any) => {
@@ -911,7 +912,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   recalcularRegistro(dato: any) {
 
     console.log('recalcularRegistro...', dato);
-    if (this.idOrdenC > 0) {
+    //if (this.idOrdenC > 0) {
       this.setSpinner(true);
       this.mensajeSpinner = 'Recalculando...!';
       let subtotal = this.lstItemOC.map(({ preciocostototal }) => preciocostototal).reduce((acc, value) => acc + value, 0);
@@ -928,20 +929,27 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (rpta: any) => {
             console.log('recalcularRegistro...', rpta);
-            this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(rpta[0].s_monto_valor_venta_CTB);
-            this.frmDatos.get('s_monto_igv_CTB')?.setValue(rpta[0].s_monto_igv_CTB);
-            this.frmDatos.get('s_monto_total_CTB')?.setValue(rpta[0].s_monto_total_CTB);
-            this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue(rpta[0].monto_detraccion_mn_CTB);
-            this.frmDatos.get('monto_pen_pago')?.setValue(rpta[0].s_monto_neto_CTB);
+            if(Object.keys(rpta).length === 0){
+              this.setSpinner(false);
+              return;
+            }
+
+            const data = rpta[0];
+            this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(data.s_monto_valor_venta_CTB);
+            this.frmDatos.get('s_monto_igv_CTB')?.setValue(data.s_monto_igv_CTB);
+            this.frmDatos.get('s_monto_total_CTB')?.setValue(data.s_monto_total_CTB);
+            this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue(data.monto_detraccion_mn_CTB);
+            this.frmDatos.get('monto_pen_pago')?.setValue(data.s_monto_neto_CTB);
+            this.frmDatos.get('s_monto_detraccion_CTB')?.setValue(data.s_monto_detraccion_CTB);
 
             /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
-            this.s_monto = rpta[0].s_monto_valor_venta_CTB;
-            this.s_igv = rpta[0].s_monto_igv_CTB;
-            this.montoTotal = rpta[0].s_monto_total_CTB;
+            this.s_monto = data.s_monto_valor_venta_CTB;
+            this.s_igv = data.s_monto_igv_CTB;
+            this.montoTotal = data.s_monto_total_CTB;
 
             this.listaCuotas = [];
 
-            const lista = rpta[0].cuotas
+            const lista = data.cuotas
 
             for (let i = 0; i < lista; i++) {
               const objet = {
@@ -964,7 +972,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
           }
         });
       this.$listSubcription.push($recalcularRegistro)
-    }
+    //}
   }
 
   emitirDocumento(idordendocumento: number) {
