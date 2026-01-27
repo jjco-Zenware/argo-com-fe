@@ -40,7 +40,7 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.data = this.config.data;
     console.log('CmTransferirItemsComponent data:', this.data);
-    
+
     this.createFrm();
     this.obtenerHabitaciones();
     this.lstItemOC = this.data.items;
@@ -78,7 +78,7 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
       next: (rpta: any) => {
         this.setSpinner(false);
         const data = rpta.habitaciones.map((hab: any) => {
-          return  {
+          return {
             ...hab,
             descripcionCompleta: `${hab.nomHabitacion} - N° ${hab.idreserva}`
           }
@@ -113,11 +113,58 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
     this.s_monto = +(total / igvFactor).toFixed(2);
     this.s_igv = +(total - this.s_monto).toFixed(2);
     this.montoTotal = +total.toFixed(2);
+    /*const items = this.lstItemOC.map((item: any) => {
+      return {
+        idprod: item.idprod,
+        preciocosto: item.preciocosto,
+        cantidad: item.cantidad,
+        mtodescuento: item.descuento,
+        tipoafectacion: item.tipoigv
+      }
+    })
+    const { porc_detraccion, tc, idmoneda, indmanualdetraccion } = this.registerFormRegistro.getRawValue();
+    const objeto = {
+      porc_detraccion: 0,
+      tc,
+      idmoneda,
+      indmanualdetraccion,
+      monto_detraccion_mn_manual: 0,
+      p_igv: 0,
+      idusuario: constantesLocalStorage.idusuario,
+      items,
+      itemsJson: ""
+    }
+    const $calculoDetraccionV2 = this.serviceReserva.calculoDetraccionV2(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('calculoDetraccionV2...', rpta);
+          if (rpta.length === 0) {
+            this.setSpinner(false);
+            return;
+          }
+
+          const data = rpta.datos[0].detraccion[0];
+
+          this.s_monto = data.monto_gravado;
+          this.s_igv = data.monto_igv;
+          this.montoTotal = data.monto;
+
+          this.setSpinner(false);
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($calculoDetraccionV2)*/
   }
 
-    transferir() {
+  transferir() {
     const { idprod } = this.frmDatos.getRawValue();
-    if(!idprod) {
+    if (!idprod) {
       this.serviceSharedApp.messageToast({
         severity: 'warn',
         summary: 'Aviso',
@@ -127,7 +174,7 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
     }
 
     const { idreserva: iddocumentoprc } = this.lstHabitaciones.find(hab => hab.idprod === idprod) || {};
-    if(!iddocumentoprc) {
+    if (!iddocumentoprc) {
       this.serviceSharedApp.messageToast({
         severity: 'warn',
         summary: 'Aviso',
@@ -137,7 +184,7 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
     }
 
     const listaItems = this.lstItemOC.map(item => ({
-      iditemreserva: item.idprod,
+      iditemreserva: item.idordencompraitem,
     }));
 
     const objeto = {
@@ -155,8 +202,8 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
 
     this.serviceHotel.transferirReservaHabitacionItems(objeto).subscribe({
       next: (rpta: any) => {
-          this.setSpinner(false);
-          this.serviceSharedApp.messageToast({
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast({
           severity: rpta.procesoSwitch === 0 ? 'success' : 'error',
           summary: rpta.procesoSwitch === 0 ? 'Éxito' : 'Error',
           detail: rpta.mensaje
