@@ -271,7 +271,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
 
   cambioTipoDoc(dato: any) {
     console.log('cambioTipoDoc...', dato);
-    const tipoDocCtb:any = {
+    const tipoDocCtb: any = {
       factura: 1,
       boleta: 2
     };
@@ -761,7 +761,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   }
 
   async guardarOC() {
-    if(!this.validarTipoDocComprob()){
+    if (!this.validarTipoDocComprob()) {
       this.setSpinner(false);
       this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "No se puede emitir factura para una persona natural" });
       return;
@@ -862,8 +862,8 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
           summary: rpta.resultProceso !== '0' ? 'Éxito' : 'Información',
           detail: rpta.resultProceso !== '0' ? 'Se guardó correctamente la factura.' : 'No se pudo guardar la factura.',
         });
-        if (rpta.resultProceso !== '0') { 
-          this.cerrar(true); 
+        if (rpta.resultProceso !== '0') {
+          this.cerrar(true);
         }
       },
       error: (err) => {
@@ -910,7 +910,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     );
   }
 
-  recalcularRegistro(dato: any) {
+  /*recalcularRegistro(dato: any) {
 
     console.log('recalcularRegistro...', dato);
     //if (this.idOrdenC > 0) {
@@ -943,7 +943,6 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
             this.frmDatos.get('monto_pen_pago')?.setValue(data.s_monto_neto_CTB);
             this.frmDatos.get('s_monto_detraccion_CTB')?.setValue(data.s_monto_detraccion_CTB);
 
-            /*ACTUALIZANDO MONTOS TOTALES DE LOS ITEMS*/
             this.s_monto = data.s_monto_valor_venta_CTB;
             this.s_igv = data.s_monto_igv_CTB;
             this.montoTotal = data.s_monto_total_CTB;
@@ -974,7 +973,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         });
       this.$listSubcription.push($recalcularRegistro)
     //}
-  }
+  }*/
 
   emitirDocumento(idordendocumento: number) {
     this.setSpinner(true);
@@ -1086,7 +1085,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   }
 
   async vistaPreliminar() {
-    if(!this.validarTipoDocComprob()){
+    if (!this.validarTipoDocComprob()) {
       this.setSpinner(false);
       this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "No se puede emitir factura para una persona natural" });
       return;
@@ -1194,8 +1193,8 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($vistaPreliminarPrc)
   }
 
-  validarTipoDocComprob():boolean{
-    const tipoDocCtb:any = {
+  validarTipoDocComprob(): boolean {
+    const tipoDocCtb: any = {
       factura: 1,
       boleta: 2
     };
@@ -1203,15 +1202,110 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     const { idtipodoc, tipodoc_ctb } = this.frmDatos.getRawValue();
     console.log("idtipodoc :", idtipodoc, "tipodoc_ctb:", tipodoc_ctb);
 
-    if (idtipodoc === 'RUC' && tipodoc_ctb === tipoDocCtb.factura){
+    if (idtipodoc === 'RUC' && tipodoc_ctb === tipoDocCtb.factura) {
       return true;
     }
 
     const documentosNatural: Set<string> = new Set(['DNI', 'CEX', 'PAS']);
-    if (documentosNatural.has(idtipodoc) && tipodoc_ctb === tipoDocCtb.boleta){
+    if (documentosNatural.has(idtipodoc) && tipodoc_ctb === tipoDocCtb.boleta) {
       return true;
     }
 
     return false;
+  }
+
+  changeEditaDetra(value: any) {
+    if (value) {
+      this.frmDatos.get('porc_detraccion').enable();
+    } else {
+      this.frmDatos.get('retencion_tipo').disable();
+    }
+  }
+
+  recalcularRegistro(porc_detraccion: any) {
+
+    console.log('recalcularRegistro...', porc_detraccion);
+    //if (this.idOrdenC > 0) {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Recalculando...!';
+    /*let subtotal = this.lstItemOC.map(({ preciocostototal }) => preciocostototal).reduce((acc, value) => acc + value, 0);
+
+    const objeto = {
+      subtotal: subtotal,
+      porc_detraccion: dato,
+      tc: this.frmDatos.get('tc')?.value,
+      idmoneda: this.frmDatos.get('idmoneda')?.value,
+      nrocuotas: this.nrocuotas,
+      nrodias: this.frmDatos.get('nrodias')?.value,
+    }*/
+
+    const items = this.lstItemOC.map((item: any) => {
+      return {
+        idprod: item.idprod,
+        preciocosto: item.preciocosto,
+        cantidad: item.cantidad,
+        mtodescuento: item.descuento,
+        tipoafectacion: item.tipoigv
+      }
+    })
+    const { /*porc_detraccion,*/ tc, idmoneda, indmanualdetraccion } = this.frmDatos.getRawValue();
+    const objeto = {
+      porc_detraccion,
+      tc,
+      idmoneda,
+      indmanualdetraccion,
+      monto_detraccion_mn_manual: 0,
+      p_igv: 0,
+      idusuario: constantesLocalStorage.idusuario,
+      items,
+      itemsJson: ""
+    }
+    const $calculoDetraccionV2 = this.serviceReserva.calculoDetraccionV2(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('calculoDetraccionV2...', rpta);
+          if (rpta.length === 0) {
+            this.setSpinner(false);
+            return;
+          }
+
+          const data = rpta.datos[0].detraccion[0];
+          this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(data.monto_gravado);
+          this.frmDatos.get('s_monto_igv_CTB')?.setValue(data.monto_igv);
+          this.frmDatos.get('s_monto_total_CTB')?.setValue(data.monto_valorventa);
+          this.frmDatos.get('monto_pen_pago')?.setValue(data.monto);
+          this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue(data.monto_detraccion_m);
+          this.frmDatos.get('s_monto_detraccion_CTB')?.setValue(data.monto_detraccion);
+
+          this.s_monto = data.monto_gravado;
+          this.s_igv = data.monto_igv;
+          this.montoTotal = data.monto;
+
+          /*this.listaCuotas = [];
+
+          const lista = data.cuotas
+
+          for (let i = 0; i < lista; i++) {
+            const objet = {
+              fechacuota: new Date(lista[i].fechacuota),
+              monto: lista[i].monto,
+              idcuotadoc: 0
+            }
+            this.listaCuotas.push(objet);
+          }
+
+          this.listaCuotas = rpta[0].cuotas;*/
+          this.setSpinner(false);
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($calculoDetraccionV2)
+    //}
   }
 }

@@ -74,4 +74,9 @@ export class ReservaService {
     return this.http.post(url, objeto, { responseType: 'blob' })
   }
 
+  calculoDetraccionV2(objeto: any) {
+    const url = `${constantesApiWeb.calculoDetraccionV2}`;
+    return this.http.post<any>(url, objeto)
+  }
+
 }
