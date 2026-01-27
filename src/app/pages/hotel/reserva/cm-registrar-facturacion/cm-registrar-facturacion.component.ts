@@ -1201,6 +1201,16 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
 
     const { idtipodoc, tipodoc_ctb } = this.frmDatos.getRawValue();
     console.log("idtipodoc :", idtipodoc, "tipodoc_ctb:", tipodoc_ctb);
-    return idtipodoc === 'RUC' && tipodoc_ctb === tipoDocCtb.factura;
+
+    if (idtipodoc === 'RUC' && tipodoc_ctb === tipoDocCtb.factura){
+      return true;
+    }
+
+    const documentosNatural: Set<string> = new Set(['DNI', 'CEX', 'PAS']);
+    if (documentosNatural.has(idtipodoc) && tipodoc_ctb === tipoDocCtb.boleta){
+      return true;
+    }
+
+    return false;
   }
 }
