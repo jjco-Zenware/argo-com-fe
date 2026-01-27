@@ -141,7 +141,7 @@
             </ng-template>
             <ng-template pTemplate="footer">
                 <tr>
-                    <td colspan="7" class="text-right">Sub Total: </td>
+                    <td colspan="6" class="text-right">Sub Total: </td>
                     <td>
                         <div [ngStyle]="{'text-align':'right'}">
                             {{s_monto | number: '0.2-2'}}
@@ -149,7 +149,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="7" class="text-right">IGV: </td>
+                    <td colspan="6" class="text-right">IGV: </td>
                     <td>
                         <div [ngStyle]="{'text-align':'right'}">
                             {{s_igv | number: '0.2-2'}}
@@ -157,7 +157,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="7" class="text-right">Total: </td>
+                    <td colspan="6" class="text-right">Total: </td>
                     <td>
                         <div [ngStyle]="{'text-align':'right'}">
                             {{montoTotal | number: '0.2-2'}}

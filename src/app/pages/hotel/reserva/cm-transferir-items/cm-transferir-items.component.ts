@@ -105,15 +105,15 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const total = this.lstItemOC.reduce(
+    /*const total = this.lstItemOC.reduce(
       (acc, item) => acc + (item.preciocostototal || 0),
       0,
     );
     const igvFactor = 1 + this.IGV;
     this.s_monto = +(total / igvFactor).toFixed(2);
     this.s_igv = +(total - this.s_monto).toFixed(2);
-    this.montoTotal = +total.toFixed(2);
-    /*const items = this.lstItemOC.map((item: any) => {
+    this.montoTotal = +total.toFixed(2);*/
+    const items = this.lstItemOC.map((item: any) => {
       return {
         idprod: item.idprod,
         preciocosto: item.preciocosto,
@@ -122,12 +122,12 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
         tipoafectacion: item.tipoigv
       }
     })
-    const { porc_detraccion, tc, idmoneda, indmanualdetraccion } = this.registerFormRegistro.getRawValue();
+    const { tc, idmoneda } = this.data;
     const objeto = {
       porc_detraccion: 0,
       tc,
       idmoneda,
-      indmanualdetraccion,
+      indmanualdetraccion: false,
       monto_detraccion_mn_manual: 0,
       p_igv: 0,
       idusuario: constantesLocalStorage.idusuario,
@@ -159,7 +159,7 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
           this.setSpinner(false);
         }
       });
-    this.$listSubcription.push($calculoDetraccionV2)*/
+    this.$listSubcription.push($calculoDetraccionV2)
   }
 
   transferir() {

@@ -1759,7 +1759,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const total = this.lstItemOC.reduce(
+    /*const total = this.lstItemOC.reduce(
       (acc, item) => acc + (item.preciocostototal || 0),
       0,
     );
@@ -1767,7 +1767,60 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
     const igvFactor = 1 + IGV;
     this.s_monto = +(total / igvFactor).toFixed(2);
     this.s_igv = +(total - this.s_monto).toFixed(2);
-    this.montoTotal = +total.toFixed(2);
+    this.montoTotal = +total.toFixed(2);*/
+    const items = this.lstItemOC.map((item: any) => {
+      return {
+        idprod: item.idprod,
+        preciocosto: item.preciocosto,
+        cantidad: item.cantidad,
+        mtodescuento: item.descuento,
+        tipoafectacion: item.tipoigv
+      }
+    })
+    const { /*porc_detraccion,*/ tc, idmoneda, indmanualdetraccion } = this.registerFormRegistro.getRawValue();
+    const objeto = {
+      porc_detraccion: 0,
+      tc,
+      idmoneda,
+      indmanualdetraccion,
+      monto_detraccion_mn_manual: 0,
+      p_igv: 0,
+      idusuario: constantesLocalStorage.idusuario,
+      items,
+      itemsJson: ""
+    }
+    const $calculoDetraccionV2 = this.serviceReserva.calculoDetraccionV2(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('calculoDetraccionV2...', rpta);
+          if (rpta.length === 0) {
+            this.setSpinner(false);
+            return;
+          }
+
+          const data = rpta.datos[0].detraccion[0];
+          this.registerFormRegistro.get('s_monto_valor_venta_CTB')?.setValue(data.monto_gravado);
+          this.registerFormRegistro.get('s_monto_igv_CTB')?.setValue(data.monto_igv);
+          this.registerFormRegistro.get('s_monto_total_CTB')?.setValue(data.monto_valorventa);
+          this.registerFormRegistro.get('monto_pen_pago')?.setValue(data.monto);
+          this.registerFormRegistro.get('monto_detraccion_mn_CTB')?.setValue(data.monto_detraccion_m);
+          this.registerFormRegistro.get('s_monto_detraccion_CTB')?.setValue(data.monto_detraccion);
+
+          this.s_monto = data.monto_gravado;
+          this.s_igv = data.monto_igv;
+          this.montoTotal = data.monto;
+
+          this.setSpinner(false);
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($calculoDetraccionV2)
   }
 
 }

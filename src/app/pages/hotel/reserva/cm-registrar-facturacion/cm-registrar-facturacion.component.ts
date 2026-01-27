@@ -204,9 +204,10 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
 
         this.minimaFechaHasta = this.parsearFecha(this.frmDatos.value.fecemision);
         this.maximaFechaDesde = this.parsearFecha(this.frmDatos.value.fecvencimiento);
-        this.calcularMontosCompra();
+        //this.calcularMontosCompra();
+        this.recalcularRegistro(this.frmDatos.get('porc_detraccion')?.value, true);
         this.gettipocambiodia(new Date());
-        this.prcCuota(1)
+        //this.prcCuota(1)
         this.setSpinner(false);
       },
       error: (err: any) => {
@@ -1058,7 +1059,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($emitirDocumento);
   }
 
-  calcularMontosCompra() {
+  /*calcularMontosCompra() {
     if (this.lstItemOC.length === 0) {
       this.s_monto = 0;
       this.s_igv = 0;
@@ -1082,7 +1083,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     this.frmDatos.get('monto_pen_pago')?.setValue(this.montoTotal);
     this.frmDatos.get('montoTotal')?.setValue(this.montoTotal);
     this.frmDatos.get('s_monto_neto_CTB')?.setValue(this.montoTotal);
-  }
+  }*/
 
   async vistaPreliminar() {
     if (!this.validarTipoDocComprob()) {
@@ -1222,7 +1223,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     }
   }
 
-  recalcularRegistro(porc_detraccion: any) {
+  recalcularRegistro(porc_detraccion: any, procesaCuotas: boolean = false) {
 
     console.log('recalcularRegistro...', porc_detraccion);
     //if (this.idOrdenC > 0) {
@@ -1280,6 +1281,10 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
           this.s_monto = data.monto_gravado;
           this.s_igv = data.monto_igv;
           this.montoTotal = data.monto;
+
+          if(procesaCuotas){
+            this.prcCuota(1)
+          }
 
           /*this.listaCuotas = [];
 

@@ -1546,7 +1546,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     })
 
     const { idordencompra } = this.IA_data;
-    const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
+    const { idproveedor, idmoneda, tc } = this.registerFormRegistro.getRawValue();
     console.log("lstCliente : ", this.lstCliente);
     const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
     const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;
@@ -1559,6 +1559,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       totalPagar: this.montoTotal,
       idproveedor,
       idmoneda,
+      tc,
       simboloMoneda,
       paramReg: 'RES',
       idDocPrcVentaTrx: idVentaTrx,
@@ -2212,8 +2213,9 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     }
     const codigosSeleccionados = this.selectedDetalle.map((x: any) => x.idordencompraitem ?? x);
     const items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
+    const { tc, idmoneda } = this.registerFormRegistro.getRawValue();
 
-    const data: any = { items }
+    const data: any = { items, tc, idmoneda }
     console.log('CmTransferirItemsComponent', data);
     const refItem = this.dialogService.open(CmTransferirItemsComponent, {
       data,
