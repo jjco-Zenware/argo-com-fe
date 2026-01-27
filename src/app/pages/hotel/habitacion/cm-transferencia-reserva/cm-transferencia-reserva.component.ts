@@ -145,10 +145,10 @@ export class CmTransferenciaReservaComponent implements OnInit, OnDestroy {
     const habitacionesSeleccionadas: any[] = [];
     for (const grupo of this.habitacionesAgrupadas) {
       for (const habitacion of grupo.habitaciones) {
-        if (habitacion.chkActivo && habitacion.idprod /*idnrooperacion*/) {
+        if (habitacion.chkActivo && habitacion.idnrooperacion) {
           habitacionesSeleccionadas.push({
             //idreservaTransfiere: habitacion.idnrooperacion
-            idreservaTransfiere: habitacion.idprod
+            idreservaTransfiere: habitacion.idnrooperacion
           });
         }
       }
