@@ -1,7 +1,7 @@
 <div>
-    <div class="flex justify-content-between mb-4 -mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
+    <div class="flex justify-content-between mb-4 mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
         <form [formGroup]="frmDatos">
-            <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="nomHabitacion"
+            <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="descripcionCompleta"
                 optionValue="idprod" placeholder="Seleccionar Habitacion" inputStyleClass="w-full" appendTo="body"
                 styleClass="w-full"></p-dropdown>
         </form>

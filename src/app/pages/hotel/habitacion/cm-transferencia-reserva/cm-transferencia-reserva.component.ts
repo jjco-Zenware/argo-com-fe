@@ -96,7 +96,13 @@ export class CmTransferenciaReservaComponent implements OnInit, OnDestroy {
     this.serviceReserva.listarHabitacionesCombo3(objeto).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
-        this.lstHabitaciones = rpta.habitaciones;
+        const data = rpta.habitaciones.map((hab: any) => {
+          return  {
+            ...hab,
+            descripcionCompleta: `${hab.nomHabitacion} - N° ${hab.idreserva}`
+          }
+        });
+        this.lstHabitaciones = data;
         this.existeHabitacionTransferible = rpta.habitaciones.length > 0;
       },
       error: (err) => {

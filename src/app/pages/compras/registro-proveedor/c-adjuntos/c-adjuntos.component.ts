@@ -63,7 +63,7 @@ export class CAdjuntosComponent {
         
         
         this.getListaArchivos();
-        this.getValueDescrip();
+        //this.getValueDescrip();
       }
 
       

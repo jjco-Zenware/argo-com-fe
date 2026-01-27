@@ -5,7 +5,7 @@
     </div>
     <div *ngIf="verAcciones" class="field mt-6">
         <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" [auto]="true" chooseLabel="Archivo" chooseIcon="pi pi-file" 
-            class="text-sm p-inputtext-sm" [disabled]="disabUpload" (uploadHandler)="onUpload($event, fubauto)" >
+            class="text-sm p-inputtext-sm" (uploadHandler)="onUpload($event, fubauto)" >
         </p-fileUpload>
     </div>
 </div>

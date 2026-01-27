@@ -2217,7 +2217,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     console.log('CmTransferirItemsComponent', data);
     const refItem = this.dialogService.open(CmTransferirItemsComponent, {
       data,
-      header: "Transferir Items" + this.idOrdenC,
+      header: "Transferir Items " + this.idOrdenC,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '60%'
