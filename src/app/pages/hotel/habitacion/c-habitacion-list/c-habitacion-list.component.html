@@ -31,7 +31,7 @@
                                     </div>
                                     <div class="habitacion-nombre">
                                         <span class="white-space-nowrap">{{item.nomHabitacion}} 
-                                            <span> - {{item.idnrooperacion}}</span>
+                                            <span *ngIf="item.idnrooperacion > 0"> - {{item.idnrooperacion}}</span>
                                         </span>
                                     </div>
                                     <div class="habitacion-estado">
