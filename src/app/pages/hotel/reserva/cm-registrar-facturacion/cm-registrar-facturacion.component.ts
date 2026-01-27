@@ -206,6 +206,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         this.maximaFechaDesde = this.parsearFecha(this.frmDatos.value.fecvencimiento);
         this.calcularMontosCompra();
         this.gettipocambiodia(new Date());
+        this.prcCuota(1)
         this.setSpinner(false);
       },
       error: (err: any) => {
