@@ -19,7 +19,7 @@
             <div class="col-12 md:col-4 lg:col-4 mb-0">
                 <label class="block text-900 mb-1">Habitacion<span class="text-red-500 font-bold"> *</span></label>
                 <span>
-                    <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="nomHabitacion"
+                    <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="nuevaHabitacion"
                         placeholder="Seleccionar..." optionValue="idprod" appendTo="body" [readonly]="onlyRead"
                         class="p-inputtext-sm" (onChange)="changeHabitacion($event.value)"></p-dropdown>
                 </span>

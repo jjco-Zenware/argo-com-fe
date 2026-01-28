@@ -177,7 +177,8 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
             this.listaMonedas$(),
         ]).subscribe({
             next: () => {
-                if (!this.IA_data.idordencompra) {
+                if (!this.IA_data.idordencompra || !this.IA_data.idDocPrcVentaTrx) {
+                    this.frmDatos.get('idordencompra')?.setValue(0);
                     this.setSpinner(false);
                     this.mensajeSpinner = '';
                     return;
@@ -277,7 +278,12 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         return this.serviceReserva.listarHabitacionesCombo(objeto).pipe(
             map((rpta: any) => {
                 console.log('rpta listarHabitacionesCombo: ', rpta);
-                this.lstHabitaciones = rpta.habitaciones;
+                //this.lstHabitaciones = rpta.habitaciones;
+                const data = rpta.habitaciones.map((item: any) => ({
+                    ...item,
+                    nuevaHabitacion: `${item.nomHabitacion} - ${item.idreserva}`
+                }))
+                this.lstHabitaciones = data;
                 return this.lstHabitaciones;
             }),
         );
@@ -307,7 +313,12 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
         };
         return this.serviceReserva.listarHabitacionesCombo3(objeto).pipe(
             map((rpta: any) => {
-                this.lstHabitaciones = rpta.habitaciones;
+                //this.lstHabitaciones = rpta.habitaciones;
+                const data = rpta.habitaciones.map((item: any) => ({
+                    ...item,
+                    nuevaHabitacion: `${item.nomHabitacion} - ${item.idreserva}`
+                }))
+                this.lstHabitaciones = data;
                 return this.lstHabitaciones;
             }),
         );
@@ -717,8 +728,10 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     }
 
     guardarOC() {
-        if (this.IA_data.items[0]?.idordencompra > 0) {
-            this.pagarItemDetalle(this.IA_data.items[0]?.idordencompra);
+        console.log("idordencompra : ", this.frmDatos.get('idordencompra')?.value);
+
+        if (this.frmDatos.get('idordencompra')?.value > 0) {
+            this.pagarItemDetalle(this.frmDatos.get('idordencompra')?.value);
             return;
         }
 
