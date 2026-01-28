@@ -717,8 +717,8 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
     }
 
     guardarOC() {
-        if (this.IA_data.idordencompra > 0) {
-            this.pagarItemDetalle(this.IA_data.idordencompra);
+        if (this.IA_data.items[0]?.idordencompra > 0) {
+            this.pagarItemDetalle(this.IA_data.items[0]?.idordencompra);
             return;
         }
 
