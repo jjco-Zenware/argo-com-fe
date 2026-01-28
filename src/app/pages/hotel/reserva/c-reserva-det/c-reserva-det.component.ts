@@ -2017,6 +2017,14 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       return
     }
 
+    const detalleCompra = this.selectedDetalle.map((item: any) => {
+      return {
+        ...item,
+        iddocumentoprcitem_trx: item.idordencompraitem,
+        idordencompraitem: 0
+      }
+    })
+
     const { idordencompra } = this.IA_data;
     /*const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
     console.log("lstCliente : ", this.lstCliente);
@@ -2036,7 +2044,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     const data = {
       ...this.registerFormRegistro.getRawValue(),
       idordencompra,
-      detalleCompra: this.selectedDetalle,
+      detalleCompra, //: this.selectedDetalle,
       s_monto: this.s_monto,
       s_igv: this.s_igv,
       montoTotal: this.montoTotal,
