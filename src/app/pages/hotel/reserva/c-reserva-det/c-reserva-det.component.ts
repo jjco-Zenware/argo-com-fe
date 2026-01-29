@@ -2078,6 +2078,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       s_monto: this.s_monto,
       s_igv: this.s_igv,
       montoTotal: this.montoTotal,
+      codtipodoc: 'RSV'
     }
     console.log("selectedDetalle data : ", data);
 

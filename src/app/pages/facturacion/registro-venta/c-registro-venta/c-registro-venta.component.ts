@@ -290,7 +290,8 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy {
       idtipodoc: null,
       tipodoc_ctb: null,
       idmoneda: null,
-      codformapago: null
+      codformapago: null,
+      codtipodoc: 'RGV'
     }
     console.log("onEditar facturacion : ", data);
 
@@ -339,7 +340,8 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy {
       idtipodoc: 'RUC',
       tipodoc_ctb: 1,
       idmoneda: 1,
-      codformapago: 14328
+      codformapago: 14328,
+      codtipodoc: 'RGV'
     }
     console.log("onNuevo facturacion : ", data);
 
