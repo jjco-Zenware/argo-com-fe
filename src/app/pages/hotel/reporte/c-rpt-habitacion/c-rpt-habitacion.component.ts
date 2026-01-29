@@ -185,7 +185,13 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
   onCellContextMenu(event: MouseEvent, habitacionPorFecha: any) {
     event.preventDefault();
     this.menuContextualData = habitacionPorFecha;
-    this.menuContextualTop = event.clientY;
+    const menuHeight = 150;
+    const windowHeight = window.innerHeight;
+    if (event.clientY + menuHeight > windowHeight) {
+      this.menuContextualTop = event.clientY - menuHeight;
+    } else {
+      this.menuContextualTop = event.clientY;
+    }
     this.menuContextualLeft = event.clientX;
     if (habitacionPorFecha && Array.isArray(habitacionPorFecha.acciones) && habitacionPorFecha.acciones.length > 0) {
       this.opcionesMenuContextual = habitacionPorFecha.acciones.map((accion: any) => ({
