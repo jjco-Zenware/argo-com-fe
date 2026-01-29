@@ -1537,6 +1537,17 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
+    const idsEstadoItem = _items.map((item: any) => item.estadopago);
+    const existeEstadoPagado = idsEstadoItem.some((estado: any) => estado === 'PAG');
+    if (existeEstadoPagado) { 
+      this.serviceSharedApp.messageToast({
+        severity: 'info',
+        summary: 'Aviso...!',
+        detail: 'Uno o más ítems ya están pagados.'
+      });
+      return;
+    }
+
     const items = _items.map((dato: any) => {
       return {
         ...dato,
@@ -2017,6 +2028,24 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       return
     }
 
+    const codigosSeleccionados = this.selectedDetalle.map((x: any) => x.idordencompraitem ?? x);
+    const _items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
+
+    const tipoFacturado = {
+      SinFacturar: 0,
+      Facturado: 1,
+    }
+    const idsItemFacturados = _items.map((item: any) => item.indfacturado);
+    const existeFacturado = idsItemFacturados.some((item: any) => item === tipoFacturado.Facturado);
+    if (existeFacturado) { 
+      this.serviceSharedApp.messageToast({
+        severity: 'info',
+        summary: 'Aviso...!',
+        detail: 'Uno o más ítems ya están facturados.'
+      });
+      return;
+    }
+
     const detalleCompra = this.selectedDetalle.map((item: any) => {
       return {
         ...item,
@@ -2042,6 +2071,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
     }*/
     const data = {
+      tipoProceso: 'RESERVA',
       ...this.registerFormRegistro.getRawValue(),
       idordencompra,
       detalleCompra, //: this.selectedDetalle,

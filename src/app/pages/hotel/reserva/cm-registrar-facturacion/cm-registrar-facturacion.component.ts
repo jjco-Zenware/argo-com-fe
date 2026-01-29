@@ -182,7 +182,13 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       this.listarTipoPagoDetraccion()
     ]).subscribe({
       next: () => {
-        const { detalleCompra, ...itemFrmDatos } = this.data;
+        const { tipoProceso, detalleCompra, ...itemFrmDatos } = this.data;
+
+        if(tipoProceso === 'VENTA' && itemFrmDatos.idordencompra > 0){
+          this.traerUnoDatoVenta(itemFrmDatos.idordencompra)
+          return;
+        }
+
         this.frmDatos.patchValue(itemFrmDatos);
         this.lstItemOC = detalleCompra;
         this.s_monto = itemFrmDatos.s_monto;
@@ -205,7 +211,9 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         this.minimaFechaHasta = this.parsearFecha(this.frmDatos.value.fecemision);
         this.maximaFechaDesde = this.parsearFecha(this.frmDatos.value.fecvencimiento);
         //this.calcularMontosCompra();
-        this.recalcularRegistro(this.frmDatos.get('porc_detraccion')?.value, true);
+        if(this.frmDatos.get('porc_detraccion')?.value > 0){
+          this.recalcularRegistro(this.frmDatos.get('porc_detraccion')?.value, true);
+        }
         this.gettipocambiodia(new Date());
         //this.prcCuota(1)
         this.setSpinner(false);
@@ -1312,5 +1320,77 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       });
     this.$listSubcription.push($calculoDetraccionV2)
     //}
+  }
+
+   traerUnoDatoVenta(idordencompra:number) {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Cargando...!';
+    const objeto = {
+      idordencompra,
+      idusuario: constantesLocalStorage.idusuario
+    }
+
+    const $cargarOrdenC = this.proyectosService.ordenCompraTraeruno(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+          const ordenCompra = rpta.ordencompra[0];
+          this.frmDatos.patchValue(ordenCompra);
+
+          //this.getOcproveedor(rpta.ordencompra[0].idproveedor); 
+          if (rpta.ordencompra[0].items !== undefined) {
+            this.lstItemOC = rpta.ordencompra[0].items;
+          }
+          /*if (rpta.ordencompra[0].quotes !== undefined) {
+            this.lstQuotes = rpta.ordencompra[0].quotes;
+          }*/
+
+          if (rpta.ordencompra[0].cuotas !== undefined) {
+            this.listaCuotas = rpta.ordencompra[0].cuotas;
+          }
+          /*if (rpta.ordencompra[0].asientos !== undefined) {
+            this.lstAsientos = rpta.ordencompra[0].asientos;
+            this.tot_debe = this.lstAsientos.reduce((acc: number, item: any) => acc + item.mtodebe, 0);
+            this.tot_haber = this.lstAsientos.reduce((acc: number, item: any) => acc + item.mtohaber, 0);
+          }*/
+
+          /*this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);
+          this.visibleDocument = false;
+          this.visibleAsiento = false;
+
+          this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
+          this.registerFormRegistro.get('tipodoc_ctb')?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));*/
+          //this._alm_idordencompra = rpta.ordencompra[0].alm_idordencompra;
+          this.s_monto = rpta.ordencompra[0].s_monto;
+          this.s_igv = rpta.ordencompra[0].s_igv;
+          this.montoTotal = rpta.ordencompra[0].s_monto_total;
+          this.montoTotal = rpta.ordencompra[0].s_monto_total;
+          /*this.mostrarBotones(rpta.ordencompra[0].estado);
+          this.setearDias(rpta.ordencompra[0].fecvencimiento, rpta.ordencompra[0].fecemision);
+          this.registerFormRegistro.get('monto_pen_pago')?.setValue(rpta.ordencompra[0].s_monto_neto_CTB);
+          this.registerFormRegistro.get('fecvencimiento')?.setValue(rpta.ordencompra[0].fecvencimiento);
+          this.registerFormRegistro.get('fecemision')?.setValue(rpta.ordencompra[0].fecemision);*/
+          this.nrocuotas = rpta.ordencompra[0].nrocuotas
+          this.getBusquedaRUC();
+          this.changeAplicaDetra(rpta.ordencompra[0].inddetraccion_ctb);
+          this.getMontoAnticipo(rpta.ordencompra[0].monto_anticipo);
+          this.setSpinner(false);
+          this.changeEditaDetra(rpta.ordencompra[0].indmanualdetraccion);
+          //this.changeProyecto(rpta.ordencompra[0].idproyecto);
+          this.gettipocambiodia(new Date(this.serviceUtilitario.formatFecha(rpta.ordencompra[0].fecemision)));
+          //this.changeAplicaSunat2(rpta.ordencompra[0].indsunatreg);
+          
+          //this.recalcularRegistro();
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+
+        }
+      });
+    this.$listSubcription.push($cargarOrdenC)
   }
 }
