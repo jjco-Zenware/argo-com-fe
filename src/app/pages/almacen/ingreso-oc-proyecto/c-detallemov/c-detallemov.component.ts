@@ -730,7 +730,8 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
       const objeto ={
         idordencompra: dato,
         idusuario: constantesLocalStorage.idusuario,
-        idtipodocprc: this.IA_data.idtipodocprc
+        idtipodocprc: this.IA_data.idtipodocprc,
+        idalmacen: this.registerFormRegistro.value.idalmacen
       }
       const $personaProveedorlist = this.proyectosService.ordenCompraTraerunoSubproceso(objeto).subscribe({
           next: (rpta: any) => {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Validators, FormControl } from '@angular/forms';
-import { mensajesGenericos, moduloAPP, tipoAcceso } from '@constantes';
+import { constantesLocalStorage, mensajesGenericos, moduloAPP, tipoAcceso } from '@constantes';
 import { I_rptaDataLogin } from '@interfaces';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';

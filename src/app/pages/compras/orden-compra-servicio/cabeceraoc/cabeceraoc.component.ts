@@ -198,6 +198,7 @@ export class CabeceraocComponent implements OnInit, OnDestroy{
       tc: [{ value: 0, disabled: false }],
       fecprogramacion: [{ value: null, disabled: false }],
       nomsubfamilia: [{ value: '', disabled: false }],
+      parm_igv: [{ value: 596, disabled: false }],
     });
   }
 

@@ -433,7 +433,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                         .get('fecemision')
                         ?.setValue(rpta.ordencompra[0].fecemision);
                     this.nrocuotas = rpta.ordencompra[0].nrocuotas;
-                    //this.getBusquedaRUC();
+                    this.getBusquedaRUC();
                     this.setSpinner(false);
                     this.gettipocambiodia(
                         new Date(
@@ -455,7 +455,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     this.serviceSharedApp.messageToast();
                 },
                 complete: () => {
-                    this.getBusquedaRUC();
+                    //this.getBusquedaRUC();
                     this.changeProyecto(this.ordenCompra.idproyecto);
                     this.registerFormRegistro
                         .get('idordencompra_origen_ctb')
