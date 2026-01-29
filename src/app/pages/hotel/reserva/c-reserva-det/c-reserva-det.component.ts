@@ -1539,7 +1539,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
     const idsEstadoItem = _items.map((item: any) => item.estadopago);
     const existeEstadoPagado = idsEstadoItem.some((estado: any) => estado === 'PAG');
-    if (existeEstadoPagado) { 
+    if (existeEstadoPagado) {
       this.serviceSharedApp.messageToast({
         severity: 'info',
         summary: 'Aviso...!',
@@ -1907,7 +1907,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
   cambioTipoDoc(dato: any) {
     console.log('cambioTipoDoc...', dato);
-    const tipoDocCtb:any = {
+    const tipoDocCtb: any = {
       factura: 1,
       boleta: 2
     };
@@ -2037,7 +2037,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     }
     const idsItemFacturados = _items.map((item: any) => item.indfacturado);
     const existeFacturado = idsItemFacturados.some((item: any) => item === tipoFacturado.Facturado);
-    if (existeFacturado) { 
+    if (existeFacturado) {
       this.serviceSharedApp.messageToast({
         severity: 'info',
         summary: 'Aviso...!',
@@ -2093,6 +2093,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     ref.onClose.subscribe((rpta: any) => {
       this.selectedDetalle = [];
       if (!rpta) { return; }
+      this.recargarListaOC();
     });
   }
 
@@ -2208,6 +2209,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     this.visRegistrarPago = false;
     this.visDetalle = false;
     this.visQuote = false;
+    this.recargarListaOC();
   }
 
   preCuenta() {
@@ -2263,9 +2265,39 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       styleClass: 'testDialog',
       width: '60%'
     });
-    refItem.onClose.subscribe((rpta: any) => { 
+    refItem.onClose.subscribe((rpta: any) => {
       this.selectedDetalle = [];
+      this.recargarListaOC();
     });
   }
 
+  recargarListaOC() {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Cargando...!';
+    const objeto = {
+      idordencompra: this.idOrdenC,
+      idusuario: constantesLocalStorage.idusuario
+    }
+
+    const $ordenCompraTraeruno = this.proyectosService.ordenCompraTraeruno(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          if (rpta.length === 0) { return }
+          console.log('rpta.ordencompra[0]', rpta.ordencompra[0]);
+          const data = rpta.ordencompra[0];
+          if (data.items !== undefined) {
+            this.lstItemOC = data.items;
+          }
+        },
+        error: (err: any) => {
+          this.setSpinner(false);
+          console.error('error : ', err);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => {
+          this.setSpinner(false);
+        },
+      });
+    this.$listSubcription.push($ordenCompraTraeruno)
+  }
 }
