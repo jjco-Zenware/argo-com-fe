@@ -2028,15 +2028,30 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
       return
     }
-
-    const codigosSeleccionados = this.selectedDetalle.map((x: any) => x.idordencompraitem ?? x);
-    const _items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
-
+    
     const tipoFacturado = {
       SinFacturar: 0,
       Facturado: 1,
     }
-    const idsItemFacturados = _items.map((item: any) => item.indfacturado);
+    let codigosSeleccionados = this.selectedDetalle.map((x: any) => x.idordencompraitem ?? x);
+    let _items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
+    let idsItemFacturados;
+    if (codigosSeleccionados.length === this.lstItemOC.length){
+      const itemTotales = _items.map((item: any) => {
+        return {
+          idordencompraitem: item.idordencompraitem,
+          indfacturado: item.indfacturado
+        }
+      });
+      
+      //codigosSeleccionados = itemSinFacturar.filter((item: any) => item.indfacturado === tipoFacturado.SinFacturar)
+      codigosSeleccionados = itemTotales
+      .filter((item: any) => item.indfacturado === tipoFacturado.SinFacturar)
+      .map((item: any) => item.idordencompraitem);
+    }
+
+    _items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
+    idsItemFacturados = _items.map((item: any) => item.indfacturado);
     const existeFacturado = idsItemFacturados.some((item: any) => item === tipoFacturado.Facturado);
     if (existeFacturado) {
       this.serviceSharedApp.messageToast({
@@ -2047,7 +2062,9 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const detalleCompra = this.selectedDetalle.map((item: any) => {
+    const _detalleCompra = this.selectedDetalle.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
+    this.selectedDetalle = _detalleCompra
+    const detalleCompra = _detalleCompra.map((item: any) => {
       return {
         ...item,
         iddocumentoprcitem_trx: item.idordencompraitem,
