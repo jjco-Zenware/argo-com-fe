@@ -343,7 +343,8 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       fecingresopais: [{ value: null, disabled: false }],
       tiempopermanencia: [{ value: null, disabled: false }],
       tipopermanencia: [{ value: 'D', disabled: false }],
-      codverificaciontam: [{ value: null, disabled: false }]
+      codverificaciontam: [{ value: null, disabled: false }],
+      indretencion_ctb: [{ value: null, disabled: false }],
     });
 
 

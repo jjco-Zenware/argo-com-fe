@@ -58,6 +58,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   lstTipoDetra: any[] = [];
   lstTipoPagoDetra: any[] = [];
   esGuardado: boolean = false;
+  verRetencion: boolean = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -161,6 +162,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       indsunatreg: [{ value: false, disabled: false }],
       idcategoria: [{ value: 2, disabled: false }],
       idtipodoc: [{ value: '', disabled: false }],
+      indretencion_ctb: [{ value: null, disabled: false }],
     });
   }
 
@@ -442,13 +444,13 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       this.frmDatos.get('detraccion_tipo').disable();
       this.frmDatos.get('detraccion_tipo_pago').disable();
 
-      this.frmDatos.get('retencion_tipo').enable();
+      /*this.frmDatos.get('retencion_tipo').enable();
       this.frmDatos.get('monto_retencion').enable();
       this.frmDatos.get('retencion_base_imponible').enable();
 
       this.frmDatos.get('retencion_tipo')?.setValue(0);
       this.frmDatos.get('porc_detraccion')?.setValue(0);
-      this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue(0);
+      this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue(0);*/
     } else {
       console.log('false...', value);
       this.verDetraccion = true;
@@ -458,13 +460,13 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       this.frmDatos.get('detraccion_tipo').enable();
       this.frmDatos.get('detraccion_tipo_pago').enable();
 
-      this.frmDatos.get('retencion_tipo').disable();
+      /*this.frmDatos.get('retencion_tipo').disable();
       this.frmDatos.get('monto_retencion').disable();
       this.frmDatos.get('retencion_base_imponible').disable();
 
       this.frmDatos.get('retencion_tipo')?.setValue(0);
       this.frmDatos.get('monto_retencion')?.setValue(0);
-      this.frmDatos.get('retencion_base_imponible')?.setValue(0);
+      this.frmDatos.get('retencion_base_imponible')?.setValue(0);*/
     }
     this.setSpinner(false);
   }
@@ -1398,4 +1400,34 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       });
     this.$listSubcription.push($cargarOrdenC)
   }
+
+  changeAplicaRetencion(value: any) {
+    this.setSpinner(true);
+    this.mensajeSpinner="Aplicando retencion...";
+    console.log('changeAplicaRetencion...', value);
+    if (!value) {
+      console.log('entro...', value);
+      this.verRetencion = false;
+      this.frmDatos.get('retencion_tipo').enable();
+      this.frmDatos.get('monto_retencion').enable();
+      this.frmDatos.get('retencion_base_imponible').enable();
+
+      this.frmDatos.get('retencion_tipo')?.setValue(0);
+      this.frmDatos.get('porc_detraccion')?.setValue(0);
+      this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue(0);
+    } else {
+      console.log('false...', value);
+      this.verRetencion = true;
+
+      this.frmDatos.get('retencion_tipo').disable();
+      this.frmDatos.get('monto_retencion').disable();
+      this.frmDatos.get('retencion_base_imponible').disable();
+
+      this.frmDatos.get('retencion_tipo')?.setValue(0);
+      this.frmDatos.get('monto_retencion')?.setValue(0);
+      this.frmDatos.get('retencion_base_imponible')?.setValue(0);
+    }
+    this.setSpinner(false);
+  }
+
 }
