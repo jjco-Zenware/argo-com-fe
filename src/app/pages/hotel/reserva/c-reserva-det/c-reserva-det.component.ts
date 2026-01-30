@@ -23,6 +23,7 @@ import { CMAgregarProductoComponent } from '../cm-agregar-producto/cm-agregar-pr
 import { CmRegistrarFacturacionComponent } from '../cm-registrar-facturacion/cm-registrar-facturacion.component';
 import { CmAgregarHabitacionComponent } from '../cm-agregar-habitacion/cm-agregar-habitacion.component';
 import { CmTransferirItemsComponent } from '../cm-transferir-items/cm-transferir-items.component';
+import { CmPuntoVentaComponent } from '../../punto-venta/cm-punto-venta/cm-punto-venta.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -1580,11 +1581,24 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       items
     };
 
-    this.tituloDetalle = "Registrar Pago " + idordencompra;
+    /*this.tituloDetalle = "Registrar Pago " + idordencompra;
     this.vistaLista = false;
     this.visRegistrarPago = true;
     //this.verbtnGrabar = false
-    this.O_GetBackHabitacion.emit();
+    this.O_GetBackHabitacion.emit();*/
+    const ref = this.dialogService.open(CmPuntoVentaComponent, {
+      data: this.dataRegistrarPago,
+      header: "Registrar Pago " + idordencompra,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '45%'
+    });
+
+    ref.onClose.subscribe((rpta: any) => {
+      this.selectedDetalle = [];
+      if (!rpta) { return; }
+      this.recargarListaOC();
+    });
   }
 
   onVer(data: any) {

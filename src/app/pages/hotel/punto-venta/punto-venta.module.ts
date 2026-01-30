@@ -15,11 +15,13 @@ import { ContabilidadService } from '../../contabilidad/service/contabilidad.ser
 import { ReservaService } from '../reserva/reserva.service';
 import { AlmacenService } from '../../almacen/service/almacenServices';
 import { SharedAppService } from '@sharedAppService';
+import { CmPuntoVentaComponent } from './cm-punto-venta/cm-punto-venta.component';
 
 @NgModule({
   declarations: [
     CPuntoVentaListadoComponent,
-    CPuntoVentaDatoComponent
+    CPuntoVentaDatoComponent,
+    CmPuntoVentaComponent
   ],
   imports: [
     CommonModule,

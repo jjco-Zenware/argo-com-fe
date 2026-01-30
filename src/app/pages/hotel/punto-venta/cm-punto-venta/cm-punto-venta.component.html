@@ -1,0 +1,193 @@
+<div class="card p-2">
+    <form [formGroup]="frmDatos" class="p-fluid grid col-12 border-1 border-round surface-border p-2 m-2">
+        <div class="grid" style="width:50%;margin-left:0;justify-content:flex-start;">
+            <div class="col-12 md:col-4 lg:col-4 mb-0">
+                <div class="flex">
+                    <label class="block text-900 mb-1">Tipo de Comprobante </label>
+                </div>
+                <span inputStyleClass="font-semibold surface-300">
+                    <p-dropdown [options]="lstComprobante" formControlName="tipodoc_ctb"
+                        placeholder="Seleccionar Origen" optionLabel="nomitemsunat" optionValue="codsunat"
+                        [readonly]=onlyRead class="p-inputtext-sm"></p-dropdown>
+                </span>
+            </div>
+            <div class="col-12 md:col-4 lg:col-4 mb-0">
+                <label class="block text-900 mb-1">Habitacion<span class="text-red-500 font-bold"> *</span></label>
+                <span>
+                    <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="nuevaHabitacion"
+                        placeholder="Seleccionar..." optionValue="idprod" appendTo="body" [readonly]="onlyRead"
+                        class="p-inputtext-sm" (onChange)="changeHabitacion($event.value)"></p-dropdown>
+                </span>
+            </div>
+            <div class="col-12 md:col-4 lg:col-4 mb-0">
+                <label class="block text-900 mb-1">N° Reserva</label>
+                <span class="p-fluid">
+                    <input pInputText type="text" class="font-semibold surface-300 p-inputtext-sm"
+                        formControlName="iddocumentoprc_origen" />
+                </span>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6 mb-0">
+                <label class="block text-900 font-medium">Tipo Documento</label>
+                <p-dropdown [options]="dropdownItemsTipNro" formControlName="idtipodoc" optionLabel="destipodoc"
+                    placeholder="Seleccionar Documento" optionValue="idtipodoc" (onChange)="cambioTipoDoc($event.value)"
+                    inputStyleClass="w-full" appendTo="body" styleClass="w-full"></p-dropdown>
+            </div>
+            <div class="col-12 md:col-6 lg:col-6 mb-0">
+                <label class="block text-900  mb-1">{{tituloTipoDocumento}} <span class="text-red-500 font-bold">
+                        *</span></label>
+                <span class="p-input-icon-right">
+                    <i class="pi pi-search cursor-pointer" pTooltip="Busqueda por RUC" tooltipPosition="bottom"
+                        (click)="getBusquedaRUC()"></i>
+                    <input pInputText type="text" formControlName="nrodocumento" [readonly]="onlyRead"
+                        class="p-inputtext-sm" (keydown.enter)="$event.preventDefault(); getBusquedaRUC()" />
+                </span>
+            </div>
+            <div class="col-12 mb-0">
+                <div class="flex">
+                    <label class="block text-900 mb-1">Cliente </label>
+                    <i *ngIf="esVisEditPersona" class="pi pi-user-edit cursor-pointer text-primary ml-2"
+                        pTooltip="Editar Cliente" tooltipPosition="right" (click)="editPersona()"></i>
+                </div>
+                <span inputStyleClass="font-semibold surface-300">
+                    <p-dropdown [options]="lstCliente" placeholder="Cliente..." formControlName="idproveedor"
+                        class="p-inputtext-sm" optionLabel="razonsocial" optionValue="idcliente" appendTo="body"
+                        [readonly]="onlyRead" [filter]="true" (onChange)="getDatos($event.value)"></p-dropdown>
+                </span>
+            </div>
+        </div>
+    </form>
+
+    <div class="grid" style="width:95%; margin-left:0; justify-content:flex-start; margin-top: 1rem;">
+        <div class="ml-2 col-12 border-1 border-round surface-border">
+            <p-table [value]="lstItemOC" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
+                [scrollable]="true" styleClass="p-datatable-sm ">
+                <ng-template pTemplate="caption">
+                    <div class="flex gap-2 mb-2">
+                        <button pButton class="font-semibold p-button-outlined w-auto h-2rem" pTooltip="Agregar Item"
+                            icon="pi pi-plus" label="Agregar" (click)="getAgregarProdHabit('P')"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
+                        <th style="width: 70px;" class="bg-teal-50 border-1">
+                            <div class="justify-content-end ">
+                                CÓDIGO
+                            </div>
+                        </th>
+                        <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
+                        <th style="width: 70px;" class="bg-teal-50 border-1">
+                            <div class="justify-content-end ">
+                                U. MED
+                            </div>
+                        </th>
+                        <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                            <div class="justify-content-end ">
+                                P. UNI.
+                            </div>
+                        </th>
+                        <th style="width: 70px; text-align:center;" class="bg-teal-50 border-1">
+                            <div class="justify-content-end ">
+                                CANT.
+                            </div>
+                        </th>
+                        <th style="width: 100px; text-align:center;" class="bg-teal-50 border-1">
+                            <div class="justify-content-end ">
+                                TOTAL
+                            </div>
+                        </th>
+                        <th style="width: 30px;" class="bg-teal-50 border-1">
+                            <div class="flex justify-content-between align-items-center">
+                                ACCIONES
+                            </div>
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                    <tr>
+                        <td>{{rowIndex + 1}}</td>
+                        <td>
+                            <div [ngStyle]="{'width':'70px'}">
+                                {{ product.codproducto }}
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                {{ product.descripcion | uppercase}}
+                            </div>
+                        </td>
+                        <td>
+                            <div [ngStyle]="{'width':'70px'}">
+                                {{ product.nomunidad }}
+                            </div>
+                        </td>
+                        <td>
+                            <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                {{ product.preciocosto | number: '0.2'}}
+                            </div>
+                        </td>
+                        <td>
+                            <div [ngStyle]="{'width':'70px','text-align':'right'}">
+                                {{ product.cantidad | number: '0.2'}}
+                            </div>
+                        </td>
+                        <td>
+                            <div [ngStyle]="{'width':'100px','text-align':'right'}">
+                                {{ product.preciocostototal | number: '0.2'}}
+                            </div>
+                        </td>
+                        <td>
+                            <!-- <div *ngIf="verItems" class="flex" [ngStyle]="{'width':'30px','text-align':'right'}"> -->
+                            <div class="flex" [ngStyle]="{'width':'30px','text-align':'right'}">
+                                <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item"
+                                    tooltipPosition="left" (click)="getItem(product, rowIndex)"
+                                    class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
+                                    tooltipPosition="left" (click)="eliminarItem(product, rowIndex)"
+                                    class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <tr>
+                        <td colspan="6" class="text-right">Sub Total: </td>
+                        <td>
+                            <div [ngStyle]="{'text-align':'right'}">
+                                {{s_monto | number: '0.2-2'}}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-right">IGV: </td>
+                        <td>
+                            <div [ngStyle]="{'text-align':'right'}">
+                                {{s_igv | number: '0.2-2'}}
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="text-right">Total: </td>
+                        <td>
+                            <div [ngStyle]="{'text-align':'right'}">
+                                {{montoTotal | number: '0.2-2'}}
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
+<div class="flex justify-content-end">
+    <button *ngIf="verbtnGrabar" pButton icon="pi pi-save" label="{{nombreBtnGuardar}}"
+        class="p-button-primary w-auto h-2rem" (click)="guardarOC()"></button>
+</div>
+
+<p-blockUI [blocked]="blockedDocument">
+    <div class="flex align-items-center justify-content-center">
+        <p-progressSpinner></p-progressSpinner>
+        <span class="ml-2">{{mensajeSpinner}}</span>
+    </div>
+</p-blockUI>
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
