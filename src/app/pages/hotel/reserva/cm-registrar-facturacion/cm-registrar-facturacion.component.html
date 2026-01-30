@@ -155,23 +155,6 @@
                     </span>
                 </div>
 
-                <div class="col-12 h-4rem">
-                    <div class="flex align-items-center justify-content-start h-full">
-                        <p-checkbox formControlName="inddetraccion_ctb" inputId="ny" [binary]="true"
-                            class="align-items-center" (onChange)="changeAplicaDetra($event.checked)" />
-                        <p class="m-0 ml-2">Detracción</p>
-                    </div>
-                </div>
-                <div class="sm:col-6 lg:col-6 md:col-6 col-6 -mt-1">
-                    <label class="block text-900 mb-1">Sunat Transacción <span class="text-red-500 font-bold"> *
-                        </span></label>
-                    <span>
-                        <p-dropdown [options]="lstSunatTrans" formControlName="fel_sunat_transaction"
-                            optionLabel="nomitemsunat" placeholder="Seleccionar..." optionValue="codsunat"
-                            appendTo="body" class="p-inputtext-sm"
-                            (onChange)="getMontoAnticipo($event.value)"></p-dropdown>
-                    </span>
-                </div>
                 <!-- <div class="sm:col-6 lg:col-6 md:col-6 col-6 -mt-1">
                     <label class="text-900 mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
                     <span>
@@ -222,8 +205,24 @@
                     <p-inputNumber mode="decimal" [minFractionDigits]="2" inputStyleClass="surface-100 text-right"
                         class="p-inputtext-sm " formControlName="monto_pen_pago" [readonly]="true"></p-inputNumber>
                 </div>
+
+                <div class="sm:col-6 lg:col-3 md:col-3 col-6 flex align-items-center mt-4">
+                    <p-checkbox formControlName="inddetraccion_ctb" inputId="ny" [binary]="true"
+                        class="align-items-center" (onChange)="changeAplicaDetra($event.checked)" />
+                    <p class="m-0 ml-2">Detracción</p>
+                </div>
+                <div class="sm:col-6 lg:col-6 md:col-6 col-6 -mt-1">
+                    <label class="block text-900 mb-1">Sunat Transacción <span class="text-red-500 font-bold"> *
+                        </span></label>
+                    <span>
+                        <p-dropdown [options]="lstSunatTrans" formControlName="fel_sunat_transaction"
+                            optionLabel="nomitemsunat" placeholder="Seleccionar..." optionValue="codsunat"
+                            appendTo="body" class="p-inputtext-sm"
+                            (onChange)="getMontoAnticipo($event.value)"></p-dropdown>
+                    </span>
+                </div>
                 <ng-container *ngIf="verDetraccion">
-                    <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
+                    <div class="sm:col-6 lg:col-3 md:col-3 h-4rem">
                         <label class=" text-900 mb-1">% Detracción</label>
                         <span class="p-fluid">
                             <p-inputNumber class="mt-1" formControlName="porc_detraccion" locale="es-PE" mode="decimal"
@@ -232,40 +231,51 @@
                                 (onInput)="recalcularRegistro($event.value)"></p-inputNumber>
                         </span>
                     </div>
-                    <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
-                        <div class="flex justify-content-end mb-1">
-                            <label class="text-900">Editar </label>
-                        </div>
-                        <span class="flex justify-content-end flex-wrap mt-2">
-                            <p-checkbox formControlName="indmanualdetraccion" inputId="ny" [binary]="true"
-                                class="align-items-end" (onChange)="changeEditaDetra($event.checked)"
-                                pTooltip="Editar el Monto Detracción" tooltipPosition="bottom" />
-                        </span>
+                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 flex align-items-center mt-4">
+                        <p-checkbox formControlName="indmanualdetraccion" inputId="ny" [binary]="true"
+                            class="align-items-center" (onChange)="changeEditaDetra($event.checked)"
+                            pTooltip="Editar el Monto Detracción" tooltipPosition="bottom" />
+                        <p class="m-0 ml-2">Editar</p>
                     </div>
-                    <div class="sm:col-6 lg:col-2 md:col-12 h-4rem field ">
+                    <div class="sm:col-6 lg:col-3 md:col-3 h-4rem ">
                         <label class="text-900 mb-1">Monto Detracción S/</label>
                         <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
                             formControlName="monto_detraccion_mn_CTB" Monto
                             inputStyleClass="text-right"></p-inputNumber>
                     </div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <div class="sm:col-6 lg:col-6 md:col-6">
                         <label class="text-900 mb-1">Tipo Detracción</label>
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstTipoDetra" formControlName="detraccion_tipo"
                                 placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
-                                class="p-inputtext-sm" [filter]="true" appendTo="body"></p-dropdown>
+                                class="p-inputtext-sm" [filter]="true" appendTo="body"
+                                [dropdownStyle]="{ 'max-width': '400px' }" panelStyleClass="dropdown-wrap-panel">
+                                <ng-template let-item pTemplate="item">
+                                    <div style="white-space:normal; word-break:break-word; max-width:380px;">
+                                        {{item.nomitemsunat}}
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
                         </span>
                     </div>
-                    <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                    <div class="sm:col-6 lg:col-6 md:col-6 col-6 h-4rem mb-2">
                         <label class="text-900 mb-1">Tipo Pago</label>
                         <span class="p-fluid mt-1">
                             <p-dropdown [options]="lstTipoPagoDetra" formControlName="detraccion_tipo_pago"
                                 placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
-                                class="p-inputtext-sm" [filter]="true" appendTo="body"></p-dropdown>
+                                class="p-inputtext-sm" [filter]="true" appendTo="body"
+                                [dropdownStyle]="{ 'max-width': '400px' }" panelStyleClass="dropdown-wrap-panel">
+                                <ng-template let-item pTemplate="item">
+                                    <div style="white-space:normal; word-break:break-word; max-width:380px;">
+                                        {{item.nomitemsunat}}
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
                         </span>
                     </div>
                 </ng-container>
-                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                <div
+                    [ngClass]="!verDetraccion ? 'sm:col-6 lg:col-3 md:col-3 h-4rem' : 'sm:col-6 lg:col-6 md:col-6 col-6 h-4rem'">
                     <label class="text-900 mb-1">Tipo Retención</label>
                     <span class="p-fluid mt-1">
                         <p-dropdown [options]="lstTipoRetencion" formControlName="retencion_tipo"
@@ -273,17 +283,17 @@
                             class="p-inputtext-sm" appendTo="body"></p-dropdown>
                     </span>
                 </div>
-                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                <div class="sm:col-4 lg:col-4 md:col-4 col-4 h-4rem field">
                     <label class="text-900 mb-1">Base Retención S/</label>
                     <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
                         formControlName="retencion_base_imponible" inputStyleClass="text-right"></p-inputNumber>
                 </div>
-                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                <div class="sm:col-4 lg:col-4 md:col-4 col-4 h-4rem field">
                     <label class="text-900 mb-1">Monto Retención S/</label>
                     <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
                         formControlName="monto_retencion" inputStyleClass="text-right"></p-inputNumber>
                 </div>
-                <div class="sm:col-4 lg:col-3 md:col-3 col-6 h-4rem field">
+                <div class="sm:col-4 lg:col-4 md:col-4 col-4 h-4rem field">
                     <label class=" text-900 mb-1">Monto Anticipo</label>
                     <span class="p-fluid">
                         <p-inputNumber class="mt-1" formControlName="monto_anticipo" locale="es-PE" mode="decimal"
@@ -440,9 +450,19 @@
         </p-tabPanel>
     </p-tabView>
 </div>
-
-<div class="flex justify-content-end">
-    <button pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-primary mr-2" (click)="vistaPreliminar()"></button>
+                <style>
+                .dropdown-wrap-panel {
+                    max-width: 400px !important;
+                }
+                .dropdown-wrap-panel .p-dropdown-items .p-dropdown-item {
+                    white-space: normal !important;
+                    word-break: break-word !important;
+                    max-width: 380px !important;
+                }
+                </style>
+                <div class="flex justify-content-end">
+    <button pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-primary mr-2"
+        (click)="vistaPreliminar()"></button>
     <button pButton icon="pi pi-save" label="Facturar" class="p-button-primary mr-2" (click)="guardarOC()"></button>
     <button pButton icon="pi pi-times" label="Cancelar" class="p-button-secondary" (click)="cerrar(false)"></button>
 </div>

@@ -429,6 +429,8 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   }
 
   changeAplicaDetra(value: any) {
+    this.setSpinner(true);
+    this.mensajeSpinner="Aplicando detraccion...";
     console.log('changeAplicaDetra...', value);
     this.listarItemsTablaSunat();
     if (!value) {
@@ -464,6 +466,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       this.frmDatos.get('monto_retencion')?.setValue(0);
       this.frmDatos.get('retencion_base_imponible')?.setValue(0);
     }
+    this.setSpinner(false);
   }
 
   listarItemsTablaSunat() {
