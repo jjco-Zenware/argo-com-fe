@@ -2394,6 +2394,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       cuotas: this.listaCuotas,
       nrocuotas: this.nrocuotas,
       retencion_tipo: retencion_tipo,
+      idordencompra: 0,
       tiporeporte: 2
     }
 
