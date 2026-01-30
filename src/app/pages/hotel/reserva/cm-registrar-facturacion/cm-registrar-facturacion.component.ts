@@ -59,6 +59,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
   lstTipoPagoDetra: any[] = [];
   esGuardado: boolean = false;
   verRetencion: boolean = false;
+  verConsumo: boolean = false;
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -163,6 +164,8 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       idcategoria: [{ value: 2, disabled: false }],
       idtipodoc: [{ value: '', disabled: false }],
       indretencion_ctb: [{ value: null, disabled: false }],
+      indconsumo_fel: [{ value: false, disabled: false }],
+      textoconsumo: [{ value: null, disabled: false }],
     });
   }
 
@@ -186,7 +189,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       next: () => {
         const { tipoProceso, detalleCompra, ...itemFrmDatos } = this.data;
 
-        if(tipoProceso === 'VENTA' && itemFrmDatos.idordencompra > 0){
+        if (tipoProceso === 'VENTA' && itemFrmDatos.idordencompra > 0) {
           this.traerUnoDatoVenta(itemFrmDatos.idordencompra)
           return;
         }
@@ -214,7 +217,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
         this.maximaFechaDesde = this.parsearFecha(this.frmDatos.value.fecvencimiento);
         //this.calcularMontosCompra();
         //if(this.frmDatos.get('porc_detraccion')?.value > 0){
-          this.recalcularRegistro(this.frmDatos.get('porc_detraccion')?.value, true);
+        this.recalcularRegistro(this.frmDatos.get('porc_detraccion')?.value, true);
         //}
         this.gettipocambiodia(new Date());
         //this.prcCuota(1)
@@ -432,7 +435,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
 
   changeAplicaDetra(value: any) {
     this.setSpinner(true);
-    this.mensajeSpinner="Aplicando detraccion...";
+    this.mensajeSpinner = "Aplicando detraccion...";
     console.log('changeAplicaDetra...', value);
     this.listarItemsTablaSunat();
     if (!value) {
@@ -863,7 +866,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       idordencompra: this.esGuardado ? this.frmDatos.get('idordencompra')?.value : 0,
       iddocumentoprc_origen: this.data.idordencompra,
       idtipodocprc: 6,
-      codtipodoc: this.data.codtipodoc ?? 'OPO'      
+      codtipodoc: this.data.codtipodoc ?? 'OPO'
     }
 
     console.log('guardarOC...', objeto);
@@ -1297,7 +1300,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
           this.s_igv = data.monto_igv;
           this.montoTotal = data.monto;
 
-          if(procesaCuotas){
+          if (procesaCuotas) {
             this.prcCuota(1)
           }
 
@@ -1329,7 +1332,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     //}
   }
 
-   traerUnoDatoVenta(idordencompra:number) {
+  traerUnoDatoVenta(idordencompra: number) {
     this.setSpinner(true);
     this.mensajeSpinner = 'Cargando...!';
     const objeto = {
@@ -1386,7 +1389,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
           //this.changeProyecto(rpta.ordencompra[0].idproyecto);
           this.gettipocambiodia(new Date(this.serviceUtilitario.formatFecha(rpta.ordencompra[0].fecemision)));
           //this.changeAplicaSunat2(rpta.ordencompra[0].indsunatreg);
-          
+
           //this.recalcularRegistro();
         },
         error: (err) => {
@@ -1403,7 +1406,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
 
   changeAplicaRetencion(value: any) {
     this.setSpinner(true);
-    this.mensajeSpinner="Aplicando retencion...";
+    this.mensajeSpinner = "Aplicando retencion...";
     console.log('changeAplicaRetencion...', value);
     if (!value) {
       console.log('entro...', value);
@@ -1428,6 +1431,18 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       this.frmDatos.get('retencion_base_imponible')?.setValue(0);
     }
     this.setSpinner(false);
+  }
+
+  changeAplicaConsumo(value: any) {
+    if (!value) {
+      console.log('entro...', value);
+      this.verConsumo = false;
+      this.frmDatos.get('textoconsumo').disable();
+    } else {
+      this.verConsumo = true;
+      this.frmDatos.get('textoconsumo').enable();
+    }
+    this.frmDatos.get('textoconsumo')?.setValue(null);
   }
 
 }

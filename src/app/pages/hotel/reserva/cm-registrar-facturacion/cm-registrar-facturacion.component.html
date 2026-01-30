@@ -309,9 +309,26 @@
                             inputStyleClass="text-right"></p-inputNumber>
                     </span>
                 </div>
+
+                <div class="col-12 flex align-items-center mt-4">
+                    <p-checkbox formControlName="indconsumo_fel" inputId="ny" [binary]="true" class="align-items-center"
+                        (onChange)="changeAplicaConsumo($event.checked)" />
+                    <p class="m-0 ml-2">Consumo</p>
+                </div>
+                <ng-container *ngIf="verConsumo">
+                    <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-3">
+                        <label class="block text-900 font-semibold">Por Consumo <span class="text-red-500 font-bold"> *
+                            </span></label>
+                        <span class="p-fluid">
+                            <textarea type="text" pInputTextarea [rows]="2" formControlName="textoconsumo"
+                                style="resize: none" class="w-full p-inputtext-sm"></textarea>
+                        </span>
+                    </div>
+                </ng-container>
             </form>
 
             <div class="ml-2 col-12 border-1 border-round surface-border">
+
                 <p-table [value]="lstItemOC" responsiveLayout="stack" [breakpoint]="'960px'"
                     [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" styleClass="p-datatable-sm ">
                     <ng-template pTemplate="caption">
@@ -458,17 +475,6 @@
         </p-tabPanel>
     </p-tabView>
 </div>
-<style>
-    .dropdown-wrap-panel {
-        max-width: 400px !important;
-    }
-
-    .dropdown-wrap-panel .p-dropdown-items .p-dropdown-item {
-        white-space: normal !important;
-        word-break: break-word !important;
-        max-width: 380px !important;
-    }
-</style>
 <div class="flex justify-content-end">
     <button pButton icon="pi pi-file" label="Vista Preliminar" class="p-button-primary mr-2"
         (click)="vistaPreliminar()"></button>
