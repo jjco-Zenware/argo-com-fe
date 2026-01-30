@@ -142,6 +142,18 @@ export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy
 
   reservarHabitacion(item: any) {
     console.log('Reservar habitación:', item);
+
+    const fechaActual = this.utilitariosService.obtenerFechaFormatoISO(this.utilitariosService.obtenerFechaActual());
+    const fechaSeleccionadaISO = this.utilitariosService.obtenerFechaFormatoISO(item.fechaSeleccionada);
+    if(fechaSeleccionadaISO < fechaActual){
+      this.serviceSharedApp.messageToast({
+        severity: 'info',
+        summary: 'Aviso',
+        detail: 'No se puede registrar Reserva, con fecha anterior.'
+      });
+      return;
+    }
+
     const data = {
       ...item,
       tipoProceso: 'PLANING',
