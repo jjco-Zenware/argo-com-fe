@@ -858,7 +858,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       idordencompra: this.esGuardado ? this.frmDatos.get('idordencompra')?.value : 0,
       iddocumentoprc_origen: this.data.idordencompra,
       idtipodocprc: 6,
-      codtipodoc: this.data.codtipodoc ?? 'OPO',
+      codtipodoc: this.data.codtipodoc ?? 'OPO'      
     }
 
     console.log('guardarOC...', objeto);
@@ -1183,6 +1183,7 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       idordencompra: this.esGuardado ? this.frmDatos.get('idordencompra')?.value : 0,
       iddocumentoprc_origen: this.data.idordencompra,
       idtipodocprc: 6,
+      tiporeporte: 1
     }
     const $vistaPreliminarPrc = this.serviceReserva.vistaPreliminarPrc(objeto)
       .subscribe({

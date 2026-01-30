@@ -970,7 +970,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
   }
   /*TODO-MZR*/
 
-  vistaPreliminar() {
+  /*vistaPreliminar() {
     this.setSpinner(true);
     this.mensajeSpinner = 'Generando precuenta...!';
 
@@ -978,7 +978,8 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       idusuario: constantesLocalStorage.idusuario,
       iddocumentoprc: this.idOrdenC,
       codtipoprc: c_habitacion.tipoDocPRC,
-      idplantilla: 0
+      idplantilla: 0,
+      tiporeporte: 2
     }
 
     const $cargarOrdenC = this.ordencompraService.prcDocumentoDet(objeto).subscribe({
@@ -1017,7 +1018,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       },
     });
     this.$listSubcription.push($cargarOrdenC)
-  }
+  }*/
 
   importarPlantilla() {
     this.listarTipoProducto();
@@ -2299,5 +2300,103 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
         },
       });
     this.$listSubcription.push($ordenCompraTraeruno)
+  }
+
+  async vistaPreliminar() {
+    if (this.validarDatos()) {
+      this.setSpinner(false);
+      this.messageService.add({ severity: 'info', summary: 'Aviso', detail: this.errorMensaje });
+      return;
+    }
+    if (this.listaCuotas.length > 0) {
+      for (let i = 0; i < this.listaCuotas.length; i++) {
+        this.listaCuotas[i].nrocuota = i + 1;
+        if (this.listaCuotas[i].monto === 0) {
+          this.messageService.add({ severity: 'info', summary: 'Aviso', detail: 'El monto de la cuota debe ser mayor que cero...' });
+          return;
+        }
+      }
+    }
+
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Guardando...!';
+    let fechaingreso;
+    let fecemision;
+    let fechaIni;
+    let fecvencimiento;
+    let fechaFin;
+    fechaingreso = this.registerFormRegistro.value.fechaingreso;
+    fecemision = this.registerFormRegistro.value.fecemision;
+    fechaIni = this.registerFormRegistro.value.fecha_ini;
+    fecvencimiento = this.registerFormRegistro.value.fecvencimiento;
+    fechaFin = this.registerFormRegistro.value.fecha_fin;
+
+    try {
+      if (fechaingreso.toString().length === 10) {
+        fechaingreso = new Date(this.serviceUtilitario.formatFecha(fechaingreso));
+      }
+      if (fecemision.toString().length === 10) {
+        fecemision = new Date(this.serviceUtilitario.formatFecha(fecemision));
+      }
+      if (fechaIni.toString().length === 10) {
+        fechaIni = new Date(this.serviceUtilitario.formatFecha(fechaIni));
+      }
+      if (fecvencimiento.toString().length === 10) {
+        fecvencimiento = new Date(this.serviceUtilitario.formatFecha(fecvencimiento));
+      }
+      if (fechaFin.toString().length === 10) {
+        fechaFin = new Date(this.serviceUtilitario.formatFecha(fechaFin));
+      }
+    } catch (error) {
+      this.setSpinner(false);
+    }
+
+    for (let i = 0; i < this.lstItemOC.length; i++) {
+      if (this.lstItemOC[i].cantidad.toString() === '') {
+        this.lstItemOC[i].cantidad = 0;
+      }
+      if (this.lstItemOC[i].preciocosto.toString() === '') {
+        this.lstItemOC[i].preciocosto = 0;
+      }
+    }
+
+    let retencion_tipo = this.registerFormRegistro.value.retencion_tipo;
+    if (!this.registerFormRegistro.value.inddetraccion_ctb) {
+      retencion_tipo = 0;
+    }
+
+    const objeto = {
+      ...this.registerFormRegistro.getRawValue(),
+      items: this.lstItemOC,
+      fechaingreso,
+      fecemision,
+      fecha_ini: fechaIni,
+      fecvencimiento,
+      fecha_fin: fechaFin,
+      tipodoc_ctb: (this.registerFormRegistro.value.tipodoc_ctb).toString(),
+      cuotas: this.listaCuotas,
+      nrocuotas: this.nrocuotas,
+      retencion_tipo: retencion_tipo,
+      tiporeporte: 2
+    }
+
+    console.log('guardarOC...', objeto);
+    const $vistaPreliminarPrc = this.serviceReserva.vistaPreliminarPrc(objeto)
+      .subscribe({
+        next: (blob: Blob) => {
+          console.log('vistaPreliminarPrc...', blob);
+          const url = window.URL.createObjectURL(blob);
+          window.open(url, '_blank');
+          this.setSpinner(false);
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast()
+        },
+        complete: () => {
+          this.setSpinner(false);
+        }
+      });
+    this.$listSubcription.push($vistaPreliminarPrc)
   }
 }
