@@ -10,11 +10,11 @@ import { SharedAppService } from '@sharedAppService';
 import { CModalExcTransacHotelComponent } from '../../habitacion/modal-exc-transac-hotel/modal-exc-transac-hotel.component';
 
 @Component({
-  selector: 'app-c-rpt-habitacion',
-  templateUrl: './c-rpt-habitacion.component.html',
-  styleUrls: ['./c-rpt-habitacion.component.scss']
+  selector: 'app-c-planning-reserva',
+  templateUrl: './c-planning-reserva.component.html',
+  styleUrls: ['./c-planning-reserva.component.scss']
 })
-export class CRptHabitacionComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CPlanningReservaComponent implements OnInit, AfterViewInit, OnDestroy {
   $listSubcription: Subscription[] = [];
   frmDatos!: FormGroup;
   dataHabitaciones: any = [];

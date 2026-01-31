@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CRptHabitacionComponent } from './c-rpt-habitacion/c-rpt-habitacion.component';
+import { CPlanningReservaComponent } from './c-planning-reserva/c-planning-reserva.component';
 
 const routes: Routes = [
   {
     path:'',
-    component: CRptHabitacionComponent
+    component: CPlanningReservaComponent
   }
 ];
 
@@ -13,4 +13,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ReporteHabitacionRoutingModule { }
+export class PlanningReservaRoutingModule { }

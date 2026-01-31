@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ReporteHabitacionRoutingModule } from './reporte-habitacion-routing.module';
-import { CRptHabitacionComponent } from './c-rpt-habitacion/c-rpt-habitacion.component';
+import { PlanningReservaRoutingModule } from './planning-reserva-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { DropdownModule } from 'primeng/dropdown';
@@ -16,15 +15,16 @@ import { ConfirmationService } from 'primeng/api';
 import { ReservaService } from '../reserva/reserva.service';
 import { ReservaModule } from '../reserva/reserva.module';
 import { HabitacionesService } from '../habitacion/habitaciones.service';
+import { CPlanningReservaComponent } from './c-planning-reserva/c-planning-reserva.component';
 
 
 @NgModule({
   declarations: [
-    CRptHabitacionComponent
+    CPlanningReservaComponent
   ],
   imports: [
     CommonModule,
-    ReporteHabitacionRoutingModule,
+    PlanningReservaRoutingModule,
     SharedAppModule,
     SharedPrimeNgModule,
     FormsModule,
