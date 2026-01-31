@@ -29,7 +29,7 @@ const routes: Routes = [
   },
   {
     path: 'planning-reservas',
-    loadChildren: () => import('./reporte/reporte-habitacion.module').then(m => m.ReporteHabitacionModule),
+    loadChildren: () => import('./planning-reservas/planning-reserva.module').then(m => m.PlanningReservaModule),
     data: { breadcrumb: 'Planing de Reserva' }
   },
   {

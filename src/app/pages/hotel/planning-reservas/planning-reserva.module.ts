@@ -43,4 +43,4 @@ import { CPlanningReservaComponent } from './c-planning-reserva/c-planning-reser
     HabitacionesService
   ]
 })
-export class ReporteHabitacionModule { }
+export class PlanningReservaModule { }
