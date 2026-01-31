@@ -27,7 +27,6 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
 
   blockedDocument: boolean = false;
   mensajeSpinner: string = "";
-  listadoHabitacion: any[] = [];
   menuItemsAcciones: MenuItem[] = [];
   menuItemsReservas: MenuItem[] = [];
   menuItemsFacturacion: MenuItem[] = [];
@@ -66,6 +65,7 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
   listarHabitacion() {
     this.setSpinner(true);
     this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+    this.habitacionesAgrupadas = [];
 
     const objeto =
     {
@@ -83,8 +83,8 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
         next: (rpta: any) => {
           this.setSpinner(false);
           console.log('rpta getListar', rpta);
-          this.listadoHabitacion = rpta.habitaciones;
-          this.habitacionesAgrupadas = this.getHabitacionesAgrupadasPorUbicacion(this.listadoHabitacion);
+          const listadoHabitacion = rpta.habitaciones;
+          this.habitacionesAgrupadas = this.getHabitacionesAgrupadasPorUbicacion(listadoHabitacion);
         },
         error: (err) => {
           this.setSpinner(false);
@@ -222,7 +222,8 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     this.dataPrc = {
       idordencompra: item.idnrooperacion,
       paramReg: 'E',
-      visBtnFacturacion: true
+      visBtnFacturacion: true,
+      codtipodoc: 'REH'
     }
   }
 
@@ -253,7 +254,8 @@ export class CHabitacionListComponent implements OnInit, OnDestroy {
     this.dataPrc = {
       iddocumentoprc_origen: item.idnrooperacion,
       paramReg: 'E',
-      visBtnFacturacion: true
+      visBtnFacturacion: true,
+      codtipodoc: 'REH'
     }
   }
 

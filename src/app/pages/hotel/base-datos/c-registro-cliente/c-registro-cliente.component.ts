@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit,  } from '@angular/core';
+import { Component, OnDestroy, OnInit, } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { Cliente } from '@interfaces';
@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ComprasService } from '../../../compras/Service/compraServices';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-c-registro-cliente',
@@ -13,215 +14,256 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   styleUrls: ['./c-registro-cliente.component.scss']
 })
 
-  export class CRegistroClienteComponent implements OnInit, OnDestroy{
+export class CRegistroClienteComponent implements OnInit, OnDestroy {
 
-    $listSubcription: Subscription[] = [];
-  
-    dataCT:any;
-    vistaLista: boolean = true;
-    visDetalle: boolean = false;
-  
-    listaClientes: Cliente[] =[];
-    tituloDetalle!: string;
-    frmDatos!: FormGroup;
-    blockedDocument: boolean = false;
-    mensajeSpinner: string = "";
-    cols: any[] = [];
-  
-    dropdownItemsEstado = [
-        { name: 'Registrado', code: 'REG' },
-        { name: 'Confirmado', code: 'CFM' },
-        { name: 'Aprobado', code: 'APR' },
-        { name: 'Rechazado', code: 'RCH' }
-    ];
-  
-    constructor(
-        private fb: FormBuilder,
-        private utilitariosService: UtilitariosService,
-        private comprasService: ComprasService,
-        private messageService: MessageService,
-        private confirmationService: ConfirmationService
-      ){  
-            
-    }
+  $listSubcription: Subscription[] = [];
 
-    setSpinner(valor: boolean) {
-      this.blockedDocument = valor;
-      }
-  
-    ngOnInit(): void{
-      this.getClientes();
-      this.cols = [
-        { field: 'razonsocial', header: 'Razón Social' },
-        { field: 'nomcomercial', header: 'Nombre Comercial' },
-        { field: 'idtipodoc', header: 'Tipo Documento' },
-        { field: 'nrodocumento', header: 'N° Documento' },
-        { field: 'nomtipopersona', header: 'Tipo Persona' },
-        { field: 'telefresumen', header: 'Telefono' },
-        { field: 'email', header: 'Email' },
-        { field: 'nomestado', header: 'Estado' },
-    ];
-      this.createFrm();
-    }
-  
-    ngOnDestroy(): void {
-        if (this.$listSubcription != undefined) {
-          this.$listSubcription.forEach((sub) => sub.unsubscribe());
-        }
-      }
-  
-    createFrm(){
-        this.frmDatos = this.fb.group({
-            idestado: [
-            {
-              value: null,
-              disabled: false,
-            },
-          ],idcliente: [
-            {
-              value: null,
-              disabled: false,
-            },
-          ],idproyecto: [
-            {
-              value: null,
-              disabled: false,
-            },
-          ],
-          fechaini: [
-            {
-              value: this.utilitariosService.obtenerFechaInicioMes(),
-              disabled: false,
-            },
-          ],
-          fechafin: [
-            {
-              value: this.utilitariosService.obtenerFechaFinMes(),
-              disabled: false,
-            },
-          ],
-          idusuario: [
-            {
-              value: constantesLocalStorage.idusuario,
-              disabled: false,
-            },
-          ],
-        })
-      }
-  
-    getClientes() {
-      this.setSpinner(true);
-      this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
+  dataCT: any;
+  vistaLista: boolean = true;
+  visDetalle: boolean = false;
 
-      const objeto = {
-          idrolpersona: 'CLI',
-          idusuario: constantesLocalStorage.idusuario
-      }
+  listaClientes: Cliente[] = [];
+  tituloDetalle!: string;
+  frmDatos!: FormGroup;
+  blockedDocument: boolean = false;
+  mensajeSpinner: string = "";
+  cols: any[] = [];
 
-      const $getClientes =  this.comprasService.ListaProveedores(objeto).subscribe({
-          next: (rpta: any) => {
-              this.setSpinner(false);
-              console.info('getClientes : ', rpta);
-              this.listaClientes = rpta;
-          },
-          error: (err) => {
-              this.setSpinner(false);
-              console.info('error : ', err);
-              this.messageService.clear();
-              this.messageService.add({
-                  severity: 'error',
-                  summary: 'Error',
-                  detail: mensajesQuestion.msgErrorGenerico,
-              });
-          },
-          complete: () => {},
-          });
-          this.$listSubcription.push($getClientes);
+  dropdownItemsEstado = [
+    { name: 'Registrado', code: 'REG' },
+    { name: 'Confirmado', code: 'CFM' },
+    { name: 'Aprobado', code: 'APR' },
+    { name: 'Rechazado', code: 'RCH' }
+  ];
+  lstExportar: any[] = [];
+  lstExportExcel: any[] = [];
 
-    }
-  
-    onVer(data: any) {
-        console.log('onVer...', data);
-        this.tituloDetalle = "VER CLIENTE" + data.razonsocial;
-        this.vistaLista = false;
-        this.visDetalle = true;
-    }
-  
-    EditarCliente(data: any) {
-        console.log('EditarCliente...', data);
-        this.tituloDetalle = "EDITAR CLIENTE " + data.razonsocial;
-        this.vistaLista = false;
-        this.visDetalle = true;
+  constructor(
+    private fb: FormBuilder,
+    private utilitariosService: UtilitariosService,
+    private comprasService: ComprasService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
+  ) {
 
-        this.dataCT = data;
-    }
-
-    onNuevo(data: any) {
-      console.log('nuevo cliente...',data);
-      this.dataCT = data;
-      this.tituloDetalle = "REGISTRAR NUEVO CLIENTE" ;
-      this.vistaLista = false;
-      this.visDetalle = true;
   }
-  
-    getDetalle(dato:boolean){
-        this.vistaLista = true;
-        this.visDetalle = false;
+
+  setSpinner(valor: boolean) {
+    this.blockedDocument = valor;
+  }
+
+  ngOnInit(): void {
+    this.getClientes();
+    this.cols = [
+      { field: 'razonsocial', header: 'Razón Social' },
+      { field: 'nomcomercial', header: 'Nombre Comercial' },
+      { field: 'idtipodoc', header: 'Tipo Documento' },
+      { field: 'nrodocumento', header: 'N° Documento' },
+      { field: 'nomtipopersona', header: 'Tipo Persona' },
+      { field: 'telefresumen', header: 'Telefono' },
+      { field: 'email', header: 'Email' },
+      { field: 'nomestado', header: 'Estado' },
+    ];
+    this.createFrm();
+  }
+
+  ngOnDestroy(): void {
+    if (this.$listSubcription != undefined) {
+      this.$listSubcription.forEach((sub) => sub.unsubscribe());
     }
-  
-    getBack() {
-        this.vistaLista = true;
-        this.visDetalle = false;
-        this.getClientes();
-      }
+  }
 
+  createFrm() {
+    this.frmDatos = this.fb.group({
+      idestado: [
+        {
+          value: null,
+          disabled: false,
+        },
+      ], idcliente: [
+        {
+          value: null,
+          disabled: false,
+        },
+      ], idproyecto: [
+        {
+          value: null,
+          disabled: false,
+        },
+      ],
+      fechaini: [
+        {
+          value: this.utilitariosService.obtenerFechaInicioMes(),
+          disabled: false,
+        },
+      ],
+      fechafin: [
+        {
+          value: this.utilitariosService.obtenerFechaFinMes(),
+          disabled: false,
+        },
+      ],
+      idusuario: [
+        {
+          value: constantesLocalStorage.idusuario,
+          disabled: false,
+        },
+      ],
+    })
+  }
 
-      getActvarDesactivar(dato:any){   
-        this.confirmationService.confirm({
-          key: 'confirm1',
-          header: 'Confirmación',
-          //target: event.target || new EventTarget,
-          message: '¿Estás seguro de Activar/Desactivar el Cliente: '+ '<b>'+ dato.razonsocial +'</b>'+ '?',
-          //icon: 'pi pi-exclamation-triangle text-6xl',
-          accept: () => {
-            this.activarCliente(dato);  
-          }
-      }); 
-        
-      }
+  getClientes() {
+    this.setSpinner(true);
+    this.mensajeSpinner = mensajesSpinner.msjRecuperaLista
 
-    activarCliente(data: any){      
-      this.setSpinner(true);
-      const objeto = {
-        idpersona: data.idcliente,
-        idusuario: constantesLocalStorage.idusuario,
-        indestado: data.indestado
+    const objeto = {
+      idrolpersona: 'CLI',
+      idusuario: constantesLocalStorage.idusuario
     }
 
-    const $getClientes =  this.comprasService.activarProveedor(objeto).subscribe({
-        next: (rpta: any) => {
-            this.setSpinner(false);
-            console.info('getClientes : ', rpta);
-            if (rpta.procesoSwitch === 0){
-              this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje }); 
-              this.getClientes(); 
-             }else{
-              this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
-             }
-        },
-        error: (err) => {
-            this.setSpinner(false);
-            console.info('error : ', err);
-            this.messageService.clear();
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Error',
-                detail: mensajesQuestion.msgErrorGenerico,
-            });
-        },
-        complete: () => {},
+    const $getClientes = this.comprasService.ListaProveedores(objeto).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        console.info('getClientes : ', rpta);
+        this.listaClientes = rpta;
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        console.info('error : ', err);
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
         });
-        this.$listSubcription.push($getClientes);
-    }
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($getClientes);
+
   }
-  
+
+  onVer(data: any) {
+    console.log('onVer...', data);
+    this.tituloDetalle = "VER CLIENTE" + data.razonsocial;
+    this.vistaLista = false;
+    this.visDetalle = true;
+  }
+
+  EditarCliente(data: any) {
+    console.log('EditarCliente...', data);
+    this.tituloDetalle = "EDITAR CLIENTE " + data.razonsocial;
+    this.vistaLista = false;
+    this.visDetalle = true;
+
+    this.dataCT = data;
+  }
+
+  onNuevo(data: any) {
+    console.log('nuevo cliente...', data);
+    this.dataCT = data;
+    this.tituloDetalle = "REGISTRAR NUEVO CLIENTE";
+    this.vistaLista = false;
+    this.visDetalle = true;
+  }
+
+  getDetalle(dato: boolean) {
+    this.vistaLista = true;
+    this.visDetalle = false;
+  }
+
+  getBack() {
+    this.vistaLista = true;
+    this.visDetalle = false;
+    this.getClientes();
+  }
+
+
+  getActvarDesactivar(dato: any) {
+    this.confirmationService.confirm({
+      key: 'confirm1',
+      header: 'Confirmación',
+      //target: event.target || new EventTarget,
+      message: '¿Estás seguro de Activar/Desactivar el Cliente: ' + '<b>' + dato.razonsocial + '</b>' + '?',
+      //icon: 'pi pi-exclamation-triangle text-6xl',
+      accept: () => {
+        this.activarCliente(dato);
+      }
+    });
+
+  }
+
+  activarCliente(data: any) {
+    this.setSpinner(true);
+    const objeto = {
+      idpersona: data.idcliente,
+      idusuario: constantesLocalStorage.idusuario,
+      indestado: data.indestado
+    }
+
+    const $getClientes = this.comprasService.activarProveedor(objeto).subscribe({
+      next: (rpta: any) => {
+        this.setSpinner(false);
+        console.info('getClientes : ', rpta);
+        if (rpta.procesoSwitch === 0) {
+          this.messageService.add({ severity: 'success', summary: 'OK...', detail: rpta.mensaje });
+          this.getClientes();
+        } else {
+          this.messageService.add({ severity: 'error', summary: 'Error...', detail: rpta.mensaje });
+        }
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        console.info('error : ', err);
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+        });
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($getClientes);
+  }
+
+  exportar(data: any) {
+    this.lstExportar = [];
+    if (data.filteredValue !== undefined) {
+      this.lstExportExcel = data.filteredValue;
+    } else {
+      this.lstExportExcel = data._value
+    }
+
+    for (let i = 0; i < this.lstExportExcel.length; i++) {
+      const objeto = {
+        'N°': i + 1,
+        'RAZÓN SOCIAL': this.lstExportExcel[i].razonsocial,
+        'NOMBRE COMERCIAL': this.lstExportExcel[i].nomcomercial,
+        'TIPO DOCUMENTO': this.lstExportExcel[i].idtipodoc,
+        'NRO DOCUMENTO': this.lstExportExcel[i].nrodocumento,
+        'TIPO PERSONA': this.lstExportExcel[i].nomtipopersona,
+        'TELEFONO': this.lstExportExcel[i].telefresumen,
+        'EMAIL': this.lstExportExcel[i].email,
+        'ESTADO': this.lstExportExcel[i].nomestado
+      }
+      this.lstExportar.push(objeto);
+    }
+
+    import('xlsx').then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+      this.saveAsExcelFile(excelBuffer, 'REGISTRO_CLIENTES');
+    });
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
+    });
+    FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
+  }
+}

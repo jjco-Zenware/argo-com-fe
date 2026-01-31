@@ -702,6 +702,9 @@
                                 </td>
                                 <td>
                                     <div class="flex" [ngStyle]="{'width':'30px','text-align':'right'}">
+                                        <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item"
+                                                tooltipPosition="left" (click)="getItem(product, rowIndex)"
+                                                class="p-button-text p-button-rounded text-900 text-blue-600"></button>
                                         <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
                                             tooltipPosition="left" (click)="eliminaPAX(data)"
                                             class="p-button-text p-button-rounded text-900 text-red-600"></button>

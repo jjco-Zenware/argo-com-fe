@@ -136,7 +136,8 @@ export class CPlanningReservaComponent implements OnInit, AfterViewInit, OnDestr
     this.dataPrc = {
       idordencompra: item.idoperacion,
       paramReg: 'E',
-      visBtnFacturacion: true
+      visBtnFacturacion: true,
+      codtipodoc: 'RPL'
     }
   }
 

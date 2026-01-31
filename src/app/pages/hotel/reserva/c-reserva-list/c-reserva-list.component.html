@@ -91,14 +91,12 @@
                     </div>
                 </th>
             </tr>
-          
-            <!-- <tr>
+            <tr>
                 <th></th>
                 <th *ngFor="let col of cols">
                     <input pInputText type="text" (input)="dt1.filter($any($event.target).value, col.field, col.filterMatchMode)" class="w-full h-2rem"/>                    
                 </th>
-            </tr> -->
-           
+            </tr>
         </ng-template>
         <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
             <tr class="text-sm">
@@ -144,8 +142,8 @@
                         <button pButton pRipple type="button" icon="pi pi-file-pdf" tooltipPosition="bottom" pTooltip="Vista Preliminar" class="p-button-rounded p-button-text z-3 ml-auto sm:ml-0 text-red-500" (click)="onVerDetalle(data)"></button>
 
                         <p-tieredMenu #menu [model]="menuItems" appendTo="body" [popup]="true"></p-tieredMenu>
-                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text text-green-500" (click)="onVer(data)"></button>
-                        <button pButton pRipple type="button" icon="pi pi-file-edit" tooltipPosition="bottom" pTooltip="Editar" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button>
+                        <!-- <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text text-green-500" (click)="onVer(data)"></button> -->
+                        <button pButton pRipple type="button" icon="pi pi-eye" tooltipPosition="bottom" pTooltip="Ver" class="p-button-rounded p-button-text text-yellow-500" (click)="onEditar(data)"></button>
                     </div>
                 </td>
             </tr>
