@@ -32,6 +32,7 @@ export class CPlanningReservaComponent implements OnInit, AfterViewInit, OnDestr
   menuContextualData: any = null;
 
   opcionesMenuContextual: any[] = [];
+  nombreMes:string='';
 
   constructor(
     private readonly fb: FormBuilder,
@@ -95,6 +96,7 @@ export class CPlanningReservaComponent implements OnInit, AfterViewInit, OnDestr
           this.setSpinner(false);
           this.dataHabitaciones = rpta.hotel[0].habitaciones;
           this.dataLeyenda = rpta.hotel[0].leyenda;
+          this.nombreMes = rpta.hotel[0].nom_mes || '';
           //console.log("dataHabitaciones: ", this.dataHabitaciones);
 
           this.loadDias(rpta.hotel[0].nrodias || 0);
