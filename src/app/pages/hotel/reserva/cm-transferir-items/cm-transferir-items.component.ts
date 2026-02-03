@@ -74,17 +74,11 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
       idprod: 0,
       idusuario: constantesLocalStorage.idusuario,
     };
-    this.serviceReserva.listarHabitacionesCombo3(objeto).subscribe({
+    this.serviceReserva.listarReservasCombo(objeto).subscribe({
       next: (rpta: any) => {
         this.setSpinner(false);
-        const data = rpta.habitaciones.map((hab: any) => {
-          return {
-            ...hab,
-            descripcionCompleta: `${hab.nomHabitacion} - N° ${hab.idreserva}`
-          }
-        });
-        this.lstHabitaciones = data;
-        this.existeHabitacionTransferible = rpta.habitaciones.length > 0;
+        this.lstHabitaciones = rpta.reservas;
+        this.existeHabitacionTransferible = rpta.reservas.length > 0;
       },
       error: (err) => {
         this.setSpinner(false);
@@ -222,5 +216,12 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
         this.setSpinner(false);
       },
     });
+  }
+
+  getDatosReserva(dato: any) {
+    console.log('getDatos...', dato);
+    /*let provee = this.lstCliente.filter((x: { idcliente: number; }) => x.idcliente === dato);
+    this.registerFormRegistro.get('nrodocumento')?.setValue(provee[0].nrodocumento);
+    this.registerFormRegistro.get('direccion')?.setValue(provee[0].direcresumen);*/
   }
 }

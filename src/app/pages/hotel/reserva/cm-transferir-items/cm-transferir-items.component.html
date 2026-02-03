@@ -1,12 +1,15 @@
 <div>
     <div class="flex justify-content-between mb-4 mt-3 gap-2 border-1 border-round surface-border p-2 bg-blue-50">
         <form [formGroup]="frmDatos">
-            <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="descripcionCompleta"
-                optionValue="idprod" placeholder="Seleccionar Habitacion" inputStyleClass="w-full" appendTo="body"
-                styleClass="w-full"></p-dropdown>
+            <div class="flex flex-column md:flex-row gap-2 w-full">
+                <p-dropdown [options]="lstHabitaciones" formControlName="idprod" optionLabel="nombreitem"
+                    optionValue="idprod" placeholder="Seleccionar Habitacion" appendTo="body" [filter]="true"
+                    (onChange)="getDatosReserva($event.value)" class="p-inputtext-sm flex-1 w-full"></p-dropdown>
+                <button pButton [disabled]="!existeHabitacionTransferible" icon="pi pi-save" label="Transferir"
+                    class="p-button-primary w-full md:w-auto" style="white-space:nowrap;"
+                    (click)="transferir()"></button>
+            </div>
         </form>
-        <button pButton [disabled]="!existeHabitacionTransferible" icon="pi pi-save" label="Transferir"
-            class="p-button-primary w-auto h-2rem" (click)="transferir()"></button>
     </div>
     <div class="ml-2 col-12 border-1 border-round surface-border">
         <p-table [value]="lstItemOC" responsiveLayout="stack" [breakpoint]="'960px'"

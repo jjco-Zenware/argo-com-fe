@@ -79,4 +79,9 @@ export class ReservaService {
     return this.http.post<any>(url, objeto)
   }
 
+  listarReservasCombo(objeto: any) {
+    const url = `${constantesApiWeb.listarReservasCombo}`;
+    return this.http.post<any>(url, objeto)
+  }
+
 }

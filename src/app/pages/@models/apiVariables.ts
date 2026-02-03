@@ -302,5 +302,6 @@ export const constantesApiWeb = {
     transferirReservaHabitacionItems: controllerHotel + '/TransferirReservaHabitacionItems',
     facturardocprcasync: controllerLogger + '/facturardocprcasync',
     vistapreliminarprc: controllerMain + '/vistapreliminarprc',
-    calculoDetraccionV2: controllerTesoreria + '/calculodetraccionv2'
+    calculoDetraccionV2: controllerTesoreria + '/calculodetraccionv2',
+    listarReservasCombo: controllerHotel + '/listarreservascombo'
 }
