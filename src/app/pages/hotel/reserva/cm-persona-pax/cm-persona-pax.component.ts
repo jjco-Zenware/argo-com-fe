@@ -200,6 +200,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
         ...this.registerFormCliente.getRawValue(),
         idreserva: this.param.idreserva,
         idprod: this.registerFormCliente.get('idprod')?.value,
+        iditempax: this.param.iditempax || 0,
       }
       const $registrarPaxPRC = this.serviceReserva.registrarPaxPRC(objeto)
         .subscribe({
