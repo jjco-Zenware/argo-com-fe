@@ -1451,6 +1451,8 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       ...itemDocumento,
       nroDocumento: itemDocumento?.nrodocumento,
       tipopersona: itemDocumento?.idtipodoc && dctsNaturales.includes(itemDocumento.idtipodoc) ? 'N' : 'J',
+      idreserva: this.IA_data.idordencompra,
+      idprod: 0,
     }
 
     const refItem = this.dialogService.open(CmPersonaPaxComponent, {
