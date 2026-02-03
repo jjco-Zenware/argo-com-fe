@@ -105,7 +105,7 @@
                             <div class="flex">
                                 <label class="block text-900 mb-1">Cliente </label>
                                 <i *ngIf="esVisEditPersona" class="pi pi-user-edit cursor-pointer text-primary ml-2"
-                                pTooltip="Editar Cliente" tooltipPosition="right" (click)="editPersona()"></i>
+                                    pTooltip="Editar Cliente" tooltipPosition="right" (click)="editPersona()"></i>
                                 <!-- <i class="pi pi-user-plus cursor-pointer text-blue-600" style="margin-left: 10px;"
                                     pTooltip="Nuevo Cliente" tooltipPosition="right" (click)="NuevoPersona();"></i> -->
                             </div>
@@ -395,9 +395,11 @@
                                             <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item"
                                                 tooltipPosition="left" (click)="getItem(product, rowIndex)"
                                                 class="p-button-text p-button-rounded text-900 text-blue-600"></button>
-                                            <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
-                                                tooltipPosition="left" (click)="eliminarItem(product)"
-                                                class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                            <ng-container *ngIf="product.indeliminar === 1">
+                                                <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
+                                                    tooltipPosition="left" (click)="eliminarItem(product)"
+                                                    class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                            </ng-container>
                                         </div>
                                     </td>
                                 </tr>
@@ -703,11 +705,11 @@
                                 <td>
                                     <div class="flex" [ngStyle]="{'width':'30px','text-align':'right'}">
                                         <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item"
-                                                tooltipPosition="left" (click)="clientePAX(data)"
-                                                class="p-button-text p-button-rounded text-900 text-blue-600"></button>
-                                        <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
+                                            tooltipPosition="left" (click)="clientePAX(data)"
+                                            class="p-button-text p-button-rounded text-900 text-blue-600"></button>
+                                        <!-- <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item"
                                             tooltipPosition="left" (click)="eliminaPAX(data)"
-                                            class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                            class="p-button-text p-button-rounded text-900 text-red-600"></button> -->
                                     </div>
                                 </td>
                             </tr>
@@ -1058,7 +1060,8 @@
                 </div>
             </div>
         </div> -->
-        <app-c-punto-venta-dato [IA_data]="dataRegistrarPago" (O_GetBackListado)="getBackListado()"></app-c-punto-venta-dato>
+        <app-c-punto-venta-dato [IA_data]="dataRegistrarPago"
+            (O_GetBackListado)="getBackListado()"></app-c-punto-venta-dato>
     </ng-container>
     <ng-template #visDetQuote>
         <ng-container *ngIf="visDetalle" (OB_back)="getDetalle($event)">
