@@ -1399,7 +1399,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     console.log("eliminaPAX: ", item);
 
     this.confirmationService.confirm({
-      key: 'confirm1',
+      key: 'confirm2',
       header: 'Confirmación',
       message: '¿Desea Eliminar Item ' + '<b>' + item.razonsocial + '</b>' + '?',
       accept: () => {
@@ -1446,17 +1446,17 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     console.log("clientePAX itemDocumento: ", itemDocumento);
     
     const dctsNaturales: string[] = ['DNI', 'CEX', 'CDI', 'PAS'];
-    const objet = {
+    const data = {
       idrolpersona: 'PRO',
       ...itemDocumento,
       nroDocumento: itemDocumento?.nrodocumento,
-      tipopersona: itemDocumento?.idtipodoc && dctsNaturales.includes(itemDocumento.idtipodoc) ? 'N' : 'J',
+      tipopersona: 'N', //itemDocumento?.idtipodoc && dctsNaturales.includes(itemDocumento.idtipodoc) ? 'N' : 'J',
       idreserva: this.IA_data.idordencompra,
       idprod: 0,
     }
 
     const refItem = this.dialogService.open(CmPersonaPaxComponent, {
-      data: objet,
+      data,
       header: "Agregar Cliente PAX",
       closeOnEscape: false,
       styleClass: 'testDialog',
