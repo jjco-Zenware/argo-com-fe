@@ -2,13 +2,13 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogRef, DynamicDialogConfig, DialogService } from 'primeng/dynamicdialog';
-import { map, Subscription } from 'rxjs';
-import { UtilitariosService } from 'src/app/services/utilitarios.service';
+import { Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { ReservaService } from '../reserva.service';
+
 @Component({
   selector: 'app-cm-persona-pax',
   templateUrl: './cm-persona-pax.component.html'
@@ -74,6 +74,9 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
     this.listarItemsTabla();
     this.listarHabitacion();
     this.listarTiposDoc();
+    if(this.param?.idtipodoc != null && this.param?.nroDocumento != null){
+      this.getBuscarPersonaPAX();
+    }
     this.cambioTipoPer('N');
   }
 
@@ -88,12 +91,12 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
     this.registerFormCliente = this.formBuilder.group({
       //idrolpersona: [{ value: this.param.idrolpersona, disabled: false }],
       idrolpersona: [{ value: "CLI", disabled: false }],
-      tipopersona: [{ value: 'N', disabled: false }],
+      tipopersona: [{ value: this.param?.tipopersona || 'N', disabled: false }],
       tipoalta: [{ value: 'NOR', disabled: false }],
-      indnacionalidad: [{ value: '1', disabled: false }, [Validators.required]],
+      indnacionalidad: [{ value: this.param?.esExtranjero ? '0' : '1', disabled: false }, [Validators.required]],
       idpais: [{ value: '1', disabled: false }],
-      idtipodoc: [{ value: null, disabled: false }, [Validators.required]],
-      nrodocumento: [{ value: null, disabled: false }, [Validators.required]],
+      idtipodoc: [{ value: this.param?.idtipodoc || null, disabled: false }, [Validators.required]],
+      nrodocumento: [{ value: this.param?.nroDocumento || null, disabled: false }, [Validators.required]],
       appaterno: [{ value: null, disabled: false }, [Validators.required]],
       apmaterno: [{ value: null, disabled: false }, [Validators.required]],
       apcasada: [{ value: null, disabled: false }],
@@ -122,8 +125,6 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
       adm_fechanacimiento: [{ value: null, disabled: false }, [Validators.required]],
     });
   }
-
-
 
   cambioTipoPer(dato: any) {
     this.listarTiposDoc();
@@ -282,7 +283,7 @@ export class CmPersonaPaxComponent implements OnInit, OnDestroy {
   }
 
   getBuscarPersonaPAX() {
-    const { idtipodoc, nrodocumento, tipopersona } = this.registerFormCliente.getRawValue();
+    const { idtipodoc, nrodocumento } = this.registerFormCliente.getRawValue();
     if (!idtipodoc) {
       this.messageService.add({ severity: 'info', summary: 'Aviso', detail: "Seleccione Tipo Documento" });
       return;

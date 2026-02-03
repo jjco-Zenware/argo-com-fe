@@ -834,33 +834,6 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  getItem(data: any, index: number) {
-    data.nroindex = index;
-    data.idordencompra = this.idOrdenC;
-    data.origenreg = 'RV';
-    console.log('CItemOrdenesComponent', data);
-    const refItem = this.dialogService.open(CItemOrdenesComponent, {
-      data: data,
-      header: data.length == 0 ? "Agregar Detalle" : "Editar Detalle - " + data.idordencompraitem,
-      closeOnEscape: false,
-      styleClass: 'testDialog',
-      width: '40%'
-    });
-    refItem.onClose.subscribe((rpta: any) => {
-
-      console.log('onClose', rpta);
-      if (rpta != undefined) {
-        const _posAll: number = this.lstItemOC.findIndex((x => x.nroindex == index))
-        if (_posAll != -1) {
-          this.lstItemOC.splice(_posAll, 1)
-        }
-        console.log('getItem', rpta.objeto);
-        this.lstItemOC.push(rpta.objeto);
-        console.log('this.lstItemOC', this.lstItemOC);
-      }
-    });
-  }
-
   eliminarItem(data: any) {
     this.confirmationService.confirm({
       key: 'confirm1',
@@ -1463,15 +1436,24 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  clientePAX() {
-    const objet = {
+  clientePAX(itemDocumento?: any) {
+    /*const objet = {
       idreserva: this.IA_data.idordencompra,
       idprod: 0,
       idrolpersona: 'PRO'
+    }*/
+
+    console.log("clientePAX itemDocumento: ", itemDocumento);
+    
+    const dctsNaturales: string[] = ['DNI', 'CEX', 'CDI', 'PAS'];
+    const objet = {
+      idrolpersona: 'PRO',
+      ...itemDocumento,
+      nroDocumento: itemDocumento.nrodocumento,
+      tipopersona: itemDocumento.idtipodoc && dctsNaturales.includes(itemDocumento.idtipodoc) ? 'N' : 'J',
     }
 
     const refItem = this.dialogService.open(CmPersonaPaxComponent, {
-
       data: objet,
       header: "Agregar Cliente PAX",
       closeOnEscape: false,
