@@ -167,7 +167,7 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { idreserva: iddocumentoprc } = this.lstHabitaciones.find(hab => hab.idprod === idprod) || {};
+    /*const { idreserva: iddocumentoprc } = this.lstHabitaciones.find(hab => hab.idreserva === idprod) || {};
     if (!iddocumentoprc) {
       this.serviceSharedApp.messageToast({
         severity: 'warn',
@@ -175,7 +175,7 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
         detail: 'La habitación destino no tiene una reserva asociada válida'
       });
       return;
-    }
+    }*/
 
     const listaItems = this.lstItemOC.map(item => ({
       iditemreserva: item.idordencompraitem,
@@ -183,8 +183,8 @@ export class CmTransferirItemsComponent implements OnInit, OnDestroy {
 
     const objeto = {
       idusuario: constantesLocalStorage.idusuario,
-      iddocumentoprc, //this.data.idnrooperacion,
-      idhabitacion: idprod,
+      iddocumentoprc: idprod, //this.data.idnrooperacion,
+      idhabitacion: 0,
       itemsJson: "",
       listaItems
     };
