@@ -159,7 +159,7 @@
                             <td>
                                 <div *ngIf="verItems" class="flex">
                                     <button pButton pRipple icon="pi pi-map" pTooltip="Ubicación Item" tooltipPosition="left" (click)="verUbicacion(product, product)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
-                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
+                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
 
                                 </div>
                             </td>

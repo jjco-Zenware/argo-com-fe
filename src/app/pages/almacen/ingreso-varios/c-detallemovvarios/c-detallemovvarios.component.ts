@@ -503,7 +503,7 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
     this.montoTotal = totalpreventot;
   }
 
-  eliminarItem(data: any) {
+  eliminarItem(data: any, index:number) {
     this.confirmationService.confirm({
       key: 'confirm1',
       header: 'Confirmación',
@@ -515,10 +515,11 @@ export class CDetalleMovVariosComponent implements OnInit, OnDestroy {
             this.lstItemOC.splice(_posAll, 1)
           }
         } else {
-          const _posAll: number = this.lstItemOC.findIndex((x => x.idnvoitem == data.idnvoitem))
+            this.lstItemOC.splice(index, 1);
+          /*const _posAll: number = this.lstItemOC.findIndex((x => x.idnvoitem == data.idnvoitem))
           if (_posAll != -1) {
             this.lstItemOC.splice(_posAll, 1)
-          }
+          }*/
         }
         this.calcularTotales();
       }
