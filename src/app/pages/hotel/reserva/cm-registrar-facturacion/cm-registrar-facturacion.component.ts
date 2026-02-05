@@ -1125,12 +1125,12 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
       }
     }
 
-    const rpta = await this.serviceSharedApp.confirmDialog({
+    /*const rpta = await this.serviceSharedApp.confirmDialog({
       message: '¿Desea generar la vista preliminar?',
       header: 'Aviso',
     });
 
-    if (!rpta) { return; }
+    if (!rpta) { return; }*/
 
     this.setSpinner(true);
     this.mensajeSpinner = 'Guardando...!';
