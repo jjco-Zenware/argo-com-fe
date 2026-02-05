@@ -38,6 +38,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.data = this.config.data;
+    this.data.saldoPendiente = Number.parseFloat(this.data.totalPagar);
     console.log('data Modal', this.data);
     this.createFrm();
     this.obtenerItemsTabla();
@@ -66,7 +67,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
         coditem: metodo.coditem,
         idmoneda: this.data.idmoneda,
         metodo: metodo.valoritem,
-        montoPago: 0,
+        montoPago: this.data.saldoPendiente,
         montoAplicado: 0,
         referencia: ''
       });
@@ -201,6 +202,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
     }
 
     this.lstDetallePago[index].montoAplicado = montoAplicado;
+    this.data.saldoPendiente = Number((Number.parseFloat(this.data.totalPagar) - this.totalPago).toFixed(2));
   }
 
   obtenerTipoCambio() {
