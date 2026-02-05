@@ -260,7 +260,7 @@ if (
     });
   }
 
-  listarHabitacionReserva$(): Observable<any> {
+  listarHabitacionReserva$(){
     const objeto = {
       codproducto: '',
       idfamilia: 325,
@@ -272,33 +272,51 @@ if (
       idusuario: constantesLocalStorage.idusuario,
     };
 
-    return this.serviceReserva.listarHabitacionesCombo(objeto).pipe(
-      map((rpta: any) => {
+    const $listarHabitacionesCombo = this.serviceReserva.listarHabitacionesCombo(objeto)
+    .subscribe({
+      next: (rpta: any) => {
         console.log('rpta listarHabitacionesCombo: ', rpta);
         //this.lstHabitaciones = rpta.habitaciones;
+        if(rpta.length === 0){return;}
         const data = rpta.habitaciones.map((item: any) => ({
           ...item,
           nuevaHabitacion: `${item.nomHabitacion} - ${item.idreserva}`
         }))
         this.lstHabitaciones = data;
-        return this.lstHabitaciones;
-      }),
-    );
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => {
+        this.setSpinner(false);
+      },
+    });
+    this.$listSubcription.push($listarHabitacionesCombo);
   }
 
-  listarItemsTablaComprobante$(): Observable<any> {
-    return this.contabilidadService.listarItemsTablaSunat(2).pipe(
-      map((rpta: any) => {
+  listarItemsTablaComprobante$() {
+    const $listarItemsTablaSunat = this.contabilidadService.listarItemsTablaSunat(2)
+    .subscribe({
+      next: (rpta: any) => {
         this.lstComprobante = rpta.filter(
           (x: { codsunat: number }) =>
             x.codsunat === 1 || x.codsunat === 2,
         );
         return this.lstComprobante;
-      }),
-    );
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => {
+        this.setSpinner(false);
+      },
+    });
+    this.$listSubcription.push($listarItemsTablaSunat);
   }
 
-  listaHabitaciones$(): Observable<any> {
+  listaHabitaciones$(){
     const objeto = {
       codproducto: '',
       idfamilia: 125,
@@ -308,8 +326,8 @@ if (
       idprod: 0,
       idusuario: constantesLocalStorage.idusuario,
     };
-    return this.serviceReserva.listarHabitacionesCombo3(objeto).pipe(
-      map((rpta: any) => {
+    const $listarHabitacionesCombo3 = this.serviceReserva.listarHabitacionesCombo3(objeto).subscribe({
+      next: (rpta: any) => {
         //this.lstHabitaciones = rpta.habitaciones;
         const data = rpta.habitaciones.map((item: any) => ({
           ...item,
@@ -317,8 +335,16 @@ if (
         }))
         this.lstHabitaciones = data;
         return this.lstHabitaciones;
-      }),
-    );
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.serviceSharedApp.messageToast();
+      },
+      complete: () => {
+        this.setSpinner(false);
+      },
+    });
+    this.$listSubcription.push($listarHabitacionesCombo3);
   }
 
   changeHabitacion(codHabitacion: number) {
@@ -338,10 +364,11 @@ if (
     this.tipoigv = habitacion?.tipoigv_item || 1;
   }
 
-  listarTiposDoc$(): Observable<any> {
+  listarTiposDoc$() {
     const documentosValidos: string[] = ['DNI', 'RUC', 'CEX', 'PAS'];
-    return this.serviceReserva.listartipodocumentotablasunat('X').pipe(
-      map((rpta: any) => {
+    const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat('X')
+    .subscribe({
+      next: (rpta: any) => {
         const filtrados = rpta.filter(
           (item: any) =>
             item.idtipodoc &&
@@ -349,28 +376,63 @@ if (
         );
         this.dropdownItemsTipNro = filtrados;
         return filtrados;
-      }),
-    );
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+        });
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($listartipodocumentotablasunat);
   }
 
-  listaClientes$(): Observable<any> {
+  listaClientes$() {
     let tiporol = 'CLI';
-    return this.proyectosService.obtenerClientes(tiporol).pipe(
-      map((rpta: any) => {
+    const $obtenerClientes = this.proyectosService.obtenerClientes(tiporol)
+    .subscribe({
+      next: (rpta: any) => {
         this.lstCliente = rpta;
         return rpta;
-      }),
-    );
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+        });
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($obtenerClientes);
   }
 
-  listaMonedas$(): Observable<any> {
-    return this.proyectosService.obtenerMonedas().pipe(
-      map((rpta: any) => {
+  listaMonedas$() {
+    const $obtenerMonedas = this.proyectosService.obtenerMonedas()
+    .subscribe({
+      next: (rpta: any) => {
         console.log('listaMonedas', rpta);
         this.lstMonedas = rpta;
         return rpta;
-      }),
-    );
+      },
+      error: (err) => {
+        this.setSpinner(false);
+        this.messageService.clear();
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: mensajesQuestion.msgErrorGenerico,
+        });
+      },
+      complete: () => { },
+    });
+    this.$listSubcription.push($obtenerMonedas);
   }
 
   getDatos(codCliente: number) {
@@ -562,7 +624,7 @@ if (
       if (rpta === undefined) {
         return;
       }
-      this.listaClientes$().subscribe(() => { });
+      this.listaClientes$();
       nrodocumento?.setValue(rpta.objeto.nrodocumento);
       idproveedor?.setValue(Number.parseInt(rpta.objeto.idpersona));
       direccion?.setValue(rpta.objeto.direcresumen);
