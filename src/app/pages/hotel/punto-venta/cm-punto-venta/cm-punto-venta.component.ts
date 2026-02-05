@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, OrdenCompraItem, Moneda } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Subscription, forkJoin, Observable, map } from 'rxjs';
+import { Subscription, forkJoin, of } from 'rxjs';
 import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
@@ -166,13 +166,17 @@ if (
     this.setSpinner(true);
     this.mensajeSpinner = 'Cargando...!';
 
-    forkJoin([
-      this.listarTiposDoc$(),
-      this.listaClientes$(),
-      this.IA_data.codtipodoc === 'RSV' ? this.listarHabitacionReserva$() : this.listaHabitaciones$(),
-      this.listarItemsTablaComprobante$(),
-      this.listaMonedas$(),
-    ]).subscribe({
+    this.listarTiposDoc$();
+    this.listaClientes$();
+    if (this.IA_data.codtipodoc === 'RSV') {
+      this.listarHabitacionReserva$();
+    } else {
+      this.listaHabitaciones$();
+    }
+    this.listarItemsTablaComprobante$();
+    this.listaMonedas$();
+
+    of(null).subscribe({
       next: () => {
         if (!this.IA_data.idordencompra || !this.IA_data.idDocPrcVentaTrx) {
           this.frmDatos.get('idordencompra')?.setValue(0);
