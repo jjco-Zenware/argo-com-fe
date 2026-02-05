@@ -60,6 +60,14 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
 
   agregarDetallePago(metodo: any): void {
     console.log("agregarDetallePago metodo: ", metodo);
+    if(this.data.saldoPendiente <= 0) {
+      this.serviceSharedApp.messageToast({
+        severity: 'warn',
+        summary: 'Validación',
+        detail: 'No hay saldo pendiente para registrar más pagos.'
+      });
+      return;
+    }
 
     if (!this.lstDetallePago.some((p: any) => p.iditem === metodo.iditem)) {
       this.lstDetallePago.push({
@@ -68,13 +76,15 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
         idmoneda: this.data.idmoneda,
         metodo: metodo.valoritem,
         montoPago: this.data.saldoPendiente,
-        montoAplicado: 0,
+        montoAplicado: this.data.saldoPendiente,
         referencia: ''
       });
       this.selectedMetodoPago = metodo.iditem;
     } else {
       this.selectedMetodoPago = metodo.iditem;
     }
+
+    this.data.saldoPendiente = 0.00;
   }
 
   eliminarDetallePago(index: number): void {
