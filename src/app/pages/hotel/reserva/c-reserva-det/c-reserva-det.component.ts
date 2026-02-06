@@ -2440,12 +2440,12 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     this.$listSubcription.push($vistaPreliminarPrc)
   }
 
-  facturar(item:any) {
+  facturar(item:any, tipodeuda:number) {
     this.verbtnGrabar = false;
     console.log('lstItemOC : ', this.lstItemOC);
 
     //const { idordencompra } = this.IA_data;
-    const { idordencompra, idproveedor, idmoneda, s_monto_detraccion_mn_CTB: totalPagar } = item;
+    const { idordencompra, idproveedor, idmoneda, s_monto_detraccion_mn_CTB, saldo_documento } = item;
     const nombreCliente = this.lstCliente.find(
       (x: { idcliente: number }) => x.idcliente === idproveedor,
     )?.razonsocial;
@@ -2457,11 +2457,11 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       idordencompra,
       nombreCliente,
       fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
-      totalPagar,
+      totalPagar: tipodeuda === 2 ? s_monto_detraccion_mn_CTB : saldo_documento,
       idproveedor,
       idmoneda,
       simboloMoneda,
-      tipodeuda: 2
+      tipodeuda //: 2
       //idordencompraitemArray: this.lstItemOC.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
     };
     console.log('facturar data : ', data);
@@ -2475,6 +2475,8 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     });
 
     ref.onClose.subscribe(async (rpta: any) => {
+      console.log('facturar subscribe : ', rpta);
+      this.recargarListaOC();
       if (!rpta?.proceso) {
         //this.verbtnGrabar = true;
         return;
