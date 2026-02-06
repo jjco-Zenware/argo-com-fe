@@ -54,6 +54,44 @@
                         [readonly]="onlyRead" [filter]="true" (onChange)="getDatos($event.value)"></p-dropdown>
                 </span>
             </div>
+            <ng-container *ngIf="visIndDetraccionCTB">
+                <div class="col-12 md:col-6 lg:col-4 xl:col-4 field flex align-items-center mt-4">
+                    <p-checkbox formControlName="inddetraccion_ctb" inputId="ny" [binary]="true"
+                        class="align-items-center" />
+                    <p class="m-0 ml-2">Detracción</p>
+                </div>
+                <div class="col-12 md:col-6 lg:col-4 xl:col-4 field flex align-items-center mt-4 mr-6">
+                    <p-checkbox formControlName="_indautodetraccion" inputId="ny" [binary]="true"
+                        class="align-items-center" (onChange)="changeAutoDetrac($event.checked)" />
+                    <p class="m-0 ml-2">AutoDetraccion</p>
+                </div>
+            </ng-container>
+        </div>
+        <div class="grid" *ngIf="visIndDetraccionCTB">
+            <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                <label class="text-900 mb-1">Total</label>
+                <span class="p-fluid">
+                    <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                        inputStyleClass="surface-100 text-right" formControlName="s_monto_total_CTB"
+                        readonly="true"></p-inputNumber>
+                </span>
+            </div>
+            <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                <label class="text-900 mb-1"> Detracción</label>
+                <span class="p-fluid">
+                    <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                        inputStyleClass="surface-100 text-right" formControlName="s_monto_detraccion_CTB"
+                        readonly="true"></p-inputNumber>
+                </span>
+            </div>
+            <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                <label class="text-900 mb-1">Neto</label>
+                <span class="p-fluid">
+                    <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                        inputStyleClass="surface-100 text-right" formControlName="s_monto_neto_CTB"
+                        readonly="true"></p-inputNumber>
+                </span>
+            </div>
         </div>
     </form>
 

@@ -5,7 +5,7 @@ import { Cliente, OrdenCompraItem, Moneda } from '@interfaces';
 import { SharedAppService } from '@sharedAppService';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Subscription, forkJoin, of } from 'rxjs';
+import { Subscription, of } from 'rxjs';
 import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
@@ -52,6 +52,9 @@ export class CmPuntoVentaComponent implements OnInit, OnDestroy {
   tipoigv: number = 1;
   nombreBtnGuardar: string = 'Vender';
   esVisEditPersona: boolean = false;
+  //visIndAutoDetraccion: boolean = true;
+  visIndDetraccionCTB: boolean = false;
+  saldoDocumentoPagar: number = 0;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -155,6 +158,15 @@ if (
         { value: constantesLocalStorage.idusuario, disabled: false },
       ],
       codformapago: [{ value: 14328, disabled: false }],
+      _indautodetraccion: [{ value: false, disabled: false }],
+      inddetraccion_ctb: [{ value: true, disabled: true }],
+      s_monto_valor_venta_CTB: [{ value: 0, disabled: true }],
+      s_monto_total_CTB: [{ value: 0, disabled: true }],
+      monto_pen_pago: [{ value: 0, disabled: true }],
+      s_monto_igv_CTB: [{ value: 0, disabled: true }],
+      monto_detraccion_mn_CTB: [{ value: 0, disabled: true }],
+      s_monto_detraccion_CTB: [{ value: 0, disabled: true }],
+      s_monto_neto_CTB: [{ value: 0, disabled: true }],
     });
   }
 
@@ -206,6 +218,7 @@ if (
               );
 
               const ordenCompra = rpta.ordencompra[0];
+              this.saldoDocumentoPagar = ordenCompra.saldo_documento || 0;
               this.frmDatos.patchValue(ordenCompra);
               const { fecemision, fechaingreso, fecvencimiento } =
                 this.frmDatos.controls;
@@ -244,6 +257,8 @@ if (
                 this.lstItemOC = ordenCompra.items;
               }
               this.calcularMontosCompra();
+              //this.visIndAutoDetraccion = ordenCompra.indautodetraccion;
+              this.visIndDetraccionCTB = ordenCompra.inddetraccion_ctb;
               this.setSpinner(false);
               this.mensajeSpinner = '';
             },
@@ -264,7 +279,7 @@ if (
     });
   }
 
-  listarHabitacionReserva$(){
+  listarHabitacionReserva$() {
     const objeto = {
       codproducto: '',
       idfamilia: 325,
@@ -277,50 +292,50 @@ if (
     };
 
     const $listarHabitacionesCombo = this.serviceReserva.listarHabitacionesCombo(objeto)
-    .subscribe({
-      next: (rpta: any) => {
-        console.log('rpta listarHabitacionesCombo: ', rpta);
-        //this.lstHabitaciones = rpta.habitaciones;
-        if(rpta.length === 0){return;}
-        const data = rpta.habitaciones.map((item: any) => ({
-          ...item,
-          nuevaHabitacion: `${item.nomHabitacion} - ${item.idreserva}`
-        }))
-        this.lstHabitaciones = data;
-      },
-      error: (err) => {
-        this.setSpinner(false);
-        this.serviceSharedApp.messageToast();
-      },
-      complete: () => {
-        this.setSpinner(false);
-      },
-    });
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('rpta listarHabitacionesCombo: ', rpta);
+          //this.lstHabitaciones = rpta.habitaciones;
+          if (rpta.length === 0) { return; }
+          const data = rpta.habitaciones.map((item: any) => ({
+            ...item,
+            nuevaHabitacion: `${item.nomHabitacion} - ${item.idreserva}`
+          }))
+          this.lstHabitaciones = data;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => {
+          this.setSpinner(false);
+        },
+      });
     this.$listSubcription.push($listarHabitacionesCombo);
   }
 
   listarItemsTablaComprobante$() {
     const $listarItemsTablaSunat = this.contabilidadService.listarItemsTablaSunat(2)
-    .subscribe({
-      next: (rpta: any) => {
-        this.lstComprobante = rpta.filter(
-          (x: { codsunat: number }) =>
-            x.codsunat === 1 || x.codsunat === 2,
-        );
-        return this.lstComprobante;
-      },
-      error: (err) => {
-        this.setSpinner(false);
-        this.serviceSharedApp.messageToast();
-      },
-      complete: () => {
-        this.setSpinner(false);
-      },
-    });
+      .subscribe({
+        next: (rpta: any) => {
+          this.lstComprobante = rpta.filter(
+            (x: { codsunat: number }) =>
+              x.codsunat === 1 || x.codsunat === 2,
+          );
+          return this.lstComprobante;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => {
+          this.setSpinner(false);
+        },
+      });
     this.$listSubcription.push($listarItemsTablaSunat);
   }
 
-  listaHabitaciones$(){
+  listaHabitaciones$() {
     const objeto = {
       codproducto: '',
       idfamilia: 125,
@@ -371,71 +386,71 @@ if (
   listarTiposDoc$() {
     const documentosValidos: string[] = ['DNI', 'RUC', 'CEX', 'PAS'];
     const $listartipodocumentotablasunat = this.serviceReserva.listartipodocumentotablasunat('X')
-    .subscribe({
-      next: (rpta: any) => {
-        const filtrados = rpta.filter(
-          (item: any) =>
-            item.idtipodoc &&
-            documentosValidos.includes(item.idtipodoc),
-        );
-        this.dropdownItemsTipNro = filtrados;
-        return filtrados;
-      },
-      error: (err) => {
-        this.setSpinner(false);
-        this.messageService.clear();
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-        });
-      },
-      complete: () => { },
-    });
+      .subscribe({
+        next: (rpta: any) => {
+          const filtrados = rpta.filter(
+            (item: any) =>
+              item.idtipodoc &&
+              documentosValidos.includes(item.idtipodoc),
+          );
+          this.dropdownItemsTipNro = filtrados;
+          return filtrados;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.messageService.clear();
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: mensajesQuestion.msgErrorGenerico,
+          });
+        },
+        complete: () => { },
+      });
     this.$listSubcription.push($listartipodocumentotablasunat);
   }
 
   listaClientes$() {
     let tiporol = 'CLI';
     const $obtenerClientes = this.proyectosService.obtenerClientes(tiporol)
-    .subscribe({
-      next: (rpta: any) => {
-        this.lstCliente = rpta;
-        return rpta;
-      },
-      error: (err) => {
-        this.setSpinner(false);
-        this.messageService.clear();
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-        });
-      },
-      complete: () => { },
-    });
+      .subscribe({
+        next: (rpta: any) => {
+          this.lstCliente = rpta;
+          return rpta;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.messageService.clear();
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: mensajesQuestion.msgErrorGenerico,
+          });
+        },
+        complete: () => { },
+      });
     this.$listSubcription.push($obtenerClientes);
   }
 
   listaMonedas$() {
     const $obtenerMonedas = this.proyectosService.obtenerMonedas()
-    .subscribe({
-      next: (rpta: any) => {
-        console.log('listaMonedas', rpta);
-        this.lstMonedas = rpta;
-        return rpta;
-      },
-      error: (err) => {
-        this.setSpinner(false);
-        this.messageService.clear();
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: mensajesQuestion.msgErrorGenerico,
-        });
-      },
-      complete: () => { },
-    });
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('listaMonedas', rpta);
+          this.lstMonedas = rpta;
+          return rpta;
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.messageService.clear();
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: mensajesQuestion.msgErrorGenerico,
+          });
+        },
+        complete: () => { },
+      });
     this.$listSubcription.push($obtenerMonedas);
   }
 
@@ -881,13 +896,13 @@ if (
     const simboloMoneda = this.lstMonedas.find(
       (x: { idmoneda: number }) => x.idmoneda === idmoneda,
     )?.simbmoneda;
-
+    
     const data = {
       //resultProceso,
       idordencompra,
       nombreCliente,
       fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
-      totalPagar: this.montoTotal,
+      totalPagar: this.saldoDocumentoPagar, //this.montoTotal,
       idproveedor,
       idmoneda,
       simboloMoneda,
@@ -1106,6 +1121,42 @@ if (
 
   cerrar(proceso: boolean) {
     this.ref.close({ proceso });
+  }
+
+  changeAutoDetrac(indautodetraccion: boolean) {
+    this.setSpinner(true);
+    this.mensajeSpinner = 'Actualizando...!';
+    const objeto = {
+      iddocumentoprc: this.frmDatos.get('idordencompra')?.value,
+      indautodetraccion,
+      idusuario: constantesLocalStorage.idusuario,
+    };
+
+    const $actualizaAutoDetraccion = this.serviceReserva
+      .actualizaAutoDetraccion(objeto)
+      .subscribe({
+        next: (rpta: any) => {
+          console.log('actualizaAutoDetraccion', rpta);
+          this.setSpinner(false);
+          this.traerUno();
+
+          this.serviceSharedApp.messageToast({
+            severity: rpta.resultProceso === '0' ? 'success' : 'info',
+            summary: rpta.resultProceso === '0' ? 'Éxito' : 'Información',
+            detail: rpta.resultProceso === '0' ? rpta.mensaje : 'No se pudo procesar.'
+          });
+        },
+        error: (err) => {
+          this.setSpinner(false);
+          this.cerrar(true);
+          console.error('error : ', err);
+          this.serviceSharedApp.messageToast();
+        },
+        complete: () => {
+          this.setSpinner(false);
+        },
+      });
+    this.$listSubcription.push($actualizaAutoDetraccion);
   }
 
 }

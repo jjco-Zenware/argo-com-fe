@@ -84,4 +84,8 @@ export class ReservaService {
     return this.http.post<any>(url, objeto)
   }
 
+  actualizaAutoDetraccion(objeto: any) {
+    const url = `${constantesApiWeb.actualizaAutoDetraccion}`;
+    return this.http.post<any>(url, objeto)
+  }
 }
