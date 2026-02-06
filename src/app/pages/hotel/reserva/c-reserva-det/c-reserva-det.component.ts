@@ -24,6 +24,7 @@ import { CmRegistrarFacturacionComponent } from '../cm-registrar-facturacion/cm-
 import { CmAgregarHabitacionComponent } from '../cm-agregar-habitacion/cm-agregar-habitacion.component';
 import { CmTransferirItemsComponent } from '../cm-transferir-items/cm-transferir-items.component';
 import { CmPuntoVentaComponent } from '../../punto-venta/cm-punto-venta/cm-punto-venta.component';
+import { CmRegistrarPagoComponent } from '../cm-registrar-pago/cm-registrar-pago.component';
 
 @Component({
   selector: 'app-c-reserva-det',
@@ -1471,7 +1472,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     }*/
 
     console.log("clientePAX itemDocumento: ", itemDocumento);
-    
+
     const dctsNaturales: string[] = ['DNI', 'CEX', 'CDI', 'PAS'];
     const data = {
       idrolpersona: 'PRO',
@@ -1591,12 +1592,6 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       idordencompraitemArray: codigosSeleccionados,
       items
     };
-
-    /*this.tituloDetalle = "Registrar Pago " + idordencompra;
-    this.vistaLista = false;
-    this.visRegistrarPago = true;
-    //this.verbtnGrabar = false
-    this.O_GetBackHabitacion.emit();*/
     const ref = this.dialogService.open(CmPuntoVentaComponent, {
       data: this.dataRegistrarPago,
       header: "Registrar Pago " + idordencompra,
@@ -2054,7 +2049,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       this.messageService.add({ severity: 'info', summary: 'Aviso...!', detail: 'Seleccionar al menos un item...' });
       return
     }
-    
+
     const tipoFacturado = {
       SinFacturar: 0,
       Facturado: 1,
@@ -2062,18 +2057,18 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     let codigosSeleccionados = this.selectedDetalle.map((x: any) => x.idordencompraitem ?? x);
     let _items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
     let idsItemFacturados;
-    if (codigosSeleccionados.length === this.lstItemOC.length){
+    if (codigosSeleccionados.length === this.lstItemOC.length) {
       const itemTotales = _items.map((item: any) => {
         return {
           idordencompraitem: item.idordencompraitem,
           indfacturado: item.indfacturado
         }
       });
-      
+
       //codigosSeleccionados = itemSinFacturar.filter((item: any) => item.indfacturado === tipoFacturado.SinFacturar)
       codigosSeleccionados = itemTotales
-      .filter((item: any) => item.indfacturado === tipoFacturado.SinFacturar)
-      .map((item: any) => item.idordencompraitem);
+        .filter((item: any) => item.indfacturado === tipoFacturado.SinFacturar)
+        .map((item: any) => item.idordencompraitem);
     }
 
     _items = this.lstItemOC.filter((item: any) => codigosSeleccionados.includes(item.idordencompraitem));
@@ -2417,7 +2412,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       fecvencimiento,
       fecha_fin: fechaFin,
       //tipodoc_ctb: (this.registerFormRegistro.value.tipodoc_ctb).toString(),
-      tipodoc_ctb : this.registerFormRegistro.value.tipodoc_ctb,
+      tipodoc_ctb: this.registerFormRegistro.value.tipodoc_ctb,
       cuotas: this.listaCuotas,
       nrocuotas: this.nrocuotas,
       retencion_tipo: retencion_tipo,
@@ -2443,5 +2438,62 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
         }
       });
     this.$listSubcription.push($vistaPreliminarPrc)
+  }
+
+  facturar(item:any) {
+    this.verbtnGrabar = false;
+    console.log('lstItemOC : ', this.lstItemOC);
+
+    //const { idordencompra } = this.IA_data;
+    const { idordencompra, idproveedor, idmoneda, s_monto_detraccion_mn_CTB: totalPagar } = item;
+    const nombreCliente = this.lstCliente.find(
+      (x: { idcliente: number }) => x.idcliente === idproveedor,
+    )?.razonsocial;
+    const simboloMoneda = this.lstMonedas.find(
+      (x: { idmoneda: number }) => x.idmoneda === idmoneda,
+    )?.simbmoneda;
+
+    const data = {
+      idordencompra,
+      nombreCliente,
+      fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
+      totalPagar,
+      idproveedor,
+      idmoneda,
+      simboloMoneda,
+      tipodeuda: 2
+      //idordencompraitemArray: this.lstItemOC.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
+    };
+    console.log('facturar data : ', data);
+
+    const ref = this.dialogService.open(CmRegistrarPagoComponent, {
+      data, //this.ordenHabitacion,
+      header: 'Registrar Pago Detracción', //+ ' - ' + this.ordenHabitacion.nomHabitacion,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '40%',
+    });
+
+    ref.onClose.subscribe(async (rpta: any) => {
+      if (!rpta?.proceso) {
+        //this.verbtnGrabar = true;
+        return;
+      }
+
+      const rptaFacturar = await this.serviceSharedApp.confirmDialog({
+        message: '¿Desea facturar?',
+        header: 'Aviso',
+      });
+
+      if (!rptaFacturar) {
+        this.getListarPagos();
+        return;
+      }
+
+      this.setSpinner(true);
+      this.mensajeSpinner = 'Generando Factura...!';
+
+      this.emitirDocumento({idordencompra});
+    });
   }
 }

@@ -102,6 +102,14 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
         this.setSpinner(false);
         console.log("lstMetodoPago response: ", rpta);
         this.lstMetodoPago = rpta
+        if(this.data.tipodeuda === 2) {
+          const codTransferencia:number = 625;
+          const transferencia:any = this.lstMetodoPago.find((m: any) => m.iditem === codTransferencia);
+          if (transferencia) {
+            this.agregarDetallePago(transferencia);
+            this.selectedMetodoPago = transferencia.iditem;
+          }
+        }
       },
       error: (err: any) => {
         this.setSpinner(false);
@@ -159,7 +167,7 @@ export class CmRegistrarPagoComponent implements OnInit, OnDestroy {
       tc: this.lstTipoCambio.length > 0 ? this.lstTipoCambio[0].tc_venta : 0,
       observacion: this.frmDatos.get('observaciones')?.value,
       idusuario: constantesLocalStorage.idusuario,
-      tipodeuda: 0,
+      tipodeuda: this.data.tipodeuda, //0,
       lstformapago
     };
 

@@ -79,9 +79,7 @@ export class CmPuntoVentaComponent implements OnInit, OnDestroy {
 
     if (this.IA_data.codtipodoc === 'RSV') {
       this.verbtnGrabar = this.IA_data.idordencompra > 0;
-    } /*else {
-            this.verbtnGrabar = this.IA_data.idordencompra === 0;
-        }*/
+    } 
 
     if (
       this.IA_data.codtipodoc === 'RSV' &&
@@ -93,26 +91,6 @@ export class CmPuntoVentaComponent implements OnInit, OnDestroy {
       this.mensajeSpinner = '';
       return;
     }
-
-    /*if (this.IA_data.paramReg === 'RES') {
-    this.listarHabitacionReserva();
-    this.verbtnGrabar = this.IA_data.idordencompra > 0;
-} else {
-    this.verbtnGrabar = this.IA_data.idordencompra === 0;
-}
-
-if (
-    this.IA_data.codtipodoc === 'RSV' &&
-    !this.IA_data.idDocPrcVentaTrx
-) {
-    this.lstItemOC = this.IA_data.items;
-    this.calcularMontosCompra();
-    this.setSpinner(false);
-    this.mensajeSpinner = '';
-    return;
-} else {
-    this.traerUno();
-}*/
   }
 
   ngOnDestroy() {
@@ -741,14 +719,6 @@ if (
       return;
     }
 
-    /*const total = this.lstItemOC.reduce(
-        (acc, item) => acc + (item.preciocostototal || 0),
-        0,
-    );
-    const igvFactor = 1 + this.IGV;
-    this.s_monto = +(total / igvFactor).toFixed(2);
-    this.s_igv = +(total - this.s_monto).toFixed(2);
-    this.montoTotal = +total.toFixed(2);*/
     const items = this.lstItemOC.map((item: any) => {
       return {
         idprod: item.idprod,
@@ -781,12 +751,12 @@ if (
           }
 
           const data = rpta.datos[0].detraccion[0];
-          this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(data.monto_gravado);
+          /*this.frmDatos.get('s_monto_valor_venta_CTB')?.setValue(data.monto_gravado);
           this.frmDatos.get('s_monto_igv_CTB')?.setValue(data.monto_igv);
           this.frmDatos.get('s_monto_total_CTB')?.setValue(data.monto_valorventa);
           this.frmDatos.get('monto_pen_pago')?.setValue(data.monto);
           this.frmDatos.get('monto_detraccion_mn_CTB')?.setValue(data.monto_detraccion_m);
-          this.frmDatos.get('s_monto_detraccion_CTB')?.setValue(data.monto_detraccion);
+          this.frmDatos.get('s_monto_detraccion_CTB')?.setValue(data.monto_detraccion);*/
 
           this.s_monto = data.monto_gravado;
           this.s_igv = data.monto_igv;
@@ -906,6 +876,7 @@ if (
       idproveedor,
       idmoneda,
       simboloMoneda,
+      tipodeuda: 1
       //idordencompraitemArray: this.lstItemOC.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
     };
     console.log('selectedDetalle data : ', data);

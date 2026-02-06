@@ -828,6 +828,7 @@ export class CPuntoVentaDatoComponent implements OnInit, OnDestroy {
             idproveedor,
             idmoneda,
             simboloMoneda,
+            tipodeuda: 1
             //idordencompraitemArray: this.lstItemOC.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
         };
         console.log('selectedDetalle data : ', data);
