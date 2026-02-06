@@ -175,154 +175,167 @@
                     </span>
                 </div>
             </ng-template>
-            <form [formGroup]="frmDatos" class="p-fluid grid col-12 border-1 m-2 border-round surface-border ">
-                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
-                    <label class=" text-900 mb-1">B.Imponible</label>
-                    <span class="p-fluid">
-                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
-                            inputStyleClass="surface-100 text-right" formControlName="s_monto_valor_venta_CTB"
-                            readonly="true"></p-inputNumber>
-                    </span>
+            <form [formGroup]="frmDatos" class="p-fluid col-12 border-1 m-2 border-round surface-border ">
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                        <label class=" text-900 mb-1">B.Imponible</label>
+                        <span class="p-fluid">
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                                inputStyleClass="surface-100 text-right" formControlName="s_monto_valor_venta_CTB"
+                                readonly="true"></p-inputNumber>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                        <label class="text-900 mb-1">IGV</label>
+                        <span class="p-fluid">
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                                inputStyleClass="surface-100 text-right" formControlName="s_monto_igv_CTB"
+                                readonly="true"></p-inputNumber>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                        <label class="text-900 mb-1">Total</label>
+                        <span class="p-fluid">
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
+                                inputStyleClass="surface-100 text-right" formControlName="s_monto_total_CTB"
+                                readonly="true"></p-inputNumber>
+                        </span>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                        <label class="text-900 mb-1">Monto Neto Pago</label>
+                        <p-inputNumber mode="decimal" [minFractionDigits]="2" inputStyleClass="surface-100 text-right"
+                            class="p-inputtext-sm " formControlName="monto_pen_pago" [readonly]="true"></p-inputNumber>
+                    </div>
                 </div>
-                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
-                    <label class="text-900 mb-1">IGV</label>
-                    <span class="p-fluid">
-                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
-                            inputStyleClass="surface-100 text-right" formControlName="s_monto_igv_CTB"
-                            readonly="true"></p-inputNumber>
-                    </span>
-                </div>
-                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
-                    <label class="text-900 mb-1">Total</label>
-                    <span class="p-fluid">
-                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="p-inputtext-sm"
-                            inputStyleClass="surface-100 text-right" formControlName="s_monto_total_CTB"
-                            readonly="true"></p-inputNumber>
-                    </span>
-                </div>
-                <div class="sm:col-6 lg:col-3 md:col-3 h-4rem field">
-                    <label class="text-900 mb-1">Monto Neto Pago</label>
-                    <p-inputNumber mode="decimal" [minFractionDigits]="2" inputStyleClass="surface-100 text-right"
-                        class="p-inputtext-sm " formControlName="monto_pen_pago" [readonly]="true"></p-inputNumber>
-                </div>
-
-                <div class="sm:col-6 lg:col-3 md:col-3 col-6 flex align-items-center mt-4">
-                    <p-checkbox formControlName="inddetraccion_ctb" inputId="ny" [binary]="true"
-                        class="align-items-center" (onChange)="changeAplicaDetra($event.checked)" />
-                    <p class="m-0 ml-2">Detracción</p>
-                </div>
-                <div class="sm:col-6 lg:col-6 md:col-6 col-6 -mt-1">
-                    <label class="block text-900 mb-1">Sunat Transacción <span class="text-red-500 font-bold"> *
-                        </span></label>
-                    <span>
-                        <p-dropdown [options]="lstSunatTrans" formControlName="fel_sunat_transaction"
-                            optionLabel="nomitemsunat" placeholder="Seleccionar..." optionValue="codsunat"
-                            appendTo="body" class="p-inputtext-sm"
-                            (onChange)="getMontoAnticipo($event.value)"></p-dropdown>
-                    </span>
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-2 xl:col-2 field flex align-items-center mt-4">
+                        <p-checkbox formControlName="inddetraccion_ctb" inputId="ny" [binary]="true"
+                            class="align-items-center" (onChange)="changeAplicaDetra($event.checked)" />
+                        <p class="m-0 ml-2">Detracción</p>
+                    </div>
+                    <div class="col-12 md:col-6 lg:col-5 xl:col-5 field">
+                        <label class="block text-900 mb-1">Sunat Transacción <span class="text-red-500 font-bold"> *
+                            </span></label>
+                        <span>
+                            <p-dropdown [options]="lstSunatTrans" formControlName="fel_sunat_transaction"
+                                optionLabel="nomitemsunat" placeholder="Seleccionar..." optionValue="codsunat"
+                                appendTo="body" class="p-inputtext-sm"
+                                (onChange)="getMontoAnticipo($event.value)"></p-dropdown>
+                        </span>
+                    </div>
+                    <ng-container *ngIf="verDetraccion">
+                        <div class="col-12 md:col-6 lg:col-5 xl:col-5 field">
+                            <label class="text-900 mb-1">Tipo Detracción</label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstTipoDetra" formControlName="detraccion_tipo"
+                                    placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
+                                    class="p-inputtext-sm" [filter]="true" appendTo="body"
+                                    panelStyleClass="dropdown-wrap-panel">
+                                    <ng-template let-item pTemplate="item">
+                                        <div style="white-space:normal; word-break:break-word; max-width:380px;">
+                                            {{item.nomitemsunat}}
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </span>
+                        </div>
+                    </ng-container>
                 </div>
                 <ng-container *ngIf="verDetraccion">
-                    <div class="sm:col-6 lg:col-3 md:col-3 h-4rem">
-                        <label class=" text-900 mb-1">% Detracción</label>
+                    <div class="grid">
+                        <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                            <label class=" text-900 mb-1">% Detracción</label>
+                            <span class="p-fluid">
+                                <p-inputNumber class="mt-1" formControlName="porc_detraccion" locale="es-PE"
+                                    mode="decimal" [minFractionDigits]="0" name="porc_detraccion" [min]="0" [max]="99"
+                                    class="p-inputtext-sm" inputStyleClass="text-right"
+                                    (onInput)="recalcularRegistro($event.value)"></p-inputNumber>
+                            </span>
+                        </div>
+                        <div class="col-12 md:col-6 lg:col-2 xl:col-2 flex align-items-center mt-4">
+                            <p-checkbox formControlName="indmanualdetraccion" inputId="ny" [binary]="true"
+                                class="align-items-center" (onChange)="changeEditaDetra($event.checked)"
+                                pTooltip="Editar el Monto Detracción" tooltipPosition="bottom" />
+                            <p class="m-0 ml-2">Editar</p>
+                        </div>
+                        <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                            <label class="text-900 mb-1">Monto Detracción S/</label>
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
+                                formControlName="monto_detraccion_mn_CTB" Monto
+                                inputStyleClass="text-right"></p-inputNumber>
+                        </div>
+                        <div class="col-12 md:col-6 lg:col-4 xl:col-4 field">
+                            <label class="text-900 mb-1">Tipo Pago</label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstTipoPagoDetra" formControlName="detraccion_tipo_pago"
+                                    placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
+                                    class="p-inputtext-sm" [filter]="true" appendTo="body"
+                                    [dropdownStyle]="{ 'max-width': '400px' }" panelStyleClass="dropdown-wrap-panel">
+                                    <ng-template let-item pTemplate="item">
+                                        <div style="white-space:normal; word-break:break-word; max-width:380px;">
+                                            {{item.nomitemsunat}}
+                                        </div>
+                                    </ng-template>
+                                </p-dropdown>
+                            </span>
+                        </div>
+                    </div>
+                </ng-container>
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-2 xl:col-2 field flex align-items-center mt-4">
+                        <p-checkbox formControlName="indretencion_ctb" inputId="ny" [binary]="true"
+                            class="align-items-center" (onChange)="changeAplicaRetencion($event.checked)" />
+                        <p class="m-0 ml-2">Retención</p>
+                    </div>
+                    <ng-container *ngIf="verRetencion">
+                        <div class="col-12 md:col-6 lg:col-4 xl:col-4 field">
+                            <label class="text-900 mb-1">Tipo Retención</label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstTipoRetencion" formControlName="retencion_tipo"
+                                    placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
+                                    class="p-inputtext-sm" appendTo="body"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                            <label class="text-900 mb-1">Base Retención S/</label>
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
+                                formControlName="retencion_base_imponible" inputStyleClass="text-right"></p-inputNumber>
+                        </div>
+                        <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                            <label class="text-900 mb-1">Monto Retención S/</label>
+                            <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
+                                formControlName="monto_retencion" inputStyleClass="text-right"></p-inputNumber>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-3 xl:col-3 field">
+                        <label class=" text-900 mb-1">Monto Anticipo</label>
                         <span class="p-fluid">
-                            <p-inputNumber class="mt-1" formControlName="porc_detraccion" locale="es-PE" mode="decimal"
-                                [minFractionDigits]="0" name="porc_detraccion" [min]="0" [max]="99"
-                                class="p-inputtext-sm" inputStyleClass="text-right"
-                                (onInput)="recalcularRegistro($event.value)"></p-inputNumber>
+                            <p-inputNumber class="mt-1" formControlName="monto_anticipo" locale="es-PE" mode="decimal"
+                                [minFractionDigits]="0" [min]="0" class="p-inputtext-sm"
+                                inputStyleClass="text-right"></p-inputNumber>
                         </span>
                     </div>
-                    <div class="sm:col-6 lg:col-3 md:col-3 col-6 flex align-items-center mt-4">
-                        <p-checkbox formControlName="indmanualdetraccion" inputId="ny" [binary]="true"
-                            class="align-items-center" (onChange)="changeEditaDetra($event.checked)"
-                            pTooltip="Editar el Monto Detracción" tooltipPosition="bottom" />
-                        <p class="m-0 ml-2">Editar</p>
-                    </div>
-                    <div class="sm:col-6 lg:col-3 md:col-3 h-4rem ">
-                        <label class="text-900 mb-1">Monto Detracción S/</label>
-                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
-                            formControlName="monto_detraccion_mn_CTB" Monto
-                            inputStyleClass="text-right"></p-inputNumber>
-                    </div>
-                    <div class="sm:col-6 lg:col-6 md:col-6">
-                        <label class="text-900 mb-1">Tipo Detracción</label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstTipoDetra" formControlName="detraccion_tipo"
-                                placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
-                                class="p-inputtext-sm" [filter]="true" appendTo="body"
-                                [dropdownStyle]="{ 'max-width': '400px' }" panelStyleClass="dropdown-wrap-panel">
-                                <ng-template let-item pTemplate="item">
-                                    <div style="white-space:normal; word-break:break-word; max-width:380px;">
-                                        {{item.nomitemsunat}}
-                                    </div>
-                                </ng-template>
-                            </p-dropdown>
-                        </span>
-                    </div>
-                    <div class="sm:col-6 lg:col-6 md:col-6 col-6 h-4rem mb-2">
-                        <label class="text-900 mb-1">Tipo Pago</label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstTipoPagoDetra" formControlName="detraccion_tipo_pago"
-                                placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
-                                class="p-inputtext-sm" [filter]="true" appendTo="body"
-                                [dropdownStyle]="{ 'max-width': '400px' }" panelStyleClass="dropdown-wrap-panel">
-                                <ng-template let-item pTemplate="item">
-                                    <div style="white-space:normal; word-break:break-word; max-width:380px;">
-                                        {{item.nomitemsunat}}
-                                    </div>
-                                </ng-template>
-                            </p-dropdown>
-                        </span>
-                    </div>
-                </ng-container>
-                <div class="sm:col-6 lg:col-3 md:col-3 col-6 flex align-items-center mt-4">
-                    <p-checkbox formControlName="indretencion_ctb" inputId="ny" [binary]="true"
-                        class="align-items-center" (onChange)="changeAplicaRetencion($event.checked)" />
-                    <p class="m-0 ml-2">Retención</p>
                 </div>
-                <ng-container *ngIf="verRetencion">
-                    <div class="sm:col-6 lg:col-3 md:col-3 col-6">
-                        <label class="text-900 mb-1">Tipo Retención</label>
-                        <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstTipoRetencion" formControlName="retencion_tipo"
-                                placeholder="Seleccionar..." optionLabel="nomitemsunat" optionValue="codsunat"
-                                class="p-inputtext-sm" appendTo="body"></p-dropdown>
-                        </span>
+                <div class="grid">
+                    <div class="col-12 md:col-6 lg:col-2 xl:col-2 field flex align-items-center mt-4">
+                        <p-checkbox formControlName="indconsumo_fel" inputId="ny" [binary]="true"
+                            class="align-items-center" (onChange)="changeAplicaConsumo($event.checked)" />
+                        <p class="m-0 ml-2">Consumo</p>
                     </div>
-                    <div class="sm:col-4 lg:col-4 md:col-4 col-4 h-4rem field">
-                        <label class="text-900 mb-1">Base Retención S/</label>
-                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
-                            formControlName="retencion_base_imponible" inputStyleClass="text-right"></p-inputNumber>
-                    </div>
-                    <div class="sm:col-4 lg:col-4 md:col-4 col-4 h-4rem field">
-                        <label class="text-900 mb-1">Monto Retención S/</label>
-                        <p-inputNumber mode="decimal" [minFractionDigits]="2" class="font-semibold p-inputtext-sm"
-                            formControlName="monto_retencion" inputStyleClass="text-right"></p-inputNumber>
-                    </div>
-                </ng-container>
-
-
-                <div class="sm:col-4 lg:col-4 md:col-4 col-4 h-4rem field">
-                    <label class=" text-900 mb-1">Monto Anticipo</label>
-                    <span class="p-fluid">
-                        <p-inputNumber class="mt-1" formControlName="monto_anticipo" locale="es-PE" mode="decimal"
-                            [minFractionDigits]="0" [min]="0" class="p-inputtext-sm"
-                            inputStyleClass="text-right"></p-inputNumber>
-                    </span>
-                </div>
-
-                <div class="col-12 flex align-items-center mt-4">
-                    <p-checkbox formControlName="indconsumo_fel" inputId="ny" [binary]="true" class="align-items-center"
-                        (onChange)="changeAplicaConsumo($event.checked)" />
-                    <p class="m-0 ml-2">Consumo</p>
                 </div>
                 <ng-container *ngIf="verConsumo">
-                    <div class="sm:col-12 lg:col-12 md:col-12 col-12 -mt-3">
-                        <label class="block text-900 font-semibold">Por Consumo <span class="text-red-500 font-bold"> *
-                            </span></label>
-                        <span class="p-fluid">
-                            <textarea type="text" pInputTextarea [rows]="2" formControlName="textoconsumo"
-                                style="resize: none" class="w-full p-inputtext-sm"></textarea>
-                        </span>
+                    <div class="grid">
+                        <div class="col-12 md:col-6 lg:col-12 xl:col-12 field">
+                            <label class="block text-900 font-semibold">Por Consumo <span
+                                    class="text-red-500 font-bold"> *
+                                </span></label>
+                            <span class="p-fluid">
+                                <textarea type="text" pInputTextarea [rows]="2" formControlName="textoconsumo"
+                                    style="resize: none" class="w-full p-inputtext-sm"></textarea>
+                            </span>
+                        </div>
                     </div>
                 </ng-container>
             </form>
