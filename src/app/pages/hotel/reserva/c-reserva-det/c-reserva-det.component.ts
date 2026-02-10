@@ -1622,9 +1622,9 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     this.visQuote = false;
   }
 
-  onEditar(data: any) {
-    console.log("onEditar data : ", data);
-    this.dataPrc = {
+  onEditar(item: any) {
+    console.log("onEditar data : ", item);
+    /*this.dataPrc = {
       idordencompra: data.idordencompra,
       idproveedor: data.idproveedor,
       paramReg: 'E'
@@ -1633,7 +1633,37 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     this.vistaLista = false;
     this.visRegistrarPago = false;
     this.visDetalle = true;
-    this.visQuote = false;
+    this.visQuote = false;*/
+    
+    const { idordencompra, idproveedor, nrofactura } = item;
+    const data = {
+      tipoProceso: 'FACTURACION',
+      ...this.registerFormRegistro.getRawValue(),
+      idordencompra,
+      idproveedor,
+      detalleCompra: [],
+      s_monto: this.s_monto,
+      s_igv: this.s_igv,
+      montoTotal: this.montoTotal,
+      codtipodoc: 'RSV'
+    }
+    console.log("selectedDetalle data : ", data);
+
+    const ref = this.dialogService.open(CmRegistrarFacturacionComponent, {
+      data, //this.ordenHabitacion,
+      header: "Editar Factura N° " + nrofactura,
+      closeOnEscape: false,
+      styleClass: 'testDialog',
+      width: '50%'
+    });
+
+    ref.onClose.subscribe((rpta: any) => {
+      this.selectedDetalle = [];
+      if (!rpta) { return; }
+      this.lstPagos = [];
+      this.getListarPagos();
+      //this.recargarListaOC();
+    });
   }
 
   onVerDetalle(data: any) {
@@ -2094,21 +2124,6 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
     })
 
     const { idordencompra } = this.IA_data;
-    /*const { idproveedor, idmoneda } = this.registerFormRegistro.getRawValue();
-    console.log("lstCliente : ", this.lstCliente);
-    const nombreCliente = this.lstCliente.find((x: { idcliente: number; }) => x.idcliente === idproveedor)?.razonsocial;
-    const simboloMoneda = this.lstMonedas.find((x: { idmoneda: number; }) => x.idmoneda === idmoneda)?.simbmoneda;*/
-
-    /*const data = {
-      idordencompra,
-      nombreCliente,
-      fecha: this.serviceUtilitario.obtenerFechaFormateadoDMA(),
-      totalPagar: this.montoTotal,
-      idproveedor,
-      idmoneda,
-      simboloMoneda,
-      idordencompraitemArray: this.selectedDetalle.map((x: { idordencompraitem: any; }) => x.idordencompraitem)
-    }*/
     const data = {
       tipoProceso: 'RESERVA',
       ...this.registerFormRegistro.getRawValue(),
@@ -2133,6 +2148,8 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
       this.selectedDetalle = [];
       if (!rpta) { return; }
       this.recargarListaOC();
+      this.lstPagos = [];
+      this.getListarPagos();
     });
   }
 
@@ -2468,7 +2485,7 @@ export class CReservaDetComponent implements OnInit, OnChanges, OnDestroy {
 
     const ref = this.dialogService.open(CmRegistrarPagoComponent, {
       data, //this.ordenHabitacion,
-      header: 'Registrar Pago Detracción', //+ ' - ' + this.ordenHabitacion.nomHabitacion,
+      header: tipodeuda === 1 ? 'Registrar Pago' : 'Registrar Pago Detracción', //+ ' - ' + this.ordenHabitacion.nomHabitacion,
       closeOnEscape: false,
       styleClass: 'testDialog',
       width: '40%',

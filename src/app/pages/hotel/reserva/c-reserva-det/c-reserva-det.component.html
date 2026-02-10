@@ -1035,16 +1035,17 @@
                                             tooltipPosition="bottom" pTooltip="Editar"
                                             class="p-button-rounded p-button-text text-yellow-500"
                                             (click)="onEditar(data)"></button>
-                                        <button *ngIf="data.inddetraccion_ctb"
-                                            pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom"
-                                            pTooltip="Facturar"
-                                            class="p-button-rounded p-button-text text-green-500"
-                                            (click)="facturar(data,2)"></button>
-                                        <button
-                                            pButton pRipple type="button" icon="pi pi-money-bill" tooltipPosition="bottom"
-                                            pTooltip="Facturar"
-                                            class="p-button-rounded p-button-text text-green-500"
-                                            (click)="facturar(data, 1)"></button>
+                                        <ng-container *ngIf="data.estado_pago !== 'PAG'">
+                                            <button *ngIf="data.inddetraccion_ctb" pButton pRipple type="button"
+                                                icon="pi pi-money-bill" tooltipPosition="bottom"
+                                                pTooltip="Pagar Detracción"
+                                                class="p-button-rounded p-button-text text-green-500"
+                                                (click)="facturar(data,2)"></button>
+                                            <button pButton pRipple type="button" icon="pi pi-money-bill"
+                                                tooltipPosition="bottom" pTooltip="Pagar"
+                                                class="p-button-rounded p-button-text text-green-500"
+                                                (click)="facturar(data, 1)"></button>
+                                        </ng-container>
                                     </div>
                                 </td>
                             </tr>

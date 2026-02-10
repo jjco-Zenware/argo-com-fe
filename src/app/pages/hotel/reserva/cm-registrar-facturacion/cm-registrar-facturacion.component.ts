@@ -188,8 +188,9 @@ export class CmRegistrarFacturacionComponent implements OnInit, OnDestroy {
     ]).subscribe({
       next: () => {
         const { tipoProceso, detalleCompra, ...itemFrmDatos } = this.data;
-
-        if (tipoProceso === 'VENTA' && itemFrmDatos.idordencompra > 0) {
+        const traerUnoDatoVenta:any=['VENTA', 'FACTURACION']
+        //if (tipoProceso === 'VENTA' && itemFrmDatos.idordencompra > 0) {
+        if (traerUnoDatoVenta.includes(tipoProceso) && itemFrmDatos.idordencompra > 0) {
           this.traerUnoDatoVenta(itemFrmDatos.idordencompra)
           return;
         }
