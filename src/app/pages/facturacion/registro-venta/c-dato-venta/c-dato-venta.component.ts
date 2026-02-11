@@ -488,6 +488,7 @@ createFormRegistro() {
       cuotas: this.listaCuotas,
       nrocuotas: this.nrocuotas ,
       retencion_tipo : retencion_tipo,
+      rc_compra:0
       //detraccion_tipo : detraccion_tipo,
       //detraccion_tipo_pago : detraccion_tipo_pago
     }

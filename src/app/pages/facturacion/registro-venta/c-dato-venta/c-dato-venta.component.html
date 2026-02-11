@@ -57,7 +57,7 @@
                             <span inputStyleClass="font-semibold surface-300">
                                 <p-dropdown [options]="lstCliente" placeholder="Cliente..."  formControlName="idproveedor" class="p-inputtext-sm" 
                                 optionLabel="razonsocial" optionValue="idcliente" appendTo="body" [readonly]=onlyRead  [filter]="true"
-                                    (onChange)="getDatos($event.value)"></p-dropdown>            
+                                    (onChange)="getDatos($event.value)" [panelStyle]="{ width: '300px' }"></p-dropdown>            
                             </span>
                         </div>                        
                          
@@ -277,7 +277,7 @@
                             <label class="text-900 mb-1">Tipo Pago</label>
                             <span class="p-fluid mt-1">
                                 <p-dropdown [options]="lstTipoPagoDetra" formControlName="detraccion_tipo_pago" placeholder="Seleccionar..." optionLabel="nomitemsunat" 
-                                optionValue="codsunat" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true"></p-dropdown>
+                                optionValue="codsunat" [readonly]=onlyRead class="p-inputtext-sm" [filter]="true" [panelStyle]="{ width: '300px' }"></p-dropdown>
                             </span>
                         </div> 
                         <div class="sm:col-4 lg:col-2 md:col-3 col-6 h-4rem field">
