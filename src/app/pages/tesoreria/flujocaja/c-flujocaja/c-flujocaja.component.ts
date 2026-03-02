@@ -97,13 +97,13 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
             this.lstmontomesC = [];
             this.lstFlujoCaja.forEach(element => {
               if (element.tipo === "C" ) {
-                this.lstmontomesC = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.septiembre, element.octubre, element.noviembre, element.diciembre];
+                this.lstmontomesC = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.xxxx, element.octubre, element.noviembre, element.diciembre];
               }
                if (element.tipo === "A" ) {
-                this.lstmontomesA = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.septiembre, element.octubre, element.noviembre, element.diciembre];
+                this.lstmontomesA = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.xxxx, element.octubre, element.noviembre, element.diciembre];
               }
                if (element.tipo === "B" ) {
-                this.lstmontomesB = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.septiembre, element.octubre, element.noviembre, element.diciembre];
+                this.lstmontomesB = [element.enero, element.febrero, element.marzo, element.abril, element.mayo, element.junio, element.julio, element.agosto, element.xxxx, element.octubre, element.noviembre, element.diciembre];
               }
             });
         },
@@ -203,7 +203,7 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
           cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
 
       return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
           datasets: [               
 
               {
@@ -223,7 +223,7 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
           cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
 
       return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
           datasets: [               
 
               
@@ -244,7 +244,7 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
           cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
 
       return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
           datasets: [               
 
               {
@@ -264,7 +264,7 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
           cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
 
       return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
           datasets: [               
               {
                   //type: 'bar',

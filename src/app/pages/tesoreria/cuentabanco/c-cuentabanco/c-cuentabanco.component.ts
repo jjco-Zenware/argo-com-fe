@@ -55,12 +55,13 @@ export class CCuentaBancoComponent implements OnInit, OnDestroy{
     this.personaProveedorlist();
     this.listarBancos();
     this.cols = [
-      { field: 'nombanco', header: 'BANCO' },
+      { field: 'razonsocial', header: 'BANCO' },
       { field: 'desmoneda', header: 'MONEDA ' },
-      { field: 'nomtipocuenta', header: 'TIPO' },
-      { field: 'nrocuenta', header: 'CTA' },
-      { field: 'nrocci', header: 'CCI' },
-      { field: 'nomcuenta', header: 'NOMBRE' }        
+      { field: 'codctactble', header: 'CUENTA ' },
+      { field: 'nomtipocuenta', header: 'TIPOCUENTA ' },
+      { field: 'nomcuenta', header: 'NOMCUENTA' },
+      { field: 'nrocuenta', header: 'NROCTA' },
+      { field: 'nrocci', header: 'CCI' }       
     ];
     this.personaProveedorlist();
   }

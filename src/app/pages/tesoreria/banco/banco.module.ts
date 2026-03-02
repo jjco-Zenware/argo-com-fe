@@ -10,6 +10,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { AlmacenService } from '../../almacen/service/almacenServices';
 import { TesoreriaService } from '../service/tesoreriaServices';
+import { ContabilidadService } from '../../contabilidad/service/contabilidad.services';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,6 @@ import { TesoreriaService } from '../service/tesoreriaServices';
     ReactiveFormsModule,
     BancoRoutingModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, TesoreriaService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, TesoreriaService, ContabilidadService]
 })
 export class BancoModule { }

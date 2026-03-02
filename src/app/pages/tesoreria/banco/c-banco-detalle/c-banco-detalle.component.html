@@ -49,12 +49,19 @@
                                 oninput="this.value=this.value.replace(/[^0-9]/g,'');"/>
                             </span>
                         </div>  
-                        <div class="col-12 lg:col-6 md:col-12 -mt-3">
+                        <!-- <div class="col-12 lg:col-6 md:col-12 -mt-3">
                             <label class="block text-900 font-semibold mb-1">Cuenta Contable <span class="text-red-500 font-bold"> * </span></label>
                             <span >
                                 <input pInputText type="text" class="p-inputtext-sm" formControlName="codctactble" [readonly]=onlyRead/>
                             </span>
-                        </div> 
+                        </div>  -->
+                        <div  class="col-12 lg:col-6 md:col-12 -mt-3">
+                            <label class="text-900 font-semibold mb-1">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstCtaCtble" formControlName="codctactble" placeholder="Seleccionar..." optionLabel="s_desctactble" 
+                                class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false" [filter]="true" [showClear]="true" [readonly]=onlyRead></p-dropdown>
+                            </span>
+                        </div>
                         <div class="col-12 lg:col-6 md:col-12"></div> 
                         <div class="col-12 lg:col-4 md:col-12 -mt-3">
                             <label class="block text-900 font-semibold mb-1">Código BCR </label>

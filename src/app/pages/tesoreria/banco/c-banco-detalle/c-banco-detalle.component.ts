@@ -13,6 +13,7 @@ import { AlmacenService } from 'src/app/pages/almacen/service/almacenServices';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
 import { TesoreriaService } from '../../service/tesoreriaServices';
+import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 
 @Component({
   selector: 'app-c-banco-detalle',
@@ -36,6 +37,7 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
   verbtnGrabar: boolean = false;
   errorMensaje: string = "";
   lstTipoBanco: TablaDetalle[] = [];
+  lstCtaCtble: any;
 
   lstTipoDocumento = [
     { name: 'RUC', code: 'RUC' }
@@ -51,7 +53,8 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
     public dialogService: DialogService,
     private confirmationService: ConfirmationService,
     private tesoreriaService: TesoreriaService,  
-    private comprasService: ComprasService,    
+    private comprasService: ComprasService, 
+    private contabilidadService: ContabilidadService,   
   ) { }
 
   ngOnInit(): void {
@@ -60,6 +63,7 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
     this.createFrm();
     this.createFormRegistro();
     this.listaTipoBanco(); 
+    this.listarPlanContable();
     
     if (this.idBanco > 0) {            
       this.traerUno();
@@ -124,6 +128,24 @@ export class CBancoDetalleComponent implements OnInit, OnDestroy{
 
   setSpinner(valor: boolean) {
     this.blockedDocument = valor;
+  }
+
+  listarPlanContable() {
+    const $listarPlanContable = this.contabilidadService
+        .listarPlanContable()
+        .subscribe({
+            next: (rpta: any) => {
+                console.log('listarPlanContable...', rpta);
+                this.setSpinner(false);
+                this.lstCtaCtble = rpta;
+            },
+            error: (err) => {
+                this.setSpinner(false);
+                this.serviceSharedApp.messageToast();
+            },
+            complete: () => {},
+        });
+    this.$listSubcription.push($listarPlanContable);
   }
 
   listaTipoBanco() {
