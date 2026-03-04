@@ -459,7 +459,8 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
                         ),
                     );
                     this.changeAplicaSunat2(rpta.ordencompra[0].indsunatreg);
-                    rpta.ordencompra[0].retencion_base_imponible = rpta.ordencompra[0].s_monto_total;
+                    rpta.ordencompra[0].retencion_base_imponible =
+                        rpta.ordencompra[0].s_monto_total;
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -531,20 +532,26 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
                 this.lstItemOC[i].preciocosto = 0;
             }
         }
+         let retencion_tipo = this.registerFormRegistro.value.retencion_tipo;
 
-        let retencion_tipo = this.registerFormRegistro.value.retencion_tipo;
+        //if (!this.registerFormRegistro.value.inddetraccion_ctb){ retencion_tipo = 0;}
+
+       
         //let detraccion_tipo = this.registerFormRegistro.value.detraccion_tipo;
         //let detraccion_tipo_pago = this.registerFormRegistro.value.detraccion_tipo_pago;
         if (this.registerFormRegistro.value.inddetraccion_ctb) {
             retencion_tipo = 0;
             this.registerFormRegistro.get('monto_retencion')?.setValue(0);
-        }else{
-                    let s_monto_total_CTB = this.registerFormRegistro.value.s_monto_total_CTB;
-
-          this.registerFormRegistro.get('monto_retencion')?.setValue(0);
             this.registerFormRegistro
                 .get('retencion_base_imponible')
-                ?.setValue(s_monto_total_CTB);
+                ?.setValue(0);
+        } else {    
+            this.registerFormRegistro.get('monto_retencion')?.setValue(0);            
+        }
+
+        if (this.registerFormRegistro.value.retencion_tipo > 0) {
+            let s_monto_total_CTB = this.registerFormRegistro.value.s_monto_total_CTB;
+            this.registerFormRegistro.get('retencion_base_imponible')?.setValue(s_monto_total_CTB);
         }
 
         const objeto = {
@@ -683,7 +690,8 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
                     //agregar cuotas
                     this.prcCuota2(1);
 
-                    rpta.ordencompra[0].retencion_base_imponible = rpta.ordencompra[0].s_monto_total;
+                    rpta.ordencompra[0].retencion_base_imponible =
+                        rpta.ordencompra[0].s_monto_total;
 
                     this.setSpinner(false);
                 },
@@ -1379,10 +1387,14 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
         this.nrocuotas = data;
         this.listaCuotas = [];
         let _monto = 0;
-        if (this.registerFormRegistro.value.retencion_tipo > 0 ) {
-          _monto = (this.registerFormRegistro.value.monto_pen_pago - (this.registerFormRegistro.value.monto_pen_pago * (3 / 100 ))) / data;
-        }else{
-          _monto = this.registerFormRegistro.value.monto_pen_pago / data;
+        if (this.registerFormRegistro.value.retencion_tipo > 0) {
+            _monto =
+                (this.registerFormRegistro.value.monto_pen_pago -
+                    this.registerFormRegistro.value.monto_pen_pago *
+                        (3 / 100)) /
+                data;
+        } else {
+            _monto = this.registerFormRegistro.value.monto_pen_pago / data;
         }
 
         let fecemision;
@@ -1452,10 +1464,14 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
         this.listaCuotas = [];
         let _monto = 0;
 
-        if (this.registerFormRegistro.value.retencion_tipo > 0 ) {
-          _monto = (this.registerFormRegistro.value.monto_pen_pago - (this.registerFormRegistro.value.monto_pen_pago * (3 / 100 ))) / data;
-        }else{
-          _monto = this.registerFormRegistro.value.monto_pen_pago / data;
+        if (this.registerFormRegistro.value.retencion_tipo > 0) {
+            _monto =
+                (this.registerFormRegistro.value.monto_pen_pago -
+                    this.registerFormRegistro.value.monto_pen_pago *
+                        (3 / 100)) /
+                data;
+        } else {
+            _monto = this.registerFormRegistro.value.monto_pen_pago / data;
         }
         console.log('_monto...', _monto);
         let tot_dia = this.registerFormRegistro.value.nrodias;
@@ -1822,7 +1838,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
             this.registerFormRegistro.get('monto_retencion').enable();
             this.registerFormRegistro.get('retencion_base_imponible').enable();
 
-            // this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
+            this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
             // this.registerFormRegistro.get('porc_detraccion')?.setValue(0);
             this.registerFormRegistro
                 .get('monto_detraccion_mn_CTB')
@@ -1840,7 +1856,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
             this.registerFormRegistro.get('monto_retencion').disable();
             this.registerFormRegistro.get('retencion_base_imponible').disable();
 
-            // this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
+            this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
             // this.registerFormRegistro.get('monto_retencion')?.setValue(0);
             // this.registerFormRegistro.get('retencion_base_imponible')?.setValue(0);
         }
@@ -1941,4 +1957,6 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
         console.log('s_categoria...', s_categoria);
         this.indtipoingreso = s_categoria[0].indtipoingreso;
     }
+
+  
 }
