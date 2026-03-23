@@ -414,7 +414,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
                     }
 
                     this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);
-                    this.changeMotivo(rpta.ordencompra[0].idcategoria);
+                    //this.changeMotivo(rpta.ordencompra[0].idcategoria);
                     this.visibleDocument = false;
                     this.visibleAsiento = false;
 
@@ -461,6 +461,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
                     this.changeAplicaSunat2(rpta.ordencompra[0].indsunatreg);
                     rpta.ordencompra[0].retencion_base_imponible =
                         rpta.ordencompra[0].s_monto_total;
+                    this.changeMotivo(rpta.ordencompra[0].idcategoria);
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -1373,6 +1374,16 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
     }
 
     prcCuota(data: number) {
+        console.log('monto_pen_pago...', this.registerFormRegistro.value.monto_pen_pago);
+        let porcrete = 0;
+
+        if (this.registerFormRegistro.value.retencion_tipo === 1){
+            porcrete = 3;
+        }
+        if (this.registerFormRegistro.value.retencion_tipo === 2){
+            porcrete = 6;
+        }
+
         console.log('prcCuota...', data);
         if (this.registerFormRegistro.value.monto_pen_pago === 0) {
             this.messageService.add({
@@ -1386,16 +1397,18 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
         }
         this.nrocuotas = data;
         this.listaCuotas = [];
-        let _monto = 0;
-        if (this.registerFormRegistro.value.retencion_tipo > 0) {
-            _monto =
-                (this.registerFormRegistro.value.monto_pen_pago -
-                    this.registerFormRegistro.value.monto_pen_pago *
-                        (3 / 100)) /
-                data;
-        } else {
-            _monto = this.registerFormRegistro.value.monto_pen_pago / data;
-        }
+        let _monto = this.registerFormRegistro.value.monto_pen_pago;
+        // if (this.registerFormRegistro.value.retencion_tipo > 0) {
+        //     _monto =
+        //         (this.registerFormRegistro.value.monto_pen_pago -
+        //             this.registerFormRegistro.value.monto_pen_pago *
+        //                 (porcrete / 100)) /
+        //         data;
+        // } else {
+        //     _monto = this.registerFormRegistro.value.monto_pen_pago / data;
+        // }
+
+        _monto = this.registerFormRegistro.value.monto_pen_pago / data;
 
         let fecemision;
         fecemision = this.registerFormRegistro.value.fecemision;
@@ -1406,7 +1419,6 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
             );
         }
 
-        //const _fecha =new Date(this.serviceUtilitario.formatFecha(this.registerFormRegistro.value.fecemision));
         console.log('_fecha...', fecemision);
         console.log('_monto...', _monto);
         let tot_dia = this.registerFormRegistro.value.nrodias / data;
@@ -1427,52 +1439,42 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
                 idcuotadoc: 0,
             };
 
-            //tot_dia = tot_dia + tot_dia;
             this.listaCuotas.push(objet);
         }
 
-        //
-        // let _monto = 0;
-
-        // let total = this.listaCuotas.map(({monto}) => monto).reduce((acc, value) => acc + value, 0);
-        // console.log('total', total);
-        // if (total > this.registerFormRegistro.value.monto_pen_pago) {
-        //   this.messageService.add({severity: 'info', summary: 'Aviso', detail: 'El Monto de cuotas no debe exceder el Monto Neto Pago'});
-        //       return;
-        // }
-
-        // if (this.listaCuotas.length === 0) {
-        //   _monto = this.registerFormRegistro.value.monto_pen_pago
-        // }else{
-        //   _monto = this.registerFormRegistro.value.monto_pen_pago - total
-        // }
-
-        // const objet = {
-        //   fechacuota: newDate,
-        //   monto: _monto,
-        //   idcuotadoc:0
-        // }
-        // this.listaCuotas.push(objet);
     }
 
     prcCuota2(data: number) {
+        console.log('monto_pen_pago...', this.registerFormRegistro.value.monto_pen_pago);
+        let porcrete = 0;
+
+        if (this.registerFormRegistro.value.retencion_tipo === 1){
+            porcrete = 3;
+        }
+        if (this.registerFormRegistro.value.retencion_tipo === 2){
+            porcrete = 6;
+        }
+
         this.nrocuotas = data;
         console.log(
             'monto_pen_pago...',
             this.registerFormRegistro.value.monto_pen_pago,
         );
         this.listaCuotas = [];
-        let _monto = 0;
+        let _monto = this.registerFormRegistro.value.monto_pen_pago;
 
-        if (this.registerFormRegistro.value.retencion_tipo > 0) {
-            _monto =
-                (this.registerFormRegistro.value.monto_pen_pago -
-                    this.registerFormRegistro.value.monto_pen_pago *
-                        (3 / 100)) /
-                data;
-        } else {
-            _monto = this.registerFormRegistro.value.monto_pen_pago / data;
-        }
+        // if (this.registerFormRegistro.value.retencion_tipo > 0) {
+        //     _monto =
+        //         (this.registerFormRegistro.value.monto_pen_pago -
+        //             this.registerFormRegistro.value.monto_pen_pago *
+        //                 (porcrete / 100)) /
+        //         data;
+        // } else {
+        //     _monto = this.registerFormRegistro.value.monto_pen_pago / data;
+        // }
+
+        _monto = this.registerFormRegistro.value.monto_pen_pago / data;
+        
         console.log('_monto...', _monto);
         let tot_dia = this.registerFormRegistro.value.nrodias;
         console.log('tot_dia...', tot_dia);

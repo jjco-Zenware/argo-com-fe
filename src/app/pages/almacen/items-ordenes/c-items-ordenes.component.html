@@ -55,11 +55,11 @@
                 </div>    
                 <div *ngIf="!verporTipo" class="sm:col-12 lg:col-3 md:col-12 ">
                     <label class="font-semibold">P. Unitario</label>
-                    <p-inputNumber (onInput)="calcularBCPu($event)" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="4" class="p-inputtext-sm"></p-inputNumber>
+                    <p-inputNumber (onInput)="calcularBCPu($event)" formControlName="preciocosto" mode="decimal" locale="en-US" [minFractionDigits]="6" class="p-inputtext-sm"></p-inputNumber>
                 </div>
                 <div *ngIf="!verporTipo" class="sm:col-12 lg:col-3 md:col-12">
                     <label class="font-semibold">Total</label>
-                    <p-inputNumber class="surface-100 font-bold" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="4" class="p-inputtext-sm"></p-inputNumber>
+                    <p-inputNumber class="surface-100 font-bold" formControlName="preciocostototal" mode="decimal" locale="en-US" [minFractionDigits]="6" class="p-inputtext-sm"></p-inputNumber>
                 </div>            
             </div>
             <div *ngIf="verTag" class="flex grid mt-1">

@@ -143,10 +143,9 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.idOrdenC = this.IA_data.idordencompra;
 
-        this.createFrm();
+         this.createFrm();
         this.createFormRegistro();
         this.createFormContacto();
-        //this.createFormRegistroInf();
 
         this.listaProyectoTipo();
         this.listaClientes();
@@ -160,6 +159,9 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.listarCategoriaDoc();
         this.listarAreas();
         this.listarItemsTablaIgv();
+
+       
+
 
         this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
         this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -286,7 +288,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
             iddocumentoprc_origen: [{ value: null, disabled: false }],
             idcategoria: [{ value: null, disabled: false }],
             idarea: [{ value: 0, disabled: false }],
-            parm_igv: [{ value: 596, disabled: false }],
+            parm_igv: [{ value: 596, disabled: false }]
         });
     }
 

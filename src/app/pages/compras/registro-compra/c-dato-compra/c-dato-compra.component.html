@@ -211,7 +211,14 @@
                                     [readonly]="onlyRead"></p-dropdown>
                             </span>
                         </div>
-                        <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field -mt-3">
+                        <div  class="sm:col-12 lg:col-8 md:col-12 field h-4rem">
+                            <label class="text-900 mb-1">Cuenta Contable<span class="text-red-500 font-bold"> * </span></label>
+                            <span class="p-fluid mt-1">
+                                <p-dropdown [options]="lstCtaCtble" formControlName="codctactble" placeholder="Seleccionar..." optionLabel="s_desctactble" 
+                                class="p-inputtext-sm" optionValue="codctactble" appendTo="body" autoWidth="false" [filter]="true" [showClear]="true"></p-dropdown>
+                            </span>
+                        </div>
+                        <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field">
                             <label class="block text-900 mb-1">Origen</label>
                             <span class="p-fluid mt-1">
                                 <p-dropdown [options]="lstOrigen" formControlName="codtipodoc"
@@ -220,7 +227,7 @@
                                     class="p-inputtext-sm"></p-dropdown>
                             </span>
                         </div>
-                        <div *ngIf="verProyecto" class="sm:col-8 lg:col-6 md:col-12 col-6 field h-4rem -mt-3">
+                        <div *ngIf="verProyecto" class="sm:col-8 lg:col-6 md:col-12 col-6 field h-4rem ">
                             <label class="block text-900 mb-1">Proyecto<span class="text-red-500 font-bold">
                                     *
                                 </span></label>
@@ -242,7 +249,7 @@
                                     [filter]="true"></p-dropdown>
                             </span>
                         </div>
-                        <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field -mt-3">
+                        <div class="sm:col-6 lg:col-4 md:col-12 col-6 h-4rem field ">
                             <label class="block text-900 mb-1">N° OC/OS</label>
                             <span class="p-fluid">
                                 <p-dropdown [options]="lstOrdenC" formControlName="idordencompra_origen_ctb"
