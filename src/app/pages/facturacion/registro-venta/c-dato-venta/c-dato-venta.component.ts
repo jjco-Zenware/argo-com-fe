@@ -534,7 +534,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
         }
          let retencion_tipo = this.registerFormRegistro.value.retencion_tipo;
 
-        //if (!this.registerFormRegistro.value.inddetraccion_ctb){ retencion_tipo = 0;}
+        if (retencion_tipo == null || undefined){ retencion_tipo = 0;}
 
        
         //let detraccion_tipo = this.registerFormRegistro.value.detraccion_tipo;
@@ -1838,7 +1838,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
             this.registerFormRegistro.get('monto_retencion').enable();
             this.registerFormRegistro.get('retencion_base_imponible').enable();
 
-            this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
+            //this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
             // this.registerFormRegistro.get('porc_detraccion')?.setValue(0);
             this.registerFormRegistro
                 .get('monto_detraccion_mn_CTB')
@@ -1856,7 +1856,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
             this.registerFormRegistro.get('monto_retencion').disable();
             this.registerFormRegistro.get('retencion_base_imponible').disable();
 
-            this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
+            //this.registerFormRegistro.get('retencion_tipo')?.setValue(0);
             // this.registerFormRegistro.get('monto_retencion')?.setValue(0);
             // this.registerFormRegistro.get('retencion_base_imponible')?.setValue(0);
         }
