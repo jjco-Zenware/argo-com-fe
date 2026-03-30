@@ -31,16 +31,27 @@
                         <label class="block text-900 font-semibold mb-1">Transacción <span class="text-red-500 font-bold"> * </span></label>
                         <span>
                             <p-dropdown [options]="lstDocumentoPrc" formControlName="idtipodocprc" optionLabel="nomtipodocprc" placeholder="Seleccionar..."
-                                optionValue="idtipodocprc" appendTo="body" class="p-inputtext-sm" (onChange)="listarCategoriaDoc()"></p-dropdown>
+                                optionValue="idtipodocprc" appendTo="body" class="p-inputtext-sm" ></p-dropdown>
                         </span>
                     </div> 
-                    <div class="sm:col-12 lg:col-5 md:col-12 h-4rem field">
+                    <div class="sm:col-4 lg:col-5 md:col-3 col-6 h-4rem field">
+                        <label class="block text-900 mb-1">Moneda
+                            <span class="text-red-500 font-bold">
+                                *
+                            </span></label>
+                        <span class="p-fluid mt-1">
+                            <p-dropdown [options]="lstMonedas" formControlName="idmoneda"
+                                placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda"
+                                appendTo="body" class="p-inputtext-sm"></p-dropdown>
+                        </span>
+                    </div>
+                    <!-- <div class="sm:col-12 lg:col-5 md:col-12 h-4rem field">
                         <label class="block text-900 font-semibold mb-1">Motivo <span class="text-red-500 font-bold"> * </span></label>
                         <span>
                             <p-dropdown [options]="lstCategoriaDoc" formControlName="idcategoria" optionLabel="nomcategoria" placeholder="Seleccionar..."
                                 optionValue="idcategoria" appendTo="body" class="p-inputtext-sm" [filter]="true"></p-dropdown>
                         </span>
-                    </div>
+                    </div> -->
                      <div class="sm:col-6 lg:col-12 md:col-12 h-4rem field">
                         <label class="block text-900 mb-1 font-semibold">Nombre del Asiento</label>
                         <span class="p-fluid">

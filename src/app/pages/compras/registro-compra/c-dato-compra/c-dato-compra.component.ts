@@ -117,12 +117,12 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     verProyecto: boolean = true;
     verOportunidad: boolean = false;
     lstOportunidades: any;
-    lstCategoriaDoc: any;
+    //lstCategoriaDoc: any;
     tot_debe: number = 0;
     tot_haber: number = 0;
     lstAreas: any[] = [];
     lstIgv: any[] = [];
-  indtipoingreso: boolean = false;
+    indtipoingreso: boolean = false;
   rc_compra: number = 0;
 
     constructor(
@@ -156,7 +156,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.listarItemsTablaComprobante();
         this.listarCentroCosto();
         this.listarPlanContable();
-        this.listarCategoriaDoc();
+        //this.listarCategoriaDoc();
         this.listarAreas();
         this.listarItemsTablaIgv();
 
@@ -406,7 +406,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     }
 
                     this.cargarProyectos(rpta.ordencompra[0].idtipoproyecto);                     
-                    this.changeMotivo(rpta.ordencompra[0].idcategoria);
+                    //this.changeMotivo(rpta.ordencompra[0].idcategoria);
                     this.visibleDocument = false;
                     this.visibleAsiento = false;
 
@@ -973,13 +973,13 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
 
     getItem(data: any, index: number) {
 
-        console.log('idcategoria', this.registerFormRegistro.get('idcategoria')?.value);
+        console.log('codctactble', this.registerFormRegistro.get('codctactble')?.value);
 
-        if(this.registerFormRegistro.get('idcategoria')?.value === null){
+        if(this.registerFormRegistro.get('codctactble')?.value === null){
             this.messageService.add({
                     severity: 'warn',
                     summary: 'Aviso...!',
-                    detail: 'Debe Seleccionar el Motivo',
+                    detail: 'Debe Seleccionar Cuenta Contable',
                 });
             return;
         }
@@ -988,7 +988,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         data.nroindex = index;
         data.idordencompra = this.idOrdenC;
         data.origenreg = 'RC';
-        data.identifica_gasto = this.registerFormRegistro.get('idcategoria')?.value;
+        //data.codctactble = this.registerFormRegistro.get('codctactble')?.value;
         //console.log('CItemOrdenesComponent', data);
 
         const refItem = this.dialogService.open(CItemOrdenesComponent, {
@@ -1713,32 +1713,18 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.$listSubcription.push($gettipocambio);
     }
 
-    filterCtaCtble(event: any) {
-        let filtered: any[] = [];
-        let query = event.query;
-
-        for (let i = 0; i < (this.lstCtaCtble as any[]).length; i++) {
-            let codigo = (this.lstCtaCtble as any[])[i];
-            if (
-                codigo.s_desctactble &&
-                codigo.s_desctactble
-                    .toLowerCase()
-                    .indexOf(query.toLowerCase()) == 0
-            ) {
-                filtered.push(codigo);
-            }
-        }
-        //console.log('filtered', filtered);
-        this.filteredCtaCtble = filtered;
-    }
-
     listarPlanContable() {
         const $listarPlanContable = this.marketingService
             .listarPlanContable()
             .subscribe({
                 next: (rpta: any) => {
                     this.setSpinner(false);
-                    this.lstCtaCtble = rpta;
+                    this.lstCtaCtble = rpta.map((item: any) => ({
+                            codctactble: item.codctactble,
+                            s_desctactble: item.s_desctactble,
+                            idclasectb: item.idclasectb
+                        }))
+                    //this.lstCtaCtble = rpta;
                 },
                 error: (err) => {
                     this.setSpinner(false);
@@ -1885,24 +1871,24 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.traerUnoItems(codigo[0].codigonroorden);
     }
 
-    listarCategoriaDoc() {
-    let tipo = this.registerFormRegistro.value.idtipodocprc;
-    const $listarCategoriaDoc = this.contabilidadService
-        .listarCategoriasDoc(tipo)
-        .subscribe({
-            next: (rpta: any) => {
-                //console.log('listarCategoriasDoc...', rpta);
-                this.setSpinner(false);
-                this.lstCategoriaDoc = rpta;
-            },
-            error: (err) => { 
-                this.setSpinner(false);
-                this.serviceSharedApp.messageToast();
-            },
-            complete: () => {},
-        });
-    this.$listSubcription.push($listarCategoriaDoc);
-  }
+//     listarCategoriaDoc() {
+//     let tipo = this.registerFormRegistro.value.idtipodocprc;
+//     const $listarCategoriaDoc = this.contabilidadService
+//         .listarCategoriasDoc(tipo)
+//         .subscribe({
+//             next: (rpta: any) => {
+//                 //console.log('listarCategoriasDoc...', rpta);
+//                 this.setSpinner(false);
+//                 this.lstCategoriaDoc = rpta;
+//             },
+//             error: (err) => { 
+//                 this.setSpinner(false);
+//                 this.serviceSharedApp.messageToast();
+//             },
+//             complete: () => {},
+//         });
+//     this.$listSubcription.push($listarCategoriaDoc);
+//   }
 
   cargarMenu(data: any) {
       this.menuItems = [];
@@ -1973,14 +1959,15 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
 
         this.setSpinner(true);
         this.mensajeSpinner = 'Generando Asientos...!';
-        let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.registerFormRegistro.value.idcategoria);
+        //let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.registerFormRegistro.value.idcategoria);
         //console.log('s_categoria...', s_categoria);
 
         const objeto = {
             idasiento: 0,
             idreferencia: this.idOrdenC,
-            glosaasiento: 'ASIENTO GENERADO DESDE COMPRAS ' + s_categoria[0].nomcategoria,
-            idusuario: constantesLocalStorage.idusuario
+            glosaasiento: this.lstItemOC[0].descripcion,
+            idusuario: constantesLocalStorage.idusuario,
+            idmoneda: this.registerFormRegistro.value.idmoneda
         }
         const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
             next: (rpta: any) => {
@@ -2038,8 +2025,19 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     }
 
     changeMotivo(value:any){
-      let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === value);
-        console.log('s_categoria...', s_categoria);
-    this.indtipoingreso = s_categoria[0].indtipoingreso;
+      let s_clasecta = this.lstCtaCtble.filter((x: { codctactble: any; }) => x.codctactble === value);
+        console.log('s_categoria...', s_clasecta);
+
+        switch (s_clasecta[0].idclasectb) {
+            case 6:
+                this.indtipoingreso = false
+                break;
+        
+            case 2:
+                 case 3:
+                this.indtipoingreso = true
+                break;
+        }
+    //this.indtipoingreso = s_categoria[0].idclasectb;
     }
 }

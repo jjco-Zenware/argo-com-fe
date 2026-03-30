@@ -80,6 +80,7 @@ export class CNotaCreditoDetComponent implements OnInit, OnDestroy{
   lstSunatTrans:any[]=[];
   lstTipoNota:any[]=[];
   verDocumentoEnlace: boolean = false;
+  onlyReadSunat: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -203,6 +204,7 @@ createFormRegistro() {
     nroserie_ctb_origen:[{ value: null, disabled: false }],
     nrodocumento_ctb_origen:[{ value: null, disabled: false }],
     enlaceFEL:[{ value: null, disabled: false }],
+    indsunatreg: [{ value: false, disabled: false }],
     //fecreg: [{ value: this.serviceUtilitario.obtenerFechaFormateadoDMA(), disabled: false, }],
   });
 
@@ -317,6 +319,7 @@ createFormRegistro() {
           this.mostrarBotones(rpta.ordencompra[0].estado); 
           this.getBusquedaRUC();
           this.verDocumentoEnlace = true;
+          this.changeAplicaSunat2(rpta.ordencompra[0].indsunatreg);
           this.setSpinner(false);       
          },
          error:(err)=>{
@@ -1012,5 +1015,31 @@ createFormRegistro() {
     verDocumento(){
       let enlace = this.registerFormRegistro.value.enlaceFEL;
       window.open(enlace);
+    }
+
+    changeAplicaSunat(value: any) {
+        console.log('changeAplicaSunat...', value);
+
+        if (value) {
+            console.log('entro...', value);
+            this.onlyReadSunat = false;
+        } else {
+            console.log('false...', value);
+            this.onlyReadSunat = true;
+            this.registerFormRegistro.get('nroserie_ctb')?.setValue('');
+            this.registerFormRegistro.get('nrodocumento_ctb')?.setValue('');
+        }
+    }
+
+    changeAplicaSunat2(value: any) {
+        console.log('changeAplicaSunat...', value);
+
+        if (value) {
+            console.log('entro...', value);
+            this.onlyReadSunat = false;
+        } else {
+            console.log('false...', value);
+            this.onlyReadSunat = true;
+        }
     }
 }

@@ -417,6 +417,8 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy {
   }
 
   emitirDocumento(data: any) {
+    console.log('emitirDocumento', data);
+    this.ordenCompra = data
 
     this.confirmationService.confirm({
       key: 'confirm1',
@@ -438,8 +440,8 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy {
             this.setSpinner(false);
             if (rpta.aceptada_por_sunat) {
               this.messageService.add({ severity: 'info', summary: 'Aviso', detail: rpta.sunat_description });
-              this.getListar();
               this.generarAsiento();
+              this.getListar();
               return;
             } else {
               this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.errors });
@@ -637,14 +639,13 @@ export class CRegistroVentaComponent implements OnInit, OnDestroy {
 
     this.setSpinner(true);
     this.mensajeSpinner = 'Generando Asientos...!';
-    let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.ordenCompra.idcategoria);
-    console.log('s_categoria...', s_categoria);
-
+    
     const objeto = {
       idasiento: 0,
       idreferencia: this.ordenCompra.idordencompra,
-      glosaasiento: 'ASIENTO GENERADO DESDE COMPRAS ' + s_categoria[0].nomcategoria,
-      idusuario: constantesLocalStorage.idusuario
+      glosaasiento: 'ASIENTO GENERADO DESDE VENTAS ' ,
+      idusuario: constantesLocalStorage.idusuario,
+      idmoneda: this.ordenCompra.idmoneda
     }
     const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
       next: (rpta: any) => {

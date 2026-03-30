@@ -42,7 +42,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy {
   ordenCompra: any;
   lstMonedas: Moneda[] = [];
   visXperfil: boolean = true;
-  lstCategoriaDoc: any;
+  //lstCategoriaDoc: any;
 
   constructor(
     private fb: FormBuilder,
@@ -62,7 +62,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy {
     //this.listaProveedores();
     this.getListar();
     this.listaMonedas();
-    this.listarCategoriaDoc();
+    //this.listarCategoriaDoc();
 
     if (constantesLocalStorage.idperfil === 11) {
       this.visXperfil = false;
@@ -262,7 +262,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy {
     this.vistaLista = true;
     this.visDetalle = false;
     this.visQuote = false;
-    this.listarCategoriaDoc();
+    //this.listarCategoriaDoc();
   }
 
   getBack() {
@@ -270,7 +270,7 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy {
     this.getListar();
     this.visDetalle = false;
     this.visQuote = false;
-    this.listarCategoriaDoc();
+    //this.listarCategoriaDoc();
   }
 
   onNuevo() {
@@ -411,14 +411,15 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy {
 
     this.setSpinner(true);
     this.mensajeSpinner = 'Generando Asientos...!';
-    let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.ordenCompra.idcategoria);
-    console.log('s_categoria...', s_categoria);
+    // let s_categoria = this.lstCategoriaDoc.filter((x: { idcategoria: any; }) => x.idcategoria === this.ordenCompra.idcategoria);
+    // console.log('s_categoria...', s_categoria);
 
     const objeto = {
       idasiento: 0,
       idreferencia: this.ordenCompra.idordencompra,
-      glosaasiento: 'ASIENTO GENERADO DESDE COMPRAS ' + s_categoria[0].nomcategoria,
-      idusuario: constantesLocalStorage.idusuario
+      glosaasiento: 'ASIENTO GENERADO DESDE COMPRAS ',
+      idusuario: constantesLocalStorage.idusuario,
+      idmoneda: this.ordenCompra.idmoneda
     }
     const $listaMonedas = this.contabilidadService.asientoPrc(objeto).subscribe({
       next: (rpta: any) => {
@@ -439,23 +440,23 @@ export class CRegistroCompraComponent implements OnInit, OnDestroy {
     this.$listSubcription.push($listaMonedas);
   }
 
-  listarCategoriaDoc() {
-    let tipo = 7; // compras
-    const $listarCategoriaDoc = this.contabilidadService
-      .listarCategoriasDoc(tipo)
-      .subscribe({
-        next: (rpta: any) => {
-          console.log('listarCategoriasDoc...', rpta);
+  // listarCategoriaDoc() {
+  //   let tipo = 7; // compras
+  //   const $listarCategoriaDoc = this.contabilidadService
+  //     .listarCategoriasDoc(tipo)
+  //     .subscribe({
+  //       next: (rpta: any) => {
+  //         console.log('listarCategoriasDoc...', rpta);
 
-          this.lstCategoriaDoc = rpta;
-        },
-        error: (err) => {
-          this.setSpinner(false);
-          this.serviceSharedApp.messageToast();
-        },
-        complete: () => { },
-      });
-    this.$listSubcription.push($listarCategoriaDoc);
-  }
+  //         this.lstCategoriaDoc = rpta;
+  //       },
+  //       error: (err) => {
+  //         this.setSpinner(false);
+  //         this.serviceSharedApp.messageToast();
+  //       },
+  //       complete: () => { },
+  //     });
+  //   this.$listSubcription.push($listarCategoriaDoc);
+  // }
 
 }

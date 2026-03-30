@@ -190,12 +190,11 @@
                         >
                             <label class="block text-900 mb-1">Serie</label>
                             <span class="p-fluid">
-                                <input
+                                <input 
                                     pInputText
                                     type="text"
                                     formControlName="nroserie_ctb"
                                     [readonly]="onlyReadSunat"
-                                    class="p-inputtext-sm surface-100"
                                 />
                             </span>
                         </div>
@@ -211,7 +210,6 @@
                                     type="text"
                                     formControlName="nrodocumento_ctb"
                                     [readonly]="onlyReadSunat"
-                                    class="p-inputtext-sm surface-100"
                                     oninput="
                                         this.value = this.value.replace(
                                             /[^0-9]/g,
@@ -428,30 +426,30 @@
                                 ></p-dropdown>
                             </span>
                         </div>
-                        <div
-                            class="sm:col-12 lg:col-6 md:col-12 h-3rem field -mt-1"
-                        >
+                        <div class="sm:col-12 lg:col-8 md:col-12 field h-4rem">
                             <label class="text-900 mb-1"
-                                >Motivo
-                                <span class="text-red-500 font-bold">
+                                >Cuenta Contable<span
+                                    class="text-red-500 font-bold"
+                                >
                                     *
                                 </span></label
                             >
-                            <span>
+                            <span class="p-fluid mt-1">
                                 <p-dropdown
-                                    [options]="lstCategoriaDoc"
-                                    formControlName="idcategoria"
-                                    optionLabel="nomcategoria"
+                                    [options]="lstCtaCtble"
+                                    formControlName="codctactble"
                                     placeholder="Seleccionar..."
-                                    optionValue="idcategoria"
-                                    appendTo="body"
+                                    optionLabel="s_desctactble"
                                     class="p-inputtext-sm"
+                                    optionValue="codctactble"
+                                    appendTo="body"
+                                    autoWidth="false"
                                     [filter]="true"
+                                    [showClear]="true"
                                     (onChange)="changeMotivo($event.value)"
                                 ></p-dropdown>
                             </span>
                         </div>
-                        <div class="lg:col-6"></div>
                         <div
                             class="sm:col-6 lg:col-6 md:col-12 field h-3rem -mt-1"
                         >
@@ -1147,75 +1145,27 @@
                             >
                                 N°
                             </th>
-                            <th
-                                rowspan="2"
-                                style="width: 20px"
-                                class="bg-teal-50 border-1"
-                            >
+                            <th class="bg-teal-50 border-1">
                                 <div
-                                    class="flex justify-content-between align-items-center"
+                                    [ngStyle]="{
+                                        width: '60px',
+                                        'text-align': 'center',
+                                    }"
                                 >
-                                    CORRELATIVO
+                                    CUENTA
                                 </div>
                             </th>
-                            <th
-                                rowspan="2"
-                                style="width: 80px"
-                                class="bg-teal-50 border-1"
-                            >
-                                FECHA
-                            </th>
-                            <th
-                                rowspan="2"
-                                style="width: 300px"
-                                class="bg-teal-50 border-1"
-                            >
-                                GLOSA
-                            </th>
-                            <th
-                                rowspan="2"
-                                style="width: 80px"
-                                class="bg-teal-50 border-1"
-                            >
-                                TC
-                            </th>
-                            <th
-                                colspan="2"
-                                style="width: 200px; text-align: center"
-                                class="bg-teal-50 border-1"
-                            >
-                                CTA CTBLE
-                            </th>
-                            <th
-                                colspan="2"
-                                style="width: 200px; text-align: center"
-                                class="bg-teal-50 border-1"
-                            >
-                                MOVIMIENTOS
-                            </th>
-                        </tr>
-                        <tr class="text-sm">
-                            <th colspan="1" class="bg-teal-50 border-1">
+                            <th class="bg-teal-50 border-1">
                                 <div
                                     [ngStyle]="{
                                         width: '100px',
                                         'text-align': 'center',
                                     }"
                                 >
-                                    CÓDIGO
+                                    NOMBRE
                                 </div>
                             </th>
-                            <th colspan="1" class="bg-teal-50 border-1">
-                                <div
-                                    [ngStyle]="{
-                                        width: '100px',
-                                        'text-align': 'center',
-                                    }"
-                                >
-                                    DENOMINACIÓN
-                                </div>
-                            </th>
-                            <th colspan="1" class="bg-teal-50 border-1">
+                            <th class="bg-teal-50 border-1">
                                 <div
                                     [ngStyle]="{
                                         width: '80px',
@@ -1225,7 +1175,7 @@
                                     DEBE
                                 </div>
                             </th>
-                            <th colspan="1" class="bg-teal-50 border-1">
+                            <th class="bg-teal-50 border-1">
                                 <div
                                     [ngStyle]="{
                                         width: '80px',
@@ -1235,6 +1185,30 @@
                                     HABER
                                 </div>
                             </th>
+                            <th style="width: 50px" class="bg-teal-50 border-1">
+                                MONEDA
+                            </th>
+                            <th style="width: 50px" class="bg-teal-50 border-1">
+                                T.C.
+                            </th>
+                            <th style="width: 50px" class="bg-teal-50 border-1">
+                                <div
+                                    class="flex justify-content-between align-items-center"
+                                >
+                                    EQUIVALENTE
+                                </div>
+                            </th>
+                            <th style="width: 80px" class="bg-teal-50 border-1">
+                                CÓDIGO
+                            </th>
+                            <th
+                                style="width: 200px"
+                                class="bg-teal-50 border-1"
+                            >
+                                RAZÓN SOCIAL
+                            </th>
+
+                            <th class="bg-teal-50 border-1">GLOSA</th>
                         </tr>
                     </ng-template>
                     <ng-template
@@ -1244,16 +1218,7 @@
                     >
                         <tr class="text-sm">
                             <td>{{ rowIndex + 1 }}</td>
-                            <td>{{ dato.nroasiento }}</td>
-                            <td>{{ dato.fecasiento }}</td>
-                            <td>{{ dato.glosaasiento }}</td>
-                            <td>{{ dato.tc | number: "0.4" }}</td>
-                            <td
-                                [ngStyle]="{
-                                    width: '100px',
-                                    'text-align': 'center',
-                                }"
-                            >
+                            <td>
                                 {{ dato.ctactble }}
                             </td>
                             <td>{{ dato.desctactble }}</td>
@@ -1273,11 +1238,19 @@
                             >
                                 {{ dato.mtohaber | number: "0.2" }}
                             </td>
+                            <td>{{ dato.simbmoneda }}</td>
+                            <td>{{ dato.tc | number: "0.4" }}</td>
+                            <td>{{ dato.mtoequivalente | number: "0.2"}}</td>
+                            <td>{{ dato.nrodocumento }}</td>
+                            <td>{{ dato.nomcomercial }}</td>
+                            <td>
+                                {{ dato.glosaasiento }}
+                            </td>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="footer">
                         <tr>
-                            <td colspan="7" class="text-right">Totales:</td>
+                            <td colspan="3" class="text-right">Totales:</td>
                             <td>
                                 <div [ngStyle]="{ 'text-align': 'right' }">
                                     {{ tot_debe | number: "0.2-2" }}

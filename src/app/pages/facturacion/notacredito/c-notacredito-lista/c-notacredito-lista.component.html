@@ -137,7 +137,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
+                    <div *ngIf="!data.indsunatreg" class="flex align-items-center m:justify-content-end" [ngStyle]="{'width':'40px'}">
                         <button *ngIf="data.estado === 'EMI' && data.ind_estado_fel != 1 && data.ind_estado_fel != 3 && data.ind_estado_fel != 4" pButton pRipple type="button" icon="pi pi-upload" tooltipPosition="bottom" pTooltip="Generar Documento" class="p-button-rounded p-button-text text-blue-500" (click)="emitirDocumento(data)"></button>
                         <button *ngIf="data.ind_estado_fel === 1" pButton pRipple type="button" icon="pi pi-download" tooltipPosition="bottom" pTooltip="Descargar Documento" class="p-button-rounded p-button-text text-green-500" (click)="verDocumento(data)"></button>
                         <button *ngIf="data.ind_estado_fel != 0 && data.ind_estado_fel != 2 && data.ind_estado_fel != 4" pButton pRipple type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text " (click)="toggleMenuSunat($event, data)"

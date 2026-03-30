@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion } from '@constantes';
 import { Cliente, Moneda, OrdenCompraItem } from '@interfaces';
@@ -13,6 +13,7 @@ import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/modalPersona/c-modalpersona.component';
 import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
+import { MarketingService } from 'src/app/pages/marketing/service/marketingServices';
 
 @Component({
     selector: 'app-c-dato-venta',
@@ -116,6 +117,9 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
     tot_debe: number = 0;
     tot_haber: number = 0;
     indtipoingreso: boolean = false;
+    lstCtaCtble: any[] = [];
+
+    @ViewChild('serie') serie!: ElementRef;
 
     constructor(
         private fb: FormBuilder,
@@ -129,6 +133,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
         private ordencompraService: OrdencompraService,
         private comprasService: ComprasService,
         private contabilidadService: ContabilidadService,
+        private marketingService: MarketingService,
     ) {}
 
     ngOnInit(): void {
@@ -150,6 +155,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
         this.getMontoAnticipo(0);
         this.listarTipoRetencion();
         this.listarCategoriaDoc();
+         this.listarPlanContable();
 
         this.minimaFechaHasta = this.registerFormRegistro.value.fecemision;
         this.maximaFechaDesde = this.registerFormRegistro.value.fecvencimiento;
@@ -291,6 +297,7 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
             indsunatreg: [{ value: false, disabled: false }],
             idcategoria: [{ value: null, disabled: false }],
             parm_igv: [{ value: 596, disabled: false }],
+            codctactble: [{ value: null, disabled: false }],
         });
     }
 
@@ -880,17 +887,14 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
     }
 
     getItem(data: any, index: number) {
-        console.log(
-            'idcategoria',
-            this.registerFormRegistro.get('idcategoria')?.value,
-        );
+       console.log('codctactble', this.registerFormRegistro.get('codctactble')?.value);
 
-        if (this.registerFormRegistro.get('idcategoria')?.value === null) {
+        if(this.registerFormRegistro.get('codctactble')?.value === null){
             this.messageService.add({
-                severity: 'warn',
-                summary: 'Aviso...!',
-                detail: 'Debe Seleccionar el Motivo',
-            });
+                    severity: 'warn',
+                    summary: 'Aviso...!',
+                    detail: 'Debe Seleccionar Cuenta Contable',
+                });
             return;
         }
 
@@ -1229,10 +1233,10 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
             _error = true;
         }
 
-        if (!_error && this.registerFormRegistro.value.idcategoria === null) {
-            this.errorMensaje = 'Seleccionar Motivo...!';
-            _error = true;
-        }
+        // if (!_error && this.registerFormRegistro.value.idcategoria === null) {
+        //     this.errorMensaje = 'Seleccionar Motivo...!';
+        //     _error = true;
+        // }
 
         if (!_error && this.registerFormRegistro.value.inddetraccion_ctb) {
             if (
@@ -1953,11 +1957,37 @@ export class DatoVentaComponent implements OnInit, OnDestroy {
     }
 
     changeMotivo(value: any) {
-        let s_categoria = this.lstCategoriaDoc.filter(
-            (x: { idcategoria: any }) => x.idcategoria === value,
-        );
-        console.log('s_categoria...', s_categoria);
-        this.indtipoingreso = s_categoria[0].indtipoingreso;
+         let s_clasecta = this.lstCtaCtble.filter((x: { codctactble: any; }) => x.codctactble === value);
+        console.log('s_categoria...', s_clasecta);
+
+        switch (s_clasecta[0].idclasectb) {
+            case 7:
+                this.indtipoingreso = true
+                break;
+        
+        }
+    }
+
+    listarPlanContable() {
+        const $listarPlanContable = this.marketingService
+            .listarPlanContable()
+            .subscribe({
+                next: (rpta: any) => {
+                    this.setSpinner(false);
+                    this.lstCtaCtble = rpta.map((item: any) => ({
+                            codctactble: item.codctactble,
+                            s_desctactble: item.s_desctactble,
+                            idclasectb: item.idclasectb
+                        }))
+                    //this.lstCtaCtble = rpta;
+                },
+                error: (err) => {
+                    this.setSpinner(false);
+                    this.serviceSharedApp.messageToast();
+                },
+                complete: () => {},
+            });
+        this.$listSubcription.push($listarPlanContable);
     }
 
   
