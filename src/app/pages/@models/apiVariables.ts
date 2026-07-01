@@ -1,23 +1,25 @@
-import { environment } from "src/environments/environment";
+import { environment } from '../../../environments/environment';
 
 const webApi = environment.webAPI;
 
-const controllerLogin: string = webApi+'Login';
-const controllerSeguridad: string = webApi+'Seguridad';
-const controllerCRM: string = webApi+'Crm';
-const controllerUsuario: string = webApi+'Usuario';
-const controllerComercial: string = webApi+'Comercial';
-const controllerMain: string = webApi+'Main';
-const controllerArchivo: string = webApi+'Archivo';
-const controllerPerfil: string = webApi+'Perfil';
-const controllerAlmacen: string = webApi+'Almacen';
-const controllerProducto: string = webApi+'Producto';
-const controllerTesoreria: string = webApi+'Tesoreria';
-const controllerContabilidad: string = webApi+'Contabilidad';
-const controllerAdministracion: string = webApi+'Administracion';
-const controllerMarketing: string = webApi +'Marketing'
-const controllerEventos: string = webApi +'Evento'
-const controllerLogger: string = webApi + 'Logger'
+const controllerLogin: string = webApi + 'Login';
+const controllerCargaSire: string = webApi + 'CargaSire';
+const controllerSeguridad: string = webApi + 'Seguridad';
+const controllerCRM: string = webApi + 'Crm';
+const controllerUsuario: string = webApi + 'Usuario';
+const controllerComercial: string = webApi + 'Comercial';
+const controllerMain: string = webApi + 'Main';
+const controllerArchivo: string = webApi + 'Archivo';
+const controllerPerfil: string = webApi + 'Perfil';
+const controllerAlmacen: string = webApi + 'Almacen';
+const controllerProducto: string = webApi + 'Producto';
+const controllerTesoreria: string = webApi + 'Tesoreria';
+const controllerContabilidad: string = webApi + 'Contabilidad';
+const controllerAdministracion: string = webApi + 'Administracion';
+const controllerMarketing: string = webApi + 'Marketing';
+const controllerEventos: string = webApi + 'Evento';
+const controllerIAServicio: string = webApi + 'IAServicio';
+const controllerLogger: string = webApi + 'Logger';
 
 export const constantesApiWeb = {
     refreshToken: controllerLogin + '/refreshToken',
@@ -32,11 +34,11 @@ export const constantesApiWeb = {
 
     fotocloudinary: controllerSeguridad + '/fotocloudinary/',
     TraerUnoUsuario: controllerUsuario + '/traerUnoUsuario/',
-    GuardarUsuarioPerfil: controllerUsuario + '/actualizarUsuarioPerfilPersonal/',
+    GuardarUsuarioPerfil:
+        controllerUsuario + '/actualizarUsuarioPerfilPersonal/',
     ListarNotificacion: controllerMain + '/notificacionlistar/',
     NotificacionPrc: controllerMain + '/notificacionprc/',
 
-    
     Cambioclaveuserapp: controllerSeguridad + '/cambioclaveuserapp/',
     ListaClientes: controllerCRM + '/personalist/',
     obtenerOportunidadXCliente: controllerCRM + '/oportunidadlist02',
@@ -69,7 +71,7 @@ export const constantesApiWeb = {
     lstMarca: controllerComercial + '/marcalist',
     prcMarca: controllerComercial + '/marcaprc',
 
-    oportunidadTraeruno: controllerCRM + '/oportunidadtraeruno/', 
+    oportunidadTraeruno: controllerCRM + '/oportunidadtraeruno/',
     prcTerminoPago: controllerComercial + '/personaupd02/',
 
     ordencompraprc: controllerComercial + '/ordencompraprc',
@@ -104,10 +106,10 @@ export const constantesApiWeb = {
     eliminarProyecto: controllerComercial + '/proyectodel',
     listarTrasacciones: controllerMain + '/trxmovimientolist02/',
 
-
     ListarAlamcen: controllerAlmacen + '/listarAlmacen/',
     GrabarAlamcen: controllerAlmacen + '/almacenprc/',
-    ordencompraaprobadasprovlist: controllerComercial + '/ordencompraaprobadasprovlist/',
+    ordencompraaprobadasprovlist:
+        controllerComercial + '/ordencompraaprobadasprovlist/',
     listarProducto: controllerProducto + '/listarproducto',
     prcProducto: controllerProducto + '/actualizarProducto/',
     traerunoProducto: controllerProducto + '/traerUnoProducto/',
@@ -123,15 +125,15 @@ export const constantesApiWeb = {
 
     traerunoFamilia: controllerAlmacen + '/familiatraeruno/',
     traerunoSubFamilia: controllerAlmacen + '/subfamiliatraeruno/',
-    
+
     prcFamilia: controllerAlmacen + '/familiaprc/',
     prcSubFamilia: controllerAlmacen + '/subfamiliaprc/',
-    
+
     oficinaTraeruno: controllerAlmacen + '/traerUnooficina/',
     grabarOficina: controllerAlmacen + '/oficinaprc/',
     ListarOficina: controllerAlmacen + '/listaroficina/',
     buscarProducto03: controllerAlmacen + '/buscarproducto03',
-    
+
     prcBanco: controllerTesoreria + '/bancoprc/',
     listarBanco: controllerTesoreria + '/bancolist/',
     traerunoBanco: controllerTesoreria + '/bancotraeruno/',
@@ -146,7 +148,7 @@ export const constantesApiWeb = {
     listarCentroCosto: controllerTesoreria + '/centrocostolist/',
     eliminarCentroCosto: controllerTesoreria + '/centrocostoeliminar/',
     prcReporte: controllerComercial + '/reporteRdlc',
-    
+
     prcPagoDocumento: controllerTesoreria + '/pagodocumentoprc/',
     listPagoDocumento: controllerTesoreria + '/pagodocumentolist/',
     traerunoPagoDocumento: controllerTesoreria + '/pagodocumentotraeruno/',
@@ -158,10 +160,11 @@ export const constantesApiWeb = {
     recalcularRegistro: controllerTesoreria + '/obtenercalculodetraccion/',
     listarUsuario: controllerUsuario + '/listarUsuario02',
 
-    postordocumentoseleccionacotiza: controllerComercial + '/postordocumentoseleccionacotiza',
+    postordocumentoseleccionacotiza:
+        controllerComercial + '/postordocumentoseleccionacotiza',
     prcPersona: controllerMain + '/personaprc',
     descargarInformeEmpleado: controllerMain + '/descargarinfoempleado',
-    
+
     listavinculados: controllerAdministracion + '/VinculadoList/',
     listadatoslaborales: controllerAdministracion + '/LaboralPerList/',
     delVinculado: controllerAdministracion + '/vinculadodel/',
@@ -176,12 +179,15 @@ export const constantesApiWeb = {
     listEventos: controllerEventos + '/eventolist',
     procesarTrxEvento: controllerEventos + '/prctrxevento',
 
-    
-    ordenCompraTraerunoSubproceso: controllerComercial + '/ordencompratrearunosubproceso',
+    ordenCompraTraerunoSubproceso:
+        controllerComercial + '/ordencompratrearunosubproceso',
     personaTraerUno: controllerMain + '/personatraeruno',
-    ordencompraaprobadasprovlistsal: controllerComercial + '/ordencompraaprobadasprovlistSalida/',
-    documentoPrcTipoDocPrcLista: controllerComercial + '/documentoprctipodocprclista/',
-    documentoPrcOrdenCompraxProyecto: controllerComercial + '/documentoprcordencompraxproyectoxpro/',
+    ordencompraaprobadasprovlistsal:
+        controllerComercial + '/ordencompraaprobadasprovlistSalida/',
+    documentoPrcTipoDocPrcLista:
+        controllerComercial + '/documentoprctipodocprclista/',
+    documentoPrcOrdenCompraxProyecto:
+        controllerComercial + '/documentoprcordencompraxproyectoxpro/',
     ordenCompralistGasto: controllerComercial + '/ordencompralistgasto',
     ordendocumentoprc: controllerComercial + '/ordendocumentoprc',
     ordendocumentoupd: controllerComercial + '/ordendocumentoupd',
@@ -191,7 +197,7 @@ export const constantesApiWeb = {
 
     obtenerUsuario: controllerUsuario + '/traerUnoUsuario',
     enviarEmailRequerimiento: controllerUsuario + '/enviaremailrequerimiento',
-    
+
     listarMovimientosPrc: controllerComercial + '/listarmovimientosprc/',
     pagodocextornoprc: controllerTesoreria + '/pagodocextornoprc/',
     exportarexcelcuentas: controllerMain + '/exportarexcelcuentas',
@@ -200,21 +206,26 @@ export const constantesApiWeb = {
 
     ordencompralistcuentas: controllerComercial + '/ordencompralistcuentas',
     pagosProgramados: controllerComercial + '/pagosprogramados',
-    exportarExcelpagosprogramados: controllerMain + '/exportarexcelpagosprogramados',
+    exportarExcelpagosprogramados:
+        controllerMain + '/exportarexcelpagosprogramados',
     obtenerToken: controllerEventos + '/obtenertoken',
     //enviarCorreo: controllerEventos + '/enviarcorreo',
     listaritemTablaSunat: controllerContabilidad + '/listaritemtablasunat/',
-    listarTipoTransporteTablaSunat: controllerContabilidad + '/listartipotransportetablasunat',
-    listarMotivoTrasladoTablaSunat: controllerContabilidad + '/listarmotivotrasladotablasunat',
-    listarTipoDocumentoTablaSunat: controllerContabilidad + '/listartipodocumentotablasunat/',
+    listarTipoTransporteTablaSunat:
+        controllerContabilidad + '/listartipotransportetablasunat',
+    listarMotivoTrasladoTablaSunat:
+        controllerContabilidad + '/listarmotivotrasladotablasunat',
+    listarTipoDocumentoTablaSunat:
+        controllerContabilidad + '/listartipodocumentotablasunat/',
 
     listarGastos: controllerMarketing + '/listargastos',
-    prcGastos: controllerMarketing + '/gastosprc',  
+    prcGastos: controllerMarketing + '/gastosprc',
     gastosTraeruno: controllerMarketing + '/gastostraeruno/',
-    
-    ordenCompraTraerunoNroDoc: controllerComercial + '/ordendocumentotrearunonrodoc',
+
+    ordenCompraTraerunoNroDoc:
+        controllerComercial + '/ordendocumentotrearunonrodoc',
     emitirDocumento: controllerLogger + '/comprobantefelprc',
-    
+
     operacionFel: controllerLogger + '/operacionfel',
     //operacionFel: controllerContabilidad + '/operacionfel',
 
@@ -236,7 +247,7 @@ export const constantesApiWeb = {
     getOportunidades: controllerCRM + '/oportunidadporcliente/',
     ordenCompraUpdSuma: controllerComercial + '/ordendocumentoupdsuma',
 
-     ordenDocumentoResultado: controllerComercial + '/ordendocumentoresultados',
+    ordenDocumentoResultado: controllerComercial + '/ordendocumentoresultados',
     listarPartidas: controllerProducto + '/listarpartidas',
     ordenCompralistargastos: controllerComercial + '/ordenCompralistargastos',
     ordenCompraTraerItems: controllerComercial + '/ordencompratrearitems',
@@ -248,18 +259,37 @@ export const constantesApiWeb = {
     ordencompraprcmonto: controllerComercial + '/ordencompraprcmonto',
     centroCostoUPD: controllerComercial + '/ordendocumentoupdcentrocosto',
     listarFlujoCaja: controllerTesoreria + '/flujocaja/',
-    
+
     UbicacionAlmacenDel: controllerAlmacen + '/UbicacionAlmacenDel',
     exportarexcelstock: controllerMain + '/exportarexcelstock',
-    
-    ListarMovimientosPrcSalidas: controllerComercial + '/listarmovimientosprcsalidas',
+
+    ListarMovimientosPrcSalidas:
+        controllerComercial + '/listarmovimientosprcsalidas',
     lstMovimientosConfirmados: controllerComercial + '/ordencompraconfirmada/',
     listarUbigeos: controllerComercial + '/listarubigeos',
     rdlcProducto: controllerMain + '/productordlc',
 
-     asientocfgTraeruno: controllerContabilidad + '/asientocfgtraeruno/',
+    asientocfgTraeruno: controllerContabilidad + '/asientocfgtraeruno/',
     asientoPrc: controllerContabilidad + '/asientoprc',
     exportarexceldetracciones: controllerMain + '/exportarexceldetracciones',
 
     listarAreas: controllerComercial + '/listarareas',
-}
+
+    ProyectoList: controllerComercial + '/proyectolist04',
+
+    uploadDocumentoVector: controllerIAServicio + '/uploaddocumentovector',
+    searchDocumentoVector: controllerIAServicio + '/searchdocumentovector',
+    validarproveedor: controllerMain + '/personaprcvalida',
+    validarduplicadocompra: controllerCRM + '/validarDuplicado',
+    ordenCompraprccompleto: controllerComercial + '/ordencompraprccompleto',
+
+    tipoOperacionList: controllerContabilidad + '/listartiopooperacion',
+    listarbalancecomprobacion:
+        controllerContabilidad + '/listabalancecomprobacion/',
+
+    cargasirePrc: controllerCargaSire + '/cargasireprc',
+    cargasireList: controllerCargaSire + '/cargasirelist',
+    cargasireDetalleList: controllerCargaSire + '/cargasiredetallelist/',
+    cargasireErrorList: controllerCargaSire + '/cargasireerrorlist/',
+    ordenCompraListRepVenta: controllerComercial + '/ordencompralistrepventa',
+};

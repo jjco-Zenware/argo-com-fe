@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedPrimeNgModule } from '@primeNgModule';
-import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { AlmacenService } from '../../almacen/service/almacenServices';
 import { CBalanceComponent } from './c-balance/c-balance.component';
 import { BalanceRoutingModule } from './balance-routing.module';
+import { TesoreriaService } from '../../tesoreria/service/tesoreriaServices';
+import { SharedAppModule } from '../../../shared/shared-App.module';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,6 @@ import { BalanceRoutingModule } from './balance-routing.module';
     ReactiveFormsModule,
     BalanceRoutingModule
   ],
-  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService]
+  providers: [SharedAppService, DynamicDialogRef, DynamicDialogConfig, AlmacenService, TesoreriaService]
 })
 export class BalanceModule { }

@@ -273,4 +273,14 @@ export class ProyectosService {
         const url = `${constantesApiWeb.listarUbigeos}`;
         return this.http.get<any>(url);
     }
+
+    validarproveedor(objeto:any) {
+        const url = `${constantesApiWeb.validarproveedor}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    ordenCompraListRepVenta(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompraListRepVenta}`;
+            return  this.http.post<any>(url, objeto)
+    }
 }

@@ -172,4 +172,9 @@ export class TesoreriaService {
         .pipe(
         map((resp: Blob) => resp));
     }
+
+    listarbalancecomprobacion(codigo: any) {
+        const url = `${constantesApiWeb.listarbalancecomprobacion}${codigo}`;
+        return this.http.get<any>(url);
+    }
 }

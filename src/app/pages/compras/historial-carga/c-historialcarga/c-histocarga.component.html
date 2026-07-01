@@ -1,0 +1,196 @@
+<p-toast position="top-right"></p-toast>
+
+<app-c-progress-spinner
+    *ngIf="blockedDocument"
+    [IS_mensaje]="mensajeSpinner"
+></app-c-progress-spinner>
+
+<div class="card m-4">
+    <!-- Header -->
+    <div class="hc-header">
+        <div class="hc-header-left">
+            <div class="hc-header-icon-wrap">
+                <i class="pi pi-history hc-header-icon"></i>
+            </div>
+            <div>
+                <div class="hc-header-title">HISTORIAL DE CARGAS MASIVAS</div>
+                <div class="hc-header-sub">Consulte el registro de cargas masivas de compras por periodo</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toolbar -->
+    <form [formGroup]="frmDatos" class="hc-toolbar">
+        <div class="hc-periodo-wrap">
+            <label class="hc-label">Periodo</label>
+            <p-calendar
+                dateFormat="mm/yy"
+                view="month"
+                [showIcon]="true"
+                formControlName="periodo"
+                [showOnFocus]="true"
+                [readonlyInput]="true"
+                appendTo="body"
+                [inputStyle]="{ height: '2.2rem', width: '7rem' }"
+                class="p-inputtext-sm"
+            ></p-calendar>
+        </div>
+        <button
+            pButton
+            type="button"
+            label="Buscar"
+            icon="pi pi-search"
+            class="hc-btn hc-btn-search"
+            (click)="buscar()"
+        ></button>
+    </form>
+
+    <!-- Tabla principal: historial de cargas -->
+    <p-table
+        [value]="lstHistorialCarga"
+        [rows]="20"
+        [rowHover]="true"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[20, 50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        styleClass="p-datatable-sm card border-1 border-round surface-border"
+    >
+        <ng-template pTemplate="header">
+            <tr class="text-sm">
+                <th style="width: 50px"></th>
+                <th style="width: 50px" class="bg-blue-50 border-1">N°</th>
+                <th style="width: 100px" class="bg-blue-50 border-1">PERIODO</th>
+                <th class="bg-blue-50 border-1">ARCHIVO</th>
+                <th style="width: 110px; text-align: center" class="bg-blue-50 border-1">TOTAL REG.</th>
+                <th style="width: 100px; text-align: center" class="bg-blue-50 border-1">ERRORES</th>
+                <th style="width: 120px; text-align: center" class="bg-blue-50 border-1">ESTADO</th>
+                <th style="width: 160px" class="bg-blue-50 border-1">FECHA REG.</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-carga let-rowIndex="rowIndex">
+            <!-- Fila principal -->
+            <tr class="text-sm" [class.hc-row-expanded]="carga.idcargasire === cargaExpandida">
+                <td style="text-align: center">
+                    <button
+                        pButton
+                        type="button"
+                        [icon]="carga.idcargasire === cargaExpandida ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                        class="p-button-rounded p-button-text p-button-sm hc-expand-btn"
+                        (click)="toggleDetalle(carga.idcargasire)"
+                        pTooltip="Ver detalle de la carga"
+                        tooltipPosition="right"
+                    ></button>
+                </td>
+                <td>{{ rowIndex + 1 }}</td>
+                <td><strong>{{ carga.periodo }}</strong></td>
+                <td>
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-file-excel text-green-600"></i>
+                        <span>{{ carga.nombrearchivo }}</span>
+                    </div>
+                </td>
+                <td style="text-align: center">
+                    <span class="hc-badge hc-badge-total">{{ carga.totalregistros }}</span>
+                </td>
+                <td style="text-align: center">
+                    <span
+                        class="hc-badge"
+                        [ngClass]="carga.totalerrors > 0 ? 'hc-badge-error' : 'hc-badge-ok'"
+                    >{{ carga.totalerrors }}</span>
+                </td>
+                <td style="text-align: center">
+                    <p-tag
+                        [value]="carga.estado"
+                        [severity]="getEstadoSeverity(carga.estado)"
+                    ></p-tag>
+                </td>
+                <td>{{ carga.s_fecreg }}</td>
+            </tr>
+
+            <!-- Fila de expansión con detalle -->
+            <tr *ngIf="carga.idcargasire === cargaExpandida" class="hc-expansion-row">
+                <td colspan="8" class="p-0">
+                    <div class="hc-detail-panel">
+                        <div class="hc-detail-panel-header">
+                            <i class="pi pi-list"></i>
+                            <span>
+                                Detalle de la carga
+                                <strong>{{ carga.nombrearchivo }}</strong>
+                                — periodo <strong>{{ carga.periodo }}</strong>
+                                ({{ getDetalle(carga.idcargasire).length }} registro(s))
+                            </span>
+                        </div>
+
+                        <div *ngIf="loadingDetalle" class="hc-detail-loading">
+                            <i class="pi pi-spin pi-spinner"></i> Cargando detalle...
+                        </div>
+
+                        <p-table
+                            *ngIf="!loadingDetalle"
+                            [value]="getDetalle(carga.idcargasire)"
+                            [rows]="25"
+                            [paginator]="getDetalle(carga.idcargasire).length > 25"
+                            [showCurrentPageReport]="true"
+                            currentPageReportTemplate="{first}-{last} de {totalRecords}"
+                            styleClass="p-datatable-sm"
+                        >
+                            <ng-template pTemplate="header">
+                                <tr class="text-sm">
+                                    <th style="width: 40px" class="bg-teal-50 border-1">N°</th>
+                                    <th style="width: 90px" class="bg-teal-50 border-1">FECHA EMI.</th>
+                                    <th style="width: 70px" class="bg-teal-50 border-1">TIPO DOC</th>
+                                    <th style="width: 60px" class="bg-teal-50 border-1">SERIE</th>
+                                    <th style="width: 90px" class="bg-teal-50 border-1">N° DOC</th>
+                                    <th style="width: 100px" class="bg-teal-50 border-1">RUC</th>
+                                    <th class="bg-teal-50 border-1">PROVEEDOR</th>
+                                    <th style="width: 90px; text-align: right" class="bg-teal-50 border-1">BASE IMP.</th>
+                                    <th style="width: 80px; text-align: right" class="bg-teal-50 border-1">IGV</th>
+                                    <th style="width: 100px; text-align: right" class="bg-teal-50 border-1">TOTAL</th>
+                                    <th style="width: 90px; text-align: center" class="bg-teal-50 border-1">MONEDA</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-det let-i="rowIndex">
+                                <tr class="text-sm">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ det.fecemision }}</td>
+                                    <td>{{ det.tipodoc_ctb }}</td>
+                                    <td>{{ det.nroserie_ctb }}</td>
+                                    <td>{{ det.nrodocumento_ctb }}</td>
+                                    <td>{{ det.nrodocumento }}</td>
+                                    <td>{{ det.nomempresa | uppercase }}</td>
+                                    <td style="text-align: right">{{ det.s_monto | number: '0.2-2' }}</td>
+                                    <td style="text-align: right">{{ det.s_igv | number: '0.2-2' }}</td>
+                                    <td style="text-align: right"><strong>{{ det.s_monto_total | number: '0.2-2' }}</strong></td>
+                                    <td style="text-align: center">{{ det.desmoneda }}</td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage">
+                                <tr>
+                                    <td colspan="11" class="text-center p-3 text-color-secondary text-sm">
+                                        Sin registros de detalle disponibles.
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8">
+                    <div class="hc-empty-state">
+                        <i class="pi pi-inbox hc-empty-icon"></i>
+                        <div class="hc-empty-title">Sin resultados</div>
+                        <div class="hc-empty-sub">
+                            No se encontraron cargas para el periodo seleccionado.
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

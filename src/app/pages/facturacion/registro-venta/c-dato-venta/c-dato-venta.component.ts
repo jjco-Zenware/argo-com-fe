@@ -7,13 +7,13 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
 import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
 import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
 import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
 import { CModalPersonaComponent } from 'src/app/pages/compras/registro-compra/modalPersona/c-modalpersona.component';
 import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 import { MarketingService } from 'src/app/pages/marketing/service/marketingServices';
+import { CItemOrdenesComponent } from '../../../almacen/items-ordenes/c-items-ordenes.component';
 
 @Component({
     selector: 'app-c-dato-venta',

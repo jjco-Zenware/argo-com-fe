@@ -1,0 +1,159 @@
+// ── Header ───────────────────────────────────────────────────────────────────
+.hc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(135deg, #1565c0 0%, #1976d2 60%, #1e88e5 100%);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 2px 8px rgba(21, 101, 192, .25);
+}
+
+.hc-header-left {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+}
+
+.hc-header-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .18);
+    border-radius: 50%;
+    width: 2.6rem;
+    height: 2.6rem;
+}
+
+.hc-header-icon  { font-size: 1.25rem; color: #fff; }
+.hc-header-title { font-size: 1rem; font-weight: 700; color: #fff; letter-spacing: .04em; }
+.hc-header-sub   { font-size: .78rem; color: rgba(255, 255, 255, .8); margin-top: .1rem; }
+
+// ── Toolbar ──────────────────────────────────────────────────────────────────
+.hc-toolbar {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.hc-periodo-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+
+    .p-calendar { width: auto !important; }
+}
+.hc-label        { font-size: .8rem; font-weight: 600; color: #1565c0; }
+
+// ── Buttons ──────────────────────────────────────────────────────────────────
+.hc-btn {
+    height: 2.4rem !important;
+    font-size: .82rem !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    padding: 0 1.1rem !important;
+    transition: all .18s ease !important;
+
+    &:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0, 0, 0, .15) !important; }
+}
+
+.hc-btn-search {
+    background: #1565c0 !important;
+    border: 1.5px solid #1565c0 !important;
+    color: #fff !important;
+
+    &:hover { background: #0d47a1 !important; border-color: #0d47a1 !important; }
+}
+
+// ── Expand button ─────────────────────────────────────────────────────────────
+.hc-expand-btn {
+    width: 2rem !important;
+    height: 2rem !important;
+    color: #1565c0 !important;
+
+    &:hover { background: #e3f2fd !important; }
+}
+
+// ── Row states ────────────────────────────────────────────────────────────────
+.hc-row-expanded {
+    background: #e3f2fd !important;
+
+    td { font-weight: 600; }
+}
+
+// ── Expansion panel ───────────────────────────────────────────────────────────
+.hc-expansion-row td { padding: 0 !important; background: transparent !important; }
+
+.hc-detail-panel {
+    background: #f8fafc;
+    border: 1.5px solid #bfdbfe;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 1rem 1.25rem 1.25rem;
+    animation: slideDown .2s ease-out;
+    margin-bottom: .25rem;
+}
+
+.hc-detail-panel-header {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #1565c0;
+    margin-bottom: .85rem;
+    padding-bottom: .5rem;
+    border-bottom: 1.5px solid #e2e8f0;
+
+    i { font-size: .9rem; }
+}
+
+.hc-detail-loading {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .85rem;
+    color: #6b7280;
+    padding: 1.25rem;
+
+    i { color: #1565c0; }
+}
+
+// ── Badges ────────────────────────────────────────────────────────────────────
+.hc-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 1.6rem;
+    padding: 0 .55rem;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.hc-badge-total { background: #eff6ff; color: #2563eb; border: 1.5px solid #bfdbfe; }
+.hc-badge-ok    { background: #f0fdf4; color: #16a34a; border: 1.5px solid #86efac; }
+.hc-badge-error { background: #fef2f2; color: #dc2626; border: 1.5px solid #fecaca; }
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+.hc-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem;
+    gap: .5rem;
+}
+
+.hc-empty-icon  { font-size: 2.5rem; color: #9ca3af; }
+.hc-empty-title { font-size: .95rem; font-weight: 600; color: #6b7280; }
+.hc-empty-sub   { font-size: .8rem; color: #9ca3af; }
+
+// ── Animation ─────────────────────────────────────────────────────────────────
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

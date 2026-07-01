@@ -253,4 +253,19 @@ export class OrdencompraService {
         const url = `${constantesApiWeb.centroCostoUPD}`;
             return  this.http.post<any>(url, objeto)
     }
+
+    validarduplicadocompra(objeto:any) {
+        const url = `${constantesApiWeb.validarduplicadocompra}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    ordenCompraprccompleto(objeto:any) {
+        const url = `${constantesApiWeb.ordenCompraprccompleto}`;
+            return  this.http.post<any>(url, objeto)
+    }
+
+    tipoOperacionList() {
+        const url = `${constantesApiWeb.tipoOperacionList}`;
+        return this.http.get<any>(url);
+    } 
 }

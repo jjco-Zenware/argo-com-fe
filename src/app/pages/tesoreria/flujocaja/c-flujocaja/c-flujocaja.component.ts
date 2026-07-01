@@ -30,14 +30,18 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
   lstmontomesA: number[] = [];
   lstmontomesB: number[] = [];
   lstmontomesC: number[] = [];
-  
-  
-    chartMonthlyDataA: any;
-    chartMonthlyDataB: any;
-    chartMonthlyDataC: any;
-    chartMonthlyDataT: any;
-    chartMonthlyOptions: any;
-    chartMonthlyOptionsT: any;
+
+  totalVentas: number = 0;
+  totalCostos: number = 0;
+  totalUtilidad: number = 0;
+  margenBruto: number = 0;
+
+  chartMonthlyDataA: any;
+  chartMonthlyDataB: any;
+  chartMonthlyDataC: any;
+  chartMonthlyDataT: any;
+  chartMonthlyOptions: any;
+  chartMonthlyOptionsT: any;
 
 
   constructor(
@@ -112,7 +116,11 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
             this.serviceSharedApp.messageToast()
         },
         complete:() => {
-          this.monthlyChartInit(); 
+          this.totalVentas = this.lstmontomesA.reduce((a, b) => a + b, 0);
+          this.totalCostos = this.lstmontomesB.reduce((a, b) => a + b, 0);
+          this.totalUtilidad = this.lstmontomesC.reduce((a, b) => a + b, 0);
+          this.margenBruto = this.totalVentas !== 0 ? (this.totalUtilidad / this.totalVentas) * 100 : 0;
+          this.monthlyChartInit();
           this.setSpinner(false);
         }
       });
@@ -198,148 +206,140 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
     this.chartMonthlyOptionsT = this.getChartOptionsT();
   }
 
-   getChartDataA() {
-      const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
-          cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
-
-      return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
-          datasets: [               
-
-              {
-                  label: (this.frmDatos.value.fecini).getFullYear().toString(),
-                  data: this.lstmontomesA,
-                  borderColor: greenColor,
-                  //backgroundColor: cyanColor,
-                  borderWidth: 2,
-                  //fill: true
-              }
-          ]
-      };
+  getChartDataA() {
+    const { greenColor } = this.getColors();
+    const year = (this.frmDatos.value.fecini).getFullYear().toString();
+    return {
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+      datasets: [{
+        label: year,
+        data: this.lstmontomesA,
+        borderColor: greenColor,
+        backgroundColor: 'rgba(102, 187, 106, 0.12)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: greenColor,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      }]
+    };
   }
 
   getChartDataB() {
-      const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
-          cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
-
-      return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
-          datasets: [               
-
-              
-              {
-                  label: (this.frmDatos.value.fecini).getFullYear().toString(),
-                  data: this.lstmontomesB,
-                  borderColor: lightblueColor,
-                  //backgroundColor: cyanColor,
-                  borderWidth: 2,
-                  //fill: true
-              }
-          ]
-      };
+    const { lightblueColor } = this.getColors();
+    const year = (this.frmDatos.value.fecini).getFullYear().toString();
+    return {
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+      datasets: [{
+        label: year,
+        data: this.lstmontomesB,
+        borderColor: lightblueColor,
+        backgroundColor: 'rgba(41, 182, 246, 0.12)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: lightblueColor,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      }]
+    };
   }
 
   getChartDataC() {
-      const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
-          cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
-
-      return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
-          datasets: [               
-
-              {
-                  label: (this.frmDatos.value.fecini).getFullYear().toString(),
-                  data: this.lstmontomesC,
-                  borderColor: orangeColor,
-                  //backgroundColor: cyanColor,
-                  borderWidth: 2,
-                  //fill: true
-              }
-          ]
-      };
+    const { orangeColor } = this.getColors();
+    const year = (this.frmDatos.value.fecini).getFullYear().toString();
+    return {
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+      datasets: [{
+        label: year,
+        data: this.lstmontomesC,
+        borderColor: orangeColor,
+        backgroundColor: 'rgba(255, 167, 38, 0.12)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: orangeColor,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      }]
+    };
   }
 
   getChartDataT() {
-      const { limeColor, amberColor, orangeColor, blueColor, lightblueColor,
-          cyanColor, tealColor, greenColor, lightgreenColor } = this.getColors();
-
-      return {
-          labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
-          datasets: [               
-              {
-                  //type: 'bar',
-                  label: 'Ventas',
-                  data: this.lstmontomesA,
-                  borderColor: greenColor,
-                  //backgroundColor: cyanColor,
-                  borderWidth: 2,
-                  //fill: true
-              },
-              {
-                //type: 'bar',
-                  label: 'Costos',
-                  data: this.lstmontomesB,
-                  borderColor: lightblueColor,
-                  //backgroundColor: cyanColor,
-                  borderWidth: 2,
-                  //fill: true
-              },
-              {
-                //type: 'bar',
-                  label: 'Utilidad',
-                  data: this.lstmontomesC,
-                  borderColor: orangeColor,
-                  //backgroundColor: cyanColor,
-                  borderWidth: 2,
-                  //fill: true
-              }
-          ]
-      };
+    const { greenColor, lightblueColor, orangeColor } = this.getColors();
+    return {
+      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Set', 'Oct', 'Nov', 'Dic'],
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Ventas',
+          data: this.lstmontomesA,
+          backgroundColor: 'rgba(102, 187, 106, 0.75)',
+          borderColor: greenColor,
+          borderWidth: 1,
+          borderRadius: 4,
+        },
+        {
+          type: 'bar',
+          label: 'Costos',
+          data: this.lstmontomesB,
+          backgroundColor: 'rgba(41, 182, 246, 0.75)',
+          borderColor: lightblueColor,
+          borderWidth: 1,
+          borderRadius: 4,
+        },
+        {
+          type: 'line',
+          label: 'Utilidad',
+          data: this.lstmontomesC,
+          borderColor: orangeColor,
+          backgroundColor: 'rgba(255, 167, 38, 0.1)',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: orangeColor,
+          pointRadius: 4,
+          pointHoverRadius: 7,
+        }
+      ]
+    };
   }
 
   getChartOptions() {
-      const textColor = getComputedStyle(document.body).getPropertyValue('--text-color') || 'rgba(0, 0, 0, 0.87)';
-      const gridLinesColor = getComputedStyle(document.body).getPropertyValue('--surface-border') || 'rgba(160, 167, 181, .3)';
-      const fontFamily = getComputedStyle(document.body).getPropertyValue('--font-family');
-      return {
-          plugins: {
-              legend: {
-                  display: false,
-                  labels: {
-                      fontFamily,
-                      color: textColor
-                  }
-              },
+    const textColor = getComputedStyle(document.body).getPropertyValue('--text-color') || 'rgba(0, 0, 0, 0.87)';
+    const gridLinesColor = getComputedStyle(document.body).getPropertyValue('--surface-border') || 'rgba(160, 167, 181, .3)';
+    const fontFamily = getComputedStyle(document.body).getPropertyValue('--font-family');
+    return {
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (ctx: any) => `S/ ${ctx.parsed.y.toLocaleString('es-PE', { minimumFractionDigits: 2 })}`
+          }
+        }
+      },
+      animation: { duration: 600 },
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          ticks: {
+            fontFamily,
+            color: textColor,
+            callback: (value: number) => {
+              if (Math.abs(value) >= 1000) return `${(value / 1000).toFixed(0)}K`;
+              return value;
+            }
           },
-          animation: {
-              animateScale: true,
-              animateRotate: true
-          },
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-              y: {
-                  ticks: {
-                      fontFamily,
-                      color: textColor
-                  },
-                  grid: {
-                      color: gridLinesColor
-                  }
-              },
-              x: {
-                  categoryPercentage: .9,
-                  barPercentage: .8,
-                  ticks: {
-                      fontFamily,
-                      color: textColor
-                  },
-                  grid: {
-                      color: gridLinesColor
-                  }
-              }
-          },
-      };
+          grid: { color: gridLinesColor }
+        },
+        x: {
+          ticks: { fontFamily, color: textColor },
+          grid: { color: 'transparent' }
+        }
+      }
+    };
   }
 
   getColors() {
@@ -365,48 +365,44 @@ export class CFlujoCajaComponent implements OnInit, OnDestroy{
   }
 
   getChartOptionsT() {
-      const textColor = getComputedStyle(document.body).getPropertyValue('--text-color') || 'rgba(0, 0, 0, 0.87)';
-      const gridLinesColor = getComputedStyle(document.body).getPropertyValue('--surface-border') || 'rgba(160, 167, 181, .3)';
-      const fontFamily = getComputedStyle(document.body).getPropertyValue('--font-family');
-      return {
-          plugins: {
-              legend: {
-                  //display: true,
-                  labels: {
-                      fontFamily,
-                      color: textColor
-                  }
-              },
+    const textColor = getComputedStyle(document.body).getPropertyValue('--text-color') || 'rgba(0, 0, 0, 0.87)';
+    const gridLinesColor = getComputedStyle(document.body).getPropertyValue('--surface-border') || 'rgba(160, 167, 181, .3)';
+    const fontFamily = getComputedStyle(document.body).getPropertyValue('--font-family');
+    return {
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: { fontFamily, color: textColor, usePointStyle: true, pointStyleWidth: 10 }
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx: any) => ` ${ctx.dataset.label}: S/ ${ctx.parsed.y.toLocaleString('es-PE', { minimumFractionDigits: 2 })}`
+          }
+        }
+      },
+      animation: { duration: 700 },
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          ticks: {
+            fontFamily,
+            color: textColor,
+            callback: (value: number) => {
+              if (Math.abs(value) >= 1000) return `${(value / 1000).toFixed(0)}K`;
+              return value;
+            }
           },
-          animation: {
-              animateScale: true,
-              animateRotate: true
-          },
-          responsive: true,
-          maintainAspectRatio: false,
-          aspectRatio: 0.8,
-          scales: {
-              y: {
-                  ticks: {
-                      fontFamily,
-                      color: textColor
-                  },
-                  grid: {
-                      color: gridLinesColor
-                  }
-              },
-              x: {
-                  categoryPercentage: .9,
-                  barPercentage: .8,
-                  ticks: {
-                      fontFamily,
-                      color: textColor
-                  },
-                  grid: {
-                      color: gridLinesColor
-                  }
-              }
-          },
-      };
+          grid: { color: gridLinesColor }
+        },
+        x: {
+          categoryPercentage: 0.8,
+          barPercentage: 0.7,
+          ticks: { fontFamily, color: textColor },
+          grid: { color: 'transparent' }
+        }
+      }
+    };
   }
 }

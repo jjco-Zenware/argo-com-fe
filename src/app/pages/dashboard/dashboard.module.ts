@@ -6,6 +6,9 @@ import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { SharedPrimeNgModule } from '@primeNgModule';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartModule } from 'primeng/chart';
+import { TagModule } from 'primeng/tag';
+import { ProyectosService } from '../compras/proyectos-ganados/service/proyectos.service';
+import { TesoreriaService } from '../tesoreria/service/tesoreriaServices';
 
 
 @NgModule({
@@ -19,7 +22,12 @@ import { ChartModule } from 'primeng/chart';
     FormsModule,
     ReactiveFormsModule,
     DashboardRoutingModule,
-    ChartModule
+    ChartModule,
+    TagModule
+  ],
+  providers: [
+    ProyectosService,
+    TesoreriaService
   ]
 })
 export class DashboardModule { }

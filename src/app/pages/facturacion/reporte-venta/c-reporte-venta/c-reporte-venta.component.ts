@@ -6,7 +6,6 @@ import {
     mensajesSpinner,
 } from '@constantes';
 import { Subscription } from 'rxjs';
-import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ProyectosService } from '../../../compras/proyectos-ganados/service/proyectos.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
@@ -14,7 +13,8 @@ import { OrdencompraService } from '../../../compras/orden-compra-servicio/servi
 import { MessageService } from 'primeng/api';
 import { ModalVentaComponent } from '../c-modal-venta/c-modal-venta.component';
 import * as FileSaver from 'file-saver';
-import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
+import { UtilitariosService } from '../../../../services/utilitarios.service';
+import { ComprasService } from '../../../compras/Service/compraServices';
 
 @Component({
     selector: 'app-c-reporte-venta',
@@ -104,7 +104,7 @@ export class CReporteVentaComponent implements OnInit, OnDestroy {
         };
 
         const $getListarOrdenCompra = this.proyectosService
-            .ordenCompraList(objeto)
+            .ordenCompraListRepVenta(objeto)
             .subscribe({
                 next: (rpta: any) => {
                     this.setSpinner(false);

@@ -1,250 +1,150 @@
 
-    <div class="card m-4">
-        <div class="grid mt-2">
-            <div class="flex justify-content-between col-12 -mt-3 gap-2">   
-                                
-                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">REPORTE DE VENTAS POR PERIODO</span>
-                </div>           
+<div class="card m-4">
+
+    <!-- Header -->
+    <div class="cm-header">
+        <div class="cm-header-left">
+            <div class="cm-header-icon-wrap">
+                <i class="pi pi-chart-bar cm-header-icon"></i>
+            </div>
+            <div>
+                <div class="cm-header-title">REPORTE DE VENTAS POR PERIODO</div>
+                <div class="cm-header-sub">Consulte y exporte sus ventas por periodo</div>
             </div>
         </div>
-        
-        <form [formGroup]="frmDatos" class="md:col-12 sm:col-12 lg:col-10 text-sm">  
-            <div class="flex">
-                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
-                    <label class="font-semibold text-blue-600 text-base">Periodo</label>
-                    <p-calendar view="month" dateFormat="mm/yy" [showIcon]="true" inputId="periodo" formControlName="periodo" (onSelect)="changePeriodo($event)"
-                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-                </div>
-                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
-                    <label class="font-semibold text-blue-600 text-base">Desde</label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini" formControlName="fecini"
-                        [readonlyInput]="true" appendTo="body" [inputStyle]="{'height':'2.5rem'}" class="p-inputtext-sm">
-                    </p-calendar>                    
-                </div>
-                <div class="md:col-6 sm:col-12 lg:col-2 col-6 -mt-3">
-                    <label class="font-semibold text-blue-600 text-base">Hasta</label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
-                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" [inputStyle]="{'height':'2.5rem'}"></p-calendar>
-                </div>     
-                <div class="sm:col-12 lg:col-3 md:col-6 col-12 -mt-3">                            
-                    <label class=" font-semibold text-blue-600 text-base">Cliente</label>   
-                    <span class="p-fluid mt-1">
-                        <span>
-                            <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
-                            optionLabel="nomcomercial" optionValue="idcliente" appendTo="body" [filter]="true"></p-dropdown>            
-                        </span>
-                    </span>                         
-                    
-                </div> 
-                <div class="sm:col-12 lg:col-2 md:col-6 col-12 -mt-3">
-                    <label class=" font-semibold text-blue-600 text-base">Centro Costo</label>
-                    <span class="p-fluid mt-1">
-                            <span class="p-fluid mt-1">
-                            <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto"
-                                placeholder="Seleccionar..." optionLabel="descentrocosto" class="p-inputtext-sm"
-                                optionValue="idcentrocosto" appendTo="body" autoWidth="false"></p-dropdown>
-                        </span>
-                    </span>
-                </div>
-                <div class="sm:col-12 lg:col-2 md:col-6 col-12 -mt-3">
-                    <label class=" font-semibold text-blue-600 text-base">Moneda</label>
-                    <span class="p-fluid mt-1">
-                        <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar Moneda" optionLabel="desmoneda" optionValue="idmoneda"
-                            appendTo="body" class="p-inputtext-sm"></p-dropdown>
-                    </span>
-                </div>
-                <div class="field md:col-2 -mt-3 gap-2">
-                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                        class="font-semibold mt-3 justify-content-center  w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                        <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel" tooltipPosition="bottom" 
-                        class="font-semibold mt-3 justify-content-center w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
-                    <button pButton type="button" (click)="descargarReporte()" pTooltip="Exportar Pdf" tooltipPosition="bottom" 
-                        class="font-semibold mt-3 justify-content-center  w-3rem w-auto h-auto bg-red-500 ml-2" icon="pi pi-file-pdf"></button>
-                </div>
-            </div>
-        </form> 
-
-        <p-table #dt1 [value]="lstCompras" [rows]="25" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
-            [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
-            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" styleClass="p-datatable-sm card border-1 border-round surface-border">
-
-            <ng-template pTemplate="header">
-                <tr class="text-sm">
-                    <th [ngStyle]="{'width':'50px'}"  class="bg-teal-50 border-1">
-                        <div class="flex justify-content-between align-items-center">
-                            N°
-                        </div>
-                    </th>
-                    <th [ngStyle]="{'width':'60px'}" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            FECHA <br> REGISTRO
-                        </div>
-                    </th>
-                    <th style="width: 60px;" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            TIPO <br> DOCUMENTO
-                        </div>
-                    </th>
-                    
-                    <th style="width: 60px;" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            N° <br> DOCUMENTO
-                        </div>
-                    </th>
-                    <th [ngStyle]="{'width':'60px'}" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            FECHA <br> EMISIÓN
-                        </div>
-                    </th>
-                    <th [ngStyle]="{'width':'60px'}" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            FECHA <br> VENCIMIENTO
-                        </div>
-                    </th>                          
-                   
-                    <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            CLIENTE
-                        </div>
-                    </th>
-                    <th style="width: 60px;" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            MONEDA
-                        </div>
-                    </th>
-                    <th style="width: 100px;text-align:right;" class="bg-teal-50 border-1" >
-                        <div class="justify-content-end">
-                            SUBTOTAL
-                        </div>
-                    </th>
-                    <th style="width: 100px;text-align:right;" class="bg-teal-50 border-1" >
-                        <div class="justify-content-end ">
-                            IGV
-                        </div>
-                    </th>
-                    <th style="width: 100px;text-align:right;" class="bg-teal-50 border-1" >
-                        <div class="justify-content-end ">
-                            TOTAL
-                        </div>
-                    </th>      
-                    <th [ngStyle]="{'width':'100px'}" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            GLOSA
-                        </div>
-                    </th> 
-                    <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            PROYECTO 
-                        </div>
-                    </th>
-                    <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1" >
-                        <div class="justify-content-between align-items-center">
-                            CENTRO <br> COSTO
-                        </div>
-                    </th>
-                    <th style="width: 80px" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'80px','text-align':'center'}">
-                            ESTADO
-                        </div>
-                    </th>  
-                </tr>
-               
-            </ng-template>
-            <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
-                <tr class="text-sm">
-                    <td>                        
-                        <div [ngStyle]="{'width':'20px'}">
-                            {{rowIndex + 1}}
-                        </div>
-                    </td>
-                    <td >
-                        <div [ngStyle]="{'width':'60px'}">
-                            {{data.fechaingreso}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'80px'}">
-                            {{data.nomtipodoc_ctb }}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'80px'}">
-                            {{data.nrofactura }}
-                        </div>
-                    </td>
-                    <td >
-                        <div [ngStyle]="{'width':'60px'}">
-                            {{data.fecemision}}
-                        </div>
-                    </td>
-                    <td >
-                        <div [ngStyle]="{'width':'60px'}">
-                            {{data.fecvencimiento}}
-                        </div>
-                    </td>
-                    
-                    <td>
-                        <div [ngStyle]="{'width':'200px'}">
-                            {{data.nomempresa | uppercase}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'60px','text-align':'center'}">
-                            {{data.simbmoneda | uppercase}}
-                        </div>
-                    </td>                  
-                    <td>
-                        <div [ngStyle]="{'width':'80px','text-align':'right'}">
-                            {{data.s_monto | number: '0.2-2'  }}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'80px','text-align':'right'}">
-                            {{data.s_igv | number: '0.2-2'  }}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'80px','text-align':'right'}">
-                            {{data.s_monto_total | number: '0.2-2'  }}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.s_glosa | uppercase}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.codigoproyecto}}
-                        </div>
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'width':'100px'}">
-                            {{data.descentrocosto}}
-                        </div>
-                    </td>
-                    <td>                       
-                        <div [ngStyle]="{'width':'80px','text-align': 'center'}">
-                            <p-tag [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="8">No se encontraron registros.</td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="loadingbody">
-                <tr>
-                    <td colspan="8">Cargando datos. Espere por favor.</td>8
-                </tr>
-            </ng-template>
-        </p-table>
-
     </div>
 
+    <!-- Toolbar -->
+    <div class="oc-toolbar">
+        <form [formGroup]="frmDatos" class="oc-toolbar-form">
+            <div class="oc-field">
+                <label class="cm-label">Periodo</label>
+                <p-calendar view="month" dateFormat="mm/yy" [showIcon]="true" inputId="periodo"
+                    formControlName="periodo" (onSelect)="changePeriodo($event)"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"
+                    [inputStyle]="{'height':'2.2rem'}"></p-calendar>
+            </div>
+            <div class="oc-field">
+                <label class="cm-label">Desde</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaini"
+                    formControlName="fecini" [readonlyInput]="true" appendTo="body"
+                    class="p-inputtext-sm" [inputStyle]="{'height':'2.2rem'}"></p-calendar>
+            </div>
+            <div class="oc-field">
+                <label class="cm-label">Hasta</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin"
+                    formControlName="fecfin" [readonlyInput]="true" appendTo="body"
+                    class="p-inputtext-sm" [inputStyle]="{'height':'2.2rem'}"></p-calendar>
+            </div>
+            <div class="oc-field">
+                <label class="cm-label">Cliente</label>
+                <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Cliente..."
+                    formControlName="idproveedor" class="p-inputtext-sm"
+                    optionLabel="nomcomercial" optionValue="idcliente"
+                    appendTo="body" [filter]="true"></p-dropdown>
+            </div>
+            <div class="oc-field">
+                <label class="cm-label">Centro Costo</label>
+                <p-dropdown [options]="lstCentroCosto" formControlName="idcentrocosto"
+                    placeholder="Seleccionar..." optionLabel="descentrocosto"
+                    optionValue="idcentrocosto" appendTo="body"
+                    class="p-inputtext-sm"></p-dropdown>
+            </div>
+            <div class="oc-field">
+                <label class="cm-label">Moneda</label>
+                <p-dropdown [options]="lstMonedas" formControlName="idmoneda"
+                    placeholder="Seleccionar Moneda..." optionLabel="desmoneda"
+                    optionValue="idmoneda" appendTo="body" class="p-inputtext-sm"></p-dropdown>
+            </div>
+        </form>
+        <div class="cm-actions">
+            <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros"
+                tooltipPosition="bottom" class="cm-btn cm-btn-search" icon="pi pi-search"></button>
+            <button pButton type="button" (click)="getExportarExcel(dt1)" pTooltip="Exportar Excel"
+                tooltipPosition="bottom" class="cm-btn cm-btn-load" icon="pi pi-file-excel"></button>
+            <button pButton type="button" (click)="descargarReporte()" pTooltip="Exportar PDF"
+                tooltipPosition="bottom" class="cm-btn cm-btn-pdf" icon="pi pi-file-pdf"></button>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <p-table #dt1 [value]="lstCompras" [rows]="25" [rowHover]="true" responsiveLayout="stack"
+        [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+        [resizableColumns]="true" [rowsPerPageOptions]="[25,50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        styleClass="p-datatable-sm card border-1 border-round surface-border">
+
+        <ng-template pTemplate="header">
+            <tr class="text-sm">
+                <th style="width: 30px" class="bg-teal-50 border-1">N°</th>
+                <th style="width: 70px; text-align: center" class="bg-teal-50 border-1">FECHA<br>REGISTRO</th>
+                <th style="width: 70px; text-align: center" class="bg-teal-50 border-1">TIPO<br>DOCUMENTO</th>
+                <th style="width: 80px; text-align: center" class="bg-teal-50 border-1">N°<br>DOCUMENTO</th>
+                <th style="width: 70px; text-align: center" class="bg-teal-50 border-1">FECHA<br>EMISIÓN</th>
+                <th style="width: 70px; text-align: center" class="bg-teal-50 border-1">FECHA<br>VENCIMIENTO</th>
+                <th style="width: 200px" class="bg-teal-50 border-1">CLIENTE</th>
+                <th style="width: 60px; text-align: center" class="bg-teal-50 border-1">MONEDA</th>
+                <th style="width: 90px; text-align: right" class="bg-teal-50 border-1">SUBTOTAL</th>
+                <th style="width: 80px; text-align: right" class="bg-teal-50 border-1">IGV</th>
+                <th style="width: 100px; text-align: right" class="bg-teal-50 border-1">TOTAL</th>
+                <th style="width: 120px" class="bg-teal-50 border-1">GLOSA</th>
+                <th style="width: 100px" class="bg-teal-50 border-1">PROYECTO</th>
+                <th style="width: 100px" class="bg-teal-50 border-1">CENTRO<br>COSTO</th>
+                <th style="width: 80px; text-align: center" class="bg-teal-50 border-1">ESTADO</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td>{{ rowIndex + 1 }}</td>
+                <td>{{ data.fechaingreso }}</td>
+                <td>{{ data.nomtipodoc_ctb }}</td>
+                <td>{{ data.nrofactura }}</td>
+                <td>{{ data.fecemision }}</td>
+                <td>{{ data.fecvencimiento }}</td>
+                <td>
+                    <div pTooltip="{{ data.nomempresa | uppercase }}">
+                        {{ (data.nomempresa.length > 40) ? ((data.nomempresa).slice(0, 40) + '...' | uppercase) : (data.nomempresa | uppercase) }}
+                    </div>
+                </td>
+                <td style="text-align: center">{{ data.simbmoneda | uppercase }}</td>
+                <td style="text-align: right">{{ data.s_monto | number: '0.2-2' }}</td>
+                <td style="text-align: right">{{ data.s_igv | number: '0.2-2' }}</td>
+                <td style="text-align: right">
+                    <strong>{{ data.s_monto_total | number: '0.2-2' }}</strong>
+                </td>
+                <td>
+                    <div pTooltip="{{ data.s_glosa | uppercase }}">
+                        {{ (data.s_glosa.length > 40) ? ((data.s_glosa).slice(0, 40) + '...' | uppercase) : (data.s_glosa | uppercase) }}
+                    </div>
+                </td>
+                <td>{{ data.codigoproyecto }}</td>
+                <td>{{ data.descentrocosto }}</td>
+                <td style="text-align: center">
+                    <p-tag [style]="{'width':'100%'}" [value]="data.nomestado" [severity]="data.serevity_estado"></p-tag>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="15">
+                    <div class="cm-empty-state">
+                        <i class="pi pi-inbox cm-empty-icon"></i>
+                        <div class="cm-empty-title">Sin registros encontrados</div>
+                        <div class="cm-empty-sub">Seleccione un rango de fechas y presione <strong>Buscar</strong>.</div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr>
+                <td colspan="15">Cargando datos. Espere por favor.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+</div>
 
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
 <p-toast></p-toast>

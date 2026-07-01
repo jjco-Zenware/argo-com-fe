@@ -7,14 +7,14 @@ import { Subscription } from 'rxjs';
 import { ProyectosService } from '../../proyectos-ganados/service/proyectos.service';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
-import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { CItemCotizacionComponent } from '../../proyectos-ganados/c-item-cotizacion/c-item-cotizacion.component';
 import { OrdencompraService } from '../service/ordencompra.service';
 import { CModalExcTransacComponent } from '../modal-exc-transac/modal-exc-transac.component';
 import { ComprasService } from '../../Service/compraServices';
 import * as  XLSX  from 'xlsx';
-import { AlmacenService } from 'src/app/pages/almacen/service/almacenServices';
+import { UtilitariosService } from '../../../../services/utilitarios.service';
+import { AlmacenService } from '../../../almacen/service/almacenServices';
 
 @Component({
   selector: 'app-c-cabeceraoc',

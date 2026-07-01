@@ -6,15 +6,15 @@ import { Subscription } from 'rxjs';
 import { ProyectosService } from '../../proyectos-ganados/service/proyectos.service';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { SharedAppService } from '@sharedAppService';
-import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ComprasService } from '../../Service/compraServices';
 import { OrdencompraService } from '../../orden-compra-servicio/service/ordencompra.service';
-import { CItemOrdenesComponent } from 'src/app/pages/almacen/items-ordenes/c-items-ordenes.component';
 import { CModalPersonaComponent } from '../modalPersona/c-modalpersona.component';
-import { MarketingService } from 'src/app/pages/marketing/service/marketingServices';
-import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
 import { CModalExcTransacComponent } from '../../orden-compra-servicio/modal-exc-transac/modal-exc-transac.component';
+import { UtilitariosService } from '../../../../services/utilitarios.service';
+import { MarketingService } from '../../../marketing/service/marketingServices';
+import { ContabilidadService } from '../../../contabilidad/service/contabilidad.services';
+import { CItemOrdenesComponent } from '../../../almacen/items-ordenes/c-items-ordenes.component';
 
 @Component({
     selector: 'app-c-dato-compra',
@@ -111,6 +111,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     s_igv!: number;
     filteredCtaCtble!: any[];
     lstCtaCtble: any[] = [];
+    allCtaCtble: any[] = [];
     s_desctactble!: any[];
     lstOrdenC: any;
     checkVisible: boolean = false;
@@ -124,6 +125,7 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
     lstIgv: any[] = [];
     indtipoingreso: boolean = false;
   rc_compra: number = 0;
+    lstTiposOperacion: any[] = [];
 
     constructor(
         private fb: FormBuilder,
@@ -155,10 +157,11 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
         this.listarItemsTablaUnidad();
         this.listarItemsTablaComprobante();
         this.listarCentroCosto();
-        this.listarPlanContable();
-        //this.listarCategoriaDoc();
+        //this.listarPlanContable();
         this.listarAreas();
         this.listarItemsTablaIgv();
+        this.listarTipoOpera();
+        
 
        
 
@@ -288,7 +291,8 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
             iddocumentoprc_origen: [{ value: null, disabled: false }],
             idcategoria: [{ value: null, disabled: false }],
             idarea: [{ value: 0, disabled: false }],
-            parm_igv: [{ value: 596, disabled: false }]
+            parm_igv: [{ value: 596, disabled: false }],
+            idtipooperacion: [{ value: null, disabled: false }],
         });
     }
 
@@ -411,8 +415,11 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     this.visibleAsiento = false;
 
                     this.registerFormRegistro.patchValue(rpta.ordencompra[0]);
-                    //this.codctactble = rpta.ordencompra[0].codctactble;
-                    //this.registerFormRegistro.get('codctactble')?.setValue(this.lstCtaCtble.filter((x) => x.codctactble === this.codctactble));
+                    if (rpta.ordencompra[0].idtipooperacion) {
+                        this.listarPlanContable();
+                        //this.filtrarCuentasPorTipoOperacion02(rpta.ordencompra[0].idtipooperacion, rpta.ordencompra[0].codctactble);
+                        
+                    }
                     this.registerFormRegistro
                         .get('tipodoc_ctb')
                         ?.setValue(parseInt(rpta.ordencompra[0].tipodoc_ctb));
@@ -589,7 +596,11 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                         this.verAdjunto = true;
                     }
 
-                        this.traerUno();
+                    //if (this.lstAsientos.length > 0) {
+                        this.actualizarAsiento(() => this.traerUno());
+                    // } else {
+                    //     this.traerUno();
+                    // }
                     
                     
 
@@ -1718,21 +1729,51 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
             .listarPlanContable()
             .subscribe({
                 next: (rpta: any) => {
-                    this.setSpinner(false);
-                    this.lstCtaCtble = rpta.map((item: any) => ({
-                            codctactble: item.codctactble,
-                            s_desctactble: item.s_desctactble,
-                            idclasectb: item.idclasectb
-                        }))
-                    //this.lstCtaCtble = rpta;
+                    this.allCtaCtble = rpta.map((item: any) => ({
+                        codctactble: item.codctactble,
+                        s_desctactble: item.s_desctactble,
+                        idclasectb: item.idclasectb
+                    }));
+                    const idtipo = this.registerFormRegistro.get('idtipooperacion')?.value;
+                    if (idtipo) {
+                        this.filtrarCuentasPorTipoOperacion(idtipo);
+                    }
                 },
-                error: (err) => {
-                    this.setSpinner(false);
+                error: (err:any) => {
                     this.serviceSharedApp.messageToast();
                 },
                 complete: () => {},
             });
         this.$listSubcription.push($listarPlanContable);
+    }
+
+    filtrarCuentasPorTipoOperacion(idtipooperacion: any) {
+        const tipo = this.lstTiposOperacion.find((x: any) => x.idtipooperacion === idtipooperacion);
+        if (tipo && tipo.ctactble) {
+            this.lstCtaCtble = this.allCtaCtble.filter((x: any) =>
+                x.codctactble.startsWith(tipo.ctactble)
+            );
+        } else {
+            this.lstCtaCtble = [...this.allCtaCtble];
+        }
+    }
+
+    filtrarCuentasPorTipoOperacion02(idtipooperacion: any, codctactble: any) {
+        const tipo = this.lstTiposOperacion.find((x: any) => x.idtipooperacion === idtipooperacion);
+        if (tipo && tipo.ctactble) {
+            this.lstCtaCtble = this.allCtaCtble.filter((x: any) =>
+                x.codctactble.startsWith(tipo.ctactble)
+            );
+        } else {
+            this.lstCtaCtble = [...this.allCtaCtble];
+        }
+        this.registerFormRegistro.get('codctactble')?.setValue(codctactble);
+    }
+
+    changeTipoOperacion(idtipooperacion: any) {
+        this.listarPlanContable();
+        this.registerFormRegistro.get('codctactble')?.setValue(null);
+        this.filtrarCuentasPorTipoOperacion(idtipooperacion);
     }
 
     // selectCuenta(data: any) {
@@ -1979,13 +2020,42 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                     this.messageService.add({ severity: 'error', summary: 'Error', detail: rpta.mensaje });
                 }
             },
-            error: (err) => {
+            error: (err:any) => {
                 this.setSpinner(false);
                 this.serviceSharedApp.messageToast();
             },
             complete: () => {},
         });
         this.$listSubcription.push($listaMonedas);
+    }
+
+    actualizarAsiento(onComplete?: () => void) {
+        if (this.lstItemOC.length === 0) {
+            if (onComplete) onComplete();
+            return;
+        }
+        const objeto = {
+            idasiento: this.lstAsientos.length > 0 ? this.lstAsientos[0].idasiento : 0,
+            idreferencia: this.idOrdenC,
+            glosaasiento: this.lstItemOC[0].descripcion,
+            idusuario: constantesLocalStorage.idusuario,
+            idmoneda: this.registerFormRegistro.value.idmoneda
+        };
+
+        console.log('actualizarAsiento...', objeto);
+        this.contabilidadService.asientoPrc(objeto).subscribe({
+            next: (rpta: any) => {
+                if (rpta.procesoSwitch !== 0) {
+                    this.messageService.add({ severity: 'warn', summary: 'Aviso', detail: rpta.mensaje });
+                }
+            },
+            error: () => {
+                if (onComplete) onComplete();
+            },
+            complete: () => {
+                if (onComplete) onComplete();
+            },
+        });
     }
 
     listarAreas() {
@@ -2039,5 +2109,24 @@ export class DatoCompraComponent implements OnInit, OnDestroy {
                 break;
         }
     //this.indtipoingreso = s_categoria[0].idclasectb;
+    }
+
+    listarTipoOpera() {
+        this.ordencompraService.tipoOperacionList().subscribe({
+            next: (rpta: any) => {
+                this.lstTiposOperacion = rpta;
+                console.log('listarTipoOpera...', this.lstTiposOperacion);
+                
+            },
+            error: (err) => {
+                this.messageService.clear();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: mensajesQuestion.msgErrorGenerico,
+                });
+            },
+            complete: () => {},
+        });
     }
 }

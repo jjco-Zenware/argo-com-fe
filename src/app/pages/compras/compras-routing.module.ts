@@ -51,6 +51,16 @@ const routes: Routes = [
     path: 'reporte-consolidado',
     loadChildren: () => import('./reporte-consolidado/reporte-consolidado.module').then(m => m.ReporteConsolidadoModule),
     data: { breadcrumb: 'Reporte Consolidado de Compras' }
+  },
+  {
+    path: 'carga-masiva',
+    loadChildren: () => import('./carga-masiva/cargamasiva.module').then(m => m.CargamasivaModule),
+    data: { breadcrumb: 'Carga Masiva' }
+  },
+  {
+    path: 'historial-carga',
+    loadChildren: () => import('./historial-carga/historialcarga.module').then(m => m.HistorialcargaModule),
+    data: { breadcrumb: 'Historial de Cargas' }
   }
 ];
 

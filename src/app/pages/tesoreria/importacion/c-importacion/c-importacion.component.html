@@ -1,93 +1,99 @@
 <div class="card m-4">
-    <div class="grid mt-2">
-        <div class="flex justify-content-between col-12 -mt-3 gap-2">                                  
-            <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                <span class="text-base font-semibold">IMPORTACIÓN DE ESTADO DE CUENTA</span>
-            </div>                         
+
+    <!-- Header -->
+    <div class="cm-header">
+        <div class="cm-header-left">
+            <div class="cm-header-icon-wrap">
+                <i class="fa-solid fa-money-bill-transfer cm-header-icon"></i>
+            </div>
+            <div>
+                <div class="cm-header-title">IMPORTACIÓN DE ESTADO DE CUENTA</div>
+                <div class="cm-header-sub">Importe y consulte los estados de cuenta bancarios</div>
+            </div>
         </div>
     </div>
 
-    <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-9 col-12 text-sm">
-        <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
-            <label class="font-semibold text-blue-600 text-base">Desde</label>
-            <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
-                [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
-            </p-calendar>
-        </div>
-        <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
-            <label class="font-semibold text-blue-600 text-base">Hasta</label>
-            <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
-                [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
-        </div>    
-        <!-- <div class="sm:col-6 lg:col-3 md:col-6 col-6 -mt-4">
-            <label class="font-semibold text-blue-600 text-base">Moneda</label>  
-            <span class="p-fluid mt-1">
-                <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar..." optionLabel="desmoneda" 
-                optionValue="idmoneda" appendTo="body" class="p-inputtext-sm"></p-dropdown>
-            </span>                                      
-        </div>           -->
-          
-        
-        <div class="field flex col-12 md:col-2 -mt-4 gap-2">
-            <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-            <!-- <button pButton type="button" pTooltip="Exportar Excel" tooltipPosition="bottom" 
-                class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button> -->
-            <div class="flex justify-content-end">
-                <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true" 
-                    (uploadHandler)="ReadExcel2($event, fubauto)" [auto]="true" chooseLabel="Seleccionar Archivo" 
-                    chooseIcon="pi pi-folder" class="text-sm w-auto" pTooltip="Importar Archivo">
-                </p-fileUpload>
+    <!-- Toolbar -->
+    <div class="oc-toolbar">
+        <form [formGroup]="frmDatos" class="oc-toolbar-form">
+            <div class="oc-field">
+                <label class="cm-label">Desde</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"
+                    [inputStyle]="{'height':'2.2rem'}">
+                </p-calendar>
             </div>
+            <div class="oc-field">
+                <label class="cm-label">Hasta</label>
+                <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"
+                    [inputStyle]="{'height':'2.2rem'}"></p-calendar>
+            </div>
+        </form>
+        <div class="cm-actions">
+            <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom"
+                class="cm-btn cm-btn-search" icon="pi pi-search"></button>
+            <p-fileUpload #fubauto name="files[]" mode="basic" [customUpload]="true"
+                (uploadHandler)="ReadExcel2($event, fubauto)" [auto]="true" chooseLabel="Importar Archivo"
+                chooseIcon="pi pi-folder" styleClass="cm-btn-import" pTooltip="Importar Archivo">
+            </p-fileUpload>
         </div>
-    </form> 
+    </div>
 
-    <p-tabView >
+    <p-tabView>
         <p-tabPanel>
             <ng-template pTemplate="header">
                 <div class="flex align-items-center gap-2">
                     <i class="fa-solid fa-money-bill-transfer"></i>
-                    <span class="font-bold white-space-nowrap m-0">
-                        BBVA
-                    </span>
+                    <span class="font-bold white-space-nowrap m-0">BBVA</span>
                 </div>
             </ng-template>
-           
-            <p-table [value]="lstItem"  class="ml-2" [breakpoint]="'960px'" [tableStyle]="{'min-width': '50rem'}"
-                styleClass="p-datatable-sm">
-                <!-- [paginator]="true" [showCurrentPageReport]="true" [rowsPerPageOptions]="[20,40,60]" currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" [rows]="10" -->
 
-                    <ng-template pTemplate="header">
-                        <tr class="text-sm">
-                            <th [ngStyle]="{'width':'20px'}" class="surface-200">N°</th>
-                            <th class="surface-200">FECHA</th>
-                            <th class="surface-200">DESCRIPCIÓN</th>
-                            <th class="surface-200">N° OPERACIÓN</th>
-                            <th class="surface-200">CARGO/ABONO</th>
-                            <th class="surface-200">ITF</th>
-                            <th class="surface-200">SALDO CONTABLE</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                        <tr class="text-sm">
-                            <td>{{rowIndex + 1}}</td>
-                            <td>{{ product.descripcion | uppercase}}</td>
-                            <td>{{ product.codproducto }}</td>
-                            <td>{{ product.nommarca | uppercase}}</td>
-                            <td>{{ product.sku }}</td>
-                            <td>{{ product.fecfin }}</td>
-                            <td>{{ product.preciocostototal | number: '0.2'}}</td>
-                            <!-- <td>
-                                <div *ngIf="verItems" class="flex justify-content-end">
-                                    <button pButton pRipple icon="pi pi-pencil" pTooltip="Editar Item" tooltipPosition="left" (click)="getItem(product, rowIndex)" class="p-button-text p-button-rounded text-900 text-blue-600"></button>
-                                    <button pButton pRipple icon="pi pi-trash" pTooltip="Eliminar Item" tooltipPosition="left" (click)="eliminarItem(product)" class="p-button-text p-button-rounded text-900 text-red-600"></button>
-                                </div>
-                            </td> -->
-                        </tr>
-                    </ng-template>
-                </p-table>  
-            
-        </p-tabPanel> 
+            <p-table [value]="lstItem" [rows]="25" [rowHover]="true"
+                [tableStyle]="{'min-width': '50rem'}" [paginator]="true" [showCurrentPageReport]="true"
+                [rowsPerPageOptions]="[25,50]"
+                currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+                styleClass="p-datatable-sm card border-1 border-round surface-border">
+
+                <ng-template pTemplate="header">
+                    <tr class="text-sm">
+                        <th style="width: 30px" class="bg-teal-50 border-1">N°</th>
+                        <th style="width: 90px; text-align: center" class="bg-teal-50 border-1">FECHA</th>
+                        <th class="bg-teal-50 border-1">DESCRIPCIÓN</th>
+                        <th style="width: 120px; text-align: center" class="bg-teal-50 border-1">N° OPERACIÓN</th>
+                        <th style="width: 110px; text-align: right" class="bg-teal-50 border-1">CARGO/ABONO</th>
+                        <th style="width: 90px; text-align: right" class="bg-teal-50 border-1">ITF</th>
+                        <th style="width: 120px; text-align: right" class="bg-teal-50 border-1">SALDO CONTABLE</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                    <tr class="text-sm">
+                        <td>{{ rowIndex + 1 }}</td>
+                        <td>{{ product.descripcion | uppercase }}</td>
+                        <td>{{ product.codproducto }}</td>
+                        <td>{{ product.nommarca | uppercase }}</td>
+                        <td style="text-align: right">{{ product.sku }}</td>
+                        <td style="text-align: right">{{ product.fecfin }}</td>
+                        <td style="text-align: right">{{ product.preciocostototal | number: '0.2' }}</td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="7">
+                            <div class="cm-empty-state">
+                                <i class="pi pi-inbox cm-empty-icon"></i>
+                                <div class="cm-empty-title">Sin registros encontrados</div>
+                                <div class="cm-empty-sub">Seleccione un rango de fechas y presione <strong>Buscar</strong>.</div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+            </p-table>
+
+        </p-tabPanel>
     </p-tabView>
 
 </div>
@@ -95,4 +101,5 @@
 <p-toast></p-toast>
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
 <p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '350px'}"
-acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+    acceptButtonStyleClass="p-button p-button-info surface-border"
+    rejectButtonStyleClass="p-button p-button-outlined surface-border text-900"></p-confirmDialog>

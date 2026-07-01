@@ -47,7 +47,7 @@
                             <label class="block text-900 font-semibold mb-1">Proveedor <span class="text-red-500 font-bold"> * </span></label>                            
                             <span>
                                 <p-dropdown [options]="lstProveedores" placeholder="Seleccionar Proveedor"  formControlName="idproveedor" class="p-inputtext-sm"
-                                optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead></p-dropdown>            
+                                optionLabel="razonsocial" optionValue="idcliente" appendTo="body" (onChange)="getOcproveedor($event.value)" [readonly]=onlyRead [filter]="true"></p-dropdown>            
                             </span>
                         </div>   
                         <div class="sm:col-6 lg:col-7 md:col-3 col-12 h-4rem mt-2">
@@ -56,7 +56,7 @@
                             </div>                            
                             <span *ngIf="verOc">
                                 <p-dropdown [options]="lstOrdenC" formControlName="alm_idordencompra" placeholder="Seleccionar Orden" optionLabel="label_resumen" 
-                                optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="getOCtraerItems($event.value)"></p-dropdown>
+                                optionValue="alm_idordencompra" appendTo="body" [readonly]=onlyRead class="p-inputtext-sm" (onChange)="getOCtraerItems($event.value)" [filter]="true"></p-dropdown>
                             </span>
                             <input *ngIf="!verOc" pInputText type="text" class="p-inputtext-sm surface-100" readonly="true" formControlName="label_resumen_alm"/>
 
@@ -88,8 +88,10 @@
                     <ng-template pTemplate="header" >
                         <tr class="text-sm">
                             <th [ngStyle]="{'width':'20px'}" class="bg-teal-50 border-1">N°</th>
-                            <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1">
-                                SELECCIONAR
+                            <th [ngStyle]="{'width':'50px'}" class="bg-teal-50 border-1 text-center">
+                                <input type="checkbox" [disabled]="!verItems" [(ngModel)]="selectAll"
+                                (ngModelChange)="selectCheckbox({checked: selectAll})"
+                                style="width:15px; height:15px; cursor:pointer">
                             </th>
                             <th class="bg-teal-50 border-1">CÓDIGO</th>
                             <th class="bg-teal-50 border-1">CATEGORIA</th>

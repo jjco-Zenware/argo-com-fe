@@ -1,0 +1,540 @@
+<p-toast position="top-right"></p-toast>
+
+<app-c-progress-spinner
+    *ngIf="blockedDocument"
+    [IS_mensaje]="mensajeSpinner"
+></app-c-progress-spinner>
+
+<div #blockTarget class="card m-4">
+    <!-- Header -->
+    <div class="cm-header">
+        <div class="cm-header-left">
+            <div class="cm-header-icon-wrap">
+                <i class="pi pi-upload cm-header-icon"></i>
+            </div>
+            <div>
+                <div class="cm-header-title">CARGA MASIVA DE COMPRAS</div>
+                <div class="cm-header-sub">
+                    Importe registros desde un archivo Excel
+                </div>
+            </div>
+        </div>
+        <p-tag
+            [value]="getEstadoLabel()"
+            [severity]="getEstadoSeverity()"
+            styleClass="cm-estado-tag"
+        ></p-tag>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="cm-toolbar">
+        <!-- <form [formGroup]="frmDatos" class="cm-toolbar-form">
+            <div class="cm-periodo-wrap">
+                <label class="cm-label">Periodo</label>
+                <p-calendar
+                    dateFormat="mm/yy"
+                    view="month"
+                    [showIcon]="false"
+                    inputId="fechaini"
+                    formControlName="fecini"
+                    [showOnFocus]="false"
+                    [readonlyInput]="true"
+                    appendTo="body"
+                    [inputStyle]="{ height: '2.2rem' }"
+                    class="p-inputtext-sm"
+                ></p-calendar>
+            </div>
+        </form> -->
+
+        <div class="cm-actions">
+            
+            <!-- Step 1: Siempre visible -->
+            <input
+                #fileInput
+                type="file"
+                accept=".xlsx,.xls"
+                style="display: none"
+                (change)="onFileSelected($event)"
+            />
+            <button
+                pButton
+                type="button"
+                label="Cargar Excel"
+                icon="pi pi-file-excel"
+                pTooltip="Seleccionar archivo Excel para importar"
+                tooltipPosition="bottom"
+                class="cm-btn cm-btn-load"
+                (click)="fileInput.click()"
+            ></button>
+
+            <!-- Step 2: Visible después de cargar -->
+            <ng-container *ngIf="mostrarBotonesPost">
+                <div class="cm-btn-divider"></div>
+
+                <button
+                    pButton
+                    type="button"
+                    label="Validar proveedores"
+                    icon="pi pi-user-plus"
+                    pTooltip="Buscar o registrar los proveedores en el sistema"
+                    tooltipPosition="bottom"
+                    class="cm-btn cm-btn-validate"
+                    (click)="validarProveedor()"
+                ></button>
+
+                <button
+                    pButton
+                    type="button"
+                    label="Eliminar"
+                    icon="pi pi-trash"
+                    pTooltip="Descartar la carga actual"
+                    tooltipPosition="bottom"
+                    class="cm-btn cm-btn-delete"
+                    (click)="eliminarCarga()"
+                ></button>
+
+                <!-- Step 3: Visible solo después de validar -->
+                <ng-container *ngIf="mostrarConfirmar">
+                    <div class="cm-btn-divider"></div>
+                    <button
+                        pButton
+                        type="button"
+                        label="Confirmar carga"
+                        icon="pi pi-check-circle"
+                        pTooltip="Confirmar la carga"
+                        tooltipPosition="bottom"
+                        class="cm-btn cm-btn-confirm"
+                        (click)="confirmarCarga()"
+                    ></button>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+
+    <!-- Resumen de carga -->
+    <div *ngIf="estado !== 'inicial'" class="cm-resumen-carga">
+        <div class="cm-resumen-item">
+            <span class="cm-resumen-label">
+                <i class="pi pi-calendar"></i> Periodo
+            </span>
+            <span class="cm-resumen-value">{{ periodoLabel }}</span>
+        </div>
+        <div class="cm-resumen-sep"></div>
+        <div class="cm-resumen-item">
+            <span class="cm-resumen-label">
+                <i class="pi pi-tag"></i> Tipo
+            </span>
+            <span class="cm-resumen-value">Compras</span>
+        </div>
+        <div class="cm-resumen-sep"></div>
+        <div class="cm-resumen-item">
+            <span class="cm-resumen-label">
+                <i class="pi pi-file-excel"></i> Archivo
+            </span>
+            <span
+                class="cm-resumen-value cm-resumen-file"
+                [title]="nombreArchivo"
+                >{{ nombreArchivo }}</span
+            >
+        </div>
+        <div class="cm-resumen-sep"></div>
+        <div class="cm-resumen-item">
+            <span class="cm-resumen-label">
+                <i class="pi pi-list"></i> Comprobantes
+            </span>
+            <span class="cm-resumen-value">{{ lstCargaCompras.length }}</span>
+        </div>
+        <div class="cm-resumen-sep"></div>
+        <div class="cm-resumen-item">
+            <span class="cm-resumen-label">
+                <i class="pi pi-money-bill"></i> Total S/
+            </span>
+            <span class="cm-resumen-value cm-resumen-soles">{{
+                totalSoles | number: "0.2-2"
+            }}</span>
+        </div>
+        <div class="cm-resumen-sep"></div>
+        <div class="cm-resumen-item">
+            <span class="cm-resumen-label">
+                <i class="pi pi-money-bill"></i> Total $
+            </span>
+            <span class="cm-resumen-value cm-resumen-dolares">{{
+                totalDolares | number: "0.2-2"
+            }}</span>
+        </div>
+        <div class="cm-resumen-sep"></div>
+        <div class="cm-resumen-item">
+            <span class="cm-resumen-label">
+                <i class="pi pi-info-circle"></i> Estado
+            </span>
+            <p-tag
+                value="Pendiente"
+                severity="warning"
+                styleClass="cm-resumen-tag"
+            ></p-tag>
+        </div>
+    </div>
+
+    <!-- Banner de validación -->
+    <div *ngIf="mostrarResumenValidacion" class="cm-validation-banner">
+        <div class="cm-banner-left">
+            <i
+                class="pi pi-check-circle cm-banner-icon"
+                [class.text-yellow-500]="proveedoresConError > 0"
+                [class.text-green-500]="proveedoresConError === 0"
+            ></i>
+            <div>
+                <div
+                    class="cm-banner-title"
+                    [class.text-green-700]="proveedoresConError === 0"
+                    [class.text-yellow-700]="proveedoresConError > 0"
+                >
+                    {{
+                        proveedoresConError === 0
+                            ? "Validación completada con éxito"
+                            : "Validación con observaciones"
+                    }}
+                </div>
+                <div class="cm-banner-detail">
+                    Se validaron y registraron
+                    <strong>{{ proveedoresValidados }}</strong> proveedor(es).
+                    <span
+                        *ngIf="proveedoresConError > 0"
+                        class="cm-banner-warn"
+                    >
+                        {{ proveedoresConError }} proveedor(es) presentaron
+                        error.
+                    </span>
+                    Ya puede confirmar el registro de las compras.
+                </div>
+            </div>
+        </div>
+        <div class="cm-banner-count">
+            <span class="cm-count-num">{{ lstCargaCompras.length }}</span>
+            <span class="cm-count-lbl">registros</span>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <p-table
+        #dt1
+        [value]="lstCargaCompras"
+        [rows]="25"
+        [rowHover]="true"
+        responsiveLayout="stack"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [paginator]="true"
+        [showCurrentPageReport]="true"
+        [resizableColumns]="true"
+        [rowsPerPageOptions]="[25, 50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        styleClass="p-datatable-sm card border-1 border-round surface-border"
+    >
+        <ng-template pTemplate="header">
+            <tr class="text-sm">
+                <th style="width: 30px" class="bg-teal-50 border-1">N°</th>
+                <th
+                    style="width: 40px; text-align: center"
+                    class="bg-teal-50 border-1"
+                >
+                    <p-checkbox
+                        [binary]="true"
+                        [ngModel]="todosSeleccionados"
+                        (ngModelChange)="toggleAll($event)"
+                        pTooltip="Seleccionar / deseleccionar todos"
+                        tooltipPosition="top"
+                    ></p-checkbox>
+                </th>
+
+                <th
+                    style="width: 80px; text-align: center"
+                    class="bg-teal-50 border-1"
+                >
+                    FECHA EMI.
+                </th>
+                <th
+                    style="width: 80px; text-align: center"
+                    class="bg-teal-50 border-1"
+                >
+                    FECHA VEN.
+                </th>
+                <th style="width: 80px" class="bg-teal-50 border-1">
+                    TIPO DOC.
+                </th>
+                <th style="width: 60px" class="bg-teal-50 border-1">SERIE</th>
+                <th style="width: 90px" class="bg-teal-50 border-1">N° DOC.</th>
+                <th style="width: 90px" class="bg-teal-50 border-1">RUC</th>
+                <th style="width: 200px" class="bg-teal-50 border-1">
+                    PROVEEDOR
+                </th>
+                <th
+                    style="width: 60px; text-align: center"
+                    class="bg-teal-50 border-1"
+                >
+                    TC
+                </th>
+                <th
+                    style="width: 70px; text-align: center"
+                    class="bg-teal-50 border-1"
+                >
+                    <i class="pi pi-money-bill text-green-500 mr-1"></i>MONEDA
+                </th>
+                <th
+                    style="width: 90px; text-align: right"
+                    class="bg-teal-50 border-1"
+                >
+                    BASE IMP.
+                </th>
+                <th
+                    style="width: 80px; text-align: right"
+                    class="bg-teal-50 border-1"
+                >
+                    IGV
+                </th>
+                <th
+                    style="width: 100px; text-align: right"
+                    class="bg-teal-50 border-1"
+                >
+                    TOTAL
+                </th>
+                <th style="width: 120px" class="bg-teal-50 border-1">GLOSA</th>
+                <th style="width: 100px" class="bg-teal-50 border-1">
+                    CTA CTBLE
+                </th>
+                <!-- <th style="width: 90px" class="bg-teal-50 border-1">
+                    FEC DETRA
+                </th>
+                <th style="width: 90px" class="bg-teal-50 border-1">
+                    NUM DETRA
+                </th> -->
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-data let-rowIndex="rowIndex">
+            <tr class="text-sm">
+                <td>{{ rowIndex + 1 }}</td>
+                <td style="text-align: center">
+                    <p-checkbox
+                        [binary]="true"
+                        [(ngModel)]="data.seleccionado"
+                    ></p-checkbox>
+                </td>
+
+                <td>{{ data.fecemision }}</td>
+                <td>{{ data.fecvencimiento }}</td>
+                <td>{{ data.tipodoc_ctb }}</td>
+                <td>{{ data.nroserie_ctb }}</td>
+                <td>{{ data.nrodocumento_ctb }}</td>
+                <td>{{ data.nrodocumento }}</td>
+                <td>
+                    <div class="flex align-items-center gap-1">
+                        <i
+                            *ngIf="data.idproveedor > 0"
+                            class="pi pi-check-circle text-green-500 text-xs"
+                            pTooltip="Proveedor validado"
+                        ></i>
+                        {{ data.nomempresa | uppercase }}
+                    </div>
+                </td>
+                <td style="text-align: center">{{ data.tc }}</td>
+                <td style="text-align: center">{{ data.nommoneda }}</td>
+                <td style="text-align: right">
+                    {{ data.s_monto | number: "0.2-2" }}
+                </td>
+                <td style="text-align: right">
+                    {{ data.s_igv | number: "0.2-2" }}
+                </td>
+                <td style="text-align: right">
+                    <strong>{{ data.s_monto_total | number: "0.2-2" }}</strong>
+                </td>
+                <td>{{ data.s_glosa | uppercase }}</td>
+                <td>{{ data.codctactble }}</td>
+                <!-- <td>{{ data.fecdetraccion }}</td>
+                <td>{{ data.numdetraccion }}</td> -->
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="19">
+                    <div class="cm-empty-state">
+                        <i class="pi pi-file-import cm-empty-icon"></i>
+                        <div class="cm-empty-title">Sin datos cargados</div>
+                        <div class="cm-empty-sub">
+                            Use el botón <strong>Cargar Excel</strong> para
+                            importar registros.
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
+
+<!-- Dialog: Eliminar carga -->
+<p-dialog
+    [(visible)]="eliminarDialog"
+    [modal]="true"
+    [showHeader]="false"
+    [closable]="false"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '420px' }"
+    styleClass="cm-modal"
+>
+    <div class="cm-modal-header cm-modal-header-danger">
+        <div class="cm-modal-icon-wrap">
+            <i class="pi pi-trash"></i>
+        </div>
+        <div>
+            <div class="cm-modal-title">Eliminar Carga</div>
+            <div class="cm-modal-subtitle">
+                Esta acción no se puede deshacer
+            </div>
+        </div>
+    </div>
+    <div class="cm-modal-body">
+        <div class="cm-modal-msg">
+            <i class="pi pi-exclamation-triangle cm-modal-msg-icon danger"></i>
+            <p>
+                ¿Desea eliminar la carga masiva actual? Se descartarán
+                <strong>{{ lstCargaCompras.length }}</strong> registro(s).
+            </p>
+        </div>
+    </div>
+    <div class="cm-modal-footer">
+        <button
+            pButton
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            class="cm-modal-btn-cancel"
+            (click)="eliminarDialog = false"
+        ></button>
+        <button
+            pButton
+            type="button"
+            label="Eliminar"
+            icon="pi pi-trash"
+            class="cm-modal-btn-danger"
+            (click)="confirmarEliminar()"
+        ></button>
+    </div>
+</p-dialog>
+
+<!-- Dialog: Confirmar registro con validación de duplicados -->
+<p-dialog
+    [(visible)]="mostrarDialogConfirmar"
+    [modal]="true"
+    [showHeader]="false"
+    [closable]="false"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: '540px' }"
+    styleClass="cm-modal"
+>
+    <div
+        class="cm-modal-header"
+        [class.cm-modal-header-primary]="comprasDuplicadas.length === 0"
+        [class.cm-modal-header-warn]="comprasDuplicadas.length > 0"
+    >
+        <div class="cm-modal-icon-wrap">
+            <i
+                class="pi"
+                [class.pi-check-circle]="comprasDuplicadas.length === 0"
+                [class.pi-exclamation-triangle]="comprasDuplicadas.length > 0"
+            ></i>
+        </div>
+        <div>
+            <div class="cm-modal-title">Confirmar Carga Masiva</div>
+            <div class="cm-modal-subtitle">
+                {{
+                    comprasDuplicadas.length === 0
+                        ? "Sin duplicados encontrados"
+                        : comprasDuplicadas.length +
+                          " registro(s) ya existen en el periodo"
+                }}
+            </div>
+        </div>
+    </div>
+
+    <div class="cm-modal-body">
+        <div class="cm-modal-stats">
+            <div class="cm-stat cm-stat-new">
+                <i class="pi pi-plus-circle"></i>
+                <span class="cm-stat-num">{{ comprasNuevas.length }}</span>
+                <span class="cm-stat-lbl">Nuevas</span>
+            </div>
+            <div
+                class="cm-stat cm-stat-dup"
+                *ngIf="comprasDuplicadas.length > 0"
+            >
+                <i class="pi pi-ban"></i>
+                <span class="cm-stat-num">{{ comprasDuplicadas.length }}</span>
+                <span class="cm-stat-lbl">Duplicadas</span>
+            </div>
+            <div class="cm-stat cm-stat-total">
+                <i class="pi pi-list"></i>
+                <span class="cm-stat-num">{{
+                    comprasNuevas.length + comprasDuplicadas.length
+                }}</span>
+                <span class="cm-stat-lbl">Seleccionados</span>
+            </div>
+        </div>
+
+        <div *ngIf="comprasDuplicadas.length > 0" class="cm-dup-list">
+            <div class="cm-dup-list-title">
+                <i class="pi pi-exclamation-triangle"></i>
+                Registros omitidos (ya existen en el periodo seleccionado):
+            </div>
+            <ul class="cm-dup-items">
+                <li *ngFor="let d of comprasDuplicadas">
+                    <i class="pi pi-times-circle"></i>
+                    <span class="cm-dup-doc"
+                        >{{ d.nroserie_ctb }}-{{ d.nrodocumento_ctb }}</span
+                    >
+                    <span class="cm-dup-sep">·</span>
+                    <span class="cm-dup-name">{{
+                        d.nomempresa | uppercase
+                    }}</span>
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="comprasNuevas.length > 0" class="cm-modal-info success">
+            <i class="pi pi-check-circle"></i>
+            <span
+                >Se registrarán
+                <strong>{{ comprasNuevas.length }}</strong> compra(s) nuevas y
+                se generarán sus asientos contables.</span
+            >
+        </div>
+        <div *ngIf="comprasNuevas.length === 0" class="cm-modal-info warn">
+            <i class="pi pi-ban"></i>
+            <span
+                >Todos los registros del periodo ya existen en el sistema. No
+                hay nada que registrar.</span
+            >
+        </div>
+    </div>
+
+    <div class="cm-modal-footer">
+        <button
+            pButton
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            class="cm-modal-btn-cancel"
+            (click)="mostrarDialogConfirmar = false"
+        ></button>
+        <button
+            pButton
+            type="button"
+            label="Confirmar registro"
+            icon="pi pi-check"
+            class="cm-modal-btn-primary"
+            [disabled]="comprasNuevas.length === 0"
+            (click)="ejecutarConfirmacion()"
+        ></button>
+    </div>
+</p-dialog>

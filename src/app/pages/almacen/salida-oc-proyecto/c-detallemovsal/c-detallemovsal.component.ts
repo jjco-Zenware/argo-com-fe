@@ -62,6 +62,7 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
   activeIndex: number = 0;
   lstAlmacen: any;
   selectedItems: any;
+  selectAll: boolean = false;
   lstTransacciones: any[]=[];
   listadoArchivos: any[]=[];
   verbtnPreliminar: boolean = false;
@@ -799,6 +800,7 @@ export class CDetalleSalOcProyComponent implements OnInit, OnDestroy{
       //this._alm_idordencompra = dato;
       this.lstItemOC = []
       this.selectedItems=[];
+      this.selectAll = false;
       const objeto ={
         idordencompra: dato,
         idusuario: constantesLocalStorage.idusuario,

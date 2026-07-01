@@ -1,178 +1,148 @@
 <ng-container *ngIf="vistaLista; else visSecciones">
     <div class="card m-4">
-        <div class="grid mt-2">
-            <div class="flex justify-content-between col-12 -mt-3 gap-2">   
-                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">BALANCE DE COMPROBACIÓN</span>
-                </div>  
-                       
+
+        <!-- Header -->
+        <div class="cm-header">
+            <div class="cm-header-left">
+                <div class="cm-header-icon-wrap">
+                    <i class="pi pi-chart-bar cm-header-icon"></i>
+                </div>
+                <div>
+                    <div class="cm-header-title">BALANCE DE COMPROBACIÓN</div>
+                    <div class="cm-header-sub">Consulte el balance de comprobación por periodo</div>
+                </div>
             </div>
         </div>
 
-        <form [formGroup]="frmDatos" class="mb-2 -mr-3 mt-1 ml-3">
-            <div class="p-fluid p-formgrid grid col-9 text-sm  border-round surface-border h-5rem -ml-6">
-                <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
-                    <label class="font-semibold text-blue-600">DESDE </label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
-                        [readonlyInput]="true" appendTo="body" class="p-inputtext-sm">
-                    </p-calendar>
-                </div>
-                <div class="md:col-6 sm:col-4 lg:col-2 -mt-4">
-                    <label class="font-semibold text-blue-600">HASTA</label>
-                    <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
+        <!-- Toolbar -->
+        <div class="oc-toolbar">
+            <form [formGroup]="frmDatos" class="oc-toolbar-form">
+                <div class="oc-field">
+                    <label class="cm-label">Periodo</label>
+                    <p-calendar view="month" dateFormat="mm/yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
                         [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
                 </div>
-                <div class="field col-12 md:col-2 -mt-4 gap-2">
-                    <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                        class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto h-auto" icon="pi pi-search"></button>
-                </div>
+            </form>
+            <div class="cm-actions">
+                <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom"
+                    class="cm-btn cm-btn-search" icon="pi pi-search"></button>
+                <button pButton type="button" (click)="getExportarExcel()" pTooltip="Exportar Excel" tooltipPosition="bottom"
+                    class="cm-btn cm-btn-load" icon="pi pi-file-excel"></button>
             </div>
-        </form> 
+        </div>
 
+        <!-- Tabla -->
         <p-table #dt1 [value]="lstBancos" [rows]="10" [rowHover]="true" responsiveLayout="stack" [tableStyle]="{'min-width': '50rem'}"
             [paginator]="true" [showCurrentPageReport]="true" [resizableColumns]="true" [rowsPerPageOptions]="[10,25,50]"
-            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros" 
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
             styleClass="p-datatable-sm card border-1 border-round surface-border p-datatable-striped">
             <ng-template pTemplate="header">
                 <tr class="text-sm h-1rem">
-                    <th rowspan="2" style="width: 20px" class="bg-teal-50 border-1" >
+                    <th rowspan="2" style="width: 20px" class="bg-teal-50 border-1">
                         <div class="flex justify-content-between align-items-center">
                             COD PCG
                         </div>
                     </th>
                     <th rowspan="2" style="width: 300px;" class="bg-teal-50 border-1">CUENTAS DEL MAYOR</th>
-                    <th colspan="2" style="width: 200px;" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'200px','text-align': 'center'}" >
+                    <th colspan="2" style="width: 140px;" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'width':'140px','text-align': 'center'}">
                             SUMAS DEL MAYOR
                         </div>
                     </th>
-                    <th colspan="2" style="width: 200px;" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'200px','text-align': 'center'}" >
-                            SALDOS 
+                    <th colspan="2" style="width: 140px;" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'width':'140px','text-align': 'center'}">
+                            SALDOS
                         </div>
                     </th>
-                    <!-- <th colspan="2" style="width: 200px;" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'200px','text-align': 'center'}" >
-                            CARGAS TRANSFERIDAS 
-                        </div>
-                    </th> -->
-                    <th colspan="2" style="width: 200px;" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'200px','text-align': 'center'}" >
-                            INVENTARIO 
+                    <th colspan="2" style="width: 140px;" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'width':'140px','text-align': 'center'}">
+                            INVENTARIO
                         </div>
                     </th>
-                    <th colspan="2" style="width: 200px;" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'200px','text-align': 'center'}" >
-                            RESULTADOS POR NATURALEZA 
+                    <th colspan="2" style="width: 180px;" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'width':'180px','text-align': 'center'}">
+                            RESULTADOS POR NATURALEZA
                         </div>
                     </th>
-                    <th colspan="2" style="width: 200px;" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'width':'200px','text-align': 'center'}" >
-                            RESULTADOS POR FUNCIÓN 
+                    <th colspan="2" style="width: 180px;" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'width':'180px','text-align': 'center'}">
+                            RESULTADOS POR FUNCIÓN
                         </div>
                     </th>
                 </tr>
-                <tr class="text-sm" >
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            DÉBITO
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            CRÉDITO
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            DEUDOR
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            ACREEDOR
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            DEBE
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            HABER
-                        </div>
-                    </th>
-                    <!-- <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            ACTIVO
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            PASIVO
-                        </div>
-                    </th> -->
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            PÉRDIDAS
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            GANANCIAS
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            PÉRDIDAS
-                        </div>
-                    </th>
-                    <th colspan="1" class="bg-teal-50 border-1">
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            GANANCIAS
-
-                        </div>
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex"> 
                 <tr class="text-sm">
-                    <td>{{rowIndex + 1}}</td>
-                    <!-- <td>{{dato.idbanco}}</td> -->
-                    <td>{{dato.razonsocial}}</td>
-                    <td>{{dato.destipobanco}}</td>
-                    <td>{{dato.idtipodoc}}</td>
-                    <td>{{dato.nrodoc}}</td>
-                    <td>
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            {{dato.codigobcr}}
-                        </div> 
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            {{dato.codbancosbs}}
-                        </div> 
-                    </td>
-                    <td>
-                        <div [ngStyle]="{'text-align': 'center'}">
-                            {{dato.codbancosunat}}
-                        </div> 
-                    </td>
-                    <td>{{dato.codctactble}}</td>
-                   
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">DÉBITO</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">CRÉDITO</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">DEUDOR</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">ACREEDOR</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">DEBE</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">HABER</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">PÉRDIDAS</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">GANANCIAS</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">PÉRDIDAS</div>
+                    </th>
+                    <th colspan="1" class="bg-teal-50 border-1">
+                        <div [ngStyle]="{'text-align': 'center'}">GANANCIAS</div>
+                    </th>
                 </tr>
             </ng-template>
-            <!-- <ng-template pTemplate="footer">
-                <tr>
-                    <td colspan="3" class="text-right">Totals</td>
-                    <td>{{lastYearTotal | currency: 'USD'}}</td>
-                    <td>{{thisYearTotal | currency: 'USD'}}</td>
+            <ng-template pTemplate="body" let-dato let-rowIndex="rowIndex">
+                <tr class="text-sm">
+                    <td>{{dato.CodCuenta}}</td>
+                    <td>{{dato.Descripcion}}</td>
+                    <td style="text-align: right">{{dato.Mayor_Debito | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.Mayor_Credito | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.Saldo_Deudor | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.Saldo_Acreedor | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.Inventario_Debe | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.Inventario_Haber | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.RxNaturaleza_Perdida | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.RxNaturaleza_Ganancia | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.RxFuncion_Perdida | number: '1.2-2'}}</td>
+                    <td style="text-align: right">{{dato.RxFuncion_Ganancia | number: '1.2-2'}}</td>
                 </tr>
-            </ng-template> -->
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr class="text-sm font-semibold bg-teal-50">
+                    <td colspan="2" style="text-align: right; padding-right: 0.75rem;">TOTALES</td>
+                    <td style="text-align: right">{{ totalMayorDebito | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalMayorCredito | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalSaldoDeudor | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalSaldoAcreedor | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalInventarioDebe | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalInventarioHaber | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalRxNatPerdida | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalRxNatGanancia | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalRxFunPerdida | number: '1.2-2' }}</td>
+                    <td style="text-align: right">{{ totalRxFunGanancia | number: '1.2-2' }}</td>
+                </tr>
+            </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="12">No se encontraron registros.</td>
+                    <td colspan="12">
+                        <div class="cm-empty-state">
+                            <i class="pi pi-inbox cm-empty-icon"></i>
+                            <div class="cm-empty-title">Sin registros encontrados</div>
+                            <div class="cm-empty-sub">Seleccione un periodo y presione <strong>Buscar</strong>.</div>
+                        </div>
+                    </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="loadingbody">
@@ -185,25 +155,27 @@
 </ng-container>
 
 <ng-template #visSecciones>
-
-    <div class="p-fluid p-3 mb-1 card m-4" (OB_back)="getDetalle($event)">
-        <div class="grid mt-2">
-            <div class="flex justify-content-between col-12 -mt-3 gap-2">
-                <div style="display: flex; justify-content: end;" class="mt-2 h-2rem">
-                    <button pButton class="font-semibold p-button-outlined justify-content-center" icon="pi pi-backward" label="Regresar"
-                        pTooltip="Regresar" tooltipPosition="left" (click)="getBack()" ></button>                    
+    <div class="card m-4" (OB_back)="getDetalle($event)">
+        <div class="cm-header">
+            <div class="cm-header-left">
+                <div class="cm-header-icon-wrap">
+                    <i class="pi pi-chart-bar cm-header-icon"></i>
                 </div>
-                <div class="mb-1 py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                    <span class="text-base font-semibold">{{tituloDetalle}}</span>
-                </div>       
+                <div>
+                    <div class="cm-header-title">{{tituloDetalle}}</div>
+                    <div class="cm-header-sub">Detalle del balance de comprobación</div>
+                </div>
             </div>
+            <button pButton class="cm-btn cm-btn-back" icon="pi pi-backward" label="Regresar"
+                pTooltip="Regresar" tooltipPosition="left" (click)="getBack()"></button>
         </div>
-        <app-c-banco-detalle [IA_data]="dataDet"></app-c-banco-detalle>
+        <div class="p-3">
+            <app-c-banco-detalle [IA_data]="dataDet"></app-c-banco-detalle>
+        </div>
     </div>
-
 </ng-template>
 
 <p-toast></p-toast>
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
 <p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '450px'}"
-acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+    acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900"></p-confirmDialog>

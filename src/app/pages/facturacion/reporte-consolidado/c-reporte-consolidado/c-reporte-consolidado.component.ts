@@ -6,14 +6,14 @@ import {
     mensajesSpinner,
 } from '@constantes';
 import { Subscription } from 'rxjs';
-import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { ProyectosService } from '../../../compras/proyectos-ganados/service/proyectos.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { OrdencompraService } from '../../../compras/orden-compra-servicio/service/ordencompra.service';
 import { MessageService } from 'primeng/api';
 import * as FileSaver from 'file-saver';
-import { ComprasService } from 'src/app/pages/compras/Service/compraServices';
+import { UtilitariosService } from '../../../../services/utilitarios.service';
+import { ComprasService } from '../../../compras/Service/compraServices';
 
 @Component({
     selector: 'app-c-reporte-consolidado',
@@ -99,12 +99,11 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
         this.mensajeSpinner = mensajesSpinner.msjRecuperaLista;
 
         const objeto = {
-            ...this.frmDatos.value,
-            idtipodocprc: 6,
+            ...this.frmDatos.value
         };
 
         const $getListarOrdenCompra = this.proyectosService
-            .ordenCompraList(objeto)
+            .ordenCompraListRepVenta(objeto)
             .subscribe({
                 next: (rpta: any) => {
                     this.setSpinner(false);
@@ -255,12 +254,16 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
 
         for (let i = 0; i < this.lstExportExcel.length; i++) {
             const objeto = {
-                'FECHA EMISIÓN': this.lstExportExcel[i].fecemision,
-                'FECHA VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
+                'ORI.': '02',
+                'VOU': 0,
+                'F. EMISIÓN': this.lstExportExcel[i].fecemision,
+                'F. VENCIMIENTO': this.lstExportExcel[i].fecvencimiento,
                 'DOCUMENTO': this.lstExportExcel[i].nrofactura,
+                'R. FECHA': this.lstExportExcel[i].fecemision_ori,
+                'R. DOC.': this.lstExportExcel[i].tipodoc_ctb_ori,
+                'R. NÚMERO': this.lstExportExcel[i].nrofactura_ori,
                 'RUC': this.lstExportExcel[i].nrodocumento,
-                  'CLIENTE': this.lstExportExcel[i].nomempresa,
-                'CENTRO COSTO': this.lstExportExcel[i].descentrocostoPRY,
+                'CLIENTE': this.lstExportExcel[i].nomempresa,
                 'TC': this.lstExportExcel[i].tc,
                 'MONEDA': this.lstExportExcel[i].simbmoneda,
                 'BASE S.': this.lstExportExcel[i].basesol,
@@ -280,18 +283,84 @@ export class CReporteConsolidadoComponent implements OnInit, OnDestroy {
             this.lstExportar.push(objeto);
         }
 
-        import('xlsx').then((xlsx) => {
-            const worksheet = xlsx.utils.json_to_sheet(this.lstExportar);
-            const workbook = {
-                Sheets: { data: worksheet },
-                SheetNames: ['data'],
+        this.exportarExcelConFormato();
+    }
+
+    async exportarExcelConFormato(): Promise<void> {
+        const ExcelJS = await import('exceljs');
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('REPORTE');
+
+        const columnas = Object.keys(this.lstExportar[0]);
+        const totalColumnas = columnas.length;
+
+        const periodoTexto =
+            'Periodo: ' +
+            this.utilitariosService.obtenerFechaValidaRango(
+                this.frmDatos.value.fecini
+            ) +
+            ' al ' +
+            this.utilitariosService.obtenerFechaValidaRango(
+                this.frmDatos.value.fecfin
+            );
+
+        // try {
+        //     const response = await fetch('assets/layout/images/logo_color_fon_blanco.png');
+        //     const buffer = await response.arrayBuffer();
+        //     const imageId = workbook.addImage({
+        //         buffer: buffer as any,
+        //         extension: 'png',
+        //     });
+        //     worksheet.addImage(imageId, {
+        //         tl: { col: 0, row: 0 },
+        //         ext: { width: 160, height: 55 },
+        //     });
+        // } catch (e) {
+        //     console.error('No se pudo cargar el logo de Zenware', e);
+        // }
+
+        worksheet.addRow([]);
+
+        const filaTitulo = worksheet.addRow(['REPORTE DE VENTA CONSOLIDADO']);
+        worksheet.mergeCells(filaTitulo.number, 1, filaTitulo.number, totalColumnas);
+        filaTitulo.getCell(1).font = { bold: true, size: 14 };
+        filaTitulo.getCell(1).alignment = { horizontal: 'center' };
+
+        const filaPeriodo = worksheet.addRow([periodoTexto]);
+        worksheet.mergeCells(filaPeriodo.number, 1, filaPeriodo.number, totalColumnas);
+        filaPeriodo.getCell(1).font = { bold: true, italic: true, size: 11 };
+        filaPeriodo.getCell(1).alignment = { horizontal: 'center' };
+
+        worksheet.addRow([]);
+
+        const filaCabecera = worksheet.addRow(columnas);
+        filaCabecera.eachCell((cell) => {
+            cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+            cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'FF305496' },
             };
-            const excelBuffer: any = xlsx.write(workbook, {
-                bookType: 'xlsx',
-                type: 'array',
-            });
-            this.saveAsExcelFile(excelBuffer, 'REPORTE_VENTA_CONSOLIDADO');
+            cell.alignment = { horizontal: 'center', vertical: 'middle' };
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' },
+            };
         });
+
+        this.lstExportar.forEach((item) => {
+            worksheet.addRow(columnas.map((col) => (item as any)[col]));
+        });
+
+        worksheet.columns.forEach((column, idx) => {
+            const headerLength = columnas[idx] ? columnas[idx].length : 10;
+            column.width = Math.max(headerLength + 1, 12);
+        });
+
+        const excelBuffer = await workbook.xlsx.writeBuffer();
+        this.saveAsExcelFile(excelBuffer, 'REPORTE_VENTA_CONSOLIDADO');
     }
 
     saveAsExcelFile(buffer: any, fileName: string): void {

@@ -446,6 +446,7 @@ export interface OrdenCompraItem{
     nomtipoexistencia: string;
     mtodescuento?: number;
     gas_indsuma? :boolean
+    idproyecto?: number;
 }
 
 export interface OrdenCompra {
@@ -647,5 +648,20 @@ export interface TaskList {
     id?: number;
     title: string;
     tasks: Tasks[];
+}
+
+export interface Message {
+    text: string;
+    ownerId: number;
+    createdAt: number;
+}
+
+export interface User {
+    id: number;
+    name: string;
+    image: string;
+    status: string;
+    messages: Message[];
+    lastSeen: string;
 }
 

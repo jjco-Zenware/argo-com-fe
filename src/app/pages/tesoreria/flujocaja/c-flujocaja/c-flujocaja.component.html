@@ -1,208 +1,275 @@
-<div class="card m-4 gap-2">
-    <div class="grid mt-2">
-        <div class="flex justify-content-between col-12 -mt-3 gap-2">                                  
-            <div class="mb-1 border-1 surface-border py-3 h-2rem flex border-round mt-2 p-2 fonthead w-full align-items-center">
-                <span class="text-base font-semibold">FLUJO DE CAJA</span>
-            </div>                         
+<div class="card m-4">
+
+    <!-- Header con filtro integrado -->
+    <div class="flex align-items-center justify-content-between mb-4 border-bottom-1 surface-border pb-3">
+        <div class="flex align-items-center gap-2 fonthead border-round px-3 py-2">
+            <i class="pi pi-chart-line text-white text-lg"></i>
+            <span class="text-base font-bold text-white">FLUJO DE CAJA</span>
+        </div>
+        <form [formGroup]="frmDatos" class="p-fluid">
+            <div class="flex align-items-center gap-2">
+                <label class="font-semibold text-blue-600 white-space-nowrap text-sm">Año:</label>
+                <p-calendar view="year" dateFormat="yy" [showIcon]="true" formControlName="fecini"
+                    [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" (onSelect)="getListar()"
+                    [style]="{'width': '130px'}">
+                </p-calendar>
+            </div>
+        </form>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="grid mb-4">
+        <div class="col-12 sm:col-6 lg:col-3">
+            <div class="surface-0 shadow-2 p-3 border-1 surface-border border-round border-left-3 border-green-500">
+                <div class="flex justify-content-between align-items-start mb-2">
+                    <span class="text-500 font-medium text-sm uppercase">Ventas Netas</span>
+                    <div class="flex align-items-center justify-content-center bg-green-100 border-round"
+                        style="width:2.2rem;height:2.2rem">
+                        <i class="pi pi-arrow-up-right text-green-500 text-lg"></i>
+                    </div>
+                </div>
+                <div class="text-900 font-bold text-2xl">S/ {{totalVentas | number:'0.2-2'}}</div>
+                <span class="text-green-500 font-medium text-xs">Acumulado anual</span>
+            </div>
+        </div>
+
+        <div class="col-12 sm:col-6 lg:col-3">
+            <div class="surface-0 shadow-2 p-3 border-1 surface-border border-round border-left-3 border-blue-500">
+                <div class="flex justify-content-between align-items-start mb-2">
+                    <span class="text-500 font-medium text-sm uppercase">Costo de Ventas</span>
+                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                        style="width:2.2rem;height:2.2rem">
+                        <i class="pi pi-shopping-cart text-blue-500 text-lg"></i>
+                    </div>
+                </div>
+                <div class="text-900 font-bold text-2xl">S/ {{totalCostos | number:'0.2-2'}}</div>
+                <span class="text-blue-500 font-medium text-xs">Acumulado anual</span>
+            </div>
+        </div>
+
+        <div class="col-12 sm:col-6 lg:col-3">
+            <div class="surface-0 shadow-2 p-3 border-1 surface-border border-round border-left-3"
+                [ngClass]="totalUtilidad >= 0 ? 'border-orange-500' : 'border-red-500'">
+                <div class="flex justify-content-between align-items-start mb-2">
+                    <span class="text-500 font-medium text-sm uppercase">Utilidad Bruta</span>
+                    <div class="flex align-items-center justify-content-center border-round"
+                        [ngClass]="totalUtilidad >= 0 ? 'bg-orange-100' : 'bg-red-100'"
+                        style="width:2.2rem;height:2.2rem">
+                        <i class="text-lg"
+                            [ngClass]="totalUtilidad >= 0 ? 'pi pi-dollar text-orange-500' : 'pi pi-minus-circle text-red-500'"></i>
+                    </div>
+                </div>
+                <div class="font-bold text-2xl"
+                    [ngClass]="totalUtilidad >= 0 ? 'text-orange-500' : 'text-red-500'">
+                    S/ {{totalUtilidad | number:'0.2-2'}}
+                </div>
+                <span class="font-medium text-xs"
+                    [ngClass]="totalUtilidad >= 0 ? 'text-orange-500' : 'text-red-500'">Acumulado anual</span>
+            </div>
+        </div>
+
+        <div class="col-12 sm:col-6 lg:col-3">
+            <div class="surface-0 shadow-2 p-3 border-1 surface-border border-round border-left-3"
+                [ngClass]="margenBruto >= 0 ? 'border-purple-500' : 'border-red-500'">
+                <div class="flex justify-content-between align-items-start mb-2">
+                    <span class="text-500 font-medium text-sm uppercase">Margen Bruto</span>
+                    <div class="flex align-items-center justify-content-center border-round"
+                        [ngClass]="margenBruto >= 0 ? 'bg-purple-100' : 'bg-red-100'"
+                        style="width:2.2rem;height:2.2rem">
+                        <i class="pi pi-percentage text-lg"
+                            [ngClass]="margenBruto >= 0 ? 'text-purple-500' : 'text-red-500'"></i>
+                    </div>
+                </div>
+                <div class="font-bold text-2xl"
+                    [ngClass]="margenBruto >= 0 ? 'text-purple-500' : 'text-red-500'">
+                    {{margenBruto | number:'0.1-1'}}%
+                </div>
+                <span class="text-500 font-medium text-xs">Rentabilidad sobre ventas</span>
+            </div>
         </div>
     </div>
 
-    <form [formGroup]="frmDatos" class="p-fluid p-formgrid grid lg:col-9 col-12 text-sm" >
-        <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-3 ">
-            <label class="font-semibold text-blue-600 text-base">Año</label>
-            <p-calendar view="year" dateFormat="yy" [showIcon]="true" inputId="fechaInicio" formControlName="fecini"
-                [readonlyInput]="true" appendTo="body" class="p-inputtext-sm" (onSelect)="getListar()">
-            </p-calendar>
-        </div>
-        <!-- <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                class="font-semibold mt-3 justify-content-center h-3rem" icon="pi pi-search"></button>
-        <div class="md:col-6 sm:col-4 lg:col-2 col-6 -mt-4">
-            <label class="font-semibold text-blue-600 text-base">Hasta</label>
-            <p-calendar dateFormat="dd/mm/yy" [showIcon]="true" inputId="fechaFin" formControlName="fecfin"
-                [readonlyInput]="true" appendTo="body" class="p-inputtext-sm"></p-calendar>
-        </div>    --> 
-       <!-- <div class="sm:col-6 lg:col-3 md:col-6 col-6 -mt-4">
-            <label class="font-semibold text-blue-600 text-base">Moneda</label>  
-            <span class="p-fluid mt-1">
-                <p-dropdown [options]="lstMonedas" formControlName="idmoneda" placeholder="Seleccionar..." optionLabel="desmoneda" 
-                optionValue="idmoneda" appendTo="body" class="p-inputtext-sm"></p-dropdown>
-            </span>                                      
-        </div>            
-        
-        <div class="field col-12 md:col-2 -mt-4 gap-2">
-            <button pButton type="button" (click)="getListar()" pTooltip="Buscar Registros" tooltipPosition="bottom" 
-                class="font-semibold mt-4 justify-content-center h-2.5rem w-3rem" icon="pi pi-search"></button>
-            <button pButton type="button" pTooltip="Exportar Excel" tooltipPosition="bottom" (click)="getExportarExcel(dt1)"
-                class="font-semibold mt-3 justify-content-center h-2.5rem w-3rem w-auto bg-green-500 ml-2" icon="pi pi-file-excel"></button>
-        </div>-->
-    </form> 
-
-    <p-table #dt1 [value]="lstFlujoCaja" 
-        rowGroupMode="subheader" 
-        groupRowsBy="tipo" 
-        sortField="tipo" 
-        sortMode="single"  
+    <!-- Tabla Flujo de Caja -->
+    <p-table #dt1 [value]="lstFlujoCaja"
+        rowGroupMode="subheader"
+        groupRowsBy="tipo"
+        sortField="tipo"
+        sortMode="single"
         [tableStyle]="{'min-width': '75rem'}"
-        styleClass="p-datatable-sm p-datatable-striped -mt-3">
+        styleClass="p-datatable-sm p-datatable-striped p-datatable-gridlines">
         <ng-template pTemplate="header">
             <tr>
-                <th  style="width: 100px;" class="bg-teal-50 border-1"></th>
-                <th class="bg-teal-50 border-1">Enero</th>
-                <th class="bg-teal-50 border-1">Febrero</th>
-                <th class="bg-teal-50 border-1">Marzo</th>
-                <th class="bg-teal-50 border-1">Abril</th>
-                <th class="bg-teal-50 border-1">Mayo</th>
-                <th class="bg-teal-50 border-1">Junio</th>
-                <th class="bg-teal-50 border-1">Julio</th>
-                <th class="bg-teal-50 border-1">Agosto</th>
-                <th class="bg-teal-50 border-1">Setiembrex</th>
-                <th class="bg-teal-50 border-1">Octubre</th>
-                <th class="bg-teal-50 border-1">Noviembre</th>
-                <th class="bg-teal-50 border-1">Diciembre</th>
-                <th class="bg-teal-50 border-1 font-bold">ACUMULADO</th>
+                <th style="width:160px" class="bg-blue-700 text-white border-1 border-white-alpha-30">Concepto</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Enero</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Febrero</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Marzo</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Abril</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Mayo</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Junio</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Julio</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Agosto</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Setiembre</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Octubre</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Noviembre</th>
+                <th class="bg-blue-700 text-white border-1 border-white-alpha-30 text-right">Diciembre</th>
+                <th class="bg-blue-800 text-white border-1 border-white-alpha-30 text-right font-bold">ACUMULADO</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="groupheader" let-customer>
-            <tr pRowGroupHeader>
-                <td colspan="5">
-                    <span class="font-bold ml-2">{{customer.destipo}}</span>
+            <tr pRowGroupHeader class="bg-blue-50">
+                <td colspan="14">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-tag text-blue-600 text-sm"></i>
+                        <span class="font-bold text-blue-700 text-sm">{{customer.destipo}}</span>
+                    </div>
                 </td>
             </tr>
         </ng-template>
-        <ng-template 
-            pTemplate="body" 
-            let-customer  
-            let-rowIndex="rowIndex"
-            let-rowgroup="rowgroup" 
-            let-rowspan="rowspan">
-            <tr>
-                <td *ngIf="rowgroup" [attr.rowspan]="rowspan">
-                    <span class="font-bold ml-2">{{customer.destipo}}</span>
+        <ng-template pTemplate="body" let-customer let-rowIndex="rowIndex" let-rowgroup="rowgroup" let-rowspan="rowspan">
+            <tr [ngClass]="{'bg-teal-50 font-bold': customer.tipo === 'C', 'bg-orange-50 font-bold': customer.tipo === 'B'}">
+                <td *ngIf="rowgroup" [attr.rowspan]="rowspan" class="font-semibold text-700">
+                    {{customer.destipo}}
                 </td>
-                <td>
-                    {{customer.name}}
+                <td class="text-sm">{{customer.name}}</td>
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.enero < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.enero | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.enero < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.enero | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.febrero < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.febrero | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.febrero < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.febrero | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.marzo < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.marzo | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.marzo < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.marzo | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.abril < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.abril | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.abril < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.abril | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.mayo < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.mayo | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.mayo < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.mayo | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.junio < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.junio | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.junio < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.junio | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.julio < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.julio | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.julio < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.julio | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.agosto < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.agosto | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.agosto < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.agosto | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.xxxx < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.xxxx | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.xxxx < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.xxxx | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.octubre < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.octubre | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.octubre < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.octubre | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.noviembre < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.noviembre | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.noviembre < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.noviembre | number :'0.2-2'}}
+                <td class="text-right text-sm" [ngClass]="{'text-red-500': customer.diciembre < 0, 'font-bold': customer.tipo === 'C' || customer.tipo === 'B'}">
+                    {{customer.diciembre | number:'0.2-2'}}
                 </td>
-                <td [ngClass]="{'text-red-500': customer.diciembre < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.diciembre | number :'0.2-2'}}
-                </td>
-                <td [ngClass]="{'text-red-500': customer.diciembre < 0, 'font-bold': customer.tipo === 'C'}">
-                    {{customer.total | number :'0.2-2'}}
+                <td class="text-right text-sm font-bold" [ngClass]="{'text-red-500': customer.total < 0, 'bg-teal-100': customer.tipo === 'C', 'bg-orange-100': customer.tipo === 'B'}">
+                    {{customer.total | number:'0.2-2'}}
                 </td>
             </tr>
         </ng-template>
     </p-table>
 
-    <div class="flex grid p-2 mt-6 surface-border border-top-1">
-        <div class="lg:col-4 md:col-12">        
-            <div class="flex align-items-center justify-content-between mb-3">
-                <div class="justify-content-between flex gap-2">
-                    <h5 class="text-green-500">Ventas Netas</h5>
-                    <i class="pi pi-chart-bar ml-3 text-2xl text-green-500"></i>
-                </div> 
+    <!-- Sección Gráficos -->
+    <div class="mt-5">
+        <div class="flex align-items-center gap-2 mb-4 border-bottom-1 surface-border pb-2">
+            <i class="pi pi-chart-bar text-blue-500 text-lg"></i>
+            <span class="text-lg font-semibold text-700">Análisis Gráfico</span>
+            <span class="text-500 text-sm ml-1">— Evolución mensual {{frmDatos?.value?.fecini | date:'yyyy'}}</span>
+        </div>
+
+        <div class="grid">
+            <!-- Ventas Netas -->
+            <div class="col-12 md:col-4">
+                <div class="surface-0 border-1 surface-border border-round p-3 shadow-1 h-full">
+                    <div class="flex align-items-center justify-content-between mb-3">
+                        <div class="flex align-items-center gap-2">
+                            <div class="flex align-items-center justify-content-center bg-green-100 border-round"
+                                style="width:2rem;height:2rem">
+                                <i class="pi pi-arrow-up-right text-green-500 text-sm"></i>
+                            </div>
+                            <span class="font-semibold text-green-700 text-sm">Ventas Netas</span>
+                        </div>
+                        <span class="text-xs text-500 bg-green-50 border-round px-2 py-1">
+                            S/ {{totalVentas | number:'0.0-0'}}
+                        </span>
+                    </div>
+                    <p-chart type="line" [data]="chartMonthlyDataA" [options]="chartMonthlyOptions"
+                        [responsive]="true" height="200px"></p-chart>
+                </div>
             </div>
 
-            <div class="flex align-items-center justify-content-between">
-                <div class="border-top-1 surface-border col-12">
-                    <!-- <div class="flex  justify-content-between mb-3">
-                        <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
-                    </div> -->
-                    
-                    <p-chart type="line" [data]="chartMonthlyDataA" [options]="chartMonthlyOptions" [responsive]="true"
-                        height="200px"></p-chart>
-                </div>                
-            </div>
-        </div> 
-
-        <div class="lg:col-4 md:col-12">        
-            <div class="flex align-items-center justify-content-between mb-3">
-                <div class="justify-content-between flex gap-2">
-                    <h5 class="text-blue-500">Costo de Ventas</h5>
-                    <i class="pi pi-chart-bar ml-3 text-blue-500 text-2xl"></i>
-                </div> 
-            </div>
-
-            <div class="flex align-items-center justify-content-between">
-                <div class="border-top-1 surface-border col-12">
-                    <!-- <div class="flex  justify-content-between mb-3">
-                        <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
-                    </div> -->
-                    
-                    <p-chart type="line" [data]="chartMonthlyDataB" [options]="chartMonthlyOptions" [responsive]="true"
-                        height="200px"></p-chart>
-                </div>                
-            </div>
-        </div>     
-   
-        <div class="lg:col-4 md:col-12 surface-border border-top-1">        
-            <div class="flex align-items-center justify-content-between mb-3">
-                <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0 text-orange-500">Utilidad Bruta</h5>
-                    <i class="pi pi-chart-bar ml-3 mt-1 text-orange-500 text-2xl"></i>
-                </div> 
+            <!-- Costo de Ventas -->
+            <div class="col-12 md:col-4">
+                <div class="surface-0 border-1 surface-border border-round p-3 shadow-1 h-full">
+                    <div class="flex align-items-center justify-content-between mb-3">
+                        <div class="flex align-items-center gap-2">
+                            <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                                style="width:2rem;height:2rem">
+                                <i class="pi pi-shopping-cart text-blue-500 text-sm"></i>
+                            </div>
+                            <span class="font-semibold text-blue-700 text-sm">Costo de Ventas</span>
+                        </div>
+                        <span class="text-xs text-500 bg-blue-50 border-round px-2 py-1">
+                            S/ {{totalCostos | number:'0.0-0'}}
+                        </span>
+                    </div>
+                    <p-chart type="line" [data]="chartMonthlyDataB" [options]="chartMonthlyOptions"
+                        [responsive]="true" height="200px"></p-chart>
+                </div>
             </div>
 
-            <div class="flex align-items-center justify-content-between">
-                <div class="border-top-1 surface-border col-12">
-                    <!-- <div class="flex  justify-content-between mb-3">
-                        <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
-                    </div> -->
-                    
-                    <p-chart type="line" [data]="chartMonthlyDataC" [options]="chartMonthlyOptions" [responsive]="true"
-                        height="200px"></p-chart>
-                </div>                
+            <!-- Utilidad Bruta -->
+            <div class="col-12 md:col-4">
+                <div class="surface-0 border-1 surface-border border-round p-3 shadow-1 h-full">
+                    <div class="flex align-items-center justify-content-between mb-3">
+                        <div class="flex align-items-center gap-2">
+                            <div class="flex align-items-center justify-content-center bg-orange-100 border-round"
+                                style="width:2rem;height:2rem">
+                                <i class="pi pi-dollar text-orange-500 text-sm"></i>
+                            </div>
+                            <span class="font-semibold text-orange-700 text-sm">Utilidad Bruta</span>
+                        </div>
+                        <span class="text-xs border-round px-2 py-1"
+                            [ngClass]="totalUtilidad >= 0 ? 'text-orange-500 bg-orange-50' : 'text-red-500 bg-red-50'">
+                            S/ {{totalUtilidad | number:'0.0-0'}}
+                        </span>
+                    </div>
+                    <p-chart type="line" [data]="chartMonthlyDataC" [options]="chartMonthlyOptions"
+                        [responsive]="true" height="200px"></p-chart>
+                </div>
             </div>
-        </div> 
 
-         <div class="lg:col-12 md:col-12 surface-border border-top-1">        
-            <div class="flex align-items-center justify-content-between mb-3">
-                <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0 text-blue-500">Consolidado</h5>
-                    <i class="pi pi-chart-bar ml-3 mt-1 text-blue-500 text-2xl"></i>
-                </div> 
-            </div>
-
-            <div class="flex align-items-center justify-content-between">
-                <div class="border-top-1 surface-border col-12">
-                    <!-- <div class="flex  justify-content-between mb-3">
-                        <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
-                    </div> -->
-                    
-                    <p-chart type="line" [data]="chartMonthlyDataT" [options]="chartMonthlyOptionsT" [responsive]="true"
-                        height="200px"></p-chart>
-                </div>                
+            <!-- Gráfico Consolidado -->
+            <div class="col-12">
+                <div class="surface-0 border-1 surface-border border-round p-3 shadow-1">
+                    <div class="flex align-items-center justify-content-between mb-3">
+                        <div class="flex align-items-center gap-2">
+                            <div class="flex align-items-center justify-content-center bg-indigo-100 border-round"
+                                style="width:2rem;height:2rem">
+                                <i class="pi pi-chart-bar text-indigo-500 text-sm"></i>
+                            </div>
+                            <span class="font-semibold text-indigo-700">Comparativa Consolidada</span>
+                        </div>
+                        <div class="flex align-items-center gap-3 text-xs text-500">
+                            <span class="flex align-items-center gap-1">
+                                <span class="inline-block border-round-sm" style="width:10px;height:10px;background:#66BB6A"></span> Ventas
+                            </span>
+                            <span class="flex align-items-center gap-1">
+                                <span class="inline-block border-round-sm" style="width:10px;height:10px;background:#29B6F6"></span> Costos
+                            </span>
+                            <span class="flex align-items-center gap-1">
+                                <span class="inline-block border-round-sm" style="width:10px;height:10px;background:#FFA726"></span> Utilidad
+                            </span>
+                        </div>
+                    </div>
+                    <p-chart type="bar" [data]="chartMonthlyDataT" [options]="chartMonthlyOptionsT"
+                        [responsive]="true" height="300px"></p-chart>
+                </div>
             </div>
         </div>
     </div>
@@ -211,4 +278,5 @@
 <p-toast></p-toast>
 <app-c-progress-spinner *ngIf="blockedDocument" [IS_mensaje]="mensajeSpinner"></app-c-progress-spinner>
 <p-confirmDialog header="Confirmation" key="confirm1" [style]="{width: '350px'}"
-acceptButtonStyleClass="p-button p-button-info surface-border" rejectButtonStyleClass="p-button p-button-outlined surface-border text-900 "></p-confirmDialog>
+    acceptButtonStyleClass="p-button p-button-info surface-border"
+    rejectButtonStyleClass="p-button p-button-outlined surface-border text-900"></p-confirmDialog>

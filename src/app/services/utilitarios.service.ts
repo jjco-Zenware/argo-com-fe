@@ -28,19 +28,13 @@ export class UtilitariosService {
   }
 
   obtenerFechaInicioMes(): Date {
-    return new Date(
-      this.fechaActual.getFullYear(),
-      this.fechaActual.getMonth(),
-      1
-    );
+    const hoy = new Date();
+    return new Date(hoy.getFullYear(), hoy.getMonth(), 1);
   }
 
   obtenerFechaFinMes(): Date {
-    return new Date(
-      this.fechaActual.getFullYear(),
-      this.fechaActual.getMonth() + 1,
-      0
-    );
+    const hoy = new Date();
+    return new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0);
   }
 
   obtenerFechaFinMesTotal(): Date {

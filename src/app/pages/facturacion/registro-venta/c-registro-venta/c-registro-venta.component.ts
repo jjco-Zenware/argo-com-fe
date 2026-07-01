@@ -3,17 +3,17 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { constantesLocalStorage, mensajesQuestion, mensajesSpinner } from '@constantes';
 import { dOperacion, Moneda } from '@interfaces';
 import { Subscription } from 'rxjs';
-import { UtilitariosService } from 'src/app/services/utilitarios.service';
 import { DialogService } from 'primeng/dynamicdialog';
 import { SharedAppService } from '@sharedAppService';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import * as FileSaver from 'file-saver';
-import { ProyectosService } from 'src/app/pages/compras/proyectos-ganados/service/proyectos.service';
-import { OrdencompraService } from 'src/app/pages/compras/orden-compra-servicio/service/ordencompra.service';
-import { CModalTransacComponent } from 'src/app/pages/compras/modal-trans-registro/modal-transac.component';
 import { CMotivoComponent } from '../../modalanular/c-modalanular.component';
-import { ContabilidadService } from 'src/app/pages/contabilidad/service/contabilidad.services';
+import { ProyectosService } from '../../../compras/proyectos-ganados/service/proyectos.service';
+import { UtilitariosService } from '../../../../services/utilitarios.service';
+import { OrdencompraService } from '../../../compras/orden-compra-servicio/service/ordencompra.service';
+import { ContabilidadService } from '../../../contabilidad/service/contabilidad.services';
+import { CModalTransacComponent } from '../../../compras/modal-trans-registro/modal-transac.component';
 
 @Component({
   selector: 'app-c-registro-venta',

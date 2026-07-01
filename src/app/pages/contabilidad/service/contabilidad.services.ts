@@ -107,5 +107,6 @@ export class ContabilidadService {
      asientoPrc(objeto: any) {
         const url = `${constantesApiWeb.asientoPrc}`;
         return this.http.post<any>(url, objeto)
-    }
+    } 
+    
 }

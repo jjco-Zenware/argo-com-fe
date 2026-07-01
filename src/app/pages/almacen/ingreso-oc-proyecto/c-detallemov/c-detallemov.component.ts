@@ -512,15 +512,17 @@ export class CDetalleMovComponent implements OnInit, OnDestroy{
   }
 
   getOcproveedor(dato: any) {  
+            console.info('this.getOcproveedor...: ', dato);
     this.lstOrdenC = []
     const $personaProveedorlist = this.ordencompraService.ordencompraaprobadasprovlist(dato).subscribe({
         next: (rpta: any) => {
             this.setSpinner(false);
             console.info('next getOcproveedor...: ', rpta);
+            console.info('this.ordenCompra...: ', this.ordenCompra);
             this.lstOrdenC = rpta;
-            if (this.ordenCompra.idordencompra > 0) {
+            //if (this.ordenCompra.idordencompra > 0) {
               this.registerFormRegistro.get('alm_idordencompra')?.setValue(this.ordenCompra.alm_idordencompra);
-            }
+            //}
         },
         error: (err) => {
             this.setSpinner(false);

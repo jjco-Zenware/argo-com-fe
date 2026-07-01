@@ -195,7 +195,7 @@ lstUbigeo: any;
       gre_transportista_documento_tipo: [{ value: '1', disabled: false }],
       gre_conductor_documento_tipo: [{ value: '1', disabled: false }],
       gre_conductor_documento_numero: [{ value: '', disabled: false }],
-      gre_conductor_denominacion: [{ value: '', disabled: false }],
+      gre_conductor_denominacion: [{ value: 'CHOFER', disabled: false }],
       gre_punto_de_partida_ubigeo: [{ value: '', disabled: false }],
       gre_punto_de_llegada_ubigeo: [{ value: '', disabled: false }],
       gre_fec_ini_traslado: [{ value: this.serviceUtilitario.obtenerFechaActual(), disabled: false }],

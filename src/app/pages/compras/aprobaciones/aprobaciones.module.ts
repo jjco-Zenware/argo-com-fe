@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { SharedAppModule } from 'src/app/shared/shared-App.module';
 import { SharedAppService } from '@sharedAppService';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedPrimeNgModule } from '@primeNgModule';
@@ -15,6 +14,7 @@ import { CAprobacionComponent } from './c-aprobacion/c-aprobacion.component';
 import { AprobacionRoutingModule } from './aprobaciones-routing.module';
 import { OrdencompraService } from '../orden-compra-servicio/service/ordencompra.service';
 import { CDetalleComponent } from './c-detalle/c-detalle.component';
+import { SharedAppModule } from '../../../shared/shared-App.module';
 
 
 

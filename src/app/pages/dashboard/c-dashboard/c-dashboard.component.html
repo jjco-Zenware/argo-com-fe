@@ -1,208 +1,683 @@
-    
+<div class="p-fluid grid col-12 m-0">
 
-<div class="p-fluid p-formgrid grid lg:col-12 col-12 m-1">
-    <p-card class="lg:col-12 md:col-8 col-12">
-            <div class=" h-full flex flex-column justify-content-between">
-                <div class="flex gap-3 flex-column justify-content-between w-full md:flex-row md:align-items-center">
-                    <div class="flex gap-3 align-items-center">
-                        <div class="text-5xl">👋</div>
-                        <div class="flex flex-column gap-1 text-600">
-                            <span class="text-2xl font-semibold">Hola,<span class="text-color"> {{nomUsuario}}!</span></span>
-                            <span class="font-bold text-primary">{{nomPerfil}}</span>
+    <!-- ===== HEADER GREETING ===== -->
+    <div class="col-12 p-2">
+        <div class="surface-card shadow-1 border-round p-3">
+            <div class="flex flex-column md:flex-row justify-content-between align-items-center gap-3">
+                <div class="flex align-items-center gap-3">
+                    <div class="flex align-items-center justify-content-center border-circle bg-primary"
+                         style="width:52px;height:52px;flex-shrink:0">
+                        <i class="pi pi-user text-2xl text-white"></i>
+                    </div>
+                    <div class="flex flex-column">
+                        <span class="text-xl font-bold text-900">Bienvenido, <span class="text-primary">{{ nomUsuario }}</span></span>
+                        <span class="text-color-secondary font-medium text-sm">{{ nomPerfil }}</span>
+                    </div>
+                </div>
+                <div class="flex align-items-center gap-3">
+                    <div class="flex flex-column align-items-end">
+                        <span class="text-sm text-900 font-medium">{{ fechaHoy | date:'dd/MM/yyyy' }}</span>
+                        <span class="text-color-secondary text-xs">Ejercicio {{ fechaHoy | date:'yyyy' }}</span>
+                    </div>
+                    <p-tag value="ERP Sistema" icon="pi pi-server" severity="info"></p-tag>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DASHBOARD GERENCIA DE FINANZAS (idperfil 6) ===== -->
+    <ng-container *ngIf="idperfil === 6">
+
+    <!-- ===== KPI CARDS ===== -->
+    <!-- Ventas del Mes -->
+    <div class="col-12 md:col-6 lg:col-3 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full border-left-4 border-green-500">
+            <div class="flex justify-content-between align-items-start mb-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-color-secondary text-xs font-semibold uppercase">Ventas del Mes</span>
+                    <span class="text-900 font-bold text-2xl">S/ {{ kpiVentasActual | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex align-items-center justify-content-center border-circle bg-green-100" style="width:2.8rem;height:2.8rem">
+                    <i class="pi pi-shopping-cart text-green-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="flex align-items-center gap-2 mb-2">
+                <i class="pi text-xs" [ngClass]="kpiVentasPct >= 0 ? 'pi-arrow-up text-green-500' : 'pi-arrow-down text-red-500'"></i>
+                <span class="font-semibold text-sm" [ngClass]="kpiVentasPct >= 0 ? 'text-green-500' : 'text-red-500'">
+                    {{ kpiVentasPct >= 0 ? '+' : '' }}{{ kpiVentasPct | number:'1.1-1' }}%
+                </span>
+                <span class="text-color-secondary text-xs">vs mes anterior</span>
+            </div>
+            <p-progressBar [value]="kpiVentasProgress" [showValue]="false" style="height:5px"></p-progressBar>
+        </div>
+    </div>
+
+    <!-- Compras del Mes -->
+    <div class="col-12 md:col-6 lg:col-3 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full border-left-4 border-blue-500">
+            <div class="flex justify-content-between align-items-start mb-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-color-secondary text-xs font-semibold uppercase">Compras del Mes</span>
+                    <span class="text-900 font-bold text-2xl">S/ {{ kpiComprasActual | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex align-items-center justify-content-center border-circle bg-blue-100" style="width:2.8rem;height:2.8rem">
+                    <i class="pi pi-box text-blue-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="flex align-items-center gap-2 mb-2">
+                <i class="pi text-xs" [ngClass]="kpiComprasPct >= 0 ? 'pi-arrow-up text-green-500' : 'pi-arrow-down text-red-500'"></i>
+                <span class="font-semibold text-sm" [ngClass]="kpiComprasPct >= 0 ? 'text-green-500' : 'text-red-500'">
+                    {{ kpiComprasPct >= 0 ? '+' : '' }}{{ kpiComprasPct | number:'1.1-1' }}%
+                </span>
+                <span class="text-color-secondary text-xs">vs mes anterior</span>
+            </div>
+            <p-progressBar [value]="kpiComprasProgress" [showValue]="false" style="height:5px"></p-progressBar>
+        </div>
+    </div>
+
+    <!-- Cuentas por Cobrar -->
+    <div class="col-12 md:col-6 lg:col-3 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full border-left-4 border-orange-500">
+            <div class="flex justify-content-between align-items-start mb-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-color-secondary text-xs font-semibold uppercase">Cuentas por Cobrar</span>
+                    <span class="text-900 font-bold text-2xl">S/ {{ kpiCxCTotal | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex align-items-center justify-content-center border-circle bg-orange-100" style="width:2.8rem;height:2.8rem">
+                    <i class="pi pi-dollar text-orange-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="flex align-items-center gap-2 mb-2">
+                <i class="pi text-xs" [ngClass]="kpiCxCPct >= 0 ? 'pi-arrow-up text-green-500' : 'pi-arrow-down text-red-500'"></i>
+                <span class="font-semibold text-sm" [ngClass]="kpiCxCPct >= 0 ? 'text-green-500' : 'text-red-500'">
+                    {{ kpiCxCPct >= 0 ? '+' : '' }}{{ kpiCxCPct | number:'1.1-1' }}%
+                </span>
+                <span class="text-color-secondary text-xs">vs mes anterior</span>
+            </div>
+            <div class="flex align-items-center gap-2 mb-2" *ngIf="kpiCxCVencidoSol > 0">
+                <i class="pi pi-exclamation-triangle text-orange-500 text-xs"></i>
+                <span class="text-orange-500 font-semibold text-sm">S/ {{ kpiCxCVencidoSol | number:'1.0-0' }}</span>
+                <span class="text-color-secondary text-xs">vencido</span>
+            </div>
+            <p-progressBar [value]="kpiCxCProgress" [showValue]="false" style="height:5px"></p-progressBar>
+        </div>
+    </div>
+
+    <!-- Cuentas por Pagar -->
+    <div class="col-12 md:col-6 lg:col-3 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full border-left-4 border-red-500">
+            <div class="flex justify-content-between align-items-start mb-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-color-secondary text-xs font-semibold uppercase">Cuentas por Pagar</span>
+                    <span class="text-900 font-bold text-2xl">S/ {{ kpiCxPTotal | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex align-items-center justify-content-center border-circle bg-red-100" style="width:2.8rem;height:2.8rem">
+                    <i class="pi pi-credit-card text-red-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="flex align-items-center gap-2 mb-2">
+                <i class="pi text-xs" [ngClass]="kpiCxPPct >= 0 ? 'pi-arrow-up text-green-500' : 'pi-arrow-down text-red-500'"></i>
+                <span class="font-semibold text-sm" [ngClass]="kpiCxPPct >= 0 ? 'text-green-500' : 'text-red-500'">
+                    {{ kpiCxPPct >= 0 ? '+' : '' }}{{ kpiCxPPct | number:'1.1-1' }}%
+                </span>
+                <span class="text-color-secondary text-xs">vs mes anterior</span>
+            </div>
+            <div class="flex align-items-center gap-2 mb-2" *ngIf="kpiCxPVencidoSol > 0">
+                <i class="pi pi-exclamation-triangle text-red-500 text-xs"></i>
+                <span class="text-red-500 font-semibold text-sm">S/ {{ kpiCxPVencidoSol | number:'1.0-0' }}</span>
+                <span class="text-color-secondary text-xs">vencido</span>
+            </div>
+            <p-progressBar [value]="kpiCxPProgress" [showValue]="false" style="height:5px"></p-progressBar>
+        </div>
+    </div>
+
+    <!-- ===== MÓDULOS FINANCIEROS ===== -->
+    <!-- Cuentas por Cobrar -->
+    <div class="col-12 md:col-6 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center justify-content-between mb-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-arrow-circle-down text-blue-500 text-xl"></i>
+                    <span class="font-semibold text-900">Cuentas por Cobrar</span>
+                    <i class="pi pi-info-circle text-color-secondary cursor-pointer text-sm"
+                       pTooltip="Importe pendiente de cobro del mes" tooltipPosition="bottom"></i>
+                </div>
+                <i class="pi pi-arrow-right cursor-pointer text-primary"
+                   pTooltip="Ir a Cuentas por Cobrar" tooltipPosition="bottom" (click)="goCuentaCobrar()"></i>
+            </div>
+            <div class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                <span class="text-color-secondary text-sm">Total Soles</span>
+                <span class="font-bold text-900 text-sm">S/ {{ modCxCSaldoSol | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                <span class="text-color-secondary text-sm">Total Dólares</span>
+                <span class="font-bold text-900 text-sm">U$ {{ modCxCSaldoDol | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex mt-3 gap-2">
+                <div class="flex-1 text-center p-2 border-round bg-blue-50">
+                    <span class="block text-blue-600 font-semibold text-xs mb-1">Actual</span>
+                    <span class="block text-900 font-bold text-sm">S/ {{ modCxCActualSol | number:'1.0-0' }}</span>
+                    <span class="block text-color-secondary text-xs">U$ {{ modCxCActualDol | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex-1 text-center p-2 border-round bg-red-50">
+                    <span class="block text-red-500 font-semibold text-xs mb-1">Vencido</span>
+                    <span class="block text-900 font-bold text-sm">S/ {{ modCxCVencidoSol | number:'1.0-0' }}</span>
+                    <span class="block text-color-secondary text-xs">U$ {{ modCxCVencidoDol | number:'1.0-0' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cuentas por Pagar -->
+    <div class="col-12 md:col-6 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center justify-content-between mb-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-arrow-circle-up text-red-500 text-xl"></i>
+                    <span class="font-semibold text-900">Cuentas por Pagar</span>
+                    <i class="pi pi-info-circle text-color-secondary cursor-pointer text-sm"
+                       pTooltip="Importe pendiente de pago del mes" tooltipPosition="bottom"></i>
+                </div>
+                <i class="pi pi-arrow-right cursor-pointer text-primary"
+                   pTooltip="Ir a Cuentas por Pagar" tooltipPosition="bottom" (click)="goCuentaPagar()"></i>
+            </div>
+            <div class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                <span class="text-color-secondary text-sm">Total Soles</span>
+                <span class="font-bold text-900 text-sm">S/ {{ modCxPSaldoSol | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                <span class="text-color-secondary text-sm">Total Dólares</span>
+                <span class="font-bold text-900 text-sm">U$ {{ modCxPSaldoDol | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex mt-3 gap-2">
+                <div class="flex-1 text-center p-2 border-round bg-blue-50">
+                    <span class="block text-blue-600 font-semibold text-xs mb-1">Actual</span>
+                    <span class="block text-900 font-bold text-sm">S/ {{ modCxPActualSol | number:'1.0-0' }}</span>
+                    <span class="block text-color-secondary text-xs">U$ {{ modCxPActualDol | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex-1 text-center p-2 border-round bg-red-50">
+                    <span class="block text-red-500 font-semibold text-xs mb-1">Vencido</span>
+                    <span class="block text-900 font-bold text-sm">S/ {{ modCxPVencidoSol | number:'1.0-0' }}</span>
+                    <span class="block text-color-secondary text-xs">U$ {{ modCxPVencidoDol | number:'1.0-0' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ingresos y Egresos -->
+    <div class="col-12 md:col-6 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center justify-content-between mb-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-wallet text-green-500 text-xl"></i>
+                    <span class="font-semibold text-900">Ingresos y Egresos</span>
+                    <i class="pi pi-info-circle text-color-secondary cursor-pointer text-sm"
+                       pTooltip="Ingresos y egresos del mes en curso" tooltipPosition="bottom"></i>
+                </div>
+                <i class="pi pi-arrow-right cursor-pointer text-primary"
+                   pTooltip="Ir a Caja Chica" tooltipPosition="bottom" (click)="goCajaChica()"></i>
+            </div>
+            <div class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                <span class="text-color-secondary text-sm">Saldo Soles</span>
+                <span class="font-bold text-sm" [ngClass]="modFCSaldoSol >= 0 ? 'text-green-600' : 'text-red-500'">
+                    S/ {{ modFCSaldoSol | number:'1.2-2' }}
+                </span>
+            </div>
+            <div class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                <span class="text-color-secondary text-sm">TC del día</span>
+                <span class="font-bold text-900 text-sm">S/ {{ tipoCambio | number:'1.3-3' }}</span>
+            </div>
+            <div class="flex mt-3 gap-2">
+                <div class="flex-1 text-center p-2 border-round bg-green-50">
+                    <span class="block text-green-600 font-semibold text-xs mb-1">Ingresos</span>
+                    <span class="block text-900 font-bold text-sm">S/ {{ modFCIngresosSol | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex-1 text-center p-2 border-round bg-red-50">
+                    <span class="block text-red-500 font-semibold text-xs mb-1">Egresos</span>
+                    <span class="block text-900 font-bold text-sm">S/ {{ modFCEgresosSol | number:'1.0-0' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GRÁFICOS ===== -->
+    <!-- Flujo de Caja -->
+    <div class="col-12 lg:col-8 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center justify-content-between mb-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-chart-line text-primary text-xl"></i>
+                    <span class="font-semibold text-900 text-lg">Flujo de Caja</span>
+                    <i class="pi pi-info-circle text-color-secondary cursor-pointer text-sm"
+                       pTooltip="Flujo mensual comparativo de ingresos y egresos" tooltipPosition="bottom"></i>
+                </div>
+                <i class="pi pi-arrow-right cursor-pointer text-primary"
+                   pTooltip="Ir a Flujo de Caja" tooltipPosition="bottom" (click)="goFlujoCaja()"></i>
+            </div>
+            <p-chart type="line" [data]="chartMonthlyData" [options]="chartMonthlyOptions" [responsive]="true" height="230px"></p-chart>
+            <div class="flex justify-content-around border-top-1 surface-border pt-3 mt-3">
+                <div class="text-center">
+                    <span class="block text-color-secondary text-xs mb-1">Entrante (+)</span>
+                    <span class="block text-green-500 font-bold">S/ {{ modFCIngresosSol | number:'1.0-0' }}</span>
+                </div>
+                <div class="text-center border-left-1 surface-border px-3">
+                    <span class="block text-color-secondary text-xs mb-1">Saliente (-)</span>
+                    <span class="block text-red-500 font-bold">S/ {{ modFCEgresosSol | number:'1.0-0' }}</span>
+                </div>
+                <div class="text-center border-left-1 surface-border px-3">
+                    <span class="block text-color-secondary text-xs mb-1">Saldo actual</span>
+                    <span class="font-bold" [ngClass]="modFCSaldoSol >= 0 ? 'text-blue-500' : 'text-red-500'">
+                        S/ {{ modFCSaldoSol | number:'1.0-0' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ventas por Categoría -->
+    <div class="col-12 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-chart-pie text-purple-500 text-xl"></i>
+                <span class="font-semibold text-900 text-lg">Ventas por Categoría</span>
+            </div>
+            <p-chart type="doughnut" [data]="chartCategoryData" [options]="chartCategoryOptions" height="190px"></p-chart>
+            <div class="flex flex-column gap-2 mt-3">
+                <div *ngFor="let cat of categoriaVentas" class="flex justify-content-between align-items-center">
+                    <div class="flex align-items-center gap-2">
+                        <div class="border-round" [style.background]="cat.color" style="width:10px;height:10px;flex-shrink:0"></div>
+                        <span class="text-xs text-color-secondary">{{ cat.label }}</span>
+                    </div>
+                    <span class="text-xs font-bold text-900">{{ cat.pct }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DOCUMENTOS RECIENTES + ALERTAS ===== -->
+    <!-- Últimos Documentos -->
+    <div class="col-12 lg:col-8 p-2">
+        <div class="surface-card shadow-1 border-round p-3">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-file text-primary text-xl"></i>
+                <span class="font-semibold text-900 text-lg">Últimos Documentos</span>
+                <p-badge [value]="ultimosDocumentos.length.toString()" severity="info"></p-badge>
+            </div>
+            <ng-container *ngIf="ultimosDocumentos.length > 0; else sinDocs">
+                <div class="flex flex-column gap-1">
+                    <div *ngFor="let doc of ultimosDocumentos"
+                         class="flex align-items-center justify-content-between p-2 border-round hover:surface-hover cursor-pointer transition-colors transition-duration-150">
+                        <div class="flex align-items-center gap-3">
+                            <div class="flex align-items-center justify-content-center border-round"
+                                 [ngClass]="doc.bgClass" style="width:2.2rem;height:2.2rem;flex-shrink:0">
+                                <i [class]="doc.icon"></i>
+                            </div>
+                            <div class="flex flex-column">
+                                <span class="font-medium text-900 text-sm">{{ doc.tipo }} &nbsp;·&nbsp; {{ doc.numero }}</span>
+                                <span class="text-color-secondary text-xs">{{ doc.entidad }}</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-column align-items-end gap-1">
+                            <span class="font-bold text-900 text-sm">{{ doc.monto }}</span>
+                            <p-tag [value]="doc.estado" [severity]="doc.severidad"></p-tag>
                         </div>
                     </div>
                 </div>
-            </div>
-    </p-card>
-    <!-- <div class="lg:col-4 md:col-8 col-12">
-        <div class="card">
-            <div class="flex align-items-center justify-content-between mb-3">
-                <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0">Total de cuentas por cobrar </h5>
-                    <i class="pi pi-info-circle mt-2" pTooltip="Importe Actual y Vencido que todavía debe recibir de sus clientes"
-                        tooltipPosition="bottom"></i>
+            </ng-container>
+            <ng-template #sinDocs>
+                <div class="flex align-items-center justify-content-center p-4 text-color-secondary text-sm">
+                    <i class="pi pi-inbox mr-2"></i> Sin documentos en el mes actual
                 </div>
-                
-                <div>
-                        <i class="fa-solid fa-right-to-bracket cursor-pointer text-blue-500 text-1xl" pTooltip="Ir A Cuentas por Cobrar" 
-                        tooltipPosition="bottom" (click)="goCuentaCobrar()"></i>
-                </div>
-            </div>
-            <div class="flex justify-content-between align-items-center p-1">
-                <div>
-                    <span class="text-1xl">Total de facturas sin cobrar S/</span>
-                </div>
-                <div class="text-right">
-                    <span class="text-1xl">S/ 20,000.00</span>
-                </div>
-            </div>
-            <div class="flex justify-content-between align-items-center p-1">
-                <div>
-                    <span class="text-1xl">Total de facturas sin cobrar U$</span>
-                </div>
-                <div class="text-right">
-                    <span class="text-1xl">U$ 26,000.00</span>
-                </div>
-            </div>
-
-            <div class="border-top-1 surface-border flex justify-content-between mt-3">
-                <div class="w-6 text-center p-2 flex flex-column border-right-1 surface-border">
-                    <span class="font-medium text-blue-500">Actual</span>
-                    <span class="text-color-secondary mb-2 text-1xl">S/ 15,000.00</span>
-                    <span class="text-color-secondary mb-2 text-1xl">U$ 16,000.00</span>
-                </div>
-                <div class="w-6 text-center p-2 flex flex-column">
-                    <span class="font-medium text-red-500">Vencido</span>
-                    <span class="text-color-secondary mb-2 text-1xl">S/ 5,000.00</span>
-                    <span class="text-color-secondary mb-2 text-1xl">U$ 10,000.00</span>
-                </div>
-            </div>
+            </ng-template>
         </div>
     </div>
 
-    <div class="lg:col-4 md:col-8 col-12">
-        <div class="card">
-            <div class="flex align-items-center justify-content-between mb-3">
-                <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0">Total de cuentas por Pagar </h5>
-                    <i class="pi pi-info-circle mt-2" pTooltip="Importe Actual y Vencido que todavía debe pagar a sus proveedores"
-                        tooltipPosition="bottom"></i>
-                </div>
-                
-                <div>
-                    <i class="fa-solid fa-right-to-bracket cursor-pointer text-blue-500 text-1xl" pTooltip="Ir A Cuentas por Pagar" 
-                    tooltipPosition="bottom" (click)="goCuentaPagar()"></i>
-
-                </div>
+    <!-- Alertas -->
+    <div class="col-12 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-bell text-orange-500 text-xl"></i>
+                <span class="font-semibold text-900 text-lg">Alertas</span>
+                <p-badge [value]="alertas.length.toString()" [severity]="alertas.length === 1 && alertas[0].titulo === 'Sin alertas' ? 'success' : 'danger'"></p-badge>
             </div>
-            <div class="flex justify-content-between align-items-center p-1">
-                <div>
-                    <span class="text-1xl">Total de facturas sin pagar S/</span>
-                </div>
-                <div class="text-right">
-                    <span class="text-1xl">S/ 18,000.00</span>
-                </div>
-            </div>
-            <div class="flex justify-content-between align-items-center p-1">
-                <div>
-                    <span class="text-1xl">Total de facturas sin pagar U$</span>
-                </div>
-                <div class="text-right">
-                    <span class="text-1xl">U$ 22,000.00</span>
-                </div>
-            </div>
-
-            <div class="border-top-1 surface-border flex justify-content-between mt-3">
-                <div class="w-6 text-center p-2 flex flex-column border-right-1 surface-border">
-                    <span class="font-medium text-blue-500">Actual</span>
-                    <span class="text-color-secondary mb-2 text-1xl">S/ 14,000.00</span>
-                    <span class="text-color-secondary mb-2 text-1xl">U$ 16,000.00</span>
-                </div>
-                <div class="w-6 text-center p-2 flex flex-column">
-                    <span class="font-medium text-red-500">Vencido</span>
-                    <span class="text-color-secondary mb-2 text-1xl">S/ 4,000.00</span>
-                    <span class="text-color-secondary mb-2 text-1xl">U$ 6,000.00</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-  
-
-
-    <div class="lg:col-4 md:col-8 col-12">
-        <div class="card">
-            <div class="flex align-items-center justify-content-between mb-3">
-                <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0">Ingresos y Egresos</h5>
-                    <i class="pi pi-info-circle mt-2 cursor-pointer" pTooltip="Total de Ingresos y Egresos del mes en curso"
-                        tooltipPosition="bottom"></i>
-                </div>                        
-                <div>
-                    <i class="fa-solid fa-right-to-bracket cursor-pointer text-blue-500 text-1xl" pTooltip="Ir a Caja Chica" 
-                    tooltipPosition="bottom" (click)="goCajaChica()"></i>
-
-                </div>
-            </div>
-            <div class="flex justify-content-between align-items-center p-1">
-                <div>
-                    <span class="text-1xl">Saldo S/</span>
-                </div>
-                <div class="text-right">
-                    <span class="text-1xl">S/ 45,995.00</span>
-                </div>
-            </div>
-            <div class="flex justify-content-between align-items-center p-1">
-                <div>
-                    <span class="text-1xl">Saldo U$</span>
-                </div>
-                <div class="text-right">
-                    <span class="text-1xl">U$ 55,995.00</span>
-                </div>
-            </div>
-
-            <div class="border-top-1 surface-border flex justify-content-between mt-3">                        
-                <div class="w-6 text-center p-2 flex flex-column border-right-1 surface-border">
-                    <span class="font-medium text-green-500">Total de Ingresos</span>
-                    <span class="text-color-secondary mb-2 text-1xl">S/ 4,000.00</span>
-                    <span class="text-color-secondary mb-2 text-1xl">U$ 6,000.80</span>
-                </div>
-                <div class="w-6 text-center p-2 flex flex-column">
-                    <span class="font-medium text-red-500">Total de Egresos</span>
-                    <span class="text-color-secondary mb-2 text-1xl">S/ 4,000.00</span>
-                    <span class="text-color-secondary mb-2 text-1xl">U$ 6,000.80</span>
-                </div>
-            </div>
-        </div>
-    </div>  
-    
-    <div class="lg:col-8 md:col-8 col-12">
-        <div class="card">
-            <div class="flex align-items-center justify-content-between mb-3">
-                <div class="justify-content-between flex gap-2">
-                    <h5 class="m-0">Flujo de Caja </h5>
-                    <i class="pi pi-info-circle mt-2" pTooltip="Cantidad de dinero que entra y sale de su empresa"
-                        tooltipPosition="bottom"></i>
-                </div>                        
-                <div>
-                    <i class="fa-solid fa-right-to-bracket cursor-pointer text-blue-500 text-1xl" 
-                    pTooltip="Ir a Flujo de Caja" tooltipPosition="bottom" (click)="goFlujoCaja()"></i>
-                </div>
-            </div>
-
-            <div class="flex align-items-center justify-content-between">
-                <div class="border-top-1 surface-border col-12">
-                    <div class="flex  justify-content-between mb-3">
-                        <h5 class="m-0 text-color-secondary">Comparación Mensual</h5>
+            <div class="flex flex-column gap-2">
+                <div *ngFor="let alerta of alertas"
+                     class="flex align-items-start gap-3 p-2 border-round" [ngClass]="alerta.bgClass">
+                    <i [class]="alerta.icon" [ngClass]="alerta.iconClass" style="margin-top:2px;flex-shrink:0"></i>
+                    <div class="flex flex-column gap-1">
+                        <span class="font-semibold text-sm text-900">{{ alerta.titulo }}</span>
+                        <span class="text-xs text-color-secondary">{{ alerta.descripcion }}</span>
                     </div>
-                    
-                    <p-chart #bar type="line" [data]="chartMonthlyData" [options]="chartMonthlyOptions" [responsive]="true"
-                        height="200px"></p-chart>
-                </div>
-
-                
-            </div>
-
-            <div class="border-top-1 surface-border flex justify-content-between mt-3 col-12 h-full align-content-end">
-                <div class="w-4 text-center p-1 flex flex-column surface-border">
-                    <span class="font-medium text-green-500  text-1xl">Entrante (+)</span>
-                    <span class="text-color-secondary text-1xl">10.000</span>
-                </div>
-                <div class="w-4 text-center p-1 flex flex-column border-left-1 surface-border">
-                    <span class="font-medium text-red-500 text-1xl">Saliente (-)</span>
-                    <span class="text-color-secondary text-1xl">50.702</span>
-                </div>
-                <div class="w-4 text-center p-1 flex flex-column border-left-1 surface-border">
-                    <span class="font-medium text-blue-500 text-1xl">Efectivo al (fecha) (=) </span>
-                    <span class="text-color-secondary text-1xl">50.702</span>
                 </div>
             </div>
         </div>
-    </div>  -->
+    </div>
+
+    </ng-container>
+    <!-- ===== FIN DASHBOARD GERENCIA DE FINANZAS ===== -->
+
+    <!-- ===== DASHBOARD JEFE DE COMPRAS (idperfil 7) ===== -->
+    <ng-container *ngIf="idperfil === 7">
+
+    <!-- ===== FILTRO FECHA OC ===== -->
+    <div class="col-12 p-2">
+        <div class="surface-card shadow-1 border-round p-3">
+            <div class="flex flex-wrap align-items-center gap-3">
+                <div class="flex align-items-center gap-2">
+                    <i class="pi pi-filter text-primary text-lg"></i>
+                    <span class="font-semibold text-900">Período</span>
+                </div>
+                <div class="flex align-items-center gap-2">
+                    <label class="text-sm text-color-secondary white-space-nowrap">Mes / Año</label>
+                    <p-calendar [(ngModel)]="mesSeleccionadoOC" view="month" dateFormat="mm/yy"
+                                [showIcon]="true" inputStyleClass="text-sm" styleClass="w-8rem"></p-calendar>
+                </div>
+                <p-button label="Buscar" icon="pi pi-search" (onClick)="aplicarFiltroOC()"
+                          styleClass="p-button-sm"></p-button>
+                <span class="text-color-secondary text-xs">
+                    Mostrando: {{ fecIniOC | date:'MMMM yyyy' | titlecase }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== KPI CARDS OC ===== -->
+    <!-- Órdenes del Mes -->
+    <div class="col-12 md:col-6 lg:col-3 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full border-left-4 border-blue-500">
+            <div class="flex justify-content-between align-items-start mb-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-color-secondary text-xs font-semibold uppercase">Órdenes del Mes</span>
+                    <span class="text-900 font-bold text-2xl">{{ ocTotalCount }}</span>
+                    <span class="text-color-secondary text-xs">OC emitidas</span>
+                </div>
+                <div class="flex align-items-center justify-content-center border-circle bg-blue-100" style="width:2.8rem;height:2.8rem">
+                    <i class="pi pi-shopping-cart text-blue-500 text-xl"></i>
+                </div>
+            </div>
+            <p-progressBar [value]="100" [showValue]="false" style="height:5px"></p-progressBar>
+        </div>
+    </div>
+
+    <!-- Monto Total OC -->
+    <div class="col-12 md:col-6 lg:col-3 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full border-left-4 border-green-500">
+            <div class="flex justify-content-between align-items-start mb-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-color-secondary text-xs font-semibold uppercase">Monto Total OC</span>
+                    <span class="text-900 font-bold text-2xl">S/ {{ ocTotalMonto | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex align-items-center justify-content-center border-circle bg-green-100" style="width:2.8rem;height:2.8rem">
+                    <i class="pi pi-dollar text-green-500 text-xl"></i>
+                </div>
+            </div>
+            <div class="flex align-items-center gap-2 mb-2">
+                <i class="pi text-xs" [ngClass]="ocMontoPct >= 0 ? 'pi-arrow-up text-green-500' : 'pi-arrow-down text-red-500'"></i>
+                <span class="font-semibold text-sm" [ngClass]="ocMontoPct >= 0 ? 'text-green-500' : 'text-red-500'">
+                    {{ ocMontoPct >= 0 ? '+' : '' }}{{ ocMontoPct | number:'1.1-1' }}%
+                </span>
+                <span class="text-color-secondary text-xs">vs mes anterior</span>
+            </div>
+            <p-progressBar [value]="ocMontoProgress" [showValue]="false" style="height:5px"></p-progressBar>
+        </div>
+    </div>
+
+    <!-- OC Pendientes -->
+    <div class="col-12 md:col-6 lg:col-3 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full border-left-4 border-orange-500">
+            <div class="flex justify-content-between align-items-start mb-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-color-secondary text-xs font-semibold uppercase">OC Pendientes</span>
+                    <span class="text-900 font-bold text-2xl">{{ ocPendientesCount }}</span>
+                    <span class="text-color-secondary text-xs">S/ {{ ocPendientesMonto | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex align-items-center justify-content-center border-circle bg-orange-100" style="width:2.8rem;height:2.8rem">
+                    <i class="pi pi-clock text-orange-500 text-xl"></i>
+                </div>
+            </div>
+            <p-progressBar [value]="ocPendientePct" [showValue]="false" style="height:5px"></p-progressBar>
+        </div>
+    </div>
+
+    <!-- OC Aprobadas -->
+    <div class="col-12 md:col-6 lg:col-3 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full border-left-4 border-teal-500">
+            <div class="flex justify-content-between align-items-start mb-3">
+                <div class="flex flex-column gap-1">
+                    <span class="text-color-secondary text-xs font-semibold uppercase">OC Aprobadas</span>
+                    <span class="text-900 font-bold text-2xl">{{ ocAprobadasCount }}</span>
+                    <span class="text-color-secondary text-xs">S/ {{ ocAprobadasMonto | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex align-items-center justify-content-center border-circle bg-teal-100" style="width:2.8rem;height:2.8rem">
+                    <i class="pi pi-check-circle text-teal-500 text-xl"></i>
+                </div>
+            </div>
+            <p-progressBar [value]="ocAprobadaPct" [showValue]="false" style="height:5px"></p-progressBar>
+        </div>
+    </div>
+
+    <!-- ===== MÓDULOS OC ===== -->
+    <!-- OC por Estado -->
+    <div class="col-12 md:col-6 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-list text-blue-500 text-xl"></i>
+                <span class="font-semibold text-900">OC por Estado</span>
+                <p-badge [value]="ocTotalCount.toString()" severity="info"></p-badge>
+            </div>
+            <ng-container *ngIf="ocPorEstado.length > 0; else sinEstados">
+                <div *ngFor="let est of ocPorEstado" class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                    <div class="flex align-items-center gap-2">
+                        <div class="border-round" [style.background]="est.color" style="width:10px;height:10px;flex-shrink:0"></div>
+                        <span class="text-sm text-color-secondary">{{ est.label }}</span>
+                    </div>
+                    <p-badge [value]="est.count.toString()" severity="info"></p-badge>
+                </div>
+            </ng-container>
+            <ng-template #sinEstados>
+                <div class="flex align-items-center justify-content-center p-4 text-color-secondary text-sm">
+                    <i class="pi pi-inbox mr-2"></i> Sin órdenes en el mes
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- Top Proveedores -->
+    <div class="col-12 md:col-6 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-users text-purple-500 text-xl"></i>
+                <span class="font-semibold text-900">Top Proveedores</span>
+            </div>
+            <ng-container *ngIf="topProveedores.length > 0; else sinProveedores">
+                <div *ngFor="let prov of topProveedores; let i = index"
+                     class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                    <div class="flex align-items-center gap-2">
+                        <span class="text-xs font-bold text-color-secondary w-1rem">{{ i + 1 }}.</span>
+                        <span class="text-sm text-900">{{ prov.nombre }}</span>
+                    </div>
+                    <span class="text-sm font-bold text-900 white-space-nowrap">S/ {{ prov.monto  }}</span>
+                </div>
+            </ng-container>
+            <ng-template #sinProveedores>
+                <div class="flex align-items-center justify-content-center p-4 text-color-secondary text-sm">
+                    <i class="pi pi-inbox mr-2"></i> Sin datos
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    <!-- Comparativo Mensual -->
+    <div class="col-12 md:col-6 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-chart-bar text-green-500 text-xl"></i>
+                <span class="font-semibold text-900">Comparativo Mensual</span>
+            </div>
+            <div class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                <span class="text-color-secondary text-sm">Mes Actual</span>
+                <span class="font-bold text-900 text-sm">S/ {{ ocTotalMonto | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex justify-content-between align-items-center py-2 border-bottom-1 surface-border">
+                <span class="text-color-secondary text-sm">Mes Anterior</span>
+                <span class="font-bold text-900 text-sm">S/ {{ ocAnteriorMonto | number:'1.2-2' }}</span>
+            </div>
+            <div class="flex mt-3 gap-2">
+                <div class="flex-1 text-center p-2 border-round bg-orange-50">
+                    <span class="block text-orange-500 font-semibold text-xs mb-1">Pendientes</span>
+                    <span class="block text-900 font-bold text-sm">{{ ocPendientesCount }}</span>
+                    <span class="block text-color-secondary text-xs">S/ {{ ocPendientesMonto | number:'1.0-0' }}</span>
+                </div>
+                <div class="flex-1 text-center p-2 border-round bg-teal-50">
+                    <span class="block text-teal-500 font-semibold text-xs mb-1">Aprobadas</span>
+                    <span class="block text-900 font-bold text-sm">{{ ocAprobadasCount }}</span>
+                    <span class="block text-color-secondary text-xs">S/ {{ ocAprobadasMonto | number:'1.0-0' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SERVICIOS vs OC + INDICADORES ===== -->
+    <!-- Gráfico Servicios vs OC -->
+    <div class="col-12 lg:col-8 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-chart-bar text-blue-500 text-xl"></i>
+                <span class="font-semibold text-900 text-lg">Servicios vs Órdenes de Compra</span>
+                <i class="pi pi-info-circle text-color-secondary text-sm cursor-pointer"
+                   pTooltip="Cantidad y monto del período por tipo de documento" tooltipPosition="bottom"></i>
+            </div>
+            <p-chart type="bar" [data]="chartServOCData" [options]="chartServOCOptions" height="220px"></p-chart>
+            <div class="flex justify-content-around border-top-1 surface-border pt-3 mt-3">
+                <div class="text-center">
+                    <span class="block text-color-secondary text-xs mb-1">OC · Cantidad</span>
+                    <span class="block text-blue-500 font-bold">{{ ocOCCount }}</span>
+                </div>
+                <div class="text-center border-left-1 surface-border px-3">
+                    <span class="block text-color-secondary text-xs mb-1">OC · Monto</span>
+                    <span class="block text-blue-500 font-bold">S/ {{ ocOCMonto | number:'1.0-0' }}</span>
+                </div>
+                <div class="text-center border-left-1 surface-border px-3">
+                    <span class="block text-color-secondary text-xs mb-1">Servicios · Cantidad</span>
+                    <span class="block text-green-500 font-bold">{{ ocServiciosCount }}</span>
+                </div>
+                <div class="text-center border-left-1 surface-border px-3">
+                    <span class="block text-color-secondary text-xs mb-1">Servicios · Monto</span>
+                    <span class="block text-green-500 font-bold">S/ {{ ocServiciosMonto | number:'1.0-0' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicadores Generadas / Anuladas -->
+    <div class="col-12 lg:col-4 p-2">
+        <div class="flex flex-column gap-3 h-full">
+            <div class="surface-card shadow-1 border-round p-3 flex-1 border-left-4 border-green-500">
+                <div class="flex justify-content-between align-items-start mb-2">
+                    <div class="flex flex-column gap-1">
+                        <span class="text-color-secondary text-xs font-semibold uppercase">Generadas en el Período</span>
+                        <span class="text-900 font-bold text-3xl">{{ ocGeneradasCount }}</span>
+                        <span class="text-color-secondary text-xs">Total de órdenes emitidas</span>
+                    </div>
+                    <div class="flex align-items-center justify-content-center border-circle bg-green-100" style="width:2.8rem;height:2.8rem">
+                        <i class="pi pi-file-plus text-green-500 text-xl"></i>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-2">
+                    <div class="flex-1 text-center p-2 border-round bg-blue-50">
+                        <span class="block text-blue-600 font-semibold text-xs mb-1">OC</span>
+                        <span class="block text-900 font-bold">{{ ocOCCount }}</span>
+                    </div>
+                    <div class="flex-1 text-center p-2 border-round bg-green-50">
+                        <span class="block text-green-600 font-semibold text-xs mb-1">Servicios</span>
+                        <span class="block text-900 font-bold">{{ ocServiciosCount }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="surface-card shadow-1 border-round p-3 flex-1 border-left-4 border-red-500">
+                <div class="flex justify-content-between align-items-start mb-2">
+                    <div class="flex flex-column gap-1">
+                        <span class="text-color-secondary text-xs font-semibold uppercase">Anuladas en el Período</span>
+                        <span class="text-900 font-bold text-3xl">{{ ocAnuladasCount }}</span>
+                        <span class="text-color-secondary text-xs">Órdenes con estado ANULADO</span>
+                    </div>
+                    <div class="flex align-items-center justify-content-center border-circle bg-red-100" style="width:2.8rem;height:2.8rem">
+                        <i class="pi pi-times-circle text-red-500 text-xl"></i>
+                    </div>
+                </div>
+                <div class="flex align-items-center gap-2 mt-2" *ngIf="ocAnuladasCount > 0">
+                    <i class="pi pi-exclamation-triangle text-red-500 text-xs"></i>
+                    <span class="text-xs text-color-secondary">
+                        {{ ocTotalCount > 0 ? (ocAnuladasCount / ocTotalCount * 100 | number:'1.1-1') : 0 }}% del total del período
+                    </span>
+                </div>
+                <div class="flex align-items-center gap-2 mt-2" *ngIf="ocAnuladasCount === 0">
+                    <i class="pi pi-check-circle text-green-500 text-xs"></i>
+                    <span class="text-xs text-green-600 font-medium">Sin anulaciones en el período</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== GRÁFICO + TABLA OC ===== -->
+    <!-- Distribución por Estado (donut) -->
+    <div class="col-12 lg:col-4 p-2">
+        <div class="surface-card shadow-1 border-round p-3 h-full">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-chart-pie text-orange-500 text-xl"></i>
+                <span class="font-semibold text-900 text-lg">Distribución por Estado</span>
+            </div>
+            <p-chart type="doughnut" [data]="chartOCEstadoData" [options]="chartOCEstadoOptions" height="190px"></p-chart>
+            <div class="flex flex-column gap-2 mt-3">
+                <div *ngFor="let est of ocPorEstado" class="flex justify-content-between align-items-center">
+                    <div class="flex align-items-center gap-2">
+                        <div class="border-round" [style.background]="est.color" style="width:10px;height:10px;flex-shrink:0"></div>
+                        <span class="text-xs text-color-secondary">{{ est.label }}</span>
+                    </div>
+                    <span class="text-xs font-bold text-900">{{ est.count }} OC</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimas Órdenes de Compra -->
+    <div class="col-12 lg:col-8 p-2">
+        <div class="surface-card shadow-1 border-round p-3">
+            <div class="flex align-items-center gap-2 mb-3">
+                <i class="pi pi-file text-primary text-xl"></i>
+                <span class="font-semibold text-900 text-lg">Últimas Órdenes de Compra</span>
+                <p-badge [value]="ultimasOC.length.toString()" severity="info"></p-badge>
+            </div>
+            <ng-container *ngIf="ultimasOC.length > 0; else sinOC">
+                <div class="flex flex-column gap-1">
+                    <div *ngFor="let oc of ultimasOC"
+                         class="flex align-items-center justify-content-between p-2 border-round hover:surface-hover cursor-pointer transition-colors transition-duration-150">
+                        <div class="flex align-items-center gap-3">
+                            <div class="flex align-items-center justify-content-center border-round bg-blue-50"
+                                 style="width:2.2rem;height:2.2rem;flex-shrink:0">
+                                <i class="pi pi-shopping-bag text-blue-500 text-sm"></i>
+                            </div>
+                            <div class="flex flex-column">
+                                <span class="font-medium text-900 text-sm">{{ oc.tipo }} &nbsp;·&nbsp; {{ oc.numero }}</span>
+                                <span class="text-color-secondary text-xs">{{ oc.proveedor }}</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-column align-items-end gap-1">
+                            <span class="font-bold text-900 text-sm">{{ oc.monto }}</span>
+                            <p-tag [value]="oc.estado" [severity]="oc.severidad"></p-tag>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #sinOC>
+                <div class="flex align-items-center justify-content-center p-4 text-color-secondary text-sm">
+                    <i class="pi pi-inbox mr-2"></i> Sin órdenes de compra en el mes actual
+                </div>
+            </ng-template>
+        </div>
+    </div>
+
+    </ng-container>
+    <!-- ===== FIN DASHBOARD JEFE DE COMPRAS ===== -->
 
 </div>
-
-
-
-
-
